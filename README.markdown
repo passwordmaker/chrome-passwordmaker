@@ -6,3 +6,6 @@ Sadly that extension is only a simple port of the html page that is offered on <
 
 This extension tries to make a real port. One with heart and soul.
 
+A first screenshot on what I am trying to do:
+
+![Dummy Screenshot](http://img514.imageshack.us/img514/7662/bildschirmfoto20100327u.png)
