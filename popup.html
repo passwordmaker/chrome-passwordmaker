@@ -1,5 +1,96 @@
 <html>
+    <style type="text/css">
+    <!--
+        body {
+            width: 200px;
+            height: 300px;
+            font-family: sans-serif;
+            font-size: 13px;
+        }
+        
+        label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #888888;
+        }
+        
+        #head {
+            border-bottom: 1px solid #eeeeee;
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            vertical-align: middle;
+            font-weight: bold;
+        }
+        
+        #head img {
+            position: absolute;
+            top: 8px;
+        }
+        
+        #head span {
+            margin-left: 20px;
+        }
+        
+        .input {
+            margin: 0px;
+            width: 200px;
+            border: 1px solid #000000;
+        }
+        
+        #generated{
+            color: #5E80F0;
+            font-weight: bold;
+            text-align: center;
+            width: 200px;
+            border: 1px solid #000000;
+            font-size:15px;
+        }
+        
+        select {
+            margin: 0px;
+            width: 200px;
+            border: 1px solid #000000;
+        }
+        
+        .row {
+            margin-bottom: 5px;
+        }
+        
+        #options {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+        }
+    -->
+    </style>
+    <script type="text/javascript">
+    <!--
+        
+    -->
+    </script>
     <body>
-        <a href="#" onClick="chrome.tabs.create({url: 'options.html'}); window.close();">Hello</a>
+        <form>
+        <div class='row' id='head'>
+            <img src='passwdmaker16.png' width='16px' height='16px'/><span>passwordmaker</span>
+        </div>
+        <div class='row'><label for='password'>Password:</label><input class='input' id='password' type="password"/></div>
+        <div class='row'><label for='confirmation'>Confirmation:</label><input class='input' id='confirmation' type="password"/></div>
+        <div class='row'><label>Save Password:</label>
+            <select name="store_location">
+                  <option>In memory</option>
+                  <option>On disk</option>
+                  <option>Never store</option>
+                </select>    
+        </div>
+        <div class='row'><label for='usedtext'>Used text:</label><input class='input' id='usedtext'/></div>
+        <div class='row'><label>Use Profile:</label>
+            <select name="profile">
+                  <option>Default</option>
+                </select>    
+        </div>
+        <div class='row'><label for='generated'>Generated Password:</label><input id='generated' readonly='true' value="dsf3vsn2!"/></div>
+        <div class='row'><input type="button" value="Fill password field"/></div>
+        </form>
+        <div id='options'><a href="#" onClick="chrome.tabs.create({url: 'options.html'}); window.close();">Options</a></div>
     </body>
 </html>
