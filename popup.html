@@ -63,9 +63,17 @@
         }
     -->
     </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
     <script type="text/javascript">
     <!--
-        
+        chrome.windows.getCurrent(function(obj) {
+            chrome.tabs.getSelected(obj.id, function(tab) {
+                $("#usedtext").val(tab.url);
+            });
+        });
+        $(function() {
+           $("#generated").focus(); 
+        });
     -->
     </script>
     <body>
@@ -82,12 +90,12 @@
                   <option>Never store</option>
                 </select>    
         </div>
-        <div class='row'><label for='usedtext'>Used text:</label><input class='input' id='usedtext'/></div>
         <div class='row'><label>Use Profile:</label>
             <select name="profile">
                   <option>Default</option>
                 </select>    
         </div>
+        <div class='row'><label for='usedtext'>Used text:</label><input class='input' id='usedtext'/></div>
         <div class='row'><label for='generated'>Generated Password:</label><input id='generated' readonly='true' value="dsf3vsn2!"/></div>
         <div class='row'><input type="button" value="Fill password field"/></div>
         </form>
