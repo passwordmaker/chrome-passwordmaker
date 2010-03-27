@@ -6,5 +6,9 @@
   "browser_action": {
     "default_icon": "passwdmaker.png",
     "popup": "popup.html"
-  }
+  },
+  "permissions": [
+      "tabs"
+  ],
+ "options_page": "options.html"
 }
