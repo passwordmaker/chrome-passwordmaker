@@ -1,4 +1,5 @@
 var currentTab = null;
+var currentUrl = null;
 
 function updateFields() {
     console.log("Yeaaaah!");
@@ -18,6 +19,15 @@ function updateFields() {
         $("#confirmation").css("background-color", "#FF7272");
         $("#confirmation").css("color", "#FFFFFF");        
     } else {
+        var profile = Settings.getProfile($("#profile").val());
+        
+        if (profile != null) {
+            $("#usedtext").val(profile.getUrl(currentUrl));
+            $("#generated").val(profile.getPassword());
+        } else {
+            $("#generated").val("");
+        }
+        
         $("#generated").css("background-color", "#FFFFFF");
         $("#generated").css("color", "#000000");        
         $("#password").css("background-color", "#FFFFFF");
@@ -25,8 +35,21 @@ function updateFields() {
         $("#confirmation").css("background-color", "#FFFFFF");
         $("#confirmation").css("color", "#000000");        
     }
+
+}
+
+function init() {
+    var profiles = Settings.getProfiles();
     
-    
+    var options = "";
+    for (var i in profiles) {
+        var profile = profiles[i];
+        options += "<option value='"+profile.getId()+"'>"+profile.getName()+"</option>";
+    }
+
+    $("#profile").empty().append(options);
+
+    updateFields();
 }
 
 function fillPassword() {
@@ -39,7 +62,8 @@ $(function() {
 
     chrome.windows.getCurrent(function(obj) {
         chrome.tabs.getSelected(obj.id, function(tab) {
-            $("#usedtext").val(tab.url);
+            updateFields();
+            currentUrl = tab.url;
             currentTab = tab.id;
             chrome.extension.sendRequest({hasPasswordField: true, tabId: tab.id}, function(response) {
                 if (response.hasField) {
@@ -51,6 +75,6 @@ $(function() {
 
     });
     
-    updateFields();
+    init();
     $("#generated").focus(); 
 });
