@@ -3,20 +3,20 @@
   "version": "0.1.0",
   "description": "A chrome extension based on passwordmaker.org . Create unique passwords for every webpage using a hashing algorythm.",
   "icons": { 
-      "16": "passwdmaker16.png",
-      "48": "passwdmaker48.png"
+      "16": "images/passwdmaker16.png",
+      "48": "images/passwdmaker48.png"
   },
   "browser_action": {
-    "default_icon": "passwdmaker48.png",
-    "popup": "popup.html"
+    "default_icon": "images/passwdmaker48.png",
+    "popup": "html/popup.html"
   },
   "permissions": [
       "tabs"
   ],
   "content_scripts": [ {
-     "js": [ "jquery.min.js", "content.js" ],
+     "js": [ "javascript/jquery.min.js", "javascript/content.js" ],
      "matches": [ "http://*/*", "https://*/*" ]
   } ],
- "background_page": "background.html",
- "options_page": "options.html"
+  "background_page": "html/background.html",
+  "options_page": "html/options.html"
 }
