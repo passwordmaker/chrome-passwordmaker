@@ -4,7 +4,8 @@
   "description": "A chrome extension based on passwordmaker.org . Create unique passwords for every webpage using a hashing algorythm.",
   "icons": { 
       "16": "images/passwdmaker16.png",
-      "48": "images/passwdmaker48.png"
+      "48": "images/passwdmaker48.png",
+      "128":"images/passwdmaker128.png"
   },
   "browser_action": {
     "default_icon": "images/passwdmaker48.png",
