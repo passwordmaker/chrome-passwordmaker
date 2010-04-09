@@ -22,10 +22,10 @@
         <div class='row'><label for='password'>Password:</label><input onkeyup="updateFields();" onchange="updateFields();" class='input' id='password' type="password"/></div>
         <div class='row'><label for='confirmation'>Confirmation:</label><input onkeyup="updateFields();" onchange="updateFields();" class='input' id='confirmation' type="password"/></div>
         <div class='row'><label>Save Password:</label>
-            <select name="store_location" onchange="updateFields();">
-                  <option>In memory</option>
-                  <option>On disk</option>
-                  <option>Never store</option>
+            <select id="store_location" name="store_location" onchange="updateFields();">
+                  <option value="memory">In memory</option>
+                  <option value="disk">On disk</option>
+                  <option value="never">Never store</option>
             </select>    
         </div>
         <div class='row'><label>Use Profile:</label>
@@ -36,6 +36,6 @@
         <div class='row'><label for='generated'>Generated Password:</label><input id='generated' readonly='true' value=""/></div>
         <div class='row' id="injectpasswordrow"><input type="button" value="Fill password field" onClick="fillPassword();"/></div>
         </form>
-        <div id='options'><a href="#" onClick="chrome.tabs.create({url: 'options.html'}); window.close();">Options</a></div>
+        <div id='options'><a href="#" onClick="chrome.tabs.create({url: 'html/options.html'}); window.close();">Options</a></div>
     </body>
 </html>

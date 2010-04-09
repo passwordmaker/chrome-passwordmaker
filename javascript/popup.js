@@ -12,8 +12,13 @@ function setPasswordColors(foreground, background) {
 function updateFields() {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
-    var profile = Settings.getProfile($("#profile").val());
+    var profileId = $("#profile").val();
+    var profile = Settings.getProfile(profileId);
 
+    Settings.setStoreLocation($("#store_location").val());
+    Settings.setPassword(password);
+    Settings.setActiveProfileId(profileId);
+    
     if (password == "") {
         $("#generated").val("Enter password");
         setPasswordColors("#000000", "#85FFAB")
@@ -31,18 +36,44 @@ function updateFields() {
 
 }
 
-function init() {
+function init(url) {
     var profiles = Settings.getProfiles();
-    
-    var options = "";
-    for (var i in profiles) {
-        var profile = profiles[i];
-        options += "<option value='"+profile.getId()+"'>"+profile.getName()+"</option>";
-    }
+    Settings.getPassword(function(password) {
+        $("#password").val(password);
+        $("#confirmation").val(password);
 
-    $("#profile").empty().append(options);
+        var options = "";
+        for (var i in profiles) {
+            var profile = profiles[i];
+            options += "<option value='"+profile.getId()+"'";
+            if (profile.getId() == Settings.getActiveProfileId()){
+                options += " selected='true' ";
+            }
+            options += "'>"+profile.getName()+"</option>";
+        }
 
-    updateFields();
+        $("#profile").empty().append(options);
+
+        var profile = Settings.getProfile($("#profile").val());
+        $("#usedtext").val(profile.getUrl(url));
+        $("#store_location").val(Settings.storeLocation);
+
+        updateFields();
+
+        chrome.extension.sendRequest({hasPasswordField: true, tabId: currentTab}, function(response) {
+            if (response.hasField) {
+                $("#injectpasswordrow").show();
+                $("body").css("height", "270px");
+            }
+        });
+
+        password = $("#password").val();
+        if (password == null || password.length == 0 || (password != $("#confirmation").val())) {
+            $("#password").focus();
+        } else {
+            $("#generated").focus(); 
+        }
+    });
 }
 
 function fillPassword() {
@@ -52,23 +83,11 @@ function fillPassword() {
 
 $(function() {
     $("#injectpasswordrow").hide();
-
     chrome.windows.getCurrent(function(obj) {
         chrome.tabs.getSelected(obj.id, function(tab) {
             currentTab = tab.id;
-            var profile = Settings.getProfile($("#profile").val());
-            $("#usedtext").val(profile.getUrl(tab.url));
-            updateFields();
-            chrome.extension.sendRequest({hasPasswordField: true, tabId: tab.id}, function(response) {
-                if (response.hasField) {
-                    $("#injectpasswordrow").show();
-                    $("body").css("height", "270px");
-                }
-            });
+            init(tab.url);
         });
-
     });
     
-    init();
-    $("#generated").focus(); 
 });

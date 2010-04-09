@@ -1,5 +1,6 @@
 <script>
 var passwordField = {};
+var password = null;
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
     response = {};
@@ -14,6 +15,10 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         }
         
         response = {hasField: field}
+    } else if (request.setPassword) {
+        password = request.password
+    } else if (request.getPassword) {
+        response = {password: password}
     }
     sendResponse(response);
 });
