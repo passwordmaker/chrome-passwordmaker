@@ -1,39 +1,32 @@
 var currentTab = null;
-var currentUrl = null;
+
+function setPasswordColors(foreground, background) {
+    $("#generated").css("background-color", background);
+    $("#generated").css("color", foreground);        
+    $("#password").css("background-color", background);
+    $("#password").css("color", foreground);        
+    $("#confirmation").css("background-color", background);
+    $("#confirmation").css("color", foreground);        
+}
 
 function updateFields() {
-    console.log("Yeaaaah!");
-    
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
-    
-    console.log(password);
-    console.log(confirmation);
-    
-    if (password != confirmation) {
-        $("#generated").val("");
-        $("#generated").css("background-color", "#FF7272");
-        $("#generated").css("color", "#FFFFFF");        
-        $("#password").css("background-color", "#FF7272");
-        $("#password").css("color", "#FFFFFF");        
-        $("#confirmation").css("background-color", "#FF7272");
-        $("#confirmation").css("color", "#FFFFFF");        
-    } else {
-        var profile = Settings.getProfile($("#profile").val());
-        
+    var profile = Settings.getProfile($("#profile").val());
+
+    if (password == "") {
+        $("#generated").val("Enter password");
+        setPasswordColors("#000000", "#85FFAB")
+    } else if (password != confirmation) {
+        $("#generated").val("Password wrong");
+        setPasswordColors("#FFFFFF", "#FF7272")
+    } else {        
         if (profile != null) {
-            $("#usedtext").val(profile.getUrl(currentUrl));
-            $("#generated").val(profile.getPassword());
+            $("#generated").val(profile.getPassword($("#usedtext").val(), password));
         } else {
             $("#generated").val("");
         }
-        
-        $("#generated").css("background-color", "#FFFFFF");
-        $("#generated").css("color", "#000000");        
-        $("#password").css("background-color", "#FFFFFF");
-        $("#password").css("color", "#000000");        
-        $("#confirmation").css("background-color", "#FFFFFF");
-        $("#confirmation").css("color", "#000000");        
+        setPasswordColors("#000000", "#FFFFFF")
     }
 
 }
@@ -62,9 +55,10 @@ $(function() {
 
     chrome.windows.getCurrent(function(obj) {
         chrome.tabs.getSelected(obj.id, function(tab) {
-            updateFields();
-            currentUrl = tab.url;
             currentTab = tab.id;
+            var profile = Settings.getProfile($("#profile").val());
+            $("#usedtext").val(profile.getUrl(tab.url));
+            updateFields();
             chrome.extension.sendRequest({hasPasswordField: true, tabId: tab.id}, function(response) {
                 if (response.hasField) {
                     $("#injectpasswordrow").show();
