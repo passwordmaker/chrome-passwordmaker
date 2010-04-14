@@ -1,21 +1,10 @@
 <script>
-var passwordField = {};
 var password = null;
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
     response = {};
 
-    if (request.setPasswordFieldAvailable) {
-        passwordField[sender.tab.id] = request.setPasswordFieldAvailable;
-    } else if (request.hasPasswordField) {
-        var field = false;
-        
-        if (passwordField[request.tabId]) {
-            field = true;
-        }
-        
-        response = {hasField: field}
-    } else if (request.setPassword) {
+    if (request.setPassword) {
         password = request.password
     } else if (request.getPassword) {
         response = {password: password}

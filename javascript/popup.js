@@ -36,6 +36,11 @@ function updateFields() {
 
 }
 
+function showInject() {
+    $("#injectpasswordrow").show();
+    $("body").css("height", "270px");    
+}
+
 function init(url) {
     var profiles = Settings.getProfiles();
     Settings.getPassword(function(password) {
@@ -60,10 +65,9 @@ function init(url) {
 
         updateFields();
 
-        chrome.extension.sendRequest({hasPasswordField: true, tabId: currentTab}, function(response) {
+        chrome.tabs.sendRequest(currentTab, {hasPasswordField: true}, function(response) {
             if (response.hasField) {
-                $("#injectpasswordrow").show();
-                $("body").css("height", "270px");
+                showInject();
             }
         });
 

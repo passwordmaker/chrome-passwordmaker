@@ -1,12 +1,16 @@
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-  fillPasswords(request.password);
+    if (request.password) {
+        fillPasswords(request.password);
+    } else if (request.hasPasswordField) {
+        sendResponse({hasField: hasPasswordField()});
+    }
 });
 
 function fillPasswords(password) {
     jQuery("input[type=password]").val(password);
 }
 
-function findPasswordFields() {
+function hasPasswordField() {
   fields = jQuery("input[type=password]");
   
   hasFields = false;
@@ -15,9 +19,5 @@ function findPasswordFields() {
       hasFields = true;
   }
   
-  chrome.extension.sendRequest({setPasswordFieldAvailable: hasFields});
-}
-
-if (window == top) {
-  findPasswordFields();
+  return hasFields;
 }
