@@ -37,7 +37,7 @@ function updateFields() {
 }
 
 function showInject() {
-    $("#injectpasswordrow").show();
+    $("#injectpasswordrow").fadeIn();
     $("body").css("height", "270px");    
 }
 
@@ -74,8 +74,6 @@ function init(url) {
         password = $("#password").val();
         if (password == null || password.length == 0 || (password != $("#confirmation").val())) {
             $("#password").focus();
-        } else {
-            $("#generated").focus(); 
         }
     });
 }
@@ -87,6 +85,7 @@ function fillPassword() {
 
 $(function() {
     $("#injectpasswordrow").hide();
+    $("#generated").focus(); 
     chrome.windows.getCurrent(function(obj) {
         chrome.tabs.getSelected(obj.id, function(tab) {
             currentTab = tab.id;

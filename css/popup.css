@@ -6,12 +6,14 @@ body {
 }
 
 label {
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-size: 12px;
     font-weight: bold;
     color: #888888;
 }
 
 #head {
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     border-bottom: 1px solid #eeeeee;
     margin-bottom: 5px;
     padding-bottom: 5px;
@@ -53,8 +55,15 @@ select {
     margin-bottom: 5px;
 }
 
+#injectpasswordrow {
+    float: left;
+}
+
 #options {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
+    float: right;
+}
+
+#button-row {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

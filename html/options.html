@@ -1,21 +1,155 @@
 <html>
     <head>
         <title>PasswordMaker Pro</title>    
+        <link rel="stylesheet" type="text/css" href="../css/awesome-buttons.css">
+        <link rel="stylesheet" type="text/css" href="../css/options.css">
         <script type="text/javascript" src="../javascript/jquery.min.js"></script>
         <script type="text/javascript" src="../javascript/settings.js" ></script>
         <script type="text/javascript" src="../javascript/profile.js" ></script>
         <script type="text/javascript" src="../javascript/options.js" ></script>
     </head>
     <body>
-        <h1>Options</h1>
-        
-        <div id="list">
-            <ul id="profile_list"></ul>
-            <div id="add">Add</div>
-            <div id="remove">Remove</div>
+        <div id="header">
+            <h1>Options</h1>
         </div>
         
-        <div id="profile_setting">
+        <div id="content">
+            <div id="list">
+                <h2>Profiles</h2>
+                <ul id="profile_list"></ul>
+                <div id="add"><a href="#" class="awesome button">Add new profile</a></div>
+            </div>
+
+            <div id="profile_setting">
+                <h2>Settings</h2>
+                
+                <div id="form">
+                    <div class="row">
+                        <div class="url_example">
+                        <span id="exprotocol">http://</span><span id="exsubdomain">my.</span><span id="exdomain">example.com</span><span id="expath">/my/path?q=search#top</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label>URL Components:</label>
+                        
+                        <div class="subrow">
+                            <input type="checkbox" id="protocolCB" onchange="updateExample();" />
+                            <label for="protocolCB" class="checkbox">Protocol</label>
+            			</div>
+            			<div class="subrow">
+                            <input type="checkbox" id="subdomainCB" onclick="updateExample();" />
+                            <label for="subdomainCB" class="checkbox">Subdomain(s)</label>
+                        </div>
+            			<div class="subrow">
+                            <input type="checkbox" id="domainCB" onclick="updateExample();" />
+                            <label for="domainCB" class="checkbox">Domain</label>
+            			</div>
+            			<div class="subrow">
+                            <input type="checkbox" id="pathCB" onclick="updateExample();" />
+                            <label for="pathCB" class="checkbox">Port, path, anchor, query parameters</label>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="row">
+                        <label for="whereLeetLB">Use l33t:</label>
+            			<select class="dropmenu" id="whereLeetLB">
+            				<option value="off">not at all</option>
+            				<option value="before-hashing">before generating password</option>
+            				<option value="after-hashing">after generating password</option>
+            				<option value="both">before and after generating password</option>
+            			</select>
+                    </div>
+                    
+                    <div class="row">
+                        <label for="leetLevelLB">l33t Level:</label>
+            			<select class="dropmenu" id="leetLevelLB">
+            				<option value="0">1</option>
+            				<option value="1">2</option>
+            				<option value="2">3</option>
+            				<option value="3">4</option>
+            				<option value="4">5</option>
+            				<option value="5">6</option>
+            				<option value="6">7</option>
+            				<option value="7">8</option>
+            				<option value="8">9</option>
+            			</select>
+                    </div>
+
+                    <div class="row">
+                        <label for="hashAlgorithmLB">Hash Algorithm:</label>
+            			<select id="hashAlgorithmLB">
+            				<option value="md4">MD4</option>
+            				<option value="hmac-md4">HMAC-MD4</option>
+            				<option value="md5">MD5</option>
+            				<option value="md5_v6">MD5 Version 0.6</option>
+            				<option value="hmac-md5">HMAC-MD5</option>
+            				<option value="hmac-md5_v6">HMAC-MD5 Version 0.6</option>
+            				<option value="sha1">SHA-1</option>
+            				<option value="hmac-sha1">HMAC-SHA-1</option>
+            				<option value="sha256">SHA-256</option>
+            				<option value="hmac-sha256_fix">HMAC-SHA-256</option>
+            				<option value="hmac-sha256">HMAC-SHA-256 Version 1.5.1</option>
+            				<option value="rmd160">RIPEMD-160</option>
+            				<option value="hmac-rmd160">HMAC-RIPEMD-160</option>
+            			</select>
+                    </div>
+                    
+                    <div class="row">
+                        <label for="passwdLength">Password length:</label>
+            			<input class="standard" id="passwdLength" maxlength="3" size="3" value="12"
+            			onchange="if (/\D/.test(this.value)) this.value='8';"
+            			onkeyup="if (/\D/.test(this.value)) this.value='8';"
+            			onkeydown="if (/\D/.test(this.value)) this.value='8';"
+            			onkeypress="if (/\D/.test(this.value)) this.value='8';"
+            			oninput="if (/\D/.test(this.value)) this.value='8';"/>
+                    </div>
+
+                    <div class="row">
+                        <label for="usernameTB">Username:</label>
+            			<input class="standard" id="usernameTB"/>
+                    </div>
+                    
+                    <div class="row">
+                        <label for="modifier">Modifier:</label>
+            			<input class="standard" id="modifier"/>
+                    </div>
+                    
+                    <div class="row">
+                        <label for="charset">Characters:</label>
+            			<select id="charset" name="charset">
+            				<option selected="selected">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]\:&quot;;'<>?,./</option>
+            				<option>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</option>
+            				<option>0123456789abcdef</option>
+            				<option>0123456789</option>
+            				<option>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz</option>
+            				<option>`~!@#$%^&*()_-+={}|[]\:&quot;;'<>?,./</option>
+            			</select>
+                    </div>
+                    
+                    <div class="row">
+                        <label for="passwordPrefix">Password Prefix:</label>
+            			<input class="standard" id="passwordPrefix"/>
+                    </div>
+                    
+                    <div class="row">
+                        <label for="passwordSuffix">Password Suffix:</label>
+            			<input class="standard" id="passwordSuffix"/>
+                    </div>
+
+                </div>
+                
+                <div id="buttons">
+                    <div id="remove"><a href="#" class="awesome button">Remove</a></div>
+                    <div id="save"><a href="#" class="awesome button">Save</a></div>
+                </div>
+            </div>
+            
+            <br style="clear:both"/>
+            
+            <div id="footer">
+                PasswordMaker Pro is proudly presented by <a href="http://www.passwordmaker.org">passwordmaker.org</a> and <a href="http://bitboxer.de">bitboxer.de</a>
+            </div>
         </div>
         
     </body>

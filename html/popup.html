@@ -1,19 +1,22 @@
 <html>
-    <link rel="stylesheet" type="text/css" href="../css/popup.css">
-    <script type="text/javascript" src="../javascript/jquery.min.js"></script>
-    <script type="text/javascript" src="../javascript/passwordmaker/hashutils.js"></script>
-    <script type="text/javascript" src="../javascript/passwordmaker/aes.js"></script>
-    <script type="text/javascript" src="../javascript/passwordmaker/md4.js"></script>
-    <script type="text/javascript" src="../javascript/passwordmaker/md5.js"></script>
-    <script type="text/javascript" src="../javascript/passwordmaker/md5_v6.js"></script>
-    <script type="text/javascript" src="../javascript/passwordmaker/sha256.js"></script>
-    <script type="text/javascript" src="../javascript/passwordmaker/sha1.js"></script>
-    <script type="text/javascript" src="../javascript/passwordmaker/ripemd160.js"></script>
-    <script type="text/javascript" src="../javascript/passwordmaker/l33t.js"></script>
-    
-    <script type="text/javascript" src="../javascript/settings.js" ></script>
-    <script type="text/javascript" src="../javascript/profile.js"></script>
-    <script type="text/javascript" src="../javascript/popup.js"></script>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../css/awesome-buttons.css">
+        <link rel="stylesheet" type="text/css" href="../css/popup.css">
+        <script type="text/javascript" src="../javascript/jquery.min.js"></script>
+        <script type="text/javascript" src="../javascript/passwordmaker/hashutils.js"></script>
+        <script type="text/javascript" src="../javascript/passwordmaker/aes.js"></script>
+        <script type="text/javascript" src="../javascript/passwordmaker/md4.js"></script>
+        <script type="text/javascript" src="../javascript/passwordmaker/md5.js"></script>
+        <script type="text/javascript" src="../javascript/passwordmaker/md5_v6.js"></script>
+        <script type="text/javascript" src="../javascript/passwordmaker/sha256.js"></script>
+        <script type="text/javascript" src="../javascript/passwordmaker/sha1.js"></script>
+        <script type="text/javascript" src="../javascript/passwordmaker/ripemd160.js"></script>
+        <script type="text/javascript" src="../javascript/passwordmaker/l33t.js"></script>
+
+        <script type="text/javascript" src="../javascript/settings.js" ></script>
+        <script type="text/javascript" src="../javascript/profile.js"></script>
+        <script type="text/javascript" src="../javascript/popup.js"></script>
+    </head>
     <body>
         <form>
         <div class='row' id='head'>
@@ -34,8 +37,11 @@
         </div>
         <div class='row'><label for='usedtext'>Used text:</label><input onkeyup="updateFields();" onchange="updateFields();" class='input' id='usedtext'/></div>
         <div class='row'><label for='generated'>Generated Password:</label><input id='generated' readonly='true' value=""/></div>
-        <div class='row' id="injectpasswordrow"><input type="button" value="Fill password field" onClick="fillPassword();"/></div>
+        
+        <div class='row button-row'>
+            <div id="injectpasswordrow"><input class="awesome" type="button" value="Fill password field" onClick="fillPassword();"/></div>
+            <div id='options'><a class="awesome button" href="#" onClick="chrome.tabs.create({url: 'html/options.html'}); window.close();">Options</a></div>
+        </div>
         </form>
-        <div id='options'><a href="#" onClick="chrome.tabs.create({url: 'html/options.html'}); window.close();">Options</a></div>
     </body>
 </html>

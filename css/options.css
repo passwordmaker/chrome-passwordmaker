@@ -1,0 +1,145 @@
+body {
+    margin: 0px;
+}
+
+#content {
+    width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#header {
+    border-bottom: 1px solid #aaaaaa;
+    background-color: #eeeeee;
+    margin-bottom: 10px;
+}
+
+#header h1 {
+    margin-bottom: 0px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    font-style: italic;
+}
+
+#list {
+    padding: 5px;
+    width: 210px;
+    float: left;
+    border-right: 1px solid #aaaaaa;
+}
+
+#list ul {
+    padding-left: 10px;
+    list-style-type: none;
+}
+
+#list li:before { 
+    content: "\0020 \0020 \0020 \00BB \0020"; 
+    color: #aaaaaa; 
+}
+
+h2 {
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+}
+
+#list h2 {
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+#profile_setting {
+    padding: 5px;
+    width: 505px;
+    float: right;
+}
+
+#profile_setting h2 {
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+#buttons {
+    margin-top: 30px;
+    width: 100%;
+}
+
+#buttons #remove {
+    float: right;
+}
+
+#buttons #save {
+    float: left;
+}
+
+.row {
+    margin-bottom: 5px;
+}
+
+label { 
+    position: absolute; 
+    text-align:right; 
+    width:130px; 
+    margin-top: 0.2em;
+}
+
+label.checkbox {
+    position: relative;
+} 
+
+input[type="checkbox"] {
+    width: 20px;
+}
+
+select {
+    margin-left: 135px;
+    width: 300px;
+}
+
+input {
+    margin-left: 135px;
+    width: 300px;
+}
+
+.url_example span.selected {
+    color: #FFDB13;
+}
+
+.url_example {
+    margin-left: 135px;
+    width: 300px;
+    text-align: center;
+    background-color: #000000;
+    border-radius: 7px !important; 
+    -moz-border-radius: 7px !important; 
+    -webkit-border-radius: 7px !important; 
+    margin-bottom: 10px;
+    color: #ffffff;
+    font-size: 12px;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    font-style: italic;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#footer {
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    font-style: italic;
+    font-size: 0.8em;
+    margin-top: 30px;
+    width: 100%;
+    text-align: center;    
+}
+
+#footer a {
+    background-color: #dddddd;
+    font-style: normal;
+    color: #000000;
+    padding: 4px;
+    border-radius: 5px !important; 
+    -moz-border-radius: 5px !important; 
+    -webkit-border-radius: 5px !important; 
+}
