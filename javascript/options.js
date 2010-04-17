@@ -16,6 +16,11 @@ function updateExample() {
     updateStyle($("#expath"), "selected", $("#pathCB").is(":checked"));
 }
 
+function updateLeet() {
+    $("#leetLevelLB").attr("disabled", $("#whereLeetLB").val() == "off");
+    updateStyle($("#leetLevelLabel"), "disabled", $("#whereLeetLB").val() == "off");
+}
+
 $(function() {
     var profiles = Settings.getProfiles();
     var list = "";

@@ -21,9 +21,12 @@
             </div>
 
             <div id="profile_setting">
-                <h2>Settings</h2>
-                
                 <div id="form">
+                    <div class="row">
+                        <label for="profileNameTB">Name:</label>
+            			<input class="standard" id="profileNameTB"/>
+                    </div>
+
                     <div class="row">
                         <div class="url_example">
                         <span id="exprotocol">http://</span><span id="exsubdomain">my.</span><span id="exdomain">example.com</span><span id="expath">/my/path?q=search#top</span>
@@ -53,7 +56,7 @@
                     
                     <div class="row">
                         <label for="whereLeetLB">Use l33t:</label>
-            			<select class="dropmenu" id="whereLeetLB">
+            			<select class="dropmenu" id="whereLeetLB" onchange="updateLeet();">
             				<option value="off">not at all</option>
             				<option value="before-hashing">before generating password</option>
             				<option value="after-hashing">after generating password</option>
@@ -62,7 +65,7 @@
                     </div>
                     
                     <div class="row">
-                        <label for="leetLevelLB">l33t Level:</label>
+                        <label id="leetLevelLabel" for="leetLevelLB">l33t Level:</label>
             			<select class="dropmenu" id="leetLevelLB">
             				<option value="0">1</option>
             				<option value="1">2</option>

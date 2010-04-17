@@ -46,6 +46,11 @@ h2 {
     font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
 }
 
+#profileNameTB {
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    font-size: 2em;
+}
+
 #list h2 {
     padding-top: 0px;
     margin-top: 0px;
@@ -63,8 +68,9 @@ h2 {
 }
 
 #buttons {
-    margin-top: 30px;
-    width: 100%;
+    margin-top: 20px;
+    margin-left: 135px;
+    width: 300px;
 }
 
 #buttons #remove {
@@ -84,6 +90,10 @@ label {
     text-align:right; 
     width:130px; 
     margin-top: 0.2em;
+}
+
+label.disabled {
+    color: #aaaaaa;
 }
 
 label.checkbox {
