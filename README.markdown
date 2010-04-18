@@ -1,4 +1,4 @@
-# Chrome Passwordmaker
+# Chrome PasswordMaker Pro
 
 ![Dummy Screenshot](http://img405.imageshack.us/img405/6676/bildschirmfoto20100418u.png)
 
