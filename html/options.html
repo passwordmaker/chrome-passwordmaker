@@ -4,6 +4,8 @@
         <link rel="stylesheet" type="text/css" href="../css/awesome-buttons.css">
         <link rel="stylesheet" type="text/css" href="../css/options.css">
         <script type="text/javascript" src="../javascript/jquery.min.js"></script>
+        <script type="text/javascript" src="../javascript/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="../javascript/json2.js"></script>
         <script type="text/javascript" src="../javascript/settings.js" ></script>
         <script type="text/javascript" src="../javascript/profile.js" ></script>
         <script type="text/javascript" src="../javascript/options.js" ></script>
@@ -17,7 +19,7 @@
             <div id="list">
                 <h2>Profiles</h2>
                 <ul id="profile_list"></ul>
-                <div id="add"><a href="#" class="awesome button">Add new profile</a></div>
+                <div id="add"><a href="#" class="awesome button" onClick="addProfile();">Add new profile</a></div>
             </div>
 
             <div id="profile_setting">
@@ -52,7 +54,6 @@
                             <label for="pathCB" class="checkbox">Port, path, anchor, query parameters</label>
                         </div>
                     </div>
-                    
                     
                     <div class="row">
                         <label for="whereLeetLB">Use l33t:</label>
@@ -143,8 +144,8 @@
                 </div>
                 
                 <div id="buttons">
-                    <div id="remove"><a href="#" class="awesome button">Remove</a></div>
-                    <div id="save"><a href="#" class="awesome button">Save</a></div>
+                    <div id="remove"><a href="#" onClick="removeProfile();" class="awesome button">Remove</a></div>
+                    <div id="save"><a href="#" onClick="saveProfile();" class="awesome button">Save</a></div>
                 </div>
             </div>
             

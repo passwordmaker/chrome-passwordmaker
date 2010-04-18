@@ -1,21 +1,82 @@
 var Settings = {
     activeProfileId : localStorage["profile_id"],
     storeLocation: localStorage["store_location"],
-    password: ""
+    password: "",
+    profiles: null
 };
 
 Settings.getProfiles = function() {
-    return [new Profile()];
+    if (Settings.profiles == null) {
+        Settings.loadProfiles();
+    }
+    
+    return Settings.profiles;
 }
 
 Settings.getProfile = function(id) {
     var profiles = Settings.getProfiles();
     for (var i in profiles) {
-        if (profiles[i].getId() == id) {
+        if (profiles[i].id == id) {
             return profiles[i];
         }
     }
     return null;
+}
+
+Settings.getMaxId = function() {
+    var maxId = 0;
+    var profiles = Settings.getProfiles();
+    for (var i in profiles) {
+        if (profiles[i].id > maxId) {
+            maxId = profiles[i].id;
+        }
+    }
+    return maxId;
+}
+
+Settings.addProfile = function(profile) {
+    if (Settings.profiles == null) {
+        Settings.getProfiles();
+    }
+    
+    profile.id = Settings.getMaxId() + 1;
+    
+    Settings.profiles.push(profile);
+}
+
+Settings.deleteProfile = function(profile) {
+    var profiles = Settings.getProfiles();
+    for (var i in profiles) {
+        if (profiles[i].id == profile.id) {
+            profiles.splice(i, 1);
+            Settings.saveProfiles();
+        }
+    }
+}
+
+Settings.loadProfiles = function() {
+    if (localStorage["profiles"] == null || localStorage["profiles"] == "") {
+        Settings.profiles = [new Profile()];
+    } else {
+        try {
+            json = JSON.parse(localStorage["profiles"]);
+
+            Settings.profiles = [];
+            $.each(json, function(i) {
+                p = new Profile();
+                $.each(json[i], function(key, value) {
+                    p[key] = value; 
+                });
+                Settings.profiles.push(p);                
+            });
+        } catch(e) {
+            Settings.profiles = [new Profile()];
+        }
+    }
+}
+
+Settings.saveProfiles = function() {
+    localStorage["profiles"] = JSON.stringify(Settings.profiles);
 }
 
 Settings.getActiveProfileId = function() {

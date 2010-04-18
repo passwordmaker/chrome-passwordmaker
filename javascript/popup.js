@@ -36,6 +36,20 @@ function updateFields() {
 
 }
 
+function updateUsedText(url) {
+    var profile = Settings.getProfile($("#profile").val());
+    console.log($("#profile").val());
+    $("#usedtext").val(profile.getUrl(url));
+}
+
+function fetchUrlAndUpdateUsedText() {
+    chrome.windows.getCurrent(function(obj) {
+        chrome.tabs.getSelected(obj.id, function(tab) {
+            updateUsedText(tab.url);
+        });
+    });
+}
+
 function showInject() {
     $("#injectpasswordrow").fadeIn();
     $("body").css("height", "270px");    
@@ -50,17 +64,16 @@ function init(url) {
         var options = "";
         for (var i in profiles) {
             var profile = profiles[i];
-            options += "<option value='"+profile.getId()+"'";
-            if (profile.getId() == Settings.getActiveProfileId()){
+            options += "<option value='"+profile.id+"'";
+            if (profile.id == Settings.getActiveProfileId()){
                 options += " selected='true' ";
             }
-            options += "'>"+profile.getName()+"</option>";
+            options += "'>"+profile.title+"</option>";
         }
 
         $("#profile").empty().append(options);
 
-        var profile = Settings.getProfile($("#profile").val());
-        $("#usedtext").val(profile.getUrl(url));
+        updateUsedText(url);
         $("#store_location").val(Settings.storeLocation);
 
         updateFields();

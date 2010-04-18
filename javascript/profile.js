@@ -1,4 +1,7 @@
 function Profile() {
+    this.id = 1;
+    this.title = "Default";
+    
     // Settings for the URL generation
     this.url_protocol = false;
     this.url_subdomain = false;
@@ -17,14 +20,6 @@ function Profile() {
     this.l33tLevel = 0;
 }
     
-Profile.prototype.getId = function() {
-    return 1;
-}
-    
-Profile.prototype.getName = function() {
-    return "Default"
-}
-
 Profile.prototype.getPassword = function(url, masterkey) {    
     if (this.selectedCharset.length < 2) {
         return "Not enough chars!";
