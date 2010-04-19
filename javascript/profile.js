@@ -9,14 +9,14 @@ function Profile() {
     this.url_path = false;
     
     // Settings for the key generation
-    this.hashAlgorithm = "sha256"
+    this.hashAlgorithm = "md4"
     this.username = ""
     this.modifier = ""
-    this.passwordLength = 8
-    this.selectedCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    this.passwordLength = 12
+    this.selectedCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]\:&quot;;'<>?,./";
     this.passwordPrefix = "";
     this.passwordSuffix = "";
-    this.whereToUseL33t = "before-hashing";
+    this.whereToUseL33t = "off";
     this.l33tLevel = 0;
 }
     
