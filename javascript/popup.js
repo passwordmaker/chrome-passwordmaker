@@ -89,6 +89,25 @@ function init(url) {
             $("#password").focus();
         }
     });
+    
+    localStorage["showGeneratedPassword"] = (localStorage["showGeneratedPassword"] == true) ? 1 : 0;
+    if(localStorage["showGeneratedPassword"] == true) {
+        $('#showgenerated').attr('checked', true);
+    }
+    $('#showgenerated').click(function() {
+        localStorage["showGeneratedPassword"] = localStorage["showGeneratedPassword"] == 1 ? 0 : 1;
+        showOrHidePassword();
+    });
+    showOrHidePassword();
+}
+
+function showOrHidePassword() {
+    if (localStorage["showGeneratedPassword"] == 1) {
+    	$("#generateddiv").slideDown('fast');
+    }
+    else {
+    	$("#generateddiv").slideUp('fast');
+    }
 }
 
 function fillPassword() {
@@ -105,5 +124,4 @@ $(function() {
             init(tab.url);
         });
     });
-    
 });

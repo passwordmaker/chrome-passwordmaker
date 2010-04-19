@@ -36,7 +36,12 @@
             </select>    
         </div>
         <div class='row'><label for='usedtext'>Used text:</label><input onkeyup="updateFields();" onchange="updateFields();" class='input' id='usedtext'/></div>
-        <div class='row'><label for='generated'>Generated Password:</label><input id='generated' readonly='true' value=""/></div>
+        <div class='row'>
+            <label for='showgenerated'>Show generated password?</label><input id='showgenerated' type='checkbox' />
+        </div>
+        <div class='row' id='generateddiv'>
+            <label for='generated'>Generated Password:</label><input id='generated' readonly='true' value=""/>
+        </div>
         
         <div class='row button-row'>
             <div id="injectpasswordrow"><input class="awesome" type="button" value="Fill password field" onClick="fillPassword();"/></div>
