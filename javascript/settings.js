@@ -101,6 +101,16 @@ Settings.setStoreLocation = function(store) {
     }
 }
 
+// Make a pseudo-random encryption key... emphasis on *pseudo*
+Settings.makeKey = function() {
+  var hex = ['0','1','2','3','4','5','6','7','8','9','0','a','b','c','d','e','f'];
+  var keySz = keySizeInBits/4; //keySizeInBits defined in aes.js
+  var ret = "";
+  while (ret.length < keySz) 
+    ret += hex[Math.floor(Math.random()*15)];
+  return ret;
+}
+
 Settings.setPassword = function(password) {
     // ToDo: CRYPT THIS!!
     if (Settings.storeLocation == "memory") {
@@ -109,7 +119,9 @@ Settings.setPassword = function(password) {
         chrome.extension.sendRequest({setPassword: true, password: password});
     } else if (Settings.storeLocation == "disk") {
         Settings.password = password;
-        localStorage["password"] = password;
+        key = Settings.makeKey();        
+        localStorage["password_key"] = key;
+        localStorage["password_crypt"] = byteArrayToHex(rijndaelEncrypt(password, hexToByteArray(key), "CBC"));
         chrome.extension.sendRequest({setPassword: true, password: password});
     } else {
         Settings.password = null;
@@ -125,15 +137,19 @@ Settings.getPassword = function(callback) {
         chrome.extension.sendRequest({getPassword: true}, function(response) {
             if (response.password != null && response.password.length > 0) {
                 callback(response.password);
+            } else if (localStorage["password_crypt"]) {
+                Settings.password = byteArrayToString(rijndaelDecrypt(hexToByteArray(localStorage["password_crypt"]), hexToByteArray(localStorage["password_key"]), "CBC"));
+                callback(Settings.password)
             } else if (localStorage["password"]) {
                 Settings.password = localStorage["password"];
+                Settings.setPassword(Settings.password);
+                localStorage["password"] = null;
                 callback(Settings.password);
             } else {
                 callback(null);
             }
 
         });
-        
     }
 }
 
