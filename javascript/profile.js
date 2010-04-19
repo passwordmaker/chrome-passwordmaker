@@ -13,7 +13,7 @@ function Profile() {
     this.username = ""
     this.modifier = ""
     this.passwordLength = 12
-    this.selectedCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]\:&quot;;'<>?,./";
+    this.selectedCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./";
     this.passwordPrefix = "";
     this.passwordSuffix = "";
     this.whereToUseL33t = "off";
