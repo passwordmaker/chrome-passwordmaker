@@ -37,10 +37,9 @@
         </div>
         <div class='row'><label for='usedtext'>Used text:</label><input onkeyup="updateFields();" onchange="updateFields();" class='input' id='usedtext'/></div>
         <div class='row'>
-            <label for='showgenerated'>Show generated password?</label><input id='showgenerated' type='checkbox' />
-        </div>
-        <div class='row' id='generateddiv'>
-            <label for='generated'>Generated Password:</label><input id='generated' readonly='true' value=""/>
+            <label for='generated'>Generated Password:</label>
+            <input id='generated' readonly='true' value=""/>
+            <a id='activatePassword' class="awesome button largebutton" href="#" onclick="showPassworField();">Show password</a>
         </div>
         
         <div class='row button-row'>

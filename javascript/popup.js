@@ -33,12 +33,10 @@ function updateFields() {
         }
         setPasswordColors("#000000", "#FFFFFF")
     }
-
 }
 
 function updateUsedText(url) {
     var profile = Settings.getProfile($("#profile").val());
-    console.log($("#profile").val());
     $("#usedtext").val(profile.getUrl(url));
 }
 
@@ -89,25 +87,6 @@ function init(url) {
             $("#password").focus();
         }
     });
-    
-    localStorage["showGeneratedPassword"] = (localStorage["showGeneratedPassword"] == true) ? 1 : 0;
-    if(localStorage["showGeneratedPassword"] == true) {
-        $('#showgenerated').attr('checked', true);
-    }
-    $('#showgenerated').click(function() {
-        localStorage["showGeneratedPassword"] = localStorage["showGeneratedPassword"] == 1 ? 0 : 1;
-        showOrHidePassword();
-    });
-    showOrHidePassword();
-}
-
-function showOrHidePassword() {
-    if (localStorage["showGeneratedPassword"] == 1) {
-    	$("#generateddiv").slideDown('fast');
-    }
-    else {
-    	$("#generateddiv").slideUp('fast');
-    }
 }
 
 function fillPassword() {
@@ -115,13 +94,30 @@ function fillPassword() {
     window.close();
 }
 
+function showPassworField() {
+    $("#activatePassword").hide();
+    $("#generated").show();
+    $("#generated").focus();     
+}
+
 $(function() {
     $("#injectpasswordrow").hide();
-    $("#generated").focus(); 
+
+    if (Settings.shouldHidePassword()){
+        $("#generated").hide();
+        $("#activatePassword").show();
+    } else {
+        $("#generated").show();
+        $("#generated").focus(); 
+        $("#activatePassword").hide();
+    }
+
     chrome.windows.getCurrent(function(obj) {
         chrome.tabs.getSelected(obj.id, function(tab) {
             currentTab = tab.id;
             init(tab.url);
         });
     });
+    
+    
 });

@@ -51,6 +51,14 @@ h2 {
     font-size: 2em;
 }
 
+.subrow {
+    padding-top: 3px;
+}
+
+#showSettings {
+    margin-top: 20px;
+}
+
 #list h2 {
     padding-top: 0px;
     margin-top: 0px;
@@ -60,6 +68,13 @@ h2 {
     padding: 5px;
     width: 505px;
     float: right;
+}
+
+#general_settings {
+    padding: 5px;
+    width: 505px;
+    float: right;
+    display: none;
 }
 
 #profile_setting h2 {

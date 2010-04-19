@@ -74,6 +74,20 @@ function setCurrentProfile(profile) {
     updateLeet();
     
     highlightProfile();
+    
+    if (!$("#profile_setting").is(":visible")){
+        $("#general_settings").fadeOut(300, function() {
+            $("#profile_setting").fadeIn(300);
+        });
+    }
+}
+
+function showOptions() {
+    if ($("#profile_setting").is(":visible")){
+        $("#profile_setting").fadeOut(300, function () {
+            $("#general_settings").fadeIn(300);
+        });
+    }
 }
 
 function highlightProfile(){
@@ -113,9 +127,14 @@ function updateProfileList() {
     $("#profile_list").empty().append(list);
 }
 
+function updateHidePassword() {
+    Settings.setHidePassword($("#hidePassword").attr('checked') == true);    
+}
 
 $(function() {
     updateProfileList();
     setCurrentProfile(Settings.getProfiles()[0]);
     updateRemoveButton();    
+
+    $("#hidePassword").attr('checked', Settings.shouldHidePassword());
 });

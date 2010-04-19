@@ -20,6 +20,9 @@
                 <h2>Profiles</h2>
                 <ul id="profile_list"></ul>
                 <div id="add"><a href="#" class="awesome button" onClick="addProfile();">Add new profile</a></div>
+                <div id="showSettings">
+                    <a href="#" onClick="showOptions();" class="awesome button">General Options</a>
+                </div>
             </div>
 
             <div id="profile_setting">
@@ -146,6 +149,19 @@
                 <div id="buttons">
                     <div id="remove"><a href="#" onClick="removeProfile();" class="awesome button">Remove</a></div>
                     <div id="save"><a href="#" onClick="saveProfile();" class="awesome button">Save</a></div>
+                </div>
+            </div>
+            
+            <div id="general_settings">
+                <div id="form">
+                    <h2>Settings</h2>
+                    <p><em>Here you find settings that affect all profiles.</em></p>
+                    <div class="row">
+            			<div class="subrow">
+                            <input type="checkbox" id="hidePassword" onchange="updateHidePassword();" />
+                            <label for="hidePassword" class="checkbox">Hide Password</label>
+                        </div>
+                    </div>
                 </div>
             </div>
             

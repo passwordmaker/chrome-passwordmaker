@@ -136,3 +136,12 @@ Settings.getPassword = function(callback) {
         
     }
 }
+
+Settings.setHidePassword = function(bool) {
+    localStorage["show_generated_password"] = bool;
+}
+
+Settings.shouldHidePassword = function() {
+    bool = localStorage["show_generated_password"];
+    return bool == "true";
+}

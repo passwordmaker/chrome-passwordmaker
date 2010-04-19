@@ -45,10 +45,6 @@ label {
     font-size:15px;
 }
 
-#generateddiv{
-    display: none;
-}
-
 #generated{
     color: #5E80F0;
     font-style: italic;
@@ -79,4 +75,9 @@ select {
 #button-row {
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.largebutton {
+    width: 180px;
+    text-align: center;
 }
