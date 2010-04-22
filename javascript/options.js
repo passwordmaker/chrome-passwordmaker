@@ -116,6 +116,15 @@ function saveProfile() {
     highlightProfile();
 }
 
+function cloneProfile() {
+    var p = jQuery.extend({}, currentProfile);
+    p.title = p.title + " Copy";
+    Settings.addProfile(p);
+    updateProfileList();
+    setCurrentProfile(p);
+    updateRemoveButton();
+}
+
 function updateProfileList() {
     var profiles = Settings.getProfiles();
     var list = "";
