@@ -119,6 +119,22 @@ Profile.prototype.generateCharacter = function(hashAlgorithm, key, data, whereTo
     return password;    
 }
 
+// Given a list of domain segments like [www,google,co,uk], return the
+// subdomain and domain strings (ie, [www, google.co.uk]).
+Profile.prototype.splitSubdomain = function(segments) {
+  for (var i = 0; i < segments.length; ++i) {
+    var suffix = segments.slice(i).join('.');
+    if (suffix in TOPLEVELDOMAINS) {
+      var pivot = Math.max(0, i-1);
+      return [segments.slice(0, pivot).join('.'), segments.slice(pivot).join('.')];
+    }
+  }
+  // None of the segments are in our TLD list. Assume the last component is
+  // the TLD, like ".com". The domain is therefore the last 2 components.
+  return [segments.slice(0, -2).join('.'), segments.slice(-2).join('.')];
+}
+
+
 Profile.prototype.getUrl = function(url) {
     if (url == null) {
         return "";
@@ -133,27 +149,21 @@ Profile.prototype.getUrl = function(url) {
     while (domainSegments.length < 3) {
         domainSegments.unshift(''); // Helps prevent the URL from displaying undefined in the URL to use box
     }
-    
+
     var resultURL = '';
     var protocol= this.url_protocol ? temp[1] : ''; // set the protocol or empty string
 
+    var splitSegments = this.splitSubdomain(domainSegments);
+    
     if (this.url_subdomain) {
-        // The subdomain is all domainSegments
-        // except the final two.
-        for (var i=0; i<domainSegments.length-2;i++) {
-            resultURL += domainSegments[i];
-            // Add a dot if this isn't the final subdomain
-            if (i+1 < domainSegments.length-2) {
-                resultURL += ".";
-            }
-      }      
+        resultURL += splitSegments[0];
     }
 
     if (this.url_domain) {
         if (resultURL != "" && resultURL[resultURL.length-1]  != ".") {
             resultURL += ".";
         }
-        resultURL += domainSegments[domainSegments.length-2] + "." + domainSegments[domainSegments.length-1];
+        resultURL += splitSegments[1];
     }
     resultURL = protocol + resultURL;
 
