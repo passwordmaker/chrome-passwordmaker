@@ -48,7 +48,7 @@ Profile.prototype.getPassword = function(url, masterkey) {
         password = this.passwordPrefix + password;
     }
     if (this.passwordSuffix) {
-        password = password.substring(0, passwordLength-this.passwordSuffix.length) + this.passwordSuffix;
+        password = password.substring(0, this.passwordLength-this.passwordSuffix.length) + this.passwordSuffix;
     }
     
     return password.substring(0, this.passwordLength);
