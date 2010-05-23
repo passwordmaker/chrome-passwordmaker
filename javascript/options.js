@@ -1,5 +1,14 @@
 var currentProfile = null;
 
+var CHARSET_OPTIONS = [
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]:\";'<>?,./",
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+    "0123456789abcdef",
+    "0123456789",
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+    "`~!@#$%^&*()_-+={}|[]:\";'<>?,./"
+];
+
 function editProfile(id) {
     p = Settings.getProfile(id);
     setCurrentProfile(p);
@@ -66,9 +75,33 @@ function setCurrentProfile(profile) {
     $("#passwdLength").val(profile.passwordLength);
     $("#usernameTB").val(profile.username);
     $("#modifier").val(profile.modifier);
-    $("#charset").val(profile.selectedCharset);
     $("#passwordPrefix").val(profile.passwordPrefix);
     $("#passwordSuffix").val(profile.passwordSuffix);
+    
+    $("#charset").empty();
+    
+    for (var i in CHARSET_OPTIONS) {
+        $("#charset").append("<option>"+CHARSET_OPTIONS[i]+"</option>");
+    }
+    $("#charset").append("<option>Custom charset</option>");
+    
+    $("#charset").change(function() {
+        if ($("#charset").val() == "Custom charset"){
+            $("#customCharset").val(profile.selectedCharset);
+            $("#customCharset").show();
+        } else {
+            $("#customCharset").hide();
+        }
+    });
+
+    if ($.inArray(profile.selectedCharset, CHARSET_OPTIONS) != -1) {
+        $("#charset").val(profile.selectedCharset);
+        $("#customCharset").hide();
+    } else {
+        $("#charset").val("Custom charset");
+        $("#customCharset").val(profile.selectedCharset);
+        $("#customCharset").show();
+    }
     
     updateExample();
     updateLeet();
@@ -108,9 +141,15 @@ function saveProfile() {
     currentProfile.passwordLength = $("#passwdLength").val();
     currentProfile.username       = $("#usernameTB").val();
     currentProfile.modifier       = $("#modifier").val();
-    currentProfile.selectedCharset= $("#charset").val();
     currentProfile.passwordPrefix = $("#passwordPrefix").val();
     currentProfile.passwordSuffix = $("#passwordSuffix").val();
+    
+    if ($("#charset").val() == "Custom charset"){
+        currentProfile.selectedCharset= $("#customCharset").val();
+    } else {
+        currentProfile.selectedCharset= $("#charset").val();
+    }
+    
     Settings.saveProfiles();
     updateProfileList();
     highlightProfile();
