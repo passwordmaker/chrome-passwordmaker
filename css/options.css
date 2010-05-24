@@ -154,6 +154,10 @@ input {
     padding-bottom: 10px;
 }
 
+#pledgie {
+    margin-top: 30px;
+}
+
 #footer {
     font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-style: italic;
