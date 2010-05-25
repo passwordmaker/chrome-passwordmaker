@@ -22,4 +22,4 @@ You can install this plugin from the <a href="https://chrome.google.com/extensio
 
 # Copyright
 
-Copyright (c) 2010 Bodo Tasche, PasswordMaker.org . See LICENSE for details.
+Copyright (c) 2010 Bodo Tasche, PasswordMaker.org . See LICENSE for details. A list of all contributers can be found <a href="http://github.com/bitboxer/chrome-passwordmaker/contributors">here</a>.

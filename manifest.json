@@ -1,6 +1,6 @@
 {
   "name": "PasswordMaker Pro",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "A chrome extension based on passwordmaker.org . Create unique passwords for every webpage using a hashing algorythm.",
   "icons": { 
       "16": "images/passwdmaker16.png",
