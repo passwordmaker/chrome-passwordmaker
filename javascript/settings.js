@@ -240,3 +240,22 @@ Settings.shouldHidePassword = function() {
     bool = localStorage["show_generated_password"];
     return bool == "true";
 }
+
+Settings.setKeepMasterPasswordHash = function(bool) {
+  localStorage["keep_master_password_hash"] = bool;
+}
+
+Settings.keepMasterPasswordHash = function() {
+  bool = localStorage["keep_master_password_hash"];
+  return bool == "true";
+}
+
+Settings.masterPasswordCharSet = "0123456789abcdef";
+
+Settings.setMasterPasswordHash = function(theHash) {
+  localStorage["master_password_hash"] = theHash;
+}
+
+Settings.masterPasswordHash = function() {
+  return localStorage["master_password_hash"];
+}

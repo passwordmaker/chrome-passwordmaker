@@ -9,6 +9,8 @@
         <script type="text/javascript" src="../javascript/settings.js" ></script>
         <script type="text/javascript" src="../javascript/profile.js" ></script>
         <script type="text/javascript" src="../javascript/options.js" ></script>
+        <script type="text/javascript" src="../javascript/passwordmaker/hashutils.js" ></script>
+        <script type="text/javascript" src="../javascript/passwordmaker/sha256.js" ></script>
     </head>
     <body>
         <div id="header">
@@ -164,6 +166,17 @@
                             <label for="hidePassword" class="checkbox">Hide Password</label>
                         </div>
                     </div>
+                    <div class="row">
+            		<div class="subrow">
+                            <input type="checkbox" id="keepMasterPasswordHash" onchange="updateMasterHash();" />
+                            <label for="keepMasterPasswordHash" class="checkbox">Keep Master Password Hash</label>
+                        </div>
+            		<div class="subrow" id="master_password_row" style="visibility:hidden;">
+                            <label for="masterPassword">Master Password</label>
+                            <input class="standard" type="password" id="masterPassword" onblur="updateMasterHash();" />
+                        </div>
+                    </div>
+
                 </div>
             </div>
             

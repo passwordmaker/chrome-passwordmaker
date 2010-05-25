@@ -23,7 +23,7 @@
             <img src='../images/passwdmaker16.png' width='16px' height='16px'/><span>PasswordMaker Pro</span>
         </div>
         <div class='row'><label for='password'>Password:</label><input onkeyup="updateFields();" onchange="updateFields();" class='input' id='password' type="password"/></div>
-        <div class='row'><label for='confirmation'>Confirmation:</label><input onkeyup="updateFields();" onchange="updateFields();" class='input' id='confirmation' type="password"/></div>
+        <div class='row' id='confirmation_row'><label for='confirmation'>Confirmation:</label><input onkeyup="updateFields();" onchange="updateFields();" class='input' id='confirmation' type="password"/></div>
         <div class='row'><label>Save Password:</label>
             <select id="store_location" name="store_location" onchange="updateFields();">
                   <option value="memory">In memory</option>

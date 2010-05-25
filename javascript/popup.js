@@ -22,7 +22,10 @@ function updateFields() {
     if (password == "") {
         $("#generated").val("Enter password");
         setPasswordColors("#000000", "#85FFAB")
-    } else if (password != confirmation) {
+    } else if ( ! matchesHash(password) ) {
+        $("#generated").val("Master password mismatch");
+        setPasswordColors("#FFFFFF", "#FF7272")
+    } else if (!Settings.keepMasterPasswordHash() && password != confirmation) {
         $("#generated").val("Password wrong");
         setPasswordColors("#FFFFFF", "#FF7272")
     } else {        
@@ -33,6 +36,18 @@ function updateFields() {
         }
         setPasswordColors("#000000", "#FFFFFF")
     }
+    if (Settings.keepMasterPasswordHash()) {
+      $("#confirmation_row").css('display', 'none');
+    } else {
+      $("#confirmation_row").css('display', 'block');
+    }
+}
+
+function matchesHash(password) {
+  if (!Settings.keepMasterPasswordHash()) return true;
+  var saved_hash = Settings.masterPasswordHash();
+  var new_hash = PasswordMaker_SHA256.any_sha256(password, Settings.masterPasswordCharSet);
+  return new_hash == saved_hash ;
 }
 
 function updateUsedText(url) {

@@ -175,6 +175,20 @@ function updateProfileList() {
     $("#profile_list").empty().append(list);
 }
 
+function updateMasterHash() {
+    var should_keep = ($("#keepMasterPasswordHash").attr('checked') == true);
+    Settings.setKeepMasterPasswordHash(should_keep);    
+    if ( should_keep ) {
+      var master_pass = $("#masterPassword").val();
+      var new_hash = PasswordMaker_SHA256.any_sha256(master_pass, Settings.masterPasswordCharSet);
+      Settings.setMasterPasswordHash(new_hash);    
+      $("#master_password_row").css('visibility', 'visible');
+    } else {
+      Settings.setMasterPasswordHash("");    
+      $("#master_password_row").css('visibility', 'hidden');
+    }
+}
+
 function updateHidePassword() {
     Settings.setHidePassword($("#hidePassword").attr('checked') == true);    
 }
@@ -185,4 +199,9 @@ $(function() {
     updateRemoveButton();    
 
     $("#hidePassword").attr('checked', Settings.shouldHidePassword());
+    $("#keepMasterPasswordHash").attr('checked', Settings.keepMasterPasswordHash());
+    if (Settings.keepMasterPasswordHash())
+      $("#master_password_row").css('visibility', 'visible');
+    else
+      $("#master_password_row").css('visibility', 'hidden');
 });
