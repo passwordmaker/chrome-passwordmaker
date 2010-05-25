@@ -65,7 +65,6 @@ function fetchUrlAndUpdateUsedText() {
 
 function showInject() {
     $("#injectpasswordrow").fadeIn();
-    $("body").css("height", "270px");    
 }
 
 function init(url) {
@@ -109,7 +108,7 @@ function fillPassword() {
     window.close();
 }
 
-function showPassworField() {
+function showPasswordField() {
     $("#activatePassword").hide();
     $("#generated").show();
     $("#generated").focus();     
@@ -131,6 +130,7 @@ $(function() {
         chrome.tabs.getSelected(obj.id, function(tab) {
             currentTab = tab.id;
             init(tab.url);
+            $("form").show();
         });
     });
     

@@ -1,8 +1,12 @@
 body {
     width: 200px;
-    height: 220px;
+    height: 10px;
     font-family: sans-serif;
     font-size: 13px;
+}
+
+form {
+    display:none;
 }
 
 label {
