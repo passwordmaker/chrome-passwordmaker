@@ -46,7 +46,7 @@ function updateFields() {
 function matchesHash(password) {
   if (!Settings.keepMasterPasswordHash()) return true;
   var saved_hash = Settings.masterPasswordHash();
-  var new_hash = PasswordMaker_SHA256.any_sha256(password, Settings.masterPasswordCharSet);
+  var new_hash = ChromePasswordMaker_SecureHash.make_hash(password);
   return new_hash == saved_hash ;
 }
 
@@ -124,6 +124,14 @@ $(function() {
         $("#generated").show();
         $("#generated").focus(); 
         $("#activatePassword").hide();
+    }
+
+    if (Settings.keepMasterPasswordHash()) {
+        var saved_hash = Settings.masterPasswordHash();
+        if(saved_hash.charAt(0) != 'n') {
+            saved_hash = ChromePasswordMaker_SecureHash.update_old_hash(saved_hash);
+            Settings.setMasterPasswordHash(saved_hash);
+        }
     }
 
     chrome.windows.getCurrent(function(obj) {

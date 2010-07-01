@@ -180,8 +180,8 @@ function updateMasterHash() {
     Settings.setKeepMasterPasswordHash(should_keep);    
     if ( should_keep ) {
       var master_pass = $("#masterPassword").val();
-      var new_hash = PasswordMaker_SHA256.any_sha256(master_pass, Settings.masterPasswordCharSet);
-      Settings.setMasterPasswordHash(new_hash);    
+      var new_hash = ChromePasswordMaker_SecureHash.make_hash(master_pass);
+      Settings.setMasterPasswordHash(new_hash);
       $("#master_password_row").css('visibility', 'visible');
     } else {
       Settings.setMasterPasswordHash("");    
