@@ -25,7 +25,7 @@ function updateFields() {
     } else if ( ! matchesHash(password) ) {
         $("#generated").val("Master password mismatch");
         setPasswordColors("#FFFFFF", "#FF7272")
-    } else if (!Settings.keepMasterPasswordHash() && password != confirmation) {
+    } else if (!Settings.keepMasterPasswordHash() && profile.passwordConfirm && password != confirmation) {
         $("#generated").val("Password wrong");
         setPasswordColors("#FFFFFF", "#FF7272")
     } else {        
@@ -36,7 +36,7 @@ function updateFields() {
         }
         setPasswordColors("#000000", "#FFFFFF")
     }
-    if (Settings.keepMasterPasswordHash()) {
+    if (Settings.keepMasterPasswordHash() || !profile.passwordConfirm) {
       $("#confirmation_row").css('display', 'none');
     } else {
       $("#confirmation_row").css('display', 'block');

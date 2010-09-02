@@ -77,6 +77,7 @@ function setCurrentProfile(profile) {
     $("#modifier").val(profile.modifier);
     $("#passwordPrefix").val(profile.passwordPrefix);
     $("#passwordSuffix").val(profile.passwordSuffix);
+    $("#passwordConfirm").attr('checked', profile.passwordConfirm);
     
     $("#charset").empty();
     
@@ -130,19 +131,20 @@ function highlightProfile(){
 }
 
 function saveProfile() {
-    currentProfile.title = $("#profileNameTB").val();
-    currentProfile.url_protocol = $("#protocolCB").attr('checked');
-    currentProfile.url_subdomain = $("#subdomainCB").attr('checked');
-    currentProfile.url_domain = $("#domainCB").attr('checked');
-    currentProfile.url_path = $("#pathCB").attr('checked');
-    currentProfile.whereToUseL33t = $("#whereLeetLB").val();
-    currentProfile.l33tLevel      = $("#leetLevelLB").val();
-    currentProfile.hashAlgorithm  = $("#hashAlgorithmLB").val();
-    currentProfile.passwordLength = $("#passwdLength").val();
-    currentProfile.username       = $("#usernameTB").val();
-    currentProfile.modifier       = $("#modifier").val();
-    currentProfile.passwordPrefix = $("#passwordPrefix").val();
-    currentProfile.passwordSuffix = $("#passwordSuffix").val();
+    currentProfile.title           = $("#profileNameTB").val();
+    currentProfile.url_protocol    = $("#protocolCB").attr('checked');
+    currentProfile.url_subdomain   = $("#subdomainCB").attr('checked');
+    currentProfile.url_domain      = $("#domainCB").attr('checked');
+    currentProfile.url_path        = $("#pathCB").attr('checked');
+    currentProfile.whereToUseL33t  = $("#whereLeetLB").val();
+    currentProfile.l33tLevel       = $("#leetLevelLB").val();
+    currentProfile.hashAlgorithm   = $("#hashAlgorithmLB").val();
+    currentProfile.passwordLength  = $("#passwdLength").val();
+    currentProfile.username        = $("#usernameTB").val();
+    currentProfile.modifier        = $("#modifier").val();
+    currentProfile.passwordPrefix  = $("#passwordPrefix").val();
+    currentProfile.passwordSuffix  = $("#passwordSuffix").val();
+    currentProfile.passwordConfirm = $("#passwordConfirm").attr('checked');
     
     if ($("#charset").val() == "Custom charset"){
         currentProfile.selectedCharset= $("#customCharset").val();

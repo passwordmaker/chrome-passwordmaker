@@ -16,6 +16,7 @@ function Profile() {
     this.selectedCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./";
     this.passwordPrefix = "";
     this.passwordSuffix = "";
+    this.passwordConfirm = true;
     this.whereToUseL33t = "off";
     this.l33tLevel = 0;
 }
