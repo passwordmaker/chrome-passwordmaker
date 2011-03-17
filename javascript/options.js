@@ -108,18 +108,38 @@ function setCurrentProfile(profile) {
     
     highlightProfile();
     
-    if (!$("#profile_setting").is(":visible")){
-        $("#general_settings").fadeOut(300, function() {
-            $("#profile_setting").fadeIn(300);
-        });
+    showSection('#profile_setting');
+}
+
+function showImport(){
+    showSection('#import_settings');
+}
+
+function importRdf(){
+    var txt = $('#importText').val();
+
+    if(!txt.length){
+        return false;
     }
+
+    var rdfDoc = RdfImporter.loadDoc(txt);
+
+    RdfImporter.saveProfiles(rdfDoc.profiles);
+
+    updateProfileList();
+    updateRemoveButton();
 }
 
 function showOptions() {
-    if ($("#profile_setting").is(":visible")){
-        $("#profile_setting").fadeOut(300, function () {
-            $("#general_settings").fadeIn(300);
-        });
+    showSection('#general_settings');
+}
+
+function showSection(showId) {
+    if(!$(showId).is(":visible")){
+        $('#profile_setting:visible,#import_settings:visible,#general_settings:visible')
+            .fadeOut(300, function(){
+                $(showId).fadeIn(300);
+            });
     }
 }
 

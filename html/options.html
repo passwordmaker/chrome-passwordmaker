@@ -9,6 +9,7 @@
         <script type="text/javascript" src="../javascript/settings.js" ></script>
         <script type="text/javascript" src="../javascript/profile.js" ></script>
         <script type="text/javascript" src="../javascript/options.js" ></script>
+        <script type="text/javascript" src="../javascript/import.js" ></script>
         <script type="text/javascript" src="../javascript/passwordmaker/hashutils.js" ></script>
         <script type="text/javascript" src="../javascript/passwordmaker/md4.js"></script>
         <script type="text/javascript" src="../javascript/passwordmaker/md5.js"></script>
@@ -27,6 +28,9 @@
                 <h2>Profiles</h2>
                 <ul id="profile_list"></ul>
                 <div id="add"><a href="#" class="awesome button" onClick="addProfile();">Add new profile</a></div>
+                <div id="showImport">
+                    <a href="#" onClick="showImport();" class="awesome button">Import Profiles</a>
+                </div>
                 <div id="showSettings">
                     <a href="#" onClick="showOptions();" class="awesome button">General Options</a>
                 </div>
@@ -161,6 +165,20 @@
                 </div>
             </div>
             
+            <div id="import_settings">
+                <div id="form">
+                    <h2>Import</h2>
+                    <div class="row">
+                        <em>Paste Firefox PasswordMaker RDF Export</em>
+                        <br />
+                        <textarea cols="35" rows="15" id="importText"></textarea>
+                    </div>
+                    <div id="import_buttons">
+                        <a href="#" onClick="importRdf();" class="awesome button">Import RDF</a>
+                    </div>
+                </div>
+            </div>
+            
             <div id="general_settings">
                 <div id="form">
                     <h2>Settings</h2>
@@ -184,7 +202,7 @@
 
                 </div>
             </div>
-            
+
             <br style="clear:both"/>
             
             <div id="footer">
