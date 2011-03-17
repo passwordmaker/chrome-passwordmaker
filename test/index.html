@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>QUnit Test Suite</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" href="qunit.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="qunit.js"></script>
+    <script type="text/javascript" src="../javascript/jquery.min.js"></script>
+
+    <script type="text/javascript" src="../javascript/settings.js"></script>
+    <script type="text/javascript" src="../javascript/profile.js"></script>
+    <script type="text/javascript" src="../javascript/import.js"></script>
+
+    <!-- NOTE: tests included at bottom -->
+</head>
+<body>
+    <h1 id="qunit-header">QUnit Test Suite</h1>
+    <h2 id="qunit-banner"></h2>
+    <div id="qunit-testrunner-toolbar"></div>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"><li></li></ol>
+
+    <div id="qunit-fixture">
+        <textarea id="rdf1" rows="10" cols="10">
+      <![CDATA[
+<?xml version="1.0"?>
+<RDF:RDF xmlns:NS1="http://passwordmaker.mozdev.org/rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Seq RDF:about="http://passwordmaker.mozdev.org/domains">
+  </RDF:Seq>
+  <RDF:Description RDF:about="rdf:#$5PGpU1"
+                   NS1:name="nospecial"
+                   NS1:description="no special characters"
+                   NS1:whereLeetLB="before-hashing"
+                   NS1:leetLevelLB="1"
+                   NS1:hashAlgorithmLB="hmac-sha256-fixed"
+                   NS1:passwordLength="20"
+                   NS1:usernameTB="username1"
+                   NS1:counter="modifier1"
+                   NS1:charset="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+                   NS1:prefix="prefix1"
+                   NS1:suffix="suffix1"
+                   NS1:autoPopulate="false"
+                   NS1:selectedTabIndex="0"
+                   NS1:urlToUse="about:blank"
+                   NS1:pattern0="https?://*.google.com/*"
+                   NS1:patterntype0="wildcard"
+                   NS1:patternenabled0="false"
+                   NS1:patterndesc0="thegoogle"
+                   NS1:pattern1="https?://mail\.yahoo\.com/.*"
+                   NS1:patterntype1="regex"
+                   NS1:patternenabled1="true"
+                   NS1:patterndesc1="theyahoo" />
+  <RDF:Seq RDF:about="http://passwordmaker.mozdev.org/accounts">
+    <RDF:li RDF:resource="http://passwordmaker.mozdev.org/defaults"/>
+    <RDF:li RDF:resource="rdf:#$6PGpU1"/>
+  </RDF:Seq>
+  <RDF:Seq RDF:about="http://passwordmaker.mozdev.org/remotes">
+  </RDF:Seq>
+  <RDF:Description RDF:about="http://passwordmaker.mozdev.org/defaults"
+                   NS1:name="Defaults"
+                   NS1:description="Default settings for URLs not elsewhere in this list"
+                   NS1:whereLeetLB="off"
+                   NS1:leetLevelLB="1"
+                   NS1:hashAlgorithmLB="sha256"
+                   NS1:passwordLength="15"
+                   NS1:usernameTB="username1"
+                   NS1:counter="modifier1"
+                   NS1:charset="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%"
+                   NS1:prefix="prefix1"
+                   NS1:suffix="suffix1"
+                   NS1:autoPopulate="false"
+                   NS1:selectedTabIndex="0"
+                   NS1:protocolCB="false"
+                   NS1:subdomainCB="false"
+                   NS1:domainCB="true"
+                   NS1:pathCB="true" />
+  <RDF:Seq RDF:about="rdf:#$6PGpU1">
+    <RDF:li RDF:resource="rdf:#$5PGpU1"/>
+  </RDF:Seq>
+  <RDF:Description RDF:about="rdf:#$6PGpU1"
+                   NS1:name="group1"
+                   NS1:description="" />
+  <RDF:Description RDF:about="http://passwordmaker.mozdev.org/globalSettings"
+                   NS1:autoClearClipboardSeconds="10"
+                   NS1:passwordShortcut="pop-all"
+                   NS1:hideMasterPasswordField="false"
+                   NS1:viewPwdFields="false"
+                   NS1:removeAutoComplete="false"
+                   NS1:confirmMPW="true"
+                   NS1:statusbarIndicator="true"
+                   NS1:advancedOptionsDialog="true"
+                   NS1:useMultipleMasterPasswords="false"
+                   NS1:maskMasterPassword="false"
+                   NS1:selectedTabIndex="0"
+                   NS1:autoClearClipboard="true"
+                   NS2:masterPasswordStorage="store-in-memory" />
+</RDF:RDF>
+      ]]>
+      </textarea>
+    </div>
+
+    <script type="text/javascript" src="test.js"></script>
+</body>
+</html>
