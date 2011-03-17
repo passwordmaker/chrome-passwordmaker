@@ -1,7 +1,3 @@
-QUnit.testStart = function () {
-    localStorage.clear();
-}
-
 module("rdf import");
 
 var rdf_doc1 = RdfImporter.loadDoc($($('#rdf1').val()));
