@@ -9,7 +9,7 @@ function setPasswordColors(foreground, background) {
     $("#confirmation").css("color", foreground);        
 }
 
-function updateFields() {
+function updateFields(e) {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
     var profileId = $("#profile").val();
@@ -35,6 +35,14 @@ function updateFields() {
             $("#generated").val("");
         }
         setPasswordColors("#000000", "#FFFFFF")
+        // pressed enter in confirmation field
+        if(e && e.keyCode == 13){
+            chrome.tabs.sendRequest(currentTab, {hasPasswordField: true}, function(response) {
+                if (response.hasField) {
+                    fillPassword();
+                }
+            });
+        }
     }
     if (Settings.keepMasterPasswordHash()) {
       $("#confirmation_row").css('display', 'none');
