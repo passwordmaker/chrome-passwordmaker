@@ -42,6 +42,10 @@ body {
     color: #aaaaaa; 
 }
 
+#list .button {
+  width: 100px;
+}
+
 h2 {
     font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
 }
