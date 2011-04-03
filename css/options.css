@@ -59,6 +59,10 @@ h2 {
     margin-top: 20px;
 }
 
+#showImport {
+    margin-top: 20px;
+}
+
 #list h2 {
     padding-top: 0px;
     margin-top: 0px;
@@ -71,6 +75,13 @@ h2 {
 }
 
 #general_settings {
+    padding: 5px;
+    width: 505px;
+    float: right;
+    display: none;
+}
+
+#import_settings {
     padding: 5px;
     width: 505px;
     float: right;
@@ -94,6 +105,12 @@ h2 {
 
 #buttons #save {
     float: left;
+}
+
+#import_buttons {
+    margin-top: 20px;
+    margin-left: 135px;
+    width: 300px;
 }
 
 .row {
