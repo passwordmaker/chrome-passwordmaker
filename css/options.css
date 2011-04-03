@@ -92,6 +92,10 @@ h2 {
     display: none;
 }
 
+#import_settings p {
+    padding-left: 2px;
+}
+
 #profile_setting h2 {
     padding-top: 0px;
     margin-top: 0px;
@@ -112,8 +116,6 @@ h2 {
 }
 
 #import_buttons {
-    margin-top: 20px;
-    margin-left: 135px;
     width: 300px;
 }
 
