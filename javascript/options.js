@@ -119,12 +119,18 @@ function importRdf(){
     var txt = $('#importText').val();
 
     if(!txt.length){
+        alert("Import text is empty");
         return false;
     }
 
     var rdfDoc = RdfImporter.loadDoc(txt);
 
-    RdfImporter.saveProfiles(rdfDoc.profiles);
+    var count = RdfImporter.saveProfiles(rdfDoc.profiles);
+
+    if(!count){
+      alert("Sorry, no profiles found");
+      return false;
+    }
 
     updateProfileList();
     updateRemoveButton();

@@ -116,11 +116,14 @@ RdfImporter.loadDoc = function(rdf) {
     return {settings: settings, profiles: profiles};
 }
 
+// returns number of profiles imported
 RdfImporter.saveProfiles = function(profiles) {
+    if(!profiles || !profiles.length) return 0;
     for(var i=0;i<profiles.length;i++){
         Settings.addProfile(profiles[i]);
     }
     Settings.saveProfiles();
+    return profiles.length;
 }
 
 RdfImporter.saveSettings = function(settings) {
