@@ -43,7 +43,7 @@ body {
 }
 
 #list .button {
-  width: 100px;
+  width: 120px;
 }
 
 h2 {
@@ -96,6 +96,11 @@ h2 {
     padding-left: 2px;
 }
 
+#importText {
+    width: 505px;
+    height: 150px;
+}
+
 #profile_setting h2 {
     padding-top: 0px;
     margin-top: 0px;
@@ -116,7 +121,8 @@ h2 {
 }
 
 #import_buttons {
-    width: 300px;
+  width: 505px;
+  text-align: right;
 }
 
 .row {
