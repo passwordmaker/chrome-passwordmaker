@@ -43,10 +43,13 @@
             <input id='generated' readonly='true' value=""/>
             <a id='activatePassword' class="awesome button largebutton" href="#" onclick="showPasswordField();">Show password</a>
         </div>
-        
         <div class='row button-row'>
-            <div id="injectpasswordrow"><input class="awesome" type="button" value="Fill password field" onClick="fillPassword();"/></div>
-            <div id='options'><a class="awesome button" href="#" onClick="chrome.tabs.create({url: 'html/options.html'}); window.close();">Options</a></div>
+          <div id="copypassword"><input class="awesome" type="button" value="Copy" onClick="copyPassword();"/></div>
+          <div id="injectpasswordrow"><input class="awesome" type="button" value="Fill field" onClick="fillPassword();"/></div>
+          <div id='options'><a class="awesome button" href="#" onClick="chrome.tabs.create({url: 'html/options.html'}); window.close();">Options</a></div>
+        </div>
+        <div class='hidden'>
+          <input type='text' id='generatedForClipboard' value='' />
         </div>
         </form>
     </body>

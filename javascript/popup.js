@@ -20,19 +20,26 @@ function updateFields(e) {
     Settings.setActiveProfileId(profileId);
     
     if (password == "") {
+        $("#generatedForClipboard").val("");
         $("#generated").val("Enter password");
         setPasswordColors("#000000", "#85FFAB")
     } else if ( ! matchesHash(password) ) {
+        $("#generatedForClipboard").val("");
         $("#generated").val("Master password mismatch");
         setPasswordColors("#FFFFFF", "#FF7272")
     } else if (!Settings.keepMasterPasswordHash() && password != confirmation) {
+        $("#generatedForClipboard").val("");
         $("#generated").val("Password wrong");
         setPasswordColors("#FFFFFF", "#FF7272")
     } else {        
         if (profile != null) {
-            $("#generated").val(profile.getPassword($("#usedtext").val(), password));
+            var generatedPassword = profile.getPassword($("#usedtext").val(), password);
+            $("#generated").val(generatedPassword);
+            $("#generatedForClipboard").val(generatedPassword);
+            showCopy();
         } else {
             $("#generated").val("");
+            $("#generatedForClipboard").val("");
         }
         setPasswordColors("#000000", "#FFFFFF")
         // pressed enter in confirmation field
@@ -73,6 +80,10 @@ function fetchUrlAndUpdateUsedText() {
 
 function showInject() {
     $("#injectpasswordrow").fadeIn();
+}
+
+function showCopy() {
+  $("#copypassword").fadeIn();
 }
 
 function init(url) {
@@ -116,14 +127,21 @@ function fillPassword() {
     window.close();
 }
 
+function copyPassword() {
+    $("#generatedForClipboard").select();
+    document.execCommand("Copy");
+    window.close();
+}
+
 function showPasswordField() {
     $("#activatePassword").hide();
     $("#generated").show();
-    $("#generated").focus();     
+    $("#generated").focus();
 }
 
 $(function() {
     $("#injectpasswordrow").hide();
+    $("#copypassword").hide();
 
     if (Settings.shouldHidePassword()){
         $("#generated").hide();
@@ -149,6 +167,4 @@ $(function() {
             $("form").show();
         });
     });
-    
-    
 });
