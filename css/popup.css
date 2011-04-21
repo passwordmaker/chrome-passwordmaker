@@ -85,3 +85,12 @@ select {
     width: 180px;
     text-align: center;
 }
+
+#copypassword {
+  float: left;
+}
+
+.hidden {
+  margin-left: -500px;
+  margin-top: -500px;
+}
