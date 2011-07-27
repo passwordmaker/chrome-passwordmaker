@@ -9,15 +9,36 @@ function setPasswordColors(foreground, background) {
     $("#confirmation").css("color", foreground);        
 }
 
+function getAutoProfileIdForUrl(url) {
+    var profiles = Settings.getProfiles();
+    for (var i in profiles) {
+        var profile = profiles[i];
+        if (profile.siteList) {
+            var profileUrl = profile.getUrl(url);
+            var sites = profile.siteList.split(' ');
+            if (sites.indexOf(profileUrl) != -1) {
+                return profile.id;
+            }
+        }
+    }
+    return null;
+}
+
 function updateFields(e) {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
+    var usedtext = $("#usedtext").val();
+    
     var profileId = $("#profile").val();
+    if (profileId == "auto") {
+        profileId = getAutoProfileIdForUrl(usedtext);        
+    } else {
+        Settings.setActiveProfileId(profileId);
+    }
     var profile = Settings.getProfile(profileId);
 
     Settings.setStoreLocation($("#store_location").val());
     Settings.setPassword(password);
-    Settings.setActiveProfileId(profileId);
     
     if (password == "") {
         $("#generatedForClipboard").val("");
@@ -66,7 +87,11 @@ function matchesHash(password) {
 }
 
 function updateUsedText(url) {
-    var profile = Settings.getProfile($("#profile").val());
+    var profileId = $("#profile").val();
+    if (profileId == "auto") {
+        profileId = getAutoProfileIdForUrl(url);        
+    }
+    var profile = Settings.getProfile(profileId);
     $("#usedtext").val(profile.getUrl(url));
 }
 
@@ -87,19 +112,25 @@ function showCopy() {
 }
 
 function init(url) {
-    var profiles = Settings.getProfiles();
     Settings.getPassword(function(password) {
         $("#password").val(password);
         $("#confirmation").val(password);
 
+        var activeProfileId = Settings.getActiveProfileId();    
+        var autoProfileId = getAutoProfileIdForUrl(url);
+        
         var options = "";
+        var profiles = Settings.getProfiles();
         for (var i in profiles) {
             var profile = profiles[i];
-            options += "<option value='"+profile.id+"'";
-            if (profile.id == Settings.getActiveProfileId()){
-                options += " selected='true' ";
+            if (autoProfileId && profile.id == autoProfileId) {
+                options += "<option value='auto' selected='true'";
+            } else if (!autoProfileId && profile.id == activeProfileId) {
+                options += "<option value='"+profile.id+"' selected='true'";          
+            } else {
+                options += "<option value='"+profile.id+"'";             
             }
-            options += "'>"+profile.title+"</option>";
+            options += ">"+profile.title+"</option>";
         }
 
         $("#profile").empty().append(options);
