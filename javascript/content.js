@@ -2,7 +2,9 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
     if (request.password) {
         fillPasswords(request.password);
     } else if (request.hasPasswordField) {
-        sendResponse({hasField: hasPasswordField()});
+      if (hasPasswordField()) {
+        sendResponse({hasField: true});
+      }
     }
 });
 

@@ -16,7 +16,8 @@
   ],
   "content_scripts": [ {
      "js": [ "javascript/jquery.min.js", "javascript/content.js" ],
-     "matches": [ "http://*/*", "https://*/*" ]
+     "matches": [ "http://*/*", "https://*/*" ],
+     "all_frames": true
   } ],
   "background_page": "html/background.html",
   "options_page": "html/options.html"
