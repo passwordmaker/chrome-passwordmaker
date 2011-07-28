@@ -42,14 +42,6 @@ function updateFields(e) {
             $("#generatedForClipboard").val("");
         }
         setPasswordColors("#000000", "#FFFFFF")
-        // pressed enter in confirmation field
-        if(e && e.keyCode == 13){
-            chrome.tabs.sendRequest(currentTab, {hasPasswordField: true}, function(response) {
-                if (response.hasField) {
-                    fillPassword();
-                }
-            });
-        }
     }
     if (Settings.keepMasterPasswordHash()) {
       $("#confirmation_row").css('display', 'none');
@@ -118,6 +110,8 @@ function init(url) {
         password = $("#password").val();
         if (password == null || password.length == 0 || (password != $("#confirmation").val())) {
             $("#password").focus();
+        } else {
+            $("#generated").focus();
         }
     });
 }
@@ -148,7 +142,6 @@ $(function() {
         $("#activatePassword").show();
     } else {
         $("#generated").show();
-        $("#generated").focus(); 
         $("#activatePassword").hide();
     }
 
@@ -160,6 +153,16 @@ $(function() {
         }
     }
 
+    $("#generated").keypress(function(event) {
+      if (event.keyCode == 13) {
+            chrome.tabs.sendRequest(currentTab, {hasPasswordField: true}, function(response) {
+                if (response.hasField) {
+                    fillPassword();
+                }
+            });
+      }
+    });
+    
     chrome.windows.getCurrent(function(obj) {
         chrome.tabs.getSelected(obj.id, function(tab) {
             currentTab = tab.id;

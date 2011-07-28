@@ -49,15 +49,6 @@ label {
     font-size:15px;
 }
 
-#generated{
-    color: #5E80F0;
-    font-style: italic;
-    text-align: center;
-    width: 200px;
-    border: 1px solid #000000;
-    font-size:15px;
-}
-
 select {
     margin: 0px;
     width: 200px;
