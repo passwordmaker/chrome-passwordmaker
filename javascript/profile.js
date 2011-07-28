@@ -9,10 +9,10 @@ function Profile() {
     this.url_path = false;
     
     // Settings for the key generation
-    this.hashAlgorithm = "md4"
+    this.hashAlgorithm = "md5"
     this.username = ""
     this.modifier = ""
-    this.passwordLength = 12
+    this.passwordLength = 8
     this.selectedCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./";
     this.passwordPrefix = "";
     this.passwordSuffix = "";
