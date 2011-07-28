@@ -14,10 +14,32 @@ function getAutoProfileIdForUrl(url) {
     for (var i in profiles) {
         var profile = profiles[i];
         if (profile.siteList) {
-            var profileUrl = profile.getUrl(url);
+            var usedText = profile.getUrl(url);
             var sites = profile.siteList.split(' ');
-            if (sites.indexOf(profileUrl) != -1) {
-                return profile.id;
+            for (var j = 0; j < sites.length; j++) {
+                var pat = sites[j];
+
+                if (pat[0] == '/' && pat[pat.length-1] == '/') {
+                    pat = pat.substr(1, pat.length-2);
+                } else {
+                    pat = pat.replace(/[$.+()^\[\]\\|{},]/g, '');
+                    pat = pat.replace(/\?/g, '.');
+                    pat = pat.replace(/\*/g, '.*');
+                }
+
+                if (pat[0] != '^') pat = '^' + pat;
+                if (pat[pat.length-1] != '$') pat = pat + '$';
+
+                var re;
+                try {
+                    re = new RegExp(pat);
+                } catch(e) {
+                    console.log(e + "\n");
+                }
+
+                if (re.test(usedText) || re.test(url)) {
+                    return profile.id;
+                }
             }
         }
     }
