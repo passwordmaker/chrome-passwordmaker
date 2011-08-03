@@ -97,6 +97,36 @@ RdfImporter.loadDoc = function(rdf) {
                 prof[opts.name] = opts.convert ? opts.convert(val) : val;
             }
         }
+
+        // store site patterns
+        var patterns = [],
+            patternType = [],
+            patternEnabled = [],
+            siteList = '';
+        for(var i=0;i<this.attributes.length;i++){
+            var attrName = this.attributes[i].name.replace(/.*:/g,'');
+            var m = attrName.match(/pattern(|type|enabled)(\d+)/);
+            if(m){
+                if (m[1] == '') {
+                    patterns[m[2]] = this.attributes[i].value;
+                } else if (m[1] == 'type') {
+                    patternType[m[2]] = this.attributes[i].value;
+                } else if (m[1] == 'enabled') {
+                    patternEnabled[m[2]] = this.attributes[i].value;
+                }
+            }
+        }
+        for(var i=0;i<patterns.length;i++){
+            if(patternEnabled[i] == 'true'){
+                if(patternType[i]=='regex'){
+                    siteList += '/'+patterns[i]+'/ ';
+                }else{
+                    siteList += patterns[i]+' ';
+                }
+            }
+        }
+        prof['siteList'] = siteList;
+
         if(prof.rdf_about == 'http://passwordmaker.mozdev.org/globalSettings'){
             settings = prof;
         }else if(prof.selectedCharset){

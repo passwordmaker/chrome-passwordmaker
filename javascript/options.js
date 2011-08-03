@@ -64,6 +64,7 @@ function removeProfile() {
 function setCurrentProfile(profile) {
     currentProfile = profile;
     $("#profileNameTB").val(profile.title);
+    $("#siteList").val(profile.siteList);
     $("#protocolCB").attr('checked', profile.url_protocol);
     $("#subdomainCB").attr('checked', profile.url_subdomain);
     $("#domainCB").attr('checked', profile.url_domain);
@@ -157,6 +158,7 @@ function highlightProfile(){
 
 function saveProfile() {
     currentProfile.title = $("#profileNameTB").val();
+    currentProfile.siteList       = $("#siteList").val();
     currentProfile.url_protocol = $("#protocolCB").attr('checked');
     currentProfile.url_subdomain = $("#subdomainCB").attr('checked');
     currentProfile.url_domain = $("#domainCB").attr('checked');
