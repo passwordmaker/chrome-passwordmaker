@@ -2,6 +2,8 @@ function Profile() {
     this.id = 1;
     this.title = "Default";
     
+    this.siteList = "";
+    
     // Settings for the URL generation
     this.url_protocol = false;
     this.url_subdomain = false;

@@ -32,6 +32,7 @@ test("load profile 1", function () {
     same(p.passwordSuffix, 'suffix1');
     same(p.whereToUseL33t, 'before-hashing');
     same(p.l33tLevel, 1);
+    same(p.siteList, '/https?://mail\\.yahoo\\.com/.*/ http?://github.com/* ');
 });
 
 test("load profile 2", function () {
@@ -52,6 +53,7 @@ test("load profile 2", function () {
     same(p.passwordSuffix, 'suffix1');
     same(p.whereToUseL33t, 'off');
     same(p.l33tLevel, 1);
+    same(p.siteList, '');
 });
 
 test("save profiles", function () {
