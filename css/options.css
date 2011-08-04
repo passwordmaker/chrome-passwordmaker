@@ -59,6 +59,14 @@ h2 {
     padding-top: 3px;
 }
 
+.help_sitelist {
+  margin-left: 135px;
+  margin-bottom: 10px;
+  color: #9f9f9f;
+  font-size: 13px;
+
+}
+
 #showSettings {
     margin-top: 20px;
 }
