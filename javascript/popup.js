@@ -22,7 +22,7 @@ function getAutoProfileIdForUrl(url) {
                 if (pat[0] == '/' && pat[pat.length-1] == '/') {
                     pat = pat.substr(1, pat.length-2);
                 } else {
-                    pat = pat.replace(/[$.+()^\[\]\\|{},]/g, '');
+                    pat = pat.replace(/[$+()^\[\]\\|{},]/g, '');
                     pat = pat.replace(/\?/g, '.');
                     pat = pat.replace(/\*/g, '.*');
                 }
