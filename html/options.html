@@ -32,6 +32,9 @@
                 <div id="showImport">
                     <a href="#" onClick="showImport();" class="awesome button">Import Profiles</a>
                 </div>
+                <div id="showExport">
+                    <a href="#" onClick="showExport();" class="awesome button">Export Profiles</a>
+                </div>
                 <div id="showSettings">
                     <a href="#" onClick="showOptions();" class="awesome button">General Options</a>
                 </div>
@@ -178,21 +181,56 @@
             
             <div id="import_settings">
                 <div id="form">
-                    <h2>Import Firefox Profiles</h2>
+                    <h2>Import Profiles</h2>
                     <div class="row">
                         <p class="import_help">
                           <em>
-                            In Firefox PasswordMaker go to <a
-                              href="http://passwordmaker.org/Firefox/Mozilla/SeaMonkey/Flock/Netscape/Advanced">Advanced Options</a> &rarr; File &rarr; Export Settings.
-                            Choose RDF as the export type. Edit the .rdf file
-                            in a plain text editor (e.g. notepad) then select
-                            all, copy, and paste into the box below.
+                            Paste export into the box below then click "Import".
+                          </em>
+                        </p>
+                        <p class="import_help">
+                          <em>
+                            From Firefox PasswordMaker go to <a href="http://passwordmaker.org/Firefox/Mozilla/SeaMonkey/Flock/Netscape/Advanced">Advanced Options</a>
+                            &rarr; File &rarr; Export Settings &rarr; RDF. Open the .rdf file
+                            in a plain text editor (e.g. notepad) then select all, copy
+                            and paste into the box below.
                           </em>
                         </p>
                         <textarea id="importText"></textarea>
                     </div>
                     <div id="import_buttons">
-                        <a href="#" onClick="importRdf();" class="awesome button">Import RDF</a>
+                        <a href="#" onClick="importRdf();" class="awesome button">Import</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="export_settings">
+                <div id="form">
+                    <h2>Export Profiles</h2>
+                    <div class="row">
+                        <p class="export_help">
+                          <em>
+                            Copy and paste the text below into "Import Profiles" section of Chrome PasswordMaker Pro.
+                          </em>
+                        </p>
+                        <p class="export_help">
+                          <em>
+                            For Firefox PasswordMaker, save
+                            the text below into a plain text document (e.g.
+                            open notepad, paste, save as "profiles.rdf") then
+                            go to
+                            <a
+                              href="http://passwordmaker.org/Firefox/Mozilla/SeaMonkey/Flock/Netscape/Advanced">Advanced Options</a> &rarr; File &rarr; Import Settings.
+                            <strong>
+                            Back up any existing settings first by going to
+                            Firefox PasswordMaker &rarr; File &rarr; Export
+                            Setting &rarr; RDF.</strong>
+                          </em>
+                        </p>
+                        <textarea id="exportText"></textarea>
+                    </div>
+                    <div id="export_buttons">
+                        <a href="#" onClick="copyRdfExport();" class="awesome button">Copy</a>
                     </div>
                 </div>
             </div>

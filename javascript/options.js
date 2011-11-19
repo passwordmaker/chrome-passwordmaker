@@ -116,6 +116,11 @@ function showImport(){
     showSection('#import_settings');
 }
 
+function showExport(){
+    showSection('#export_settings');
+    $('#exportText').val(RdfImporter.dumpDoc());
+}
+
 function importRdf(){
     var txt = $('#importText').val();
 
@@ -137,13 +142,18 @@ function importRdf(){
     updateRemoveButton();
 }
 
+function copyRdfExport(){
+    $('#exportText').select();
+    document.execCommand("Copy");
+}
+
 function showOptions() {
     showSection('#general_settings');
 }
 
 function showSection(showId) {
     if(!$(showId).is(":visible")){
-        $('#profile_setting:visible,#import_settings:visible,#general_settings:visible')
+        $('#profile_setting:visible,#import_settings:visible,#export_settings:visible,#general_settings:visible')
             .fadeOut(300, function(){
                 $(showId).fadeIn(300);
             });
