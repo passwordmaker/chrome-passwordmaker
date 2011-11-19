@@ -1,3 +1,20 @@
+/*
+ * Importing RDF from Chrome and FF:
+ *
+ * var loadedData = RdfImporter.loadDoc(rdfString);
+ * var profiles = loadedData.profiles; // list of profiles
+ *
+ * var saveCount = RdfImporter.saveProfiles(profiles); // number of profiles saved
+ * 
+ * Exporting to RDF:
+ *
+ * var dumpedString = RdfImporter.dumpDoc();
+ * console.log(dumpedString); // <?xml ...
+ *
+ * NOTE: the Firefox RDF has additional settings that are ignored on import
+ * (groups, upload/download settings, etc.).
+ */
+
 function strToBool(v) {
     return v.toString() === 'true';
 }
