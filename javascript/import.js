@@ -80,7 +80,6 @@ var RdfImporter = {
 RdfImporter.loadDoc = function(rdf) {
     var profiles = [],
         defaultProfile = {},
-        fromChrome = false,
         settings = {};
 
     // check over every Description, but will ignore groups and anything without
@@ -133,13 +132,13 @@ RdfImporter.loadDoc = function(rdf) {
             if(prof.rdf_about == 'http://passwordmaker.mozdev.org/defaults'){
                 defaultProfile = prof;
             }else{
-                // chrome export sets rdf_about to CHROME0, CHROME1, etc.
-                if(prof.rdf_about.indexOf('CHROME') != -1){ fromChrome = true; }
-
                 profiles.push(prof);
             }
         }
     });
+
+    // chrome export doesn't include /remotes section.
+    var fromChrome = rdf.indexOf('http://passwordmaker.mozdev.org/remotes') == -1;
 
     // chrome -> chrome doesn't need "default" profile. would create duplicate.
     if(!fromChrome){

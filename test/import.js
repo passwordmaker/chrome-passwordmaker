@@ -4,7 +4,7 @@ var rdf_doc1 = null;
 QUnit.testStart = function () {
     localStorage.clear();
     Settings.profiles = null;
-    rdf_doc1 = RdfImporter.loadDoc($($('#rdf1').val()));
+    rdf_doc1 = RdfImporter.loadDoc($('#rdf1').val());
 }
 
 test("parse global settings", function () {
