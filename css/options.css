@@ -75,6 +75,10 @@ h2 {
     margin-top: 20px;
 }
 
+#showExport {
+    margin-top: 20px;
+}
+
 #list h2 {
     padding-top: 0px;
     margin-top: 0px;
@@ -104,7 +108,19 @@ h2 {
     padding-left: 2px;
 }
 
+#export_settings {
+    padding: 5px;
+    width: 505px;
+    float: right;
+    display: none;
+}
+
 #importText {
+    width: 505px;
+    height: 150px;
+}
+
+#exportText {
     width: 505px;
     height: 150px;
 }
@@ -129,6 +145,11 @@ h2 {
 }
 
 #import_buttons {
+  width: 505px;
+  text-align: right;
+}
+
+#export_buttons {
   width: 505px;
   text-align: right;
 }
