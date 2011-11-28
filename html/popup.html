@@ -20,10 +20,10 @@
         <script type="text/javascript" src="../javascript/popup.js"></script>
     </head>
     <body>
-        <form>
-        <div class='row' id='head'>
+        <div id='head'>
             <img src='../images/passwdmaker16.png' width='16px' height='16px'/><span>PasswordMaker Pro</span>
         </div>
+        <form>
         <div class='row'><label for='password'>Password:</label><input onkeyup="updateFields();" onchange="updateFields();" class='input' id='password' type="password"/></div>
         <div class='row' id='confirmation_row'><label for='confirmation'>Confirmation:</label><input onkeyup="updateFields(event);" onchange="updateFields(event);" class='input' id='confirmation' type="password"/></div>
         <div class='row'><label>Save Password:</label>
