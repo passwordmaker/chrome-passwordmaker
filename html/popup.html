@@ -34,7 +34,7 @@
             </select>    
         </div>
         <div class='row'><label>Use Profile:</label>
-            <select id="profile" name="profile" onchange="fetchUrlAndUpdateUsedText();updateFields();">
+            <select id="profile" name="profile" onchange="onProfileChanged();">
             </select>    
         </div>
         <div class='row'><label for='usedtext'>Used text:</label><input onkeyup="updateFields();" onchange="updateFields();" class='input' id='usedtext'/></div>

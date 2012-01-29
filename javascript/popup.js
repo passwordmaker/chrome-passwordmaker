@@ -109,10 +109,11 @@ function updateUsedText(url) {
     $("#usedtext").val(profile.getUrl(url));
 }
 
-function fetchUrlAndUpdateUsedText() {
+function onProfileChanged() {
     chrome.windows.getCurrent(function(obj) {
         chrome.tabs.getSelected(obj.id, function(tab) {
             updateUsedText(tab.url);
+            updateFields();
         });
     });
 }
