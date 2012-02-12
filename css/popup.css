@@ -1,17 +1,16 @@
 body {
-    width: 200px;
-    max-width: 200px;
-    height: 290px;
-    font-family: sans-serif;
-    font-size: 13px;
+  height: 290px;
+  font-family: sans-serif;
+  font-size: 13px;
+  padding: 5px;
 }
 
 form {
     display:none;
     width: 200px;
     padding-top: 5px;
-    padding-left: 20px;
     padding-bottom: 10px;
+    margin: 0px auto;
 }
 
 label {
@@ -23,21 +22,20 @@ label {
 
 #head {
     font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
-    width: 240px;
     border-bottom: 1px solid #eeeeee;
-    margin-bottom: 5px;
     padding-bottom: 5px;
-    vertical-align: middle;
     font-weight: bold;
+    position: relative;
 }
 
 #head img {
     position: absolute;
-    top: 8px;
+    top: 0px;
 }
 
 #head span {
     margin-left: 20px;
+    margin-bottom: 10px;
 }
 
 .input {
