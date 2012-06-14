@@ -181,6 +181,11 @@ function copyPassword() {
     window.close();
 }
 
+function openOptions() {
+    chrome.tabs.create({url: 'html/options.html'});
+    window.close();
+}
+
 function showPasswordField() {
     $("#activatePassword").hide();
     $("#generated").show();
@@ -188,6 +193,16 @@ function showPasswordField() {
 }
 
 $(function() {
+    $("#password").bind('keyup change', updateFields);
+    $("#confirmation").bind('keyup change', updateFields);
+    $("#usedtext").bind('keyup change', updateFields);
+    $("#store_location").bind('change', updateFields);
+    $("#profile").bind('change', onProfileChanged);
+    $("#activatePassword").bind('click', showPasswordField);
+    $("#copypassword>input").bind('click', copyPassword);
+    $("#injectpasswordrow>input").bind('click', fillPassword);
+    $("#options>a").bind('click', openOptions);
+
     $("#injectpasswordrow").hide();
     $("#copypassword").hide();
 

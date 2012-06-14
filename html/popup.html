@@ -24,20 +24,20 @@
             <img src='../images/passwdmaker16.png' width='16px' height='16px'/><span>PasswordMaker Pro</span>
         </div>
         <form>
-        <div class='row'><label for='password'>Password:</label><input onkeyup="updateFields();" onchange="updateFields();" class='input' id='password' type="password"/></div>
-        <div class='row' id='confirmation_row'><label for='confirmation'>Confirmation:</label><input onkeyup="updateFields(event);" onchange="updateFields(event);" class='input' id='confirmation' type="password"/></div>
+        <div class='row'><label for='password'>Password:</label><input class='input' id='password' type="password"/></div>
+        <div class='row' id='confirmation_row'><label for='confirmation'>Confirmation:</label><input class='input' id='confirmation' type="password"/></div>
         <div class='row'><label>Save Password:</label>
-            <select id="store_location" name="store_location" onchange="updateFields();">
+            <select id="store_location" name="store_location">
                   <option value="memory">In memory</option>
                   <option value="disk">On disk</option>
                   <option value="never">Never store</option>
             </select>    
         </div>
         <div class='row'><label>Use Profile:</label>
-            <select id="profile" name="profile" onchange="onProfileChanged();">
+            <select id="profile" name="profile">
             </select>    
         </div>
-        <div class='row'><label for='usedtext'>Used text:</label><input onkeyup="updateFields();" onchange="updateFields();" class='input' id='usedtext'/></div>
+        <div class='row'><label for='usedtext'>Used text:</label><input class='input' id='usedtext'/></div>
         <div class='row'>
             <label for='generated'>Generated Password:</label>
             <input id='generated' readonly='true' value=""/>
@@ -46,7 +46,7 @@
         <div class='row button-row'>
           <div id="copypassword"><input class="awesome" type="button" value="Copy" onClick="copyPassword();"/></div>
           <div id="injectpasswordrow"><input class="awesome" type="button" value="Fill field" onClick="fillPassword();"/></div>
-          <div id='options'><a class="awesome button" href="#" onClick="chrome.tabs.create({url: 'html/options.html'}); window.close();">Options</a></div>
+          <div id='options'><a class="awesome button" href="#">Options</a></div>
         </div>
         <div class='hidden'>
           <input type='text' id='generatedForClipboard' value='' />
