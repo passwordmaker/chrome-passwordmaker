@@ -9,8 +9,8 @@ var CHARSET_OPTIONS = [
     "`~!@#$%^&*()_-+={}|[]:\";'<>?,./"
 ];
 
-function editProfile(id) {
-    p = Settings.getProfile(id);
+function editProfile(event) {
+    p = Settings.getProfile(event.data.id);
     setCurrentProfile(p);
 }
 
@@ -208,9 +208,14 @@ function updateProfileList() {
     
     for (var i in profiles) {
         var profile = profiles[i];
-        list += "<li id='profile_id_"+profile.id+"'><a href='#' onClick='editProfile("+profile.id+")'>"+profile.title+"</a></li>";
+        list += "<li id='profile_id_"+profile.id+"'><a id='editProfile_"+profile.id+"' href='#'>"+profile.title+"</a></li>";
     }
     $("#profile_list").empty().append(list);
+
+    for (var i in profiles) {
+        var id = profiles[i].id;
+        $("#editProfile_"+id).bind('click', {id: id}, editProfile);
+    }
 }
 
 function updateMasterHash() {
@@ -231,6 +236,10 @@ function updateHidePassword() {
     Settings.setHidePassword($("#hidePassword").attr('checked') == true);    
 }
 
+function testPasswordLength() {
+    if (/\D/.test(this.value)) this.value='8';
+}
+
 $(function() {
     updateProfileList();
     setCurrentProfile(Settings.getProfiles()[0]);
@@ -242,4 +251,28 @@ $(function() {
       $("#master_password_row").css('visibility', 'visible');
     else
       $("#master_password_row").css('visibility', 'hidden');
+    
+    $("#add>a").bind('click', addProfile);
+    $("#showImport>a").bind('click', showImport);
+    $("#showExport>a").bind('click', showExport);
+    $("#showSettings>a").bind('click', showOptions);
+
+    $("#protocolCB").bind('change', updateExample);
+    $("#subdomainCB").bind('click', updateExample);
+    $("#domainCB").bind('click', updateExample);
+    $("#pathCB").bind('click', updateExample);
+    $("#whereLeetLB").bind('change', updateLeet);
+
+    $("#cloneProfileButton").bind('click', cloneProfile);
+    $("#remove>a").bind('click', removeProfile);
+    $("#save>a").bind('click', saveProfile);
+    $("#import_buttons>a").bind('click', importRdf);
+    $("#export_buttons>a").bind('click', copyRdfExport);
+
+    $("#hidePassword").bind('change', updateHidePassword);
+    $("#keepMasterPasswordHash").bind('change', updateMasterHash);
+    $("#masterPassword").bind('blur', updateMasterHash);
+
+    $("#passwdLength").bind('change keyup keydown keypress input', testPasswordLength);
 });
+

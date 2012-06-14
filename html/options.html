@@ -28,15 +28,15 @@
             <div id="list">
                 <h2>Profiles</h2>
                 <ul id="profile_list"></ul>
-                <div id="add"><a href="#" class="awesome button" onClick="addProfile();">Add new profile</a></div>
+                <div id="add"><a href="#" class="awesome button">Add new profile</a></div>
                 <div id="showImport">
-                    <a href="#" onClick="showImport();" class="awesome button">Import Profiles</a>
+                    <a href="#" class="awesome button">Import Profiles</a>
                 </div>
                 <div id="showExport">
-                    <a href="#" onClick="showExport();" class="awesome button">Export Profiles</a>
+                    <a href="#" class="awesome button">Export Profiles</a>
                 </div>
                 <div id="showSettings">
-                    <a href="#" onClick="showOptions();" class="awesome button">General Options</a>
+                    <a href="#" class="awesome button">General Options</a>
                 </div>
                 <div id="pledgie">
                   <a href="http://pledgie.com/campaigns/9703"><img alt="Click here to lend your support to: chrome-passwordmaker and make a donation at www.pledgie.com !" src="http://www.pledgie.com/campaigns/9703.png?skin_name=chrome" border="0"></a>
@@ -69,26 +69,26 @@
                         <label>URL Components:</label>
                         
                         <div class="subrow">
-                            <input type="checkbox" id="protocolCB" onchange="updateExample();" />
+                            <input type="checkbox" id="protocolCB" />
                             <label for="protocolCB" class="checkbox">Protocol</label>
             			</div>
             			<div class="subrow">
-                            <input type="checkbox" id="subdomainCB" onclick="updateExample();" />
+                            <input type="checkbox" id="subdomainCB" />
                             <label for="subdomainCB" class="checkbox">Subdomain(s)</label>
                         </div>
             			<div class="subrow">
-                            <input type="checkbox" id="domainCB" onclick="updateExample();" />
+                            <input type="checkbox" id="domainCB" />
                             <label for="domainCB" class="checkbox">Domain</label>
             			</div>
             			<div class="subrow">
-                            <input type="checkbox" id="pathCB" onclick="updateExample();" />
+                            <input type="checkbox" id="pathCB" />
                             <label for="pathCB" class="checkbox">Port, path, anchor, query parameters</label>
                         </div>
                     </div>
                     
                     <div class="row">
                         <label for="whereLeetLB">Use l33t:</label>
-            			<select class="dropmenu" id="whereLeetLB" onchange="updateLeet();">
+            			<select class="dropmenu" id="whereLeetLB">
             				<option value="off">not at all</option>
             				<option value="before-hashing">before generating password</option>
             				<option value="after-hashing">after generating password</option>
@@ -132,12 +132,7 @@
                     
                     <div class="row">
                         <label for="passwdLength">Password length:</label>
-            			<input class="standard" id="passwdLength" maxlength="3" size="3" value="12"
-            			onchange="if (/\D/.test(this.value)) this.value='8';"
-            			onkeyup="if (/\D/.test(this.value)) this.value='8';"
-            			onkeydown="if (/\D/.test(this.value)) this.value='8';"
-            			onkeypress="if (/\D/.test(this.value)) this.value='8';"
-            			oninput="if (/\D/.test(this.value)) this.value='8';"/>
+            			<input class="standard" id="passwdLength" maxlength="3" size="3" value="12" />
                     </div>
 
                     <div class="row">
@@ -169,13 +164,13 @@
 
 
                     <div class="row">
-                        <a class="secondColumn" href="#" onClick="cloneProfile();">Clone this profile.</a>
+                        <a id="cloneProfileButton" class="secondColumn" href="#">Clone this profile.</a>
                     </div>
                 </div>
                 
                 <div id="buttons">
-                    <div id="remove"><a href="#" onClick="removeProfile();" class="awesome button">Remove</a></div>
-                    <div id="save"><a href="#" onClick="saveProfile();" class="awesome button">Save</a></div>
+                    <div id="remove"><a href="#" class="awesome button">Remove</a></div>
+                    <div id="save"><a href="#" class="awesome button">Save</a></div>
                 </div>
             </div>
             
@@ -199,7 +194,7 @@
                         <textarea id="importText"></textarea>
                     </div>
                     <div id="import_buttons">
-                        <a href="#" onClick="importRdf();" class="awesome button">Import</a>
+                        <a href="#" class="awesome button">Import</a>
                     </div>
                 </div>
             </div>
@@ -230,7 +225,7 @@
                         <textarea id="exportText"></textarea>
                     </div>
                     <div id="export_buttons">
-                        <a href="#" onClick="copyRdfExport();" class="awesome button">Copy</a>
+                        <a href="#" class="awesome button">Copy</a>
                     </div>
                 </div>
             </div>
@@ -241,18 +236,18 @@
                     <p><em>Here you find settings that affect all profiles.</em></p>
                     <div class="row">
             			<div class="subrow">
-                            <input type="checkbox" id="hidePassword" onchange="updateHidePassword();" />
+                            <input type="checkbox" id="hidePassword" />
                             <label for="hidePassword" class="checkbox">Hide Password</label>
                         </div>
                     </div>
                     <div class="row">
             		<div class="subrow">
-                            <input type="checkbox" id="keepMasterPasswordHash" onchange="updateMasterHash();" />
+                            <input type="checkbox" id="keepMasterPasswordHash" />
                             <label for="keepMasterPasswordHash" class="checkbox">Keep Master Password Hash</label>
                         </div>
             		<div class="subrow" id="master_password_row" style="visibility:hidden;">
                             <label for="masterPassword">Master Password</label>
-                            <input class="standard" type="password" id="masterPassword" onblur="updateMasterHash();" />
+                            <input class="standard" type="password" id="masterPassword" />
                         </div>
                     </div>
 
