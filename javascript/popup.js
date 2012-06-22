@@ -62,6 +62,8 @@ function updateFields(e) {
     Settings.setStoreLocation($("#store_location").val());
     Settings.setPassword(password);
     
+    var enableCopy = false;
+
     if (password == "") {
         $("#generatedForClipboard").val("");
         $("#generated").val("Enter password");
@@ -79,12 +81,17 @@ function updateFields(e) {
             var generatedPassword = profile.getPassword($("#usedtext").val(), password);
             $("#generated").val(generatedPassword);
             $("#generatedForClipboard").val(generatedPassword);
-            showCopy();
+            enableCopy = true;
         } else {
             $("#generated").val("");
             $("#generatedForClipboard").val("");
         }
         setPasswordColors("#000000", "#FFFFFF")
+    }
+    if (enableCopy) {
+        showCopy();
+    } else {
+        hideCopy();
     }
     if (Settings.keepMasterPasswordHash()) {
       $("#confirmation_row").css('display', 'none');
@@ -120,6 +127,10 @@ function onProfileChanged() {
 
 function showInject() {
     $("#injectpasswordrow").fadeIn();
+}
+
+function hideCopy() {
+  $("#copypassword").hide();
 }
 
 function showCopy() {
