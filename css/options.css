@@ -144,6 +144,27 @@ h2 {
     float: left;
 }
 
+#sync_buttons {
+    margin-top: 20px;
+    margin-left: 135px;
+    width: 300px;
+}
+
+.message {
+    margin-left: 135px;
+    width: 300px;
+    font-size: 0.9em;
+    padding-top: 10px;
+}
+
+#sync_buttons #set_sync_password {
+    float: left;
+}
+
+#sync_buttons #clear_sync_data {
+    float: right;
+}
+
 #import_buttons {
   width: 505px;
   text-align: right;
