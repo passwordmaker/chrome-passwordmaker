@@ -13,7 +13,8 @@
     "default_popup": "html/popup.html"
   },
   "permissions": [
-      "tabs"
+      "tabs",
+      "storage"
   ],
   "content_scripts": [ {
      "js": [ "javascript/jquery.min.js", "javascript/content.js" ],

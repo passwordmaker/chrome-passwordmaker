@@ -218,6 +218,66 @@ function updateProfileList() {
     }
 }
 
+function setSyncPassword() {
+    if ($("#syncProfilesPassword").val() == "") {
+        return;
+    }
+
+    var result = Settings.startSyncWith($("#syncProfilesPassword").val());
+    if (result != null) {
+        Settings.setSyncProfiles(true);
+        Settings.setSyncProfilesPassword(result);
+        $("#syncProfilesPassword").val("");
+        updateSyncProfiles();
+        updateProfileList();
+        updateRemoveButton();
+    } else {
+        alert("Wrong password. Please specify the password you used when " +
+              "initially syncing your data");
+    }
+}
+
+function clearSyncData() {
+    Settings.clearSyncData(function(success) {
+        if (success) {
+            updateSyncProfiles();
+            Settings.setSyncProfiles(false);
+        }
+    });
+}
+
+function updateSyncProfiles() {
+    $("#sync_profiles_row").css('display', 'none');
+
+    $("#no_sync_password").css('display', 'none');
+    $("#sync_data_exists").css('display', 'none');
+    $("#sync_password_set").css('display', 'none');
+
+    $("#set_sync_password").css('visibility', 'hidden');
+    $("#clear_sync_data").css('visibility', 'hidden');
+
+    var should_sync = ($("#syncProfiles").attr('checked') == true);
+    if (should_sync) {
+      //$("#sync_profiles_row").css('visibility', 'visible');
+
+      if (Settings.syncPasswordOk) {
+          $("#sync_password_set").css('display', 'block');
+          $("#clear_sync_data").css('visibility', 'visible');
+      } else if (Settings.syncDataAvailable) {
+          $("#sync_profiles_row").css('display', 'block');
+          $("#sync_data_exists").css('display', 'block');
+          $("#set_sync_password").css('visibility', 'visible');
+          $("#clear_sync_data").css('visibility', 'visible');
+      } else {
+          $("#sync_profiles_row").css('display', 'block');
+          $("#no_sync_password").css('display', 'block');
+          $("#set_sync_password").css('visibility', 'visible');
+      }
+    } else {
+      Settings.stopSync();
+    }
+}
+
 function updateMasterHash() {
     var should_keep = ($("#keepMasterPasswordHash").attr('checked') == true);
     Settings.setKeepMasterPasswordHash(should_keep);    
@@ -251,6 +311,9 @@ $(function() {
       $("#master_password_row").css('visibility', 'visible');
     else
       $("#master_password_row").css('visibility', 'hidden');
+
+    $("#syncProfiles").attr('checked', Settings.shouldSyncProfiles());
+    updateSyncProfiles();
     
     $("#add>a").bind('click', addProfile);
     $("#showImport>a").bind('click', showImport);
@@ -271,7 +334,11 @@ $(function() {
 
     $("#hidePassword").bind('change', updateHidePassword);
     $("#keepMasterPasswordHash").bind('change', updateMasterHash);
+    $("#syncProfiles").bind('change', updateSyncProfiles);
     $("#masterPassword").bind('blur', updateMasterHash);
+
+    $("#set_sync_password").bind('click', setSyncPassword);
+    $("#clear_sync_data").bind('click', clearSyncData);
 
     $("#passwdLength").bind('change keyup keydown keypress input', testPasswordLength);
 });
