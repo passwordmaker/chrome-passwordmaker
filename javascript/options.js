@@ -240,8 +240,11 @@ function setSyncPassword() {
 function clearSyncData() {
     Settings.clearSyncData(function(success) {
         if (success) {
-            updateSyncProfiles();
             Settings.setSyncProfiles(false);
+
+            updateSyncProfiles();
+            updateProfileList();
+            updateRemoveButton();
         }
     });
 }
@@ -258,8 +261,6 @@ function updateSyncProfiles() {
 
     var should_sync = ($("#syncProfiles").attr('checked') == true);
     if (should_sync) {
-      //$("#sync_profiles_row").css('visibility', 'visible');
-
       if (Settings.syncPasswordOk) {
           $("#sync_password_set").css('display', 'block');
           $("#clear_sync_data").css('visibility', 'visible');
@@ -275,6 +276,9 @@ function updateSyncProfiles() {
       }
     } else {
       Settings.stopSync();
+
+      updateProfileList();
+      updateRemoveButton();
     }
 }
 

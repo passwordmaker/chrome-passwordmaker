@@ -353,6 +353,7 @@ Settings.clearSyncData = function(callback) {
             Settings.syncPasswordOk = false;
             localStorage['synced_profiles'] = "";
             localStorage['synced_profiles_keys'] = "";
+            Settings.loadLocalProfiles();
             callback(true);
         } else {
             alert("Could not delete synced data: " +
@@ -365,6 +366,7 @@ Settings.clearSyncData = function(callback) {
 Settings.stopSync = function() {
     Settings.setSyncProfiles(false);
     Settings.syncPasswordOk = false;
+    Settings.loadLocalProfiles();
 }
 
 Settings.startSyncWith = function(password, callback) {
