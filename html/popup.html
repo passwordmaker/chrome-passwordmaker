@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>PasswordMaker Pro</title>
         <link rel="stylesheet" type="text/css" href="../css/awesome-buttons.css">
         <link rel="stylesheet" type="text/css" href="../css/popup.css">
         <script type="text/javascript" src="../javascript/jquery.min.js"></script>
@@ -22,10 +23,10 @@
     </head>
     <body>
         <div id='head'>
-            <img src='../images/passwdmaker16.png' width='16px' height='16px'/><span>PasswordMaker Pro</span>
+            <img src='../images/passwdmaker16.png' width='16' height='16' alt=""/><span>PasswordMaker Pro</span>
         </div>
         <form>
-        <div class='row'><label for='password'>Password:</label><input class='input' id='password' type="password"/></div>
+        <div class='row'><label for='password'>Password:</label><input class='input' id='password' type="password" autofocus /></div>
         <div class='row' id='confirmation_row'><label for='confirmation'>Confirmation:</label><input class='input' id='confirmation' type="password"/></div>
         <div class='row'><label>Save Password:</label>
             <select id="store_location" name="store_location">
@@ -41,7 +42,7 @@
         <div class='row'><label for='usedtext'>Used text:</label><input class='input' id='usedtext'/></div>
         <div class='row'>
             <label for='generated'>Generated Password:</label>
-            <input id='generated' readonly='true' value=""/>
+            <input id='generated' readonly value=""/>
             <a id='activatePassword' class="awesome button largebutton" href="#" onclick="showPasswordField();">Show password</a>
         </div>
         <div class='row button-row'>
