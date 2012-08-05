@@ -250,4 +250,7 @@ $(function() {
             $("form").show();
         });
     });
+    
+  // Focus hack, see http://stackoverflow.com/a/11400653/1295557
+  if (location.search != "?focusHack") location.search = "?focusHack";
 });
