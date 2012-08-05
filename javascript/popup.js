@@ -253,4 +253,12 @@ $(function() {
     
   // Focus hack, see http://stackoverflow.com/a/11400653/1295557
   if (location.search != "?focusHack") location.search = "?focusHack";
+  
+  // Tab navigation workaround, see http://code.google.com/p/chromium/issues/detail?id=122352
+  // Use Enter instead of Tab
+  $("#password").keypress(function(event) {
+    if (event.keyCode == 13) {
+      $("#confirmation").focus();
+    }
+  });
 });
