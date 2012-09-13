@@ -218,9 +218,15 @@ Settings.saveProfiles = function() {
     localStorage["profiles"] = stringified;
     if (Settings.shouldSyncProfiles() &&
         (!Settings.syncDataAvailable || Settings.syncPasswordOk)) {
-        Settings.saveSyncedProfiles(Settings.encrypt(
+        encrypted = Settings.encrypt(
             stringified, 
-            Settings.syncProfilesPassword()).value);
+            Settings.syncProfilesPassword()).value;
+        parsed = JSON.parse(encrypted);
+        if (parsed.salt == undefined) {
+          parsed.salt = JSON.parse(localStorage["synced_profiles"]).salt;
+          encrypted = JSON.stringify(parsed);
+        }
+        Settings.saveSyncedProfiles(encrypted);
     }
 }
 
