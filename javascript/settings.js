@@ -176,17 +176,14 @@ Settings.loadProfiles = function() {
     Settings.loadLocalProfiles();
     if (localStorage["synced_profiles"] == null ||
         localStorage["synced_profiles"] == "") {
-        console.log("returning");
         return;
     }
 
-    console.log("WTF!!");
     Settings.syncDataAvailable = true;
 
     profiles = Settings.decrypt(
         localStorage["synced_profiles"], Settings.syncProfilesPassword());
     if (profiles != null) {
-        console.log("EVEN WORSE!!");
         Settings.syncPasswordOk = true;
         if (Settings.shouldSyncProfiles()) {
           Settings.loadProfilesFromString(profiles.value);
@@ -227,7 +224,6 @@ Settings.saveSyncedProfiles = function(data) {
 
 Settings.saveProfiles = function() {
     stringified = JSON.stringify(Settings.profiles);
-    console.log("stringified: " + stringified);
     localStorage["profiles"] = stringified;
     if (Settings.shouldSyncProfiles() &&
         (!Settings.syncDataAvailable || Settings.syncPasswordOk)) {
