@@ -188,6 +188,7 @@ function saveProfile() {
         currentProfile.selectedCharset= $("#charset").val();
     }
     
+    Settings.setProfile(currentProfile);
     Settings.saveProfiles();
     updateProfileList();
     highlightProfile();
