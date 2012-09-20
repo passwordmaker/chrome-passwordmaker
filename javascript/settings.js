@@ -94,6 +94,15 @@ Settings.getProfiles = function() {
     return Settings.profiles;
 }
 
+Settings.setProfile = function(profile) {
+    var profiles = Settings.getProfiles();
+    for (var i in profiles) {
+        if (profiles[i].id == profile.id) {
+            profiles[i] = profile;
+        }
+    }
+}
+
 Settings.getProfile = function(id) {
     var profiles = Settings.getProfiles();
     for (var i in profiles) {
