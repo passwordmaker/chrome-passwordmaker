@@ -257,8 +257,16 @@ $(function() {
   // Tab navigation workaround, see http://code.google.com/p/chromium/issues/detail?id=122352
   // Use Enter instead of Tab
   $("#password").keypress(function(event) {
-    if (event.keyCode == 13) {
+    if (event.keyCode == 13 && !Settings.keepMasterPasswordHash()) {
       $("#confirmation").focus();
     }
+    else if (event.keyCode == 13) {
+      chrome.tabs.sendRequest(currentTab, {hasPasswordField: true}, function(response) {
+        if (response.hasField) {
+          fillPassword();
+        }
+      });
+    }
+    
   });
 });
