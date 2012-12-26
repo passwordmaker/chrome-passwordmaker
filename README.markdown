@@ -8,6 +8,12 @@ Sadly that extension is only a simple port of the html page that is offered on <
 
 This extension fixes this. It's a real port with all the bells and whistles you expect.
 
+# Status of this project
+
+Currently there is no active development on this plugin. It has a few little issues (see the issue tracker), but it works pretty well
+for me. If you want to take over this project, send me some pull requests for features. If I think your code is good enough to
+takeover the project, I will give you full access to this repo.
+
 # Installation
 
 You can install this plugin from the <a href="https://chrome.google.com/extensions/detail/ocjkdaaapapjpmipmhiadedofjiokogj">chrome extensions library</a>.
