@@ -113,10 +113,10 @@ function updateURL(url) {
         profileId = getAutoProfileIdForUrl(url);        
     }
     var profile = Settings.getProfile(profileId);
-    // Store profile matched url to ALT attribute
-    $("#usedtext").attr('alt', profile.getUrl(url));
+    // Store url in ALT attribute
+    $("#usedtext").attr('alt', url);
     // Store either matched url or, if set, use profiles own "use text"
-    $("#usedtext").val(((profile.getText()) ? profile.getText() : $("#usedtext").attr('alt')));
+    $("#usedtext").val(((profile.getText()) ? profile.getText() : profile.getUrl(url)));
 }
 
 function onProfileChanged() {
