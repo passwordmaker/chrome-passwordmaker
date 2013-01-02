@@ -14,7 +14,7 @@ function getAutoProfileIdForUrl(url) {
     for (var i in profiles) {
         var profile = profiles[i];
         if (profile.siteList) {
-            var usedText = profile.getUrl(url);
+            var usedURL = profile.getUrl(url);
             var sites = profile.siteList.split(' ');
             for (var j = 0; j < sites.length; j++) {
                 var pat = sites[j];
@@ -37,7 +37,7 @@ function getAutoProfileIdForUrl(url) {
                     console.log(e + "\n");
                 }
 
-                if (re.test(usedText) || re.test(url)) {
+                if (re.test(usedURL) || re.test(url)) {
                     return profile.id;
                 }
             }
@@ -49,11 +49,11 @@ function getAutoProfileIdForUrl(url) {
 function updateFields(e) {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
-    var usedtext = $("#usedtext").val();
+    var usedURL = $("#usedtext").attr('alt');
     
     var profileId = $("#profile").val();
     if (profileId == "auto") {
-        profileId = getAutoProfileIdForUrl(usedtext);        
+        profileId = getAutoProfileIdForUrl(usedURL);        
     } else {
         Settings.setActiveProfileId(profileId);
     }
@@ -107,19 +107,21 @@ function matchesHash(password) {
   return new_hash == saved_hash ;
 }
 
-function updateUsedText(url) {
+function updateURL(url) {
     var profileId = $("#profile").val();
     if (profileId == "auto") {
         profileId = getAutoProfileIdForUrl(url);        
     }
     var profile = Settings.getProfile(profileId);
-    $("#usedtext").val(profile.getUrl(url));
+    // Store profile matched url to ALT attribute
+    $("#usedtext").attr('alt', profile.getUrl(url));
+    $("#usedtext").val($("#usedtext").attr('alt'));
 }
 
 function onProfileChanged() {
     chrome.windows.getCurrent(function(obj) {
         chrome.tabs.getSelected(obj.id, function(tab) {
-            updateUsedText(tab.url);
+            updateURL(tab.url);
             updateFields();
         });
     });
@@ -161,7 +163,7 @@ function init(url) {
 
         $("#profile").empty().append(options);
 
-        updateUsedText(url);
+        updateURL(url);
         $("#store_location").val(Settings.storeLocation);
 
         updateFields();
