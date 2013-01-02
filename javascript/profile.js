@@ -10,6 +10,9 @@ function Profile() {
     this.url_domain = true;
     this.url_path = false;
     
+	// Use this text instead of domain if not null
+	this.strUseText = "";
+	
     // Settings for the key generation
     this.hashAlgorithm = "md5"
     this.username = ""
@@ -136,6 +139,10 @@ Profile.prototype.splitSubdomain = function(segments) {
   return [segments.slice(0, -2).join('.'), segments.slice(-2).join('.')];
 }
 
+// Return strUseText
+Profile.prototype.getText = function(url) {
+    return this.strUseText;
+}
 
 Profile.prototype.getUrl = function(url) {
     if (url == null) {
