@@ -70,6 +70,7 @@ function setCurrentProfile(profile) {
     $("#domainCB").attr('checked', profile.url_domain);
     $("#pathCB").attr('checked', profile.url_path);
     
+    $("#inputUseThisText").val(profile.strUseText);
     $("#whereLeetLB").val(profile.whereToUseL33t);
     $("#leetLevelLB").val(profile.l33tLevel);
     $("#hashAlgorithmLB").val(profile.hashAlgorithm);
@@ -173,6 +174,7 @@ function saveProfile() {
     currentProfile.url_subdomain = $("#subdomainCB").attr('checked');
     currentProfile.url_domain = $("#domainCB").attr('checked');
     currentProfile.url_path = $("#pathCB").attr('checked');
+    currentProfile.strUseText = $("#inputUseThisText").val();
     currentProfile.whereToUseL33t = $("#whereLeetLB").val();
     currentProfile.l33tLevel      = $("#leetLevelLB").val();
     currentProfile.hashAlgorithm  = $("#hashAlgorithmLB").val();
