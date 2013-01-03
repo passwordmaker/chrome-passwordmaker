@@ -170,6 +170,15 @@ h2 {
   text-align: right;
 }
 
+#divImportOverride {
+    width: 505px;
+    text-align: left;
+}
+
+#inputImportOverwrite {
+    margin-left: 5px;    
+}
+
 #export_buttons {
   width: 505px;
   text-align: right;
