@@ -132,6 +132,14 @@ function importRdf(){
 
     var rdfDoc = RdfImporter.loadDoc(txt);
 
+    // Check that profiles have been parsed and are available before wiping current data
+    if ((rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length) && ($('#inputImportOverwrite').attr('checked') == true)) {
+        console.log("set null");
+        // Setting to null triggers creation of default profile, settings to empty array bypasses that code ([] != null)
+        Settings.profiles = [];
+        Settings.saveProfiles();
+    }
+    
     var count = RdfImporter.saveProfiles(rdfDoc.profiles);
 
     if(!count){
