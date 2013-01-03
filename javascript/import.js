@@ -58,6 +58,7 @@ var RdfImporter = {
         ['setting', 'maskMasterPassword',    'hideMasterPassword', strToBool],
         ['setting', 'masterPasswordStorage', 'storeLocation',      renameStoreLocation, renameStoreLocation],
         ['profile', 'name',                  'title'],
+        ['profile', 'urlToUse',              'strUseText'],
         ['profile', 'whereLeetLB',           'whereToUseL33t'],
         ['profile', 'leetLevelLB',           'l33tLevel',          parseInt],
         ['profile', 'hashAlgorithmLB',       'hashAlgorithm',      renameHashAlgorithm, renameHashAlgorithm],
