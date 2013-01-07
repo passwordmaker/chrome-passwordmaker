@@ -297,7 +297,7 @@ Settings.getPassword = function(callback) {
         chrome.extension.sendRequest({getPassword: true}, function(response) {
             if (response.password != null && response.password.length > 0) {
                 callback(response.password);
-            } else if (!localStorage["password_crypt"]===undefined) {
+            } else if (localStorage["password_crypt"]!==undefined) {
                 Settings.password = byteArrayToString(rijndaelDecrypt(hexToByteArray(localStorage["password_crypt"]), hexToByteArray(localStorage["password_key"]), "CBC"));
                 callback(Settings.password)
             } else if (localStorage["password"]) {
