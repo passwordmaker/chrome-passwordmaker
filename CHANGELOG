@@ -1,8 +1,8 @@
-0.4.2 - ???
+0.4.2 - 2012-01-08
 
 * font-family "monospace" for password field
 
-0.4.1 - 2012-01-06 
+0.4.1 - 2012-01-06
 
 * Starting Changelog
 * #78 - Fixes password not saving on exit
