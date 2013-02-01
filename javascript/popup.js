@@ -206,6 +206,14 @@ function showPasswordField() {
     $("#generated").focus();
 }
 
+function sendFillPassword() {
+    chrome.tabs.sendRequest(currentTab, {hasPasswordField: true}, function(response) {
+        if (response.hasField) {
+          fillPassword();
+        }
+    });
+}
+
 $(function() {
     $("#password").bind('keyup change', updateFields);
     $("#confirmation").bind('keyup change', updateFields);
@@ -237,13 +245,9 @@ $(function() {
     }
 
     $("#generated").keypress(function(event) {
-      if (event.keyCode == 13) {
-            chrome.tabs.sendRequest(currentTab, {hasPasswordField: true}, function(response) {
-                if (response.hasField) {
-                    fillPassword();
-                }
-            });
-      }
+        if (event.keyCode == 13) {
+            sendFillPassword();
+        }
     });
     
     chrome.windows.getCurrent(function(obj) {
@@ -254,22 +258,24 @@ $(function() {
         });
     });
     
-  // Focus hack, see http://stackoverflow.com/a/11400653/1295557
-  if (location.search != "?focusHack") location.search = "?focusHack";
-  
-  // Tab navigation workaround, see http://code.google.com/p/chromium/issues/detail?id=122352
-  // Use Enter instead of Tab
-  $("#password").keypress(function(event) {
-    if (event.keyCode == 13 && !Settings.keepMasterPasswordHash()) {
-      $("#confirmation").focus();
-    }
-    else if (event.keyCode == 13) {
-      chrome.tabs.sendRequest(currentTab, {hasPasswordField: true}, function(response) {
-        if (response.hasField) {
-          fillPassword();
+    // Focus hack, see http://stackoverflow.com/a/11400653/1295557
+    if (location.search != "?focusHack") location.search = "?focusHack";
+
+    // Tab navigation workaround, see http://code.google.com/p/chromium/issues/detail?id=122352
+    // Use Enter instead of Tab
+    $("#password").keypress(function(event) {
+        if (event.keyCode == 13 && !Settings.keepMasterPasswordHash()) {
+            $("#confirmation").focus();
         }
-      });
-    }
-    
-  });
+        else if (event.keyCode == 13) {
+            sendFillPassword();
+        }
+    });
+
+    $("#confirmation").keypress(function(event) {
+        if (event.keyCode == 13) {
+            sendFillPassword();
+        }
+    })
+
 });
