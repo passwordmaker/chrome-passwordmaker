@@ -159,9 +159,13 @@ function showOptions() {
     showSection('#general_settings');
 }
 
+function showInformation() {
+    showSection('#general_information');
+}
+
 function showSection(showId) {
     if(!$(showId).is(":visible")){
-        $('#profile_setting:visible,#import_settings:visible,#export_settings:visible,#general_settings:visible')
+        $('#profile_setting:visible,#import_settings:visible,#export_settings:visible,#general_settings:visible,#general_information:visible')
             .fadeOut(300, function(){
                 $(showId).fadeIn(300);
             });
@@ -333,6 +337,7 @@ $(function() {
     $("#showImport>a").bind('click', showImport);
     $("#showExport>a").bind('click', showExport);
     $("#showSettings>a").bind('click', showOptions);
+    $("#showInformation>a").bind('click', showInformation);
 
     $("#protocolCB").bind('change', updateExample);
     $("#subdomainCB").bind('click', updateExample);
