@@ -71,6 +71,10 @@ h2 {
     margin-top: 20px;
 }
 
+#showInformation {
+    margin-top: 20px;
+}
+
 #showImport {
     margin-top: 20px;
 }
@@ -91,6 +95,13 @@ h2 {
 }
 
 #general_settings {
+    padding: 5px;
+    width: 505px;
+    float: right;
+    display: none;
+}
+
+#general_information {
     padding: 5px;
     width: 505px;
     float: right;
@@ -155,6 +166,19 @@ h2 {
     width: 300px;
     font-size: 0.9em;
     padding-top: 10px;
+}
+
+.indented_text {
+    margin-left: 24px;
+    width: 411px;
+    font-size: 0.9em;
+    padding-bottom: 10px;
+}
+
+.section_header {
+    clear: both;
+    width: 500px;
+    height: 30px;
 }
 
 #sync_buttons #set_sync_password {

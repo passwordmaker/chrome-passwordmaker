@@ -38,6 +38,9 @@
                 <div id="showSettings">
                     <a href="#" class="awesome button">General Options</a>
                 </div>
+                <div id="showInformation">
+                    <a href="#" class="awesome button">Information</a>
+                </div>
                 <div id="pledgie">
                   <a href="http://pledgie.com/campaigns/9703"><img alt="Click here to lend your support to: chrome-passwordmaker and make a donation at www.pledgie.com !" src="http://www.pledgie.com/campaigns/9703.png?skin_name=chrome" border="0"></a>
                 </div>
@@ -280,10 +283,10 @@
                             <div class="message" id="sync_password_set">
                                 Password set and profile data is being synced.<br><br>
                                 You can delete the synced data and stop syncing by clicking the "Delete" button.</div>
-            		<div class="subrow" id="sync_profiles_row">
-                            <label for="syncProfilesPassword">Master Password</label>
-                            <input class="standard" type="password" id="syncProfilesPassword" />
-                </div>
+                            <div class="subrow" id="sync_profiles_row">
+                                <label for="syncProfilesPassword">Master Password</label>
+                                <input class="standard" type="password" id="syncProfilesPassword" />
+                            </div>
                             <div id="sync_buttons">
                                 <div id="set_sync_password" style="visibility:hidden;">
                                     <a href="#" class="awesome button">Set password</a></div>
@@ -292,7 +295,25 @@
                             </div>
                         </div>
                     </div>
+            </div>
 
+            <div id="general_information">
+                <h2>Information</h2>
+                <div id="form">
+                    <div class="section_header"><em>Keyboard navigation</em></div>
+                    <div class="row">
+                        <div class="subrow">
+                            <div class="indented_text" id="global_key_shortcut_information">
+                                You can use the shortcut <b>Alt+Shift+M</b> to open the PasswordMaker Pro popup, no matter where you are on a website.</div>
+                            <div class="indented_text" id="global_key_shortcut_information">
+                                When you are done typing your master password in the <em>Password</em> textfield of the PassworkMaker Pro popup, you can push <b>Enter</b> to fill the open website's password field with the generated password, using the settings that were preselected in the PasswordMaker Pro popup.</div>
+                            <div class="indented_text" id="global_key_shortcut_information">
+                                If you do not have the <span id="showSettings"><a href="#">Keep Master Password Hash</a></span> setting enabled, pushing <b>Enter</b> or <b>Tab</b> in the <em>Password</em> textfield will bring you to the <em>Confirmation</em> textfield. Here you can then push <b>Enter</b>, after you are done typing your master password again, to fill the open website's password field, using the settings that were preselected in the password popup.</div>
+                            <div class="indented_text" id="global_key_shortcut_information">
+                                If you want to alter any of the PasswordMaker Pro popup's settings, just push <b>Tab</b> to get to the respective next setting. Push <b>Shift+Tab</b> to get to the previous setting respectively. When you are in the <em>Generated Password</em> field, again you can push <b>Enter</b> to fill the open website's password field.</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <br style="clear:both"/>
