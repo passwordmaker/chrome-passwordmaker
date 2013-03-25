@@ -10,8 +10,7 @@ This extension fixes this. It's a real port with all the bells and whistles you 
 
 # Status of this project
 
-Currently there is no active development on this plugin. It has a few little issues (see the issue tracker), but it works pretty well
-for me. If you want to take over this project, send me some pull requests for features. If I think your code is good enough to
+Currently there is no active development on this plugin. If you want to take over this project, send me some pull requests for features. If I think your code is good enough to
 takeover the project, I will give you full access to this repo.
 
 # Installation

@@ -22,5 +22,12 @@
      "all_frames": true
   } ],
   "background": { "scripts": [ "javascript/background.js" ] },
-  "options_page": "html/options.html"
+  "options_page": "html/options.html",
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+M"
+      }
+    }
+  }
 }
