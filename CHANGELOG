@@ -1,3 +1,8 @@
+0.5.0 - 2012-03-25
+
+* Added Alt+Shift+M to invoke the password popup
+* Fixed keyboard handling
+
 0.4.2 - 2012-01-08
 
 * font-family "monospace" for password field
