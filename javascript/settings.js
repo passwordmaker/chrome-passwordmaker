@@ -254,6 +254,7 @@ Settings.setStoreLocation = function(store) {
         localStorage["store_location"] = store;
         if (Settings.storeLocation != "disk") {
             localStorage["password"] = "";
+            localStorage["password_crypt"] = "";
         }
         if (Settings.storeLocation != "memory") {
             Settings.password = "";
@@ -319,6 +320,25 @@ Settings.setHidePassword = function(bool) {
 
 Settings.shouldHidePassword = function() {
     bool = localStorage["show_generated_password"];
+    return bool == "true";
+}
+
+Settings.setDisablePasswordSaving = function(bool) {
+    localStorage["disable_password_saving"] = bool;
+    if (bool == true) {
+        store = "never"
+        Settings.storeLocation = store;
+        localStorage["store_location"] = store;
+        localStorage["password"] = "";
+        localStorage["password_crypt"] = "";
+        Settings.password = "";
+
+        chrome.extension.sendRequest({setPassword: true, password: null}, function(response) {});
+    }
+}
+
+Settings.shouldDisablePasswordSaving = function() {
+    bool = localStorage["disable_password_saving"];
     return bool == "true";
 }
 
