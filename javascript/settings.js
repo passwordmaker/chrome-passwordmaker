@@ -249,7 +249,6 @@ Settings.setActiveProfileId = function(id) {
 }
 
 Settings.setStoreLocation = function(store) {
-    console.log("Settings.storeLocation: " + Settings.storeLocation)
     if (Settings.storeLocation != store) {
         Settings.storeLocation = store;
         localStorage["store_location"] = store;
