@@ -254,6 +254,7 @@ Settings.setStoreLocation = function(store) {
         localStorage["store_location"] = store;
         if (Settings.storeLocation != "disk") {
             localStorage["password"] = "";
+            localStorage["password_crypt"] = "";
         }
         if (Settings.storeLocation != "memory") {
             Settings.password = "";
