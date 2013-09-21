@@ -1,3 +1,8 @@
+0.5.1 - 2013-09-21
+
+* Adds option to never save master password
+* Fixes Bug #63: Master password stays saved in extension drop down on Mac, despite "never store"
+
 0.5.0 - 2012-03-25
 
 * Added Alt+Shift+M to invoke the password popup
