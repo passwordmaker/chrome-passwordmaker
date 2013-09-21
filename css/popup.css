@@ -1,5 +1,4 @@
 body {
-  height: 290px;
   font-family: sans-serif;
   font-size: 13px;
   padding: 5px;
@@ -73,8 +72,10 @@ select {
 }
 
 #button-row {
+    height: 24px;
     margin-top: 5px;
     margin-bottom: 5px;
+    padding-bottom: 11px;
 }
 
 .largebutton {

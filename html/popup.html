@@ -28,7 +28,7 @@
         <form>
         <div class='row'><label for='password'>Password:</label><input class='input' id='password' type="password" autofocus /></div>
         <div class='row' id='confirmation_row'><label for='confirmation'>Confirmation:</label><input class='input' id='confirmation' type="password"/></div>
-        <div class='row'><label>Save Password:</label>
+        <div class='row' id="store_location_row"><label>Save Password:</label>
             <select id="store_location" name="store_location">
                   <option value="memory">In memory</option>
                   <option value="disk">On disk</option>
@@ -45,7 +45,7 @@
             <input id='generated' readonly value=""/>
             <a id='activatePassword' class="awesome button largebutton" href="#" onclick="showPasswordField();">Show password</a>
         </div>
-        <div class='row button-row'>
+        <div class='row' id='button-row'>
           <div id="copypassword"><input class="awesome" type="button" value="Copy" onClick="copyPassword();"/></div>
           <div id="injectpasswordrow"><input class="awesome" type="button" value="Fill field" onClick="fillPassword();"/></div>
           <div id='options'><a class="awesome button" href="#">Options</a></div>
