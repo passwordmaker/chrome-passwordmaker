@@ -145,6 +145,10 @@ function init(url) {
         $("#password").val(password);
         $("#confirmation").val(password);
 
+        if (Settings.shouldDisablePasswordSaving()) {
+            $("#store_location_row").hide();
+        }
+
         var activeProfileId = Settings.getActiveProfileId();    
         var autoProfileId = getAutoProfileIdForUrl(url);
         
