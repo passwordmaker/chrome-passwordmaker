@@ -1,3 +1,9 @@
+NEXT
+
+* Fixes Bug #84: If passwort_crypt is empty, the popup crashes
+* Update usage of chrome extension apis to remove deprecated stuff
+* Updated jQuery and jQuery-UI
+
 0.5.1 - 2013-09-21
 
 * Adds option to never save master password
