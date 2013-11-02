@@ -83,16 +83,15 @@ var TOPLEVELDOMAINS = {
   "vn.ua":1, "zaporizhzhe.ua":1, "zp.ua":1, "uz.ua":1, "uzhgorod.ua":1,
   "zhitomir.ua":1, "zt.ua":1, "ac.il":1, "co.il":1, "org.il":1, "net.il":1,
   "k12.il":1, "gov.il":1, "muni.il":1, "idf.il":1, "co.im":1, "org.im":1
-}
-
+};
 
 Settings.getProfiles = function() {
-    if (Settings.profiles == null) {
+    if (Settings.profiles === null) {
         Settings.loadProfiles();
     }
 
     return Settings.profiles;
-}
+};
 
 Settings.setProfile = function(profile) {
     var profiles = Settings.getProfiles();
@@ -101,7 +100,7 @@ Settings.setProfile = function(profile) {
             profiles[i] = profile;
         }
     }
-}
+};
 
 Settings.getProfile = function(id) {
     var profiles = Settings.getProfiles();
@@ -111,7 +110,7 @@ Settings.getProfile = function(id) {
         }
     }
     return null;
-}
+};
 
 Settings.getMaxId = function() {
     var maxId = 0;
@@ -122,17 +121,17 @@ Settings.getMaxId = function() {
         }
     }
     return maxId;
-}
+};
 
 Settings.addProfile = function(profile) {
-    if (Settings.profiles == null) {
+    if (Settings.profiles === null) {
         Settings.getProfiles();
     }
-    
+
     profile.id = Settings.getMaxId() + 1;
-    
+
     Settings.profiles.push(profile);
-}
+};
 
 Settings.deleteProfile = function(profile) {
     var profiles = Settings.getProfiles();
@@ -142,7 +141,7 @@ Settings.deleteProfile = function(profile) {
             Settings.saveProfiles();
         }
     }
-}
+};
 
 Settings.loadProfilesFromString = function(profiles) {
     try {
@@ -152,30 +151,30 @@ Settings.loadProfilesFromString = function(profiles) {
         $.each(json, function(i) {
             p = new Profile();
             $.each(json[i], function(key, value) {
-                p[key] = value; 
+                p[key] = value;
             });
-            Settings.profiles.push(p);                
+            Settings.profiles.push(p);
         });
        return true;
     } catch(e) {
-        return false; 
+        return false;
     }
-}
+};
 
 Settings.loadLocalProfiles = function() {
-    if (localStorage["profiles"] == null || localStorage["profiles"] == "") {
+    if (localStorage["profiles"] === null || localStorage["profiles"] === "") {
         Settings.profiles = [new Profile()];
     } else {
         if (!Settings.loadProfilesFromString(localStorage["profiles"])) {
             Settings.profiles = [new Profile()];
         }
     }
-}
+};
 
 Settings.loadProfiles = function() {
     Settings.loadLocalProfiles();
-    if (localStorage["synced_profiles"] == null ||
-        localStorage["synced_profiles"] == "") {
+    if (localStorage["synced_profiles"] === null ||
+        localStorage["synced_profiles"] === "") {
         return;
     }
 
@@ -183,13 +182,13 @@ Settings.loadProfiles = function() {
 
     profiles = Settings.decrypt(
         localStorage["synced_profiles"], Settings.syncProfilesPassword());
-    if (profiles != null) {
+    if (profiles !== null) {
         Settings.syncPasswordOk = true;
         if (Settings.shouldSyncProfiles()) {
           Settings.loadProfilesFromString(profiles.value);
         }
     }
-}
+};
 
 Settings.saveSyncedProfiles = function(data) {
     oldKeys = localStorage["synced_profiles_keys"];
@@ -220,7 +219,7 @@ Settings.saveSyncedProfiles = function(data) {
             }
         });
     }
-}
+};
 
 Settings.saveProfiles = function() {
     stringified = JSON.stringify(Settings.profiles);
@@ -228,7 +227,7 @@ Settings.saveProfiles = function() {
     if (Settings.shouldSyncProfiles() &&
         (!Settings.syncDataAvailable || Settings.syncPasswordOk)) {
         encrypted = Settings.encrypt(
-            stringified, 
+            stringified,
             Settings.syncProfilesPassword()).value;
         parsed = JSON.parse(encrypted);
         if (parsed.salt == undefined) {
@@ -237,16 +236,16 @@ Settings.saveProfiles = function() {
         }
         Settings.saveSyncedProfiles(encrypted);
     }
-}
+};
 
 Settings.getActiveProfileId = function() {
     return Settings.activeProfileId;
-}
+};
 
 Settings.setActiveProfileId = function(id) {
     localStorage["profile_id"] = id;
     Settings.activeProfileId = id;
-}
+};
 
 Settings.setStoreLocation = function(store) {
     if (Settings.storeLocation != store) {
@@ -260,17 +259,17 @@ Settings.setStoreLocation = function(store) {
             Settings.password = "";
         }
     }
-}
+};
 
 // Make a pseudo-random encryption key... emphasis on *pseudo*
 Settings.makeKey = function() {
   var hex = ['0','1','2','3','4','5','6','7','8','9','0','a','b','c','d','e','f'];
   var keySz = keySizeInBits/4; //keySizeInBits defined in aes.js
   var ret = "";
-  while (ret.length < keySz) 
+  while (ret.length < keySz)
     ret += hex[Math.floor(Math.random()*15)];
   return ret;
-}
+};
 
 Settings.setPassword = function(password) {
     // ToDo: CRYPT THIS!!
@@ -280,7 +279,7 @@ Settings.setPassword = function(password) {
         chrome.extension.sendRequest({setPassword: true, password: password});
     } else if (Settings.storeLocation == "disk") {
         Settings.password = password;
-        key = Settings.makeKey();        
+        key = Settings.makeKey();
         localStorage["password_key"] = key;
         localStorage["password_crypt"] = byteArrayToHex(rijndaelEncrypt(password, hexToByteArray(key), "CBC"));
         chrome.extension.sendRequest({setPassword: true, password: password});
@@ -289,19 +288,18 @@ Settings.setPassword = function(password) {
         localStorage["password"] = "";
         chrome.extension.sendRequest({setPassword: true, password: null});
     }
-}
+};
 
 Settings.getPassword = function(callback) {
-    if (Settings.password != null && Settings.password.length > 0) {
+    if (Settings.password !== null && Settings.password.length > 0) {
         callback(Settings.password);
     } else {
         chrome.extension.sendRequest({getPassword: true}, function(response) {
-            if (response.password != null && response.password.length > 0) {
+            if (response.password !== null && response.password.length > 0) {
                 callback(response.password);
-            } else if (localStorage["password_crypt"]!==undefined) {
             } else if (localStorage["password_crypt"]!==undefined && localStorage["password_crypt"].length > 0) {
                 Settings.password = byteArrayToString(rijndaelDecrypt(hexToByteArray(localStorage["password_crypt"]), hexToByteArray(localStorage["password_key"]), "CBC"));
-                callback(Settings.password)
+                callback(Settings.password);
             } else if (localStorage["password"]) {
                 Settings.password = localStorage["password"];
                 Settings.setPassword(Settings.password);
@@ -313,21 +311,21 @@ Settings.getPassword = function(callback) {
 
         });
     }
-}
+};
 
 Settings.setHidePassword = function(bool) {
     localStorage["show_generated_password"] = bool;
-}
+};
 
 Settings.shouldHidePassword = function() {
     bool = localStorage["show_generated_password"];
     return bool == "true";
-}
+};
 
 Settings.setDisablePasswordSaving = function(bool) {
     localStorage["disable_password_saving"] = bool;
-    if (bool == true) {
-        store = "never"
+    if (bool === true) {
+        store = "never";
         Settings.storeLocation = store;
         localStorage["store_location"] = store;
         localStorage["password"] = "";
@@ -336,51 +334,52 @@ Settings.setDisablePasswordSaving = function(bool) {
 
         chrome.extension.sendRequest({setPassword: true, password: null}, function(response) {});
     }
-}
+};
 
 Settings.shouldDisablePasswordSaving = function() {
     bool = localStorage["disable_password_saving"];
     return bool == "true";
-}
+};
 
 Settings.setKeepMasterPasswordHash = function(bool) {
   localStorage["keep_master_password_hash"] = bool;
-}
+};
 
 Settings.keepMasterPasswordHash = function() {
   bool = localStorage["keep_master_password_hash"];
   return bool == "true";
-}
+};
 
 Settings.masterPasswordCharSet = "0123456789abcdef";
 
 Settings.setMasterPasswordHash = function(theHash) {
   localStorage["master_password_hash"] = theHash;
-}
+};
 
 Settings.masterPasswordHash = function() {
   return localStorage["master_password_hash"];
-}
+};
 
 Settings.setSyncProfiles = function(bool) {
     localStorage["sync_profiles"] = bool;
-}
+
+};
 
 Settings.shouldSyncProfiles = function() {
     return localStorage["sync_profiles"] == "true";
-}
+};
 
 Settings.setSyncProfilesPassword = function(password) {
     localStorage["sync_profiles_password"] = JSON.stringify(password);
-}
+};
 
 Settings.syncProfilesPassword = function() {
     try {
         return JSON.parse(localStorage["sync_profiles_password"]);
     } catch (e) {
         return "";
-    } 
-}
+    }
+};
 
 Settings.clearSyncData = function(callback) {
     chrome.storage.sync.clear(function() {
@@ -397,18 +396,18 @@ Settings.clearSyncData = function(callback) {
             callback(false);
         }
     });
-}
+};
 
 Settings.stopSync = function() {
     Settings.setSyncProfiles(false);
     Settings.syncPasswordOk = false;
     Settings.loadLocalProfiles();
-}
+};
 
 Settings.startSyncWith = function(password, callback) {
     if (Settings.syncDataAvailable) {
         profiles = Settings.decrypt(localStorage["synced_profiles"], password);
-        if (profiles != null) {
+        if (profiles !== null) {
             Settings.syncPasswordOk = true;
             Settings.loadProfilesFromString(profiles.value);
             return profiles.key;
@@ -424,14 +423,14 @@ Settings.startSyncWith = function(password, callback) {
     }
 
     return null;
-}
+};
 
 Settings.encrypt = function(data, password) {
     var options = { ks: 256, ts: 128, iter: 10000 };
     var rp = {};
     var encrypted = sjcl.encrypt(password, data, options, rp);
     return {value: encrypted, key: rp.key};
-}
+};
 
 Settings.decrypt = function(data, password) {
     try {
@@ -441,4 +440,4 @@ Settings.decrypt = function(data, password) {
     } catch (e) {
         return null;
     }
-}
+};
