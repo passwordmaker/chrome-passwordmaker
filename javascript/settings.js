@@ -276,17 +276,17 @@ Settings.setPassword = function(password) {
     if (Settings.storeLocation == "memory") {
         Settings.password = password;
         localStorage["password"] = "";
-        chrome.extension.sendRequest({setPassword: true, password: password});
+        chrome.extension.sendMessage({setPassword: true, password: password});
     } else if (Settings.storeLocation == "disk") {
         Settings.password = password;
         key = Settings.makeKey();
         localStorage["password_key"] = key;
         localStorage["password_crypt"] = byteArrayToHex(rijndaelEncrypt(password, hexToByteArray(key), "CBC"));
-        chrome.extension.sendRequest({setPassword: true, password: password});
+        chrome.extension.sendMessage({setPassword: true, password: password});
     } else {
         Settings.password = null;
         localStorage["password"] = "";
-        chrome.extension.sendRequest({setPassword: true, password: null});
+        chrome.extension.sendMessage({setPassword: true, password: null});
     }
 };
 
@@ -294,7 +294,7 @@ Settings.getPassword = function(callback) {
     if (Settings.password !== null && Settings.password.length > 0) {
         callback(Settings.password);
     } else {
-        chrome.extension.sendRequest({getPassword: true}, function(response) {
+        chrome.extension.sendMessage({getPassword: true}, function(response) {
             if (response.password !== null && response.password.length > 0) {
                 callback(response.password);
             } else if (localStorage["password_crypt"]!==undefined && localStorage["password_crypt"].length > 0) {
@@ -332,7 +332,7 @@ Settings.setDisablePasswordSaving = function(bool) {
         localStorage["password_crypt"] = "";
         Settings.password = "";
 
-        chrome.extension.sendRequest({setPassword: true, password: null}, function(response) {});
+        chrome.extension.sendMessage({setPassword: true, password: null}, function(response) {});
     }
 };
 

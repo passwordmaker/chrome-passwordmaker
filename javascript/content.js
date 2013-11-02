@@ -1,4 +1,4 @@
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.password) {
         fillPasswords(request.password);
     } else if (request.hasPasswordField) {
@@ -14,12 +14,12 @@ function fillPasswords(password) {
 
 function hasPasswordField() {
   fields = jQuery("input[type=password]");
-  
+
   hasFields = false;
-  
+
   if (fields && fields.length > 0) {
       hasFields = true;
   }
-  
+
   return hasFields;
 }

@@ -1,12 +1,12 @@
 var password = null;
 
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     response = {};
 
     if (request.setPassword) {
-        password = request.password
+        password = request.password;
     } else if (request.getPassword) {
-        response = {password: password}
+        response = {password: password};
     }
     sendResponse(response);
 });

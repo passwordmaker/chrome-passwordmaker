@@ -2,11 +2,11 @@ var currentTab = null;
 
 function setPasswordColors(foreground, background) {
     $("#generated").css("background-color", background);
-    $("#generated").css("color", foreground);        
+    $("#generated").css("color", foreground);
     $("#password").css("background-color", background);
-    $("#password").css("color", foreground);        
+    $("#password").css("color", foreground);
     $("#confirmation").css("background-color", background);
-    $("#confirmation").css("color", foreground);        
+    $("#confirmation").css("color", foreground);
 }
 
 function getAutoProfileIdForUrl(url) {
@@ -50,10 +50,10 @@ function updateFields(e) {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
     var usedURL = $("#usedtext").attr('alt');
-    
+
     var profileId = $("#profile").val();
     if (profileId == "auto") {
-        profileId = getAutoProfileIdForUrl(usedURL);        
+        profileId = getAutoProfileIdForUrl(usedURL);
     } else {
         Settings.setActiveProfileId(profileId);
     }
@@ -61,23 +61,23 @@ function updateFields(e) {
 
     Settings.setStoreLocation($("#store_location").val());
     Settings.setPassword(password);
-    
+
     var enableCopy = false;
 
-    if (password == "") {
+    if (password === "") {
         $("#generatedForClipboard").val("");
         $("#generated").val("Enter password");
-        setPasswordColors("#000000", "#85FFAB")
-    } else if ( ! matchesHash(password) ) {
+        setPasswordColors("#000000", "#85FFAB");
+    } else if ( !matchesHash(password) ) {
         $("#generatedForClipboard").val("");
         $("#generated").val("Master password mismatch");
-        setPasswordColors("#FFFFFF", "#FF7272")
+        setPasswordColors("#FFFFFF", "#FF7272");
     } else if (!Settings.keepMasterPasswordHash() && password != confirmation) {
         $("#generatedForClipboard").val("");
         $("#generated").val("Password wrong");
-        setPasswordColors("#FFFFFF", "#FF7272")
-    } else {        
-        if (profile != null) {
+        setPasswordColors("#FFFFFF", "#FF7272");
+    } else {
+        if (profile !== null) {
             var generatedPassword = profile.getPassword($("#usedtext").val(), password);
             $("#generated").val(generatedPassword);
             $("#generatedForClipboard").val(generatedPassword);
@@ -86,7 +86,7 @@ function updateFields(e) {
             $("#generated").val("");
             $("#generatedForClipboard").val("");
         }
-        setPasswordColors("#000000", "#FFFFFF")
+        setPasswordColors("#000000", "#FFFFFF");
     }
     if (enableCopy) {
         showCopy();
@@ -110,7 +110,7 @@ function matchesHash(password) {
 function updateURL(url) {
     var profileId = $("#profile").val();
     if (profileId == "auto") {
-        profileId = getAutoProfileIdForUrl(url);        
+        profileId = getAutoProfileIdForUrl(url);
     }
     var profile = Settings.getProfile(profileId);
     // Store url in ALT attribute
@@ -121,8 +121,8 @@ function updateURL(url) {
 
 function onProfileChanged() {
     chrome.windows.getCurrent(function(obj) {
-        chrome.tabs.getSelected(obj.id, function(tab) {
-            updateURL(tab.url);
+        chrome.tabs.query({active:true, windowId: obj.id}, function(tabs) {
+            updateURL(tabs[0].url);
             updateFields();
         });
     });
@@ -149,9 +149,9 @@ function init(url) {
             $("#store_location_row").hide();
         }
 
-        var activeProfileId = Settings.getActiveProfileId();    
+        var activeProfileId = Settings.getActiveProfileId();
         var autoProfileId = getAutoProfileIdForUrl(url);
-        
+
         var options = "";
         var profiles = Settings.getProfiles();
         for (var i in profiles) {
@@ -159,9 +159,9 @@ function init(url) {
             if (autoProfileId && profile.id == autoProfileId) {
                 options += "<option value='auto' selected='true'";
             } else if (!autoProfileId && profile.id == activeProfileId) {
-                options += "<option value='"+profile.id+"' selected='true'";          
+                options += "<option value='"+profile.id+"' selected='true'";
             } else {
-                options += "<option value='"+profile.id+"'";             
+                options += "<option value='"+profile.id+"'";
             }
             options += ">"+profile.title+"</option>";
         }
@@ -173,14 +173,14 @@ function init(url) {
 
         updateFields();
 
-        chrome.tabs.sendRequest(currentTab, {hasPasswordField: true}, function(response) {
+        chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
             if (response.hasField) {
                 showInject();
             }
         });
 
         password = $("#password").val();
-        if (password == null || password.length == 0 || (password != $("#confirmation").val())) {
+        if (password === null || password.length === 0 || (password != $("#confirmation").val())) {
             $("#password").focus();
         } else {
             $("#generated").focus();
@@ -189,7 +189,7 @@ function init(url) {
 }
 
 function fillPassword() {
-    chrome.tabs.sendRequest(currentTab, {password: $("#generated").val()});
+    chrome.tabs.sendMessage(currentTab, {password: $("#generated").val()});
     window.close();
 }
 
@@ -211,7 +211,7 @@ function showPasswordField() {
 }
 
 function sendFillPassword() {
-    chrome.tabs.sendRequest(currentTab, {hasPasswordField: true}, function(response) {
+    chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
         if (response.hasField) {
           fillPassword();
         }
@@ -253,15 +253,15 @@ $(function() {
             sendFillPassword();
         }
     });
-    
+
     chrome.windows.getCurrent(function(obj) {
-        chrome.tabs.getSelected(obj.id, function(tab) {
-            currentTab = tab.id;
-            init(tab.url);
+        chrome.tabs.query({active:true, windowId: obj.id}, function(tabs) {
+            currentTab = tabs[0].id;
+            init(tabs[0].url);
             $("form").show();
         });
     });
-    
+
     // Focus hack, see http://stackoverflow.com/a/11400653/1295557
     if (location.search != "?focusHack") location.search = "?focusHack";
 
@@ -280,6 +280,6 @@ $(function() {
         if (event.keyCode == 13) {
             sendFillPassword();
         }
-    })
+    });
 
 });
