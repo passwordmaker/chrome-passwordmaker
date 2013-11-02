@@ -299,6 +299,7 @@ Settings.getPassword = function(callback) {
             if (response.password != null && response.password.length > 0) {
                 callback(response.password);
             } else if (localStorage["password_crypt"]!==undefined) {
+            } else if (localStorage["password_crypt"]!==undefined && localStorage["password_crypt"].length > 0) {
                 Settings.password = byteArrayToString(rijndaelDecrypt(hexToByteArray(localStorage["password_crypt"]), hexToByteArray(localStorage["password_key"]), "CBC"));
                 callback(Settings.password)
             } else if (localStorage["password"]) {
