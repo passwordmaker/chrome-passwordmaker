@@ -1,3 +1,7 @@
+0.5.3 - 2013-11-08
+
+* Fixes Bug #85: Error message in chrome developer console
+
 0.5.2 - 2013-11-02
 
 * Fixes Bug #84: If passwort_crypt is empty, the popup crashes
