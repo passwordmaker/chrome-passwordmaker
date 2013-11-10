@@ -23,10 +23,10 @@ function updateStyle(element, selected, isSelected) {
 }
 
 function updateExample() {
-    updateStyle($("#exprotocol"), "selected", $("#protocolCB").is(":checked"));
-    updateStyle($("#exsubdomain"), "selected", $("#subdomainCB").is(":checked"));
-    updateStyle($("#exdomain"), "selected", $("#domainCB").is(":checked"));
-    updateStyle($("#expath"), "selected", $("#pathCB").is(":checked"));
+    updateStyle($("#exprotocol"), "selected", $("#protocolCB").prop("checked"));
+    updateStyle($("#exsubdomain"), "selected", $("#subdomainCB").prop("checked"));
+    updateStyle($("#exdomain"), "selected", $("#domainCB").prop("checked"));
+    updateStyle($("#expath"), "selected", $("#pathCB").prop("checked"));
 }
 
 function updateLeet() {
@@ -65,10 +65,10 @@ function setCurrentProfile(profile) {
     currentProfile = profile;
     $("#profileNameTB").val(profile.title);
     $("#siteList").val(profile.siteList);
-    $("#protocolCB").attr('checked', profile.url_protocol);
-    $("#subdomainCB").attr('checked', profile.url_subdomain);
-    $("#domainCB").attr('checked', profile.url_domain);
-    $("#pathCB").attr('checked', profile.url_path);
+    $("#protocolCB").prop('checked', profile.url_protocol);
+    $("#subdomainCB").prop('checked', profile.url_subdomain);
+    $("#domainCB").prop('checked', profile.url_domain);
+    $("#pathCB").prop('checked', profile.url_path);
     
     $("#inputUseThisText").val(profile.strUseText);
     $("#whereLeetLB").val(profile.whereToUseL33t);
@@ -133,7 +133,7 @@ function importRdf(){
     var rdfDoc = RdfImporter.loadDoc(txt);
 
     // Check that profiles have been parsed and are available before wiping current data
-    if ((rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length) && ($('#inputImportOverwrite').attr('checked') == true)) {
+    if ((rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length) && ($('#inputImportOverwrite').prop('checked') == true)) {
         // Setting to null triggers creation of default profile, settings to empty array bypasses that code ([] != null)
         Settings.profiles = [];
         Settings.saveProfiles();
@@ -181,10 +181,10 @@ function highlightProfile(){
 function saveProfile() {
     currentProfile.title = $("#profileNameTB").val();
     currentProfile.siteList       = $("#siteList").val();
-    currentProfile.url_protocol = $("#protocolCB").attr('checked');
-    currentProfile.url_subdomain = $("#subdomainCB").attr('checked');
-    currentProfile.url_domain = $("#domainCB").attr('checked');
-    currentProfile.url_path = $("#pathCB").attr('checked');
+    currentProfile.url_protocol = $("#protocolCB").prop('checked');
+    currentProfile.url_subdomain = $("#subdomainCB").prop('checked');
+    currentProfile.url_domain = $("#domainCB").prop('checked');
+    currentProfile.url_path = $("#pathCB").prop('checked');
     currentProfile.strUseText = $("#inputUseThisText").val();
     currentProfile.whereToUseL33t = $("#whereLeetLB").val();
     currentProfile.l33tLevel      = $("#leetLevelLB").val();
@@ -273,7 +273,7 @@ function updateSyncProfiles() {
     $("#set_sync_password").css('visibility', 'hidden');
     $("#clear_sync_data").css('visibility', 'hidden');
 
-    var should_sync = ($("#syncProfiles").attr('checked') == true);
+    var should_sync = ($("#syncProfiles").prop('checked') == true);
     if (should_sync) {
       if (Settings.syncPasswordOk) {
           $("#sync_password_set").css('display', 'block');
@@ -297,7 +297,7 @@ function updateSyncProfiles() {
 }
 
 function updateMasterHash() {
-    var should_keep = ($("#keepMasterPasswordHash").attr('checked') == true);
+    var should_keep = ($("#keepMasterPasswordHash").prop('checked') == true);
     Settings.setKeepMasterPasswordHash(should_keep);    
     if ( should_keep ) {
       var master_pass = $("#masterPassword").val();
@@ -311,11 +311,11 @@ function updateMasterHash() {
 }
 
 function updateHidePassword() {
-    Settings.setHidePassword($("#hidePassword").attr('checked') == true);    
+    Settings.setHidePassword($("#hidePassword").prop('checked') == true);    
 }
 
 function updateDisablePasswordSaving() {
-    Settings.setDisablePasswordSaving($("#disablePasswordSaving").attr('checked') == true);
+    Settings.setDisablePasswordSaving($("#disablePasswordSaving").prop('checked') == true);
 }
 
 function testPasswordLength() {
@@ -327,15 +327,15 @@ $(function() {
     setCurrentProfile(Settings.getProfiles()[0]);
     updateRemoveButton();    
 
-    $("#hidePassword").attr('checked', Settings.shouldHidePassword());
-    $("#disablePasswordSaving").attr('checked', Settings.shouldDisablePasswordSaving());
-    $("#keepMasterPasswordHash").attr('checked', Settings.keepMasterPasswordHash());
+    $("#hidePassword").prop('checked', Settings.shouldHidePassword());
+    $("#disablePasswordSaving").prop('checked', Settings.shouldDisablePasswordSaving());
+    $("#keepMasterPasswordHash").prop('checked', Settings.keepMasterPasswordHash());
     if (Settings.keepMasterPasswordHash())
       $("#master_password_row").css('visibility', 'visible');
     else
       $("#master_password_row").css('visibility', 'hidden');
 
-    $("#syncProfiles").attr('checked', Settings.shouldSyncProfiles());
+    $("#syncProfiles").prop('checked', Settings.shouldSyncProfiles());
     updateSyncProfiles();
     
     $("#add>a").bind('click', addProfile);
