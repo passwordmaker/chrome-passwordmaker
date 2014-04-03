@@ -1,23 +1,22 @@
 /*  
-    awesome buttons are based on a blog post by ZERB
-    Read there blog post for more information:
+    Awesome buttons are based on a blog post by ZERB
+    Read their blog post for more information:
     "Super awesome Buttons with CSS3 and RGBA":http://www.zurb.com/article/266/super-awesome-buttons-with-css3-and-rgba 
     
-    this buttons are even more awesome, as the need only one color for all three states,
-    and have an super awesome onclick state
+    These buttons are even more awesome, as they need only one color for all three states and have a super awesome onclick state.
 */
 
-/* set an awesome color for the buttons, feel free to add new colors like an .awesome.green or .awesome.secondary */
+/* Set an awesome color for the buttons, feel free to add new colors like an .awesome.green or .awesome.secondary */
 .awesome {
   background-color: #111 !important;
   color: #fff !important;
 }
 
-/* the awesome size gets set here. Feel Free to add new sizes, like .awesome.small or .small.large   */
+/* The awesome size gets set here. Feel Free to add new sizes, like .awesome.small or .small.large   */
 .awesome        { padding: 5px 10px 6px !important; font-size: 13px !important; }
 .awesome:active	{ padding: 6px 10px 5px !important; }
 
-/* Touch the rest at your onw risk. */
+/* Touch the rest at your own risk. */
 .awesome { 
   border: 0 !important; 
   cursor: pointer !important; 
@@ -29,11 +28,11 @@
   text-align: cente !important;
   text-decoration: none !important; 
   
-  /* vertical margin is the oposite of button's awesomeness */
+  /* Vertical margin is the oposite of button's awesomeness */
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   
-  /* not all browser support these, but who cares? */
+  /* Not all browsers support these, but who cares? */
   text-shadow: 0 -1px 1px rgba(0,0,0,0.25), -2px 0 1px rgba(0,0,0,0.25) !important; 
   
           border-radius: 5px !important; 
@@ -43,13 +42,13 @@
      -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important; 
   -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
   
-  /* who needs images these days? */
+  /* Who needs images these days? */
   background-image: -moz-linear-gradient(top, rgba(255,255,255,.2), rgba(150,150,150,.2), rgba(0,0,0,.0)) !important;
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(0,0,0,.0))) !important;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#30ffffff,endColorstr=#10000000) progid:DXImageTransform.Microsoft.Shadow(color=#000000,direction=135,strength=2);
   
-  /* cross browser inline block hack 
-     see http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/ */
+  /* Cross-browser inline block hack 
+     See http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/ */
   display: -moz-inline-stack;
   display: inline-block;
   vertical-align: middle !important;
@@ -59,28 +58,28 @@
   /* IE luv */
   zoom: 1;
   
-  /*disable text selection (Firefox only)*/
+  /* Disable text selection (Firefox only) */
   -moz-user-select: none;
 }
 
-/* OPERA only
-   if there is no border set, Opera shows a transparent background-color if border-radius is set. */
+/* Opera only.
+   If there is no border set, Opera shows a transparent background-color if border-radius is set. */
 @media all and (-webkit-min-device-pixel-ratio:10000),not all and (-webkit-min-device-pixel-ratio:0) {
   input.awesome {
     border: 1px solid RGBa(0,0,0,0) !important;
   }
 }
 
-/* hide selection background color */
+/* Hide selection background color */
 .awesome::selection {
 	background: transparent;
 }
 
 .awesome {
-  outline: 0; /*remove dotted line, works for links only*/
+  outline: 0; /* Remove dotted line, works for links only*/
 }
 .awesome::-moz-focus-inner {
-  border: none; /* remove dotted lines for buttons */
+  border: none; /* Remove dotted lines for buttons */
 }
 .awesome:focus,
 .awesome:hover {
@@ -98,7 +97,7 @@
   -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.7) !important;
 }
 
-/* Safari doesn't support inset box shadow, so we better remove it */
+/* Safari doesn't support inset box shadow, so we need to remove it */
 @media screen and (-webkit-min-device-pixel-ratio:0){
   .awesome:active	{ 
     -webkit-box-shadow: none;
