@@ -1,3 +1,7 @@
+0.5.5 - 2014-04-26
+
+* Fixes Bug #93: Removed warning in Console about jquery sourcemap
+
 0.5.4 - 2013-11-10
 
 * Fixes Bug #86: No edit box for "Keep Master Password Hash" option
