@@ -1,12 +1,12 @@
 body {
-  font-family: sans-serif;
-  font-size: 13px;
-  padding: 5px;
+    font-family: sans-serif;
+    font-size: 13px;
+    padding: 5px;
 }
 
 form {
-    display:none;
-    width: 200px;
+    display: none;
+    width: 206px;
     padding-top: 5px;
     padding-bottom: 10px;
     margin: 0px auto;
@@ -39,23 +39,23 @@ label {
 
 .input {
     margin: 0px;
-    width: 200px;
+    width: 206px;
     border: 1px solid #000000;
 }
 
-#generated{
+#generated {
     color: #5E80F0;
     font-weight: bold;
     text-align: center;
-    width: 200px;
+    width: 206px;
     border: 1px solid #000000;
-    font-size:15px;
+    font-size: 15px;
     font-family: monospace;
 }
 
 select {
     margin: 0px;
-    width: 200px;
+    width: 206px;
     border: 1px solid #000000;
 }
 
@@ -84,10 +84,10 @@ select {
 }
 
 #copypassword {
-  float: left;
+    float: left;
 }
 
 .hidden {
-  margin-left: -500px;
-  margin-top: -500px;
+    margin-left: -500px;
+    margin-top: -500px;
 }

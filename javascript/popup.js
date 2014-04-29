@@ -174,7 +174,7 @@ function init(url) {
         updateFields();
 
         chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
-            if (response.hasField) {
+            if (response && response.hasField) {
                 showInject();
             }
         });
@@ -212,7 +212,7 @@ function showPasswordField() {
 
 function sendFillPassword() {
     chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
-        if (response.hasField) {
+        if (response && response.hasField) {
           fillPassword();
         }
     });
@@ -261,9 +261,6 @@ $(function() {
             $("form").show();
         });
     });
-
-    // Focus hack, see http://stackoverflow.com/a/11400653/1295557
-    if (location.search != "?focusHack") location.search = "?focusHack";
 
     // Tab navigation workaround, see http://code.google.com/p/chromium/issues/detail?id=122352
     // Use Enter instead of Tab

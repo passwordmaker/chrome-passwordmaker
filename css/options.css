@@ -3,7 +3,7 @@ body {
 }
 
 #content {
-    width: 750px;
+    width: 800px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -15,12 +15,10 @@ body {
 }
 
 #header h1 {
-    margin-bottom: 0px;
+    margin: 0px auto;
     padding-top: 15px;
     padding-bottom: 15px;
     width: 750px;
-    margin-left: auto;
-    margin-right: auto;
     font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-style: italic;
 }
@@ -37,13 +35,13 @@ body {
     list-style-type: none;
 }
 
-#list li:before { 
-    content: "\0020 \0020 \0020 \00BB \0020"; 
-    color: #aaaaaa; 
+#list li:before {
+    content: "\0020 \0020 \0020 \00BB \0020";
+    color: #aaaaaa;
 }
 
 #list .button {
-  width: 120px;
+    width: 120px;
 }
 
 h2 {
@@ -70,10 +68,10 @@ h2 {
 }
 
 .help_sitelist {
-  margin-left: 135px;
-  margin-bottom: 10px;
-  color: #9f9f9f;
-  font-size: 13px;
+    margin-bottom: 10px;
+    color: #9f9f9f;
+    margin-left: 165px;
+    font-size: 13px;
 
 }
 
@@ -99,9 +97,9 @@ h2 {
 }
 
 #profile_setting {
-    padding: 5px;
-    width: 505px;
-    float: right;
+    padding: 20px;
+    width: 520px;
+    float: left;
 }
 
 #general_settings {
@@ -153,7 +151,7 @@ h2 {
 
 #buttons {
     margin-top: 20px;
-    margin-left: 135px;
+    margin-left: 165px;
     width: 300px;
 }
 
@@ -200,8 +198,8 @@ h2 {
 }
 
 #import_buttons {
-  width: 505px;
-  text-align: right;
+    width: 505px;
+    text-align: right;
 }
 
 #divImportOverride {
@@ -210,12 +208,12 @@ h2 {
 }
 
 #inputImportOverwrite {
-    margin-left: 5px;    
+    margin-left: 5px;
 }
 
 #export_buttons {
-  width: 505px;
-  text-align: right;
+    width: 505px;
+    text-align: right;
 }
 
 .row {
@@ -223,13 +221,13 @@ h2 {
 }
 
 .secondColumn {
-    margin-left: 135px;
+    margin-left: 165px;
 }
 
-label { 
-    position: absolute; 
-    text-align:right; 
-    width:130px; 
+label {
+    position: absolute;
+    text-align: right;
+    width: 150px;
     margin-top: 0.2em;
 }
 
@@ -239,19 +237,19 @@ label.disabled {
 
 label.checkbox {
     position: relative;
-} 
+}
 
 input[type="checkbox"] {
     width: 20px;
 }
 
 select {
-    margin-left: 135px;
+    margin-left: 165px;
     width: 300px;
 }
 
 input {
-    margin-left: 135px;
+    margin-left: 165px;
     width: 300px;
 }
 
@@ -260,13 +258,11 @@ input {
 }
 
 .url_example {
-    margin-left: 135px;
+    margin-left: 165px;
     width: 300px;
     text-align: center;
     background-color: #000000;
-    border-radius: 7px !important; 
-    -moz-border-radius: 7px !important; 
-    -webkit-border-radius: 7px !important; 
+    border-radius: 7px !important;
     margin-bottom: 10px;
     color: #ffffff;
     font-size: 12px;
@@ -286,7 +282,7 @@ input {
     font-size: 0.8em;
     margin-top: 30px;
     width: 100%;
-    text-align: center;    
+    text-align: center;
 }
 
 #footer a {
@@ -294,7 +290,5 @@ input {
     font-style: normal;
     color: #000000;
     padding: 4px;
-    border-radius: 5px !important; 
-    -moz-border-radius: 5px !important; 
-    -webkit-border-radius: 5px !important; 
+    border-radius: 5px !important;
 }
