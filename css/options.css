@@ -55,6 +55,16 @@ h2 {
     font-size: 2em;
 }
 
+.highlight {
+    -webkit-animation: highlight1 1s;
+}
+
+@-webkit-keyframes highlight1 {
+    0% { background: white; }
+    50% { background: yellow; }
+    100% { background: white; }
+}
+
 .subrow {
     padding-top: 3px;
 }

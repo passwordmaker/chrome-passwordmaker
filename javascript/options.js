@@ -166,16 +166,14 @@ function showInformation() {
 function showSection(showId) {
     if(!$(showId).is(":visible")){
         $('#profile_setting:visible,#import_settings:visible,#export_settings:visible,#general_settings:visible,#general_information:visible')
-            .fadeOut(300, function(){
-                $(showId).fadeIn(300);
-            });
+        .hide(0, function(){
+            $(showId).show();
+        });
     }
 }
 
 function highlightProfile(){
-    $("#profile_id_" + currentProfile.id).animate({"background-color": "#ffff00"}, 500, 'linear', function() {
-        $("#profile_id_" + currentProfile.id).animate({"background-color": "#ffffff"}, 500)
-    });
+    $("#profile_id_" + currentProfile.id).toggleClass("highlight");
 }
 
 function saveProfile() {

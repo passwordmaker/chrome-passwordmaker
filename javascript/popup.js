@@ -129,7 +129,7 @@ function onProfileChanged() {
 }
 
 function showInject() {
-    $("#injectpasswordrow").fadeIn();
+    $("#injectpasswordrow").show();
 }
 
 function hideCopy() {
@@ -137,7 +137,7 @@ function hideCopy() {
 }
 
 function showCopy() {
-  $("#copypassword").fadeIn();
+  $("#copypassword").show();
 }
 
 function init(url) {
