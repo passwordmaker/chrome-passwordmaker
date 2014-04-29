@@ -228,7 +228,7 @@ function updateProfileList() {
 
     for (var i in profiles) {
         var id = profiles[i].id;
-        $("#editProfile_"+id).bind('click', {id: id}, editProfile);
+        $("#editProfile_"+id).on('click', {id: id}, editProfile);
     }
 }
 
@@ -338,33 +338,33 @@ $(function() {
     $("#syncProfiles").prop('checked', Settings.shouldSyncProfiles());
     updateSyncProfiles();
     
-    $("#add>a").bind('click', addProfile);
-    $("#showImport>a").bind('click', showImport);
-    $("#showExport>a").bind('click', showExport);
-    $("#showSettings>a").bind('click', showOptions);
-    $("#showInformation>a").bind('click', showInformation);
+    $("#add>a").on('click', addProfile);
+    $("#showImport>a").on('click', showImport);
+    $("#showExport>a").on('click', showExport);
+    $("#showSettings>a").on('click', showOptions);
+    $("#showInformation>a").on('click', showInformation);
 
-    $("#protocolCB").bind('change', updateExample);
-    $("#subdomainCB").bind('click', updateExample);
-    $("#domainCB").bind('click', updateExample);
-    $("#pathCB").bind('click', updateExample);
-    $("#whereLeetLB").bind('change', updateLeet);
+    $("#protocolCB").on('change', updateExample);
+    $("#subdomainCB").on('click', updateExample);
+    $("#domainCB").on('click', updateExample);
+    $("#pathCB").on('click', updateExample);
+    $("#whereLeetLB").on('change', updateLeet);
 
-    $("#cloneProfileButton").bind('click', cloneProfile);
-    $("#remove>a").bind('click', removeProfile);
-    $("#save>a").bind('click', saveProfile);
-    $("#import_buttons>a").bind('click', importRdf);
-    $("#export_buttons>a").bind('click', copyRdfExport);
+    $("#cloneProfileButton").on('click', cloneProfile);
+    $("#remove>a").on('click', removeProfile);
+    $("#save>a").on('click', saveProfile);
+    $("#import_buttons>a").on('click', importRdf);
+    $("#export_buttons>a").on('click', copyRdfExport);
 
-    $("#hidePassword").bind('change', updateHidePassword);
-    $("#disablePasswordSaving").bind('change', updateDisablePasswordSaving);
-    $("#keepMasterPasswordHash").bind('change', updateMasterHash);
-    $("#syncProfiles").bind('change', updateSyncProfiles);
-    $("#masterPassword").bind('blur', updateMasterHash);
+    $("#hidePassword").on('change', updateHidePassword);
+    $("#disablePasswordSaving").on('change', updateDisablePasswordSaving);
+    $("#keepMasterPasswordHash").on('change', updateMasterHash);
+    $("#syncProfiles").on('change', updateSyncProfiles);
+    $("#masterPassword").on('blur', updateMasterHash);
 
-    $("#set_sync_password").bind('click', setSyncPassword);
-    $("#clear_sync_data").bind('click', clearSyncData);
+    $("#set_sync_password").on('click', setSyncPassword);
+    $("#clear_sync_data").on('click', clearSyncData);
 
-    $("#passwdLength").bind('change keyup keydown keypress input', testPasswordLength);
+    $("#passwdLength").on('change keyup keydown keypress input', testPasswordLength);
 });
 

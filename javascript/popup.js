@@ -219,15 +219,15 @@ function sendFillPassword() {
 }
 
 $(function() {
-    $("#password").bind('keyup change', updateFields);
-    $("#confirmation").bind('keyup change', updateFields);
-    $("#usedtext").bind('keyup change', updateFields);
-    $("#store_location").bind('change', updateFields);
-    $("#profile").bind('change', onProfileChanged);
-    $("#activatePassword").bind('click', showPasswordField);
-    $("#copypassword>input").bind('click', copyPassword);
-    $("#injectpasswordrow>input").bind('click', fillPassword);
-    $("#options>a").bind('click', openOptions);
+    $("#password").on('keyup change', updateFields);
+    $("#confirmation").on('keyup change', updateFields);
+    $("#usedtext").on('keyup change', updateFields);
+    $("#store_location").on('change', updateFields);
+    $("#profile").on('change', onProfileChanged);
+    $("#activatePassword").on('click', showPasswordField);
+    $("#copypassword>input").on('click', copyPassword);
+    $("#injectpasswordrow>input").on('click', fillPassword);
+    $("#options>a").on('click', openOptions);
 
     $("#injectpasswordrow").hide();
     $("#copypassword").hide();
