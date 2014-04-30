@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>PasswordMaker Pro</title>    
+        <title>PasswordMaker Pro</title>
         <link rel="stylesheet" type="text/css" href="../css/awesome-buttons.css">
         <link rel="stylesheet" type="text/css" href="../css/options.css">
     </head>
@@ -10,7 +10,7 @@
         <div id="header">
             <h1>Options</h1>
         </div>
-        
+
         <div id="content">
             <div id="list">
                 <h2>Profiles</h2>
@@ -29,7 +29,7 @@
                     <a href="#" class="awesome button">Information</a>
                 </div>
                 <div id="pledgie">
-                  <a href="http://pledgie.com/campaigns/9703"><img alt="Click here to lend your support to: chrome-passwordmaker and make a donation at www.pledgie.com !" src="http://www.pledgie.com/campaigns/9703.png?skin_name=chrome" border="0"></a>
+                  <a href="http://pledgie.com/campaigns/9703"><img width="149" height="37" alt="Click here to lend your support to: chrome-passwordmaker and make a donation at www.pledgie.com !" src="http://www.pledgie.com/campaigns/9703.png?skin_name=chrome" border="0"></a>
                 </div>
             </div>
 
@@ -37,19 +37,19 @@
                 <div id="form">
                     <div class="row">
                         <label for="profileNameTB">Name:</label>
-            			      <input class="standard" id="profileNameTB"/>
+                        <input class="standard" id="profileNameTB"/>
                     </div>
 
-					          <div class="row">
+                    <div class="row">
                         <div class="subrow">
                           <label for="siteList">Use with sites:</label>
-            			        <input class="standard" id="siteList"/>
+                          <input class="standard" id="siteList"/>
                         </div>
                         <div class="subrow help_sitelist">
                           <span>Separate by space, e.g. "example.com apple.com google.com" to specify that this profile is automatically selected for those urls.</span>
                         </div>
-					        </div>
-					
+                    </div>
+
                     <div class="row">
                         <div class="url_example">
                         <span id="exprotocol">http://</span><span id="exsubdomain">my.</span><span id="exdomain">example.com</span><span id="expath">/my/path?q=search#top</span>
@@ -57,107 +57,107 @@
                     </div>
                     <div class="row">
                         <label>URL Components:</label>
-                        
+
                         <div class="subrow">
                             <input type="checkbox" id="protocolCB" />
                             <label for="protocolCB" class="checkbox">Protocol</label>
-            			</div>
-            			<div class="subrow">
+                        </div>
+                        <div class="subrow">
                             <input type="checkbox" id="subdomainCB" />
                             <label for="subdomainCB" class="checkbox">Subdomain(s)</label>
                         </div>
-            			<div class="subrow">
+                        <div class="subrow">
                             <input type="checkbox" id="domainCB" />
                             <label for="domainCB" class="checkbox">Domain</label>
-            			</div>
-            			<div class="subrow">
+                        </div>
+                        <div class="subrow">
                             <input type="checkbox" id="pathCB" />
                             <label for="pathCB" class="checkbox">Port, path, anchor, query parameters</label>
                         </div>
                     </div>
-                    
-                    <div class="row"> 
+
+                    <div class="row">
                         <label id="labelUseThisText">Use This Text:</label>
                         <input id="inputUseThisText" class="standard" maxlength="256" size="80" value="" alt="Use this text instead of domain" />
                         <div class="subrow help_sitelist">
                           <span>If you want to use a fixed url everytime, you can fill it here. E.g. to use the same password on example.com and anotherexample.com, enter example.com here and it always uses example.com for this profile.</span>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <label for="whereLeetLB">Use l33t:</label>
-            			<select class="dropmenu" id="whereLeetLB">
-            				<option value="off">not at all</option>
-            				<option value="before-hashing">before generating password</option>
-            				<option value="after-hashing">after generating password</option>
-            				<option value="both">before and after generating password</option>
-            			</select>
+                        <select class="dropmenu" id="whereLeetLB">
+                            <option value="off">not at all</option>
+                            <option value="before-hashing">before generating password</option>
+                            <option value="after-hashing">after generating password</option>
+                            <option value="both">before and after generating password</option>
+                        </select>
                     </div>
-                    
+
                     <div class="row">
                         <label id="leetLevelLabel" for="leetLevelLB">l33t Level:</label>
-            			<select class="dropmenu" id="leetLevelLB">
-            				<option value="0">1</option>
-            				<option value="1">2</option>
-            				<option value="2">3</option>
-            				<option value="3">4</option>
-            				<option value="4">5</option>
-            				<option value="5">6</option>
-            				<option value="6">7</option>
-            				<option value="7">8</option>
-            				<option value="8">9</option>
-            			</select>
+                        <select class="dropmenu" id="leetLevelLB">
+                            <option value="0">1</option>
+                            <option value="1">2</option>
+                            <option value="2">3</option>
+                            <option value="3">4</option>
+                            <option value="4">5</option>
+                            <option value="5">6</option>
+                            <option value="6">7</option>
+                            <option value="7">8</option>
+                            <option value="8">9</option>
+                        </select>
                     </div>
 
                     <div class="row">
                         <label for="hashAlgorithmLB">Hash Algorithm:</label>
-            			<select id="hashAlgorithmLB">
-            				<option value="md4">MD4</option>
-            				<option value="hmac-md4">HMAC-MD4</option>
-            				<option value="md5">MD5</option>
-            				<option value="md5_v6">MD5 Version 0.6</option>
-            				<option value="hmac-md5">HMAC-MD5</option>
-            				<option value="hmac-md5_v6">HMAC-MD5 Version 0.6</option>
-            				<option value="sha1">SHA-1</option>
-            				<option value="hmac-sha1">HMAC-SHA-1</option>
-            				<option value="sha256">SHA-256</option>
-            				<option value="hmac-sha256_fix">HMAC-SHA-256</option>
-            				<option value="hmac-sha256">HMAC-SHA-256 Version 1.5.1</option>
-            				<option value="rmd160">RIPEMD-160</option>
-            				<option value="hmac-rmd160">HMAC-RIPEMD-160</option>
-            			</select>
+                        <select id="hashAlgorithmLB">
+                            <option value="md4">MD4</option>
+                            <option value="hmac-md4">HMAC-MD4</option>
+                            <option value="md5">MD5</option>
+                            <option value="md5_v6">MD5 Version 0.6</option>
+                            <option value="hmac-md5">HMAC-MD5</option>
+                            <option value="hmac-md5_v6">HMAC-MD5 Version 0.6</option>
+                            <option value="sha1">SHA-1</option>
+                            <option value="hmac-sha1">HMAC-SHA-1</option>
+                            <option value="sha256">SHA-256</option>
+                            <option value="hmac-sha256_fix">HMAC-SHA-256</option>
+                            <option value="hmac-sha256">HMAC-SHA-256 Version 1.5.1</option>
+                            <option value="rmd160">RIPEMD-160</option>
+                            <option value="hmac-rmd160">HMAC-RIPEMD-160</option>
+                        </select>
                     </div>
-                    
+
                     <div class="row">
                         <label for="passwdLength">Password length:</label>
-            			<input class="standard" id="passwdLength" maxlength="3" size="3" value="12" />
+                        <input class="standard" id="passwdLength" maxlength="3" size="3" value="12" />
                     </div>
 
                     <div class="row">
                         <label for="usernameTB">Username:</label>
-            			<input class="standard" id="usernameTB"/>
+                        <input class="standard" id="usernameTB"/>
                     </div>
-                    
+
                     <div class="row">
                         <label for="modifier">Modifier:</label>
-            			<input class="standard" id="modifier"/>
+                        <input class="standard" id="modifier"/>
                     </div>
-                    
+
                     <div class="row">
                         <label for="charset">Characters:</label>
-            			<select id="charset" name="charset">
-            			</select>
-            			<input class="standard" id="customCharset"/>
+                        <select id="charset" name="charset">
+                        </select>
+                        <input class="standard" id="customCharset"/>
                     </div>
-                    
+
                     <div class="row">
                         <label for="passwordPrefix">Password Prefix:</label>
-            			<input class="standard" id="passwordPrefix"/>
+                        <input class="standard" id="passwordPrefix"/>
                     </div>
-                    
+
                     <div class="row">
                         <label for="passwordSuffix">Password Suffix:</label>
-            			<input class="standard" id="passwordSuffix"/>
+                        <input class="standard" id="passwordSuffix"/>
                     </div>
 
 
@@ -165,13 +165,13 @@
                         <a id="cloneProfileButton" class="secondColumn" href="#">Clone this profile.</a>
                     </div>
                 </div>
-                
+
                 <div id="buttons">
                     <div id="remove"><a href="#" class="awesome button">Remove</a></div>
                     <div id="save"><a href="#" class="awesome button">Save</a></div>
                 </div>
             </div>
-            
+
             <div id="import_settings">
                 <div id="form">
                     <h2>Import Profiles</h2>
@@ -199,7 +199,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div id="export_settings">
                 <div id="form">
                     <h2>Export Profiles</h2>
@@ -215,8 +215,7 @@
                             the text below into a plain text document (e.g.
                             open notepad, paste, save as "profiles.rdf") then
                             go to
-                            <a
-                              href="http://passwordmaker.org/Firefox/Mozilla/SeaMonkey/Flock/Netscape/Advanced">Advanced Options</a> &rarr; File &rarr; Import Settings.
+                            <a href="http://passwordmaker.org/Firefox/Mozilla/SeaMonkey/Flock/Netscape/Advanced">Advanced Options</a> &rarr; File &rarr; Import Settings.
                             <strong>
                             Back up any existing settings first by going to
                             Firefox PasswordMaker &rarr; File &rarr; Export
@@ -230,13 +229,13 @@
                     </div>
                 </div>
             </div>
-            
+
             <div id="general_settings">
                 <div id="form">
                     <h2>Settings</h2>
                     <p><em>Here you find settings that affect all profiles.</em></p>
                     <div class="row">
-            			<div class="subrow">
+                        <div class="subrow">
                             <input type="checkbox" id="hidePassword" />
                             <label for="hidePassword" class="checkbox">Hide Password</label>
                         </div>
@@ -248,17 +247,17 @@
                         </div>
                     </div>
                     <div class="row">
-            		<div class="subrow">
+                        <div class="subrow">
                             <input type="checkbox" id="keepMasterPasswordHash" />
                             <label for="keepMasterPasswordHash" class="checkbox">Keep Master Password Hash</label>
                         </div>
-            		<div class="subrow" id="master_password_row" style="visibility:hidden;">
+                        <div class="subrow" id="master_password_row" style="visibility:hidden;">
                             <label for="masterPassword">Master Password</label>
                             <input class="standard" type="password" id="masterPassword" />
                         </div>
                     </div>
                     <div class="row">
-            		<div class="subrow">
+                        <div class="subrow">
                             <input type="checkbox" id="syncProfiles" />
                             <label for="syncProfiles" class="checkbox">Sync Profiles Between Computers</label>
                         </div>
@@ -282,9 +281,11 @@
                             </div>
                             <div id="sync_buttons">
                                 <div id="set_sync_password" style="visibility:hidden;">
-                                    <a href="#" class="awesome button">Set password</a></div>
+                                    <a href="#" class="awesome button">Set password</a>
+                                </div>
                                 <div id="clear_sync_data" style="visibility:hidden;">
-                                    <a href="#" class="awesome button">Delete</a></div>
+                                    <a href="#" class="awesome button">Delete</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -310,7 +311,7 @@
             </div>
 
             <br style="clear:both"/>
-            
+
             <div id="footer">
               <a href="https://chrome.google.com/extensions/detail/ocjkdaaapapjpmipmhiadedofjiokogj">PasswordMaker Pro</a> is proudly presented by <a href="http://www.passwordmaker.org">passwordmaker.org</a> and <a href="http://bitboxer.de">bitboxer.de</a>
             </div>
