@@ -25,7 +25,7 @@ body {
 
 #list {
     padding: 5px;
-    width: 210px;
+    width: 180px;
     float: left;
     border-right: 1px solid #aaaaaa;
 }
@@ -41,7 +41,7 @@ body {
 }
 
 #list .button {
-    width: 120px;
+    width: 140px;
 }
 
 h2 {
@@ -58,9 +58,15 @@ h2 {
 }
 
 @-webkit-keyframes highlight1 {
-    0% { background: white; }
-    50% { background: yellow; }
-    100% { background: white; }
+    0% {
+        background: white;
+    }
+    50% {
+        background: yellow;
+    }
+    100% {
+        background: white;
+    }
 }
 
 .subrow {
@@ -142,11 +148,6 @@ h2 {
 #exportText {
     width: 505px;
     height: 150px;
-}
-
-#profile_setting h2 {
-    padding-top: 0px;
-    margin-top: 0px;
 }
 
 #buttons {
@@ -277,11 +278,13 @@ input {
 }
 
 #footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
     font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-style: italic;
     font-size: 0.8em;
-    margin-top: 30px;
-    width: 100%;
+    padding: 10px;
     text-align: center;
 }
 
