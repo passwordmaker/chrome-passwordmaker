@@ -9,11 +9,11 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 function fillPasswords(password) {
-    var fields = document.querySelectorAll("input[type='password']");
-    [].forEach.call(fields, function (element, index) {
+    var passFields = document.querySelectorAll("input[type='password']");
+    [].forEach.call(passFields, function (element, index) {
         // Only fill password fields that are empty and aren't already populated (for change password pages)
-        if (fields[index].value.length === 0) {
-            fields[index].value = password;
+        if (passFields[index].value.length === 0) {
+            passFields[index].value = password;
         }
     });
 }

@@ -13,11 +13,11 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 
 function updateSyncedProfiles(data) {
     localStorage["synced_profiles_keys"] = "";
-    if (data.synced_profiles == undefined) {
+    if (data.synced_profiles === undefined) {
       data.synced_profiles = "";
-    } else if (typeof(data.synced_profiles) != "string") {
+    } else if (typeof(data.synced_profiles) !== "string") {
       profiles = "";
-      for (i in data.synced_profiles) {
+      for (var i in data.synced_profiles) {
         profiles = profiles + data[data.synced_profiles[i]];
       }
       localStorage["synced_profiles_keys"] = data.synced_profiles.join();
@@ -27,18 +27,18 @@ function updateSyncedProfiles(data) {
 }
 
 chrome.storage.sync.get(null, function(data) {
-    if (chrome.extension.lastError == undefined) {
+    if (chrome.extension.lastError === undefined) {
         updateSyncedProfiles(data);
     }
 });
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
-    if (namespace != "sync") {
+    if (namespace !== "sync") {
         return;
     }
-    if (changes.synced_profiles != undefined) {
+    if (changes.synced_profiles !== undefined) {
         var flattened = {};
-        for (i in changes) {
+        for (var i in changes) {
           flattened[i] = changes[i].newValue;
         }
         updateSyncedProfiles(flattened);
