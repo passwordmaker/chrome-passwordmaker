@@ -264,10 +264,10 @@ Settings.setStoreLocation = function(store) {
 // Make a pseudo-random encryption key... emphasis on *pseudo*
 Settings.makeKey = function() {
   var hex = ['0','1','2','3','4','5','6','7','8','9','0','a','b','c','d','e','f'];
-  var keySz = keySizeInBits/4; //keySizeInBits defined in aes.js
+  var keySizeInBits = 256/4;
   var ret = "";
-  while (ret.length < keySz)
-    ret += hex[Math.floor(Math.random()*15)];
+  while (ret.length < keySizeInBits)
+    ret += hex[Math.floor(Math.random()*17)];
   return ret;
 };
 
@@ -281,7 +281,7 @@ Settings.setPassword = function(password) {
         Settings.password = password;
         key = Settings.makeKey();
         localStorage["password_key"] = key;
-        localStorage["password_crypt"] = byteArrayToHex(rijndaelEncrypt(password, hexToByteArray(key), "CBC"));
+        localStorage["password_crypt"] = sjcl.encrypt(key, password, { ks: 256, ts: 128 });
         chrome.extension.sendMessage({setPassword: true, password: password});
     } else {
         Settings.password = null;
@@ -298,7 +298,7 @@ Settings.getPassword = function(callback) {
             if (response.password !== null && response.password.length > 0) {
                 callback(response.password);
             } else if (localStorage["password_crypt"] !== undefined && localStorage["password_crypt"].length > 0) {
-                Settings.password = byteArrayToString(rijndaelDecrypt(hexToByteArray(localStorage["password_crypt"]), hexToByteArray(localStorage["password_key"]), "CBC"));
+                Settings.password = sjcl.decrypt(localStorage["password_key"], localStorage["password_crypt"]);
                 callback(Settings.password);
             } else if (localStorage["password"]) {
                 Settings.password = localStorage["password"];
