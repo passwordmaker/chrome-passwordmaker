@@ -38,7 +38,7 @@ label {
 
 .input {
     margin: 0px;
-    width: 206px;
+    width: 204px;
     border: 1px solid #000000;
 }
 
@@ -46,7 +46,7 @@ label {
     color: #5E80F0;
     font-weight: bold;
     text-align: center;
-    width: 206px;
+    width: 204px;
     border: 1px solid #000000;
     font-size: 15px;
     font-family: monospace;
@@ -60,6 +60,7 @@ select {
 
 .row {
     margin-bottom: 5px;
+    width: 206px;
 }
 
 #injectpasswordrow {
@@ -78,7 +79,7 @@ select {
 }
 
 .largebutton {
-    width: 180px;
+    width: 186px;
     text-align: center;
 }
 
