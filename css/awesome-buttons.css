@@ -6,74 +6,30 @@
     These buttons are even more awesome, as they need only one color for all three states and have a super awesome onclick state.
 */
 
-/* Set an awesome color for the buttons, feel free to add new colors like an .awesome.green or .awesome.secondary */
 .awesome {
-    background-color: #111 !important;
-    color: #fff !important;
-}
-
-/* The awesome size gets set here. Feel Free to add new sizes, like .awesome.small or .small.large   */
-.awesome {
-    padding: 5px 10px 6px !important;
-    font-size: 13px !important;
-}
-.awesome:active {
-    padding: 6px 10px 5px !important;
-}
-
-/* Touch the rest at your own risk. */
-.awesome {
-    border: 0 !important;
-    cursor: pointer !important;
-    font-style: normal !important;
-    font-weight: bold !important;
-    font: inherit !important;
-    line-height: 1 !important;
-    position: relative !important;
-    text-align: center !important;
-    text-decoration: none !important;
-    
-    /* Vertical margin is the oposite of button's awesomeness */
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    
-    /* Not all browsers support these, but who cares? */
-    text-shadow: 0 -1px 1px rgba(0,0,0,0.25), -2px 0 1px rgba(0,0,0,0.25) !important;
-    
-    border-radius: 5px !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+    background-color: #111;
+    border: 0;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font: inherit;
+    line-height: 1;
+    margin-top: 0;
+    padding: 5px 10px 6px;
+    text-align: center;
+    text-decoration: none;
     
     /* Who needs images these days? */
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(0,0,0,.0))) !important;
-    
-    /* Cross-browser inline block hack 
-         See http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/ */
-    display: inline-block;
-    vertical-align: middle !important;
-    position: absolute;
-
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(0,0,0,.0)));
 }
 
-
-/* Hide selection background color */
-.awesome::selection {
-    background: transparent;
+.awesome:active {
+    padding: 6px 10px 5px;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0,0,0,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(255,255,255,.2)));
 }
 
-.awesome {
-    outline: 0;
-    /* Remove dotted line, works for links only*/
-}
-.awesome::-moz-focus-inner {
-    border: none;
-    /* Remove dotted lines for buttons */
-}
 .awesome:focus,
 .awesome:hover {
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.4)), color-stop(0.5, rgba(150,150,150,.3)), to(rgba(0,0,0,.0))) !important;
-}
-.awesome:active {
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0,0,0,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(255,255,255,.2))) !important;
-    
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.7) !important;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.4)), color-stop(0.5, rgba(150,150,150,.3)), to(rgba(0,0,0,.0)));
 }

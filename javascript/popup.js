@@ -70,11 +70,11 @@ function updateFields(e) {
         setPasswordColors("#000000", "#85FFAB");
     } else if ( !matchesHash(password) ) {
         $("#generatedForClipboard").val("");
-        $("#generated").val("Master password mismatch");
+        $("#generated").val("Master Password Mismatch");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else if (!Settings.keepMasterPasswordHash() && password !== confirmation) {
         $("#generatedForClipboard").val("");
-        $("#generated").val("Password wrong");
+        $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else {
         if (profile !== null) {
@@ -188,7 +188,8 @@ function fillPassword() {
 }
 
 function copyPassword() {
-    $("#generatedForClipboard").select();
+    $(".hidden").show();
+    document.getElementById("generatedForClipboard").select();
     document.execCommand("Copy");
     window.close();
 }

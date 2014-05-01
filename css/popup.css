@@ -1,26 +1,29 @@
 body {
-    font-family: sans-serif;
     font-size: 13px;
-    margin: 13px;
+    margin: 10px;
+}
+
+.row {
+    padding-bottom: 5px;
+    width: 206px;
 }
 
 form {
     width: 206px;
     padding-top: 5px;
-    padding-bottom: 10px;
-    margin: 0px auto;
 }
 
+
 label {
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    font-family: Georgia, serif;
     font-size: 12px;
     font-weight: bold;
-    color: #888888;
+    color: #888;
 }
 
 #head {
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
-    border-bottom: 1px solid #eeeeee;
+    font-family: Georgia, serif;
+    border-bottom: 1px solid #eee;
     padding-bottom: 5px;
     font-size: 16px;
     position: relative;
@@ -28,7 +31,7 @@ label {
 
 #head img {
     position: absolute;
-    top: 0px;
+    top: 0;
 }
 
 #head span {
@@ -37,34 +40,23 @@ label {
 }
 
 .input {
-    margin: 0px;
     width: 204px;
-    border: 1px solid #000000;
+    border: 1px solid #000;
+    margin: 0;
 }
 
 #generated {
-    color: #5E80F0;
     font-weight: bold;
     text-align: center;
     width: 204px;
-    border: 1px solid #000000;
-    font-size: 15px;
+    border: 1px solid #000;
     font-family: monospace;
 }
 
 select {
-    margin: 0px;
     width: 206px;
-    border: 1px solid #000000;
-}
-
-.row {
-    margin-bottom: 5px;
-    width: 206px;
-}
-
-#injectpasswordrow {
-    float: left;
+    border: 1px solid #000;
+    margin: 0;
 }
 
 #options {
@@ -72,22 +64,14 @@ select {
 }
 
 #button-row {
-    height: 24px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    padding-bottom: 11px;
+    display: inline-block;
+    padding-bottom: 0;
 }
 
 .largebutton {
     width: 186px;
-    text-align: center;
 }
 
-#copypassword {
+#injectpasswordrow,#copypassword {
     float: left;
-}
-
-.hidden {
-    margin-left: -500px;
-    margin-top: -500px;
 }
