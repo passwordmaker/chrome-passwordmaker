@@ -17,7 +17,7 @@
       "storage"
   ],
   "web_accessible_resources": [
-    "javascript/jquery-2.1.0.min.map"
+    "javascript/jquery-2.1.1.min.map"
   ],
   "content_scripts": [ {
      "js": [ "javascript/content.js" ],
