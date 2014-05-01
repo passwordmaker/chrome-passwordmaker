@@ -13,6 +13,9 @@ form {
     padding-top: 5px;
 }
 
+.hide {
+    display:none;
+}
 
 label {
     font-family: Georgia, serif;

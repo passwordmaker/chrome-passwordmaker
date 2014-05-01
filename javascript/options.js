@@ -82,15 +82,14 @@ function setCurrentProfile(profile) {
     
     $("#charset").empty();
     
-    for (var i in CHARSET_OPTIONS) {
-        $("#charset").append("<option>"+CHARSET_OPTIONS[i]+"</option>");
-    }
+    CHARSET_OPTIONS.forEach(function(charset) {
+        $("#charset").append("<option>" + charset + "</option>");
+    });
     $("#charset").append("<option>Custom charset</option>");
     
     $("#charset").change(function() {
         if ($("#charset").val() == "Custom charset"){
-            $("#customCharset").val(profile.selectedCharset);
-            $("#customCharset").show();
+            $("#customCharset").val(profile.selectedCharset).show();
         } else {
             $("#customCharset").hide();
         }
@@ -101,8 +100,7 @@ function setCurrentProfile(profile) {
         $("#customCharset").hide();
     } else {
         $("#charset").val("Custom charset");
-        $("#customCharset").val(profile.selectedCharset);
-        $("#customCharset").show();
+        $("#customCharset").val(profile.selectedCharset).show();
     }
     
     updateExample();
@@ -125,7 +123,7 @@ function showExport(){
 function importRdf(){
     var txt = $('#importText').val();
 
-    if(!txt.length){
+    if(txt.trim() === ""){
         alert("Import text is empty");
         return false;
     }
@@ -133,7 +131,7 @@ function importRdf(){
     var rdfDoc = RdfImporter.loadDoc(txt);
 
     // Check that profiles have been parsed and are available before wiping current data
-    if ((rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length) && ($('#inputImportOverwrite').prop('checked') == true)) {
+    if ((rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length) && ($('#inputImportOverwrite').prop('checked') === true)) {
         // Setting to null triggers creation of default profile, settings to empty array bypasses that code ([] != null)
         Settings.profiles = [];
         Settings.saveProfiles();
@@ -177,13 +175,13 @@ function highlightProfile(){
 }
 
 function saveProfile() {
-    currentProfile.title = $("#profileNameTB").val();
+    currentProfile.title          = $("#profileNameTB").val();
     currentProfile.siteList       = $("#siteList").val();
-    currentProfile.url_protocol = $("#protocolCB").prop('checked');
-    currentProfile.url_subdomain = $("#subdomainCB").prop('checked');
-    currentProfile.url_domain = $("#domainCB").prop('checked');
-    currentProfile.url_path = $("#pathCB").prop('checked');
-    currentProfile.strUseText = $("#inputUseThisText").val();
+    currentProfile.url_protocol   = $("#protocolCB").prop('checked');
+    currentProfile.url_subdomain  = $("#subdomainCB").prop('checked');
+    currentProfile.url_domain     = $("#domainCB").prop('checked');
+    currentProfile.url_path       = $("#pathCB").prop('checked');
+    currentProfile.strUseText     = $("#inputUseThisText").val();
     currentProfile.whereToUseL33t = $("#whereLeetLB").val();
     currentProfile.l33tLevel      = $("#leetLevelLB").val();
     currentProfile.hashAlgorithm  = $("#hashAlgorithmLB").val();
@@ -218,25 +216,23 @@ function updateProfileList() {
     var profiles = Settings.getProfiles();
     var list = "";
     
-    for (var i in profiles) {
-        var profile = profiles[i];
+    profiles.forEach(function(profile) {
         list += "<li id='profile_id_"+profile.id+"'><a id='editProfile_"+profile.id+"' href='#'>"+profile.title+"</a></li>";
-    }
-    $("#profile_list").empty().append(list);
+    });
+    $("#profile_list").html(list);
 
-    for (var i in profiles) {
-        var id = profiles[i].id;
-        $("#editProfile_"+id).on('click', {id: id}, editProfile);
-    }
+    profiles.forEach(function(profile) {
+        $("#editProfile_"+profile.id).on('click', {id: profile.id}, editProfile);
+    });
 }
 
 function setSyncPassword() {
-    if ($("#syncProfilesPassword").val() == "") {
+    if ($("#syncProfilesPassword").val() === "") {
         return;
     }
 
     var result = Settings.startSyncWith($("#syncProfilesPassword").val());
-    if (result != null) {
+    if (result !== null) {
         Settings.setSyncProfiles(true);
         Settings.setSyncProfilesPassword(result);
         $("#syncProfilesPassword").val("");
@@ -262,28 +258,19 @@ function clearSyncData() {
 }
 
 function updateSyncProfiles() {
-    $("#sync_profiles_row").css('display', 'none');
+    $("#sync_profiles_row, #no_sync_password, #sync_data_exists, #sync_password_set").hide();
+    $("#set_sync_password, #clear_sync_data").css('visibility', 'hidden');
 
-    $("#no_sync_password").css('display', 'none');
-    $("#sync_data_exists").css('display', 'none');
-    $("#sync_password_set").css('display', 'none');
-
-    $("#set_sync_password").css('visibility', 'hidden');
-    $("#clear_sync_data").css('visibility', 'hidden');
-
-    var should_sync = ($("#syncProfiles").prop('checked') == true);
+    var should_sync = ($("#syncProfiles").prop('checked') === true);
     if (should_sync) {
       if (Settings.syncPasswordOk) {
-          $("#sync_password_set").css('display', 'block');
+          $("#sync_password_set").show();
           $("#clear_sync_data").css('visibility', 'visible');
       } else if (Settings.syncDataAvailable) {
-          $("#sync_profiles_row").css('display', 'block');
-          $("#sync_data_exists").css('display', 'block');
-          $("#set_sync_password").css('visibility', 'visible');
-          $("#clear_sync_data").css('visibility', 'visible');
+          $("#sync_profiles_row, #sync_data_exists").show();
+          $("#set_sync_password, #clear_sync_data").css('visibility', 'visible');
       } else {
-          $("#sync_profiles_row").css('display', 'block');
-          $("#no_sync_password").css('display', 'block');
+          $("#sync_profiles_row, #no_sync_password").show();
           $("#set_sync_password").css('visibility', 'visible');
       }
     } else {
@@ -295,7 +282,7 @@ function updateSyncProfiles() {
 }
 
 function updateMasterHash() {
-    var should_keep = ($("#keepMasterPasswordHash").prop('checked') == true);
+    var should_keep = ($("#keepMasterPasswordHash").prop('checked') === true);
     Settings.setKeepMasterPasswordHash(should_keep);    
     if ( should_keep ) {
       var master_pass = $("#masterPassword").val();
@@ -309,11 +296,11 @@ function updateMasterHash() {
 }
 
 function updateHidePassword() {
-    Settings.setHidePassword($("#hidePassword").prop('checked') == true);    
+    Settings.setHidePassword($("#hidePassword").prop('checked') === true);    
 }
 
 function updateDisablePasswordSaving() {
-    Settings.setDisablePasswordSaving($("#disablePasswordSaving").prop('checked') == true);
+    Settings.setDisablePasswordSaving($("#disablePasswordSaving").prop('checked') === true);
 }
 
 function testPasswordLength() {

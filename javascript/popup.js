@@ -1,12 +1,7 @@
 var currentTab = null;
 
 function setPasswordColors(foreground, background) {
-    $("#generated").css("background-color", background);
-    $("#generated").css("color", foreground);
-    $("#password").css("background-color", background);
-    $("#password").css("color", foreground);
-    $("#confirmation").css("background-color", background);
-    $("#confirmation").css("color", foreground);
+    $("#generated, #password, #confirmation").css({ "background-color": background, "color": foreground });
 }
 
 function getAutoProfileIdForUrl(url) {
@@ -66,7 +61,7 @@ function updateFields(e) {
 
     if (password === "") {
         $("#generatedForClipboard").val("");
-        $("#generated").val("Enter password");
+        $("#generated").val("Enter Password");
         setPasswordColors("#000000", "#85FFAB");
     } else if ( !matchesHash(password) ) {
         $("#generatedForClipboard").val("");
@@ -94,17 +89,17 @@ function updateFields(e) {
         hideCopy();
     }
     if (Settings.keepMasterPasswordHash()) {
-      $("#confirmation_row").css('display', 'none');
+      $("#confirmation_row").hide();
     } else {
-      $("#confirmation_row").css('display', 'block');
+      $("#confirmation_row").show();
     }
 }
 
 function matchesHash(password) {
-  if (!Settings.keepMasterPasswordHash()) return true;
-  var saved_hash = Settings.masterPasswordHash();
-  var new_hash = ChromePasswordMaker_SecureHash.make_hash(password);
-  return new_hash === saved_hash ;
+    if (!Settings.keepMasterPasswordHash()) return true;
+    var saved_hash = Settings.masterPasswordHash();
+    var new_hash = ChromePasswordMaker_SecureHash.make_hash(password);
+    return new_hash === saved_hash;
 }
 
 function updateURL(url) {
@@ -133,11 +128,11 @@ function showInject() {
 }
 
 function hideCopy() {
-  $("#copypassword").hide();
+    $("#copypassword").hide();
 }
 
 function showCopy() {
-  $("#copypassword").show();
+    $("#copypassword").show();
 }
 
 function init(url) {
@@ -188,7 +183,7 @@ function fillPassword() {
 }
 
 function copyPassword() {
-    $(".hidden").show();
+    document.getElementById("hidden").classList.remove("hide");
     document.getElementById("generatedForClipboard").select();
     document.execCommand("Copy");
     window.close();
