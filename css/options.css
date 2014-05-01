@@ -104,6 +104,7 @@ h2 {
 
 #profile_setting {
     padding: 20px;
+    height: 800px;
     width: 520px;
     float: left;
 }
@@ -281,6 +282,9 @@ input {
     position: fixed;
     left: 0;
     bottom: 0;
+    width: 100%;
+    border-top: 1px solid #aaaaaa;
+    background-color: #eeeeee;
     font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-style: italic;
     font-size: 0.8em;
