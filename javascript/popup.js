@@ -149,28 +149,22 @@ function init(url) {
             $("#store_location_row").hide();
         }
 
-        var activeProfileId = Settings.getActiveProfileId();
         var autoProfileId = getAutoProfileIdForUrl(url);
-
-        var options = "";
         var profiles = Settings.getProfiles();
-        for (var i in profiles) {
-            var profile = profiles[i];
-            if (autoProfileId && profile.id === autoProfileId) {
-                options += "<option value='auto' selected='true'";
-            } else if (!autoProfileId && profile.id === activeProfileId) {
-                options += "<option value='"+profile.id+"' selected='true'";
-            } else {
-                options += "<option value='"+profile.id+"'";
-            }
-            options += ">"+profile.title+"</option>";
-        }
+        var options = $();
 
-        $("#profile").empty().append(options);
+        profiles.forEach(function(profile) {
+            if (autoProfileId === profile.id) {
+                options = options.add("<option value='"+profile.id+"' selected>"+profile.title+"</option>");
+            } else {
+                options = options.add("<option value='"+profile.id+"'>"+profile.title+"</option>");
+            }
+        });
+
+        $("#profile").html(options);
 
         updateURL(url);
         $("#store_location").val(Settings.storeLocation);
-
         updateFields();
 
         chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {

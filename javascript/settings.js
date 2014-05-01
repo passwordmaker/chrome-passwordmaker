@@ -1,5 +1,5 @@
 var Settings = {
-    activeProfileId : localStorage["profile_id"],
+    activeProfileId: localStorage["profile_id"],
     storeLocation: localStorage["store_location"],
     password: "",
     profiles: null,
@@ -236,10 +236,6 @@ Settings.saveProfiles = function() {
         }
         Settings.saveSyncedProfiles(encrypted);
     }
-};
-
-Settings.getActiveProfileId = function() {
-    return Settings.activeProfileId;
 };
 
 Settings.setActiveProfileId = function(id) {
