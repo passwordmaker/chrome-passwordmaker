@@ -19,7 +19,7 @@ function getAutoProfileIdForUrl(url) {
             for (var j = 0; j < sites.length; j++) {
                 var pat = sites[j];
 
-                if (pat[0] == '/' && pat[pat.length-1] == '/') {
+                if (pat[0] === '/' && pat[pat.length-1] === '/') {
                     pat = pat.substr(1, pat.length-2);
                 } else {
                     pat = pat.replace(/[$+()^\[\]\\|{},]/g, '');
@@ -27,8 +27,8 @@ function getAutoProfileIdForUrl(url) {
                     pat = pat.replace(/\*/g, '.*');
                 }
 
-                if (pat[0] != '^') pat = '^' + pat;
-                if (pat[pat.length-1] != '$') pat = pat + '$';
+                if (pat[0] !== '^') pat = '^' + pat;
+                if (pat[pat.length-1] !== '$') pat = pat + '$';
 
                 var re;
                 try {
@@ -52,7 +52,7 @@ function updateFields(e) {
     var usedURL = $("#usedtext").attr('alt');
 
     var profileId = $("#profile").val();
-    if (profileId == "auto") {
+    if (profileId === "auto") {
         profileId = getAutoProfileIdForUrl(usedURL);
     } else {
         Settings.setActiveProfileId(profileId);
@@ -72,7 +72,7 @@ function updateFields(e) {
         $("#generatedForClipboard").val("");
         $("#generated").val("Master password mismatch");
         setPasswordColors("#FFFFFF", "#FF7272");
-    } else if (!Settings.keepMasterPasswordHash() && password != confirmation) {
+    } else if (!Settings.keepMasterPasswordHash() && password !== confirmation) {
         $("#generatedForClipboard").val("");
         $("#generated").val("Password wrong");
         setPasswordColors("#FFFFFF", "#FF7272");
@@ -104,12 +104,12 @@ function matchesHash(password) {
   if (!Settings.keepMasterPasswordHash()) return true;
   var saved_hash = Settings.masterPasswordHash();
   var new_hash = ChromePasswordMaker_SecureHash.make_hash(password);
-  return new_hash == saved_hash ;
+  return new_hash === saved_hash ;
 }
 
 function updateURL(url) {
     var profileId = $("#profile").val();
-    if (profileId == "auto") {
+    if (profileId === "auto") {
         profileId = getAutoProfileIdForUrl(url);
     }
     var profile = Settings.getProfile(profileId);
@@ -129,7 +129,7 @@ function onProfileChanged() {
 }
 
 function showInject() {
-    $("#injectpasswordrow").fadeIn();
+    $("#injectpasswordrow").show();
 }
 
 function hideCopy() {
@@ -137,7 +137,7 @@ function hideCopy() {
 }
 
 function showCopy() {
-  $("#copypassword").fadeIn();
+  $("#copypassword").show();
 }
 
 function init(url) {
@@ -149,38 +149,32 @@ function init(url) {
             $("#store_location_row").hide();
         }
 
-        var activeProfileId = Settings.getActiveProfileId();
         var autoProfileId = getAutoProfileIdForUrl(url);
-
-        var options = "";
         var profiles = Settings.getProfiles();
-        for (var i in profiles) {
-            var profile = profiles[i];
-            if (autoProfileId && profile.id == autoProfileId) {
-                options += "<option value='auto' selected='true'";
-            } else if (!autoProfileId && profile.id == activeProfileId) {
-                options += "<option value='"+profile.id+"' selected='true'";
-            } else {
-                options += "<option value='"+profile.id+"'";
-            }
-            options += ">"+profile.title+"</option>";
-        }
+        var options = $();
 
-        $("#profile").empty().append(options);
+        profiles.forEach(function(profile) {
+            if (autoProfileId === profile.id) {
+                options = options.add("<option value='"+profile.id+"' selected>"+profile.title+"</option>");
+            } else {
+                options = options.add("<option value='"+profile.id+"'>"+profile.title+"</option>");
+            }
+        });
+
+        $("#profile").html(options);
 
         updateURL(url);
         $("#store_location").val(Settings.storeLocation);
-
         updateFields();
 
         chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
-            if (response.hasField) {
+            if (response && response.hasField) {
                 showInject();
             }
         });
 
         password = $("#password").val();
-        if (password === null || password.length === 0 || (password != $("#confirmation").val())) {
+        if (password === null || password.length === 0 || (password !== $("#confirmation").val())) {
             $("#password").focus();
         } else {
             $("#generated").focus();
@@ -212,22 +206,22 @@ function showPasswordField() {
 
 function sendFillPassword() {
     chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
-        if (response.hasField) {
+        if (response && response.hasField) {
           fillPassword();
         }
     });
 }
 
 $(function() {
-    $("#password").bind('keyup change', updateFields);
-    $("#confirmation").bind('keyup change', updateFields);
-    $("#usedtext").bind('keyup change', updateFields);
-    $("#store_location").bind('change', updateFields);
-    $("#profile").bind('change', onProfileChanged);
-    $("#activatePassword").bind('click', showPasswordField);
-    $("#copypassword>input").bind('click', copyPassword);
-    $("#injectpasswordrow>input").bind('click', fillPassword);
-    $("#options>a").bind('click', openOptions);
+    $("#password").on('keyup change', updateFields);
+    $("#confirmation").on('keyup change', updateFields);
+    $("#usedtext").on('keyup change', updateFields);
+    $("#store_location").on('change', updateFields);
+    $("#profile").on('change', onProfileChanged);
+    $("#activatePassword").on('click', showPasswordField);
+    $("#copypassword>input").on('click', copyPassword);
+    $("#injectpasswordrow>input").on('click', fillPassword);
+    $("#options>a").on('click', openOptions);
 
     $("#injectpasswordrow").hide();
     $("#copypassword").hide();
@@ -242,14 +236,14 @@ $(function() {
 
     if (Settings.keepMasterPasswordHash()) {
         var saved_hash = Settings.masterPasswordHash();
-        if(saved_hash.charAt(0) != 'n') {
+        if(saved_hash.charAt(0) !== 'n') {
             saved_hash = ChromePasswordMaker_SecureHash.update_old_hash(saved_hash);
             Settings.setMasterPasswordHash(saved_hash);
         }
     }
 
     $("#generated").keypress(function(event) {
-        if (event.keyCode == 13) {
+        if (event.keyCode === 13) {
             sendFillPassword();
         }
     });
@@ -262,22 +256,19 @@ $(function() {
         });
     });
 
-    // Focus hack, see http://stackoverflow.com/a/11400653/1295557
-    if (location.search != "?focusHack") location.search = "?focusHack";
-
     // Tab navigation workaround, see http://code.google.com/p/chromium/issues/detail?id=122352
     // Use Enter instead of Tab
     $("#password").keypress(function(event) {
-        if (event.keyCode == 13 && !Settings.keepMasterPasswordHash()) {
+        if (event.keyCode === 13 && !Settings.keepMasterPasswordHash()) {
             $("#confirmation").focus();
         }
-        else if (event.keyCode == 13) {
+        else if (event.keyCode === 13) {
             sendFillPassword();
         }
     });
 
     $("#confirmation").keypress(function(event) {
-        if (event.keyCode == 13) {
+        if (event.keyCode === 13) {
             sendFillPassword();
         }
     });

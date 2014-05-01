@@ -1,6 +1,6 @@
 # Chrome PasswordMaker Pro
 
-![Dummy Screenshot](http://img405.imageshack.us/img405/6676/bildschirmfoto20100418u.png)
+![Example Screenshot](http://img405.imageshack.us/img405/6676/bildschirmfoto20100418u.png)
 
 The only thing that kept me from switching to Chrome completely was a missing port of the [passwordmaker.org](http://passwordmaker.org/) extension. Luckily, there was one available in the [Chrome Extension Directory](http://chrome.google.com/extensions/detail/doblembglfahhpiilfhajboogopikhcm). Sadly, that extension is only a simple port of the HTML page that is offered on [passwordmaker.org](http://passwordmaker.org/).
 
