@@ -1,6 +1,6 @@
 var Settings = {
     activeProfileId: localStorage["profile_id"],
-    storeLocation: localStorage["store_location"],
+    storeLocation: localStorage["store_location"] || "memory",
     password: "",
     profiles: null,
     syncDataAvailable: false,

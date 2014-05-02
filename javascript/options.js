@@ -304,7 +304,9 @@ function updateDisablePasswordSaving() {
 }
 
 function testPasswordLength() {
-    if (/\D/.test(this.value)) this.value='8';
+    if (this.value < 8) this.value = 8;
+    if (this.value > 512) this.value = 512;
+    this.value = parseInt(this.value);
 }
 
 $(function() {
@@ -350,6 +352,6 @@ $(function() {
     $("#set_sync_password").on('click', setSyncPassword);
     $("#clear_sync_data").on('click', clearSyncData);
 
-    $("#passwdLength").on('change keyup keydown keypress input', testPasswordLength);
+    $("#passwdLength").on('blur', testPasswordLength);
 });
 
