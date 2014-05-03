@@ -10,7 +10,7 @@
             <img src='../images/passwdmaker48.png' width='20' height='20' alt=""/><span>PasswordMaker Pro</span>
         </div>
         <form>
-        <div class='row'><label for='password'>Password:</label><input class='input' id='password' type="password" autofocus /></div>
+        <div class='row' id='first_row'><label for='password'>Password:</label><input class='input' id='password' type="password" autofocus /></div>
         <div class='row' id='confirmation_row'><label for='confirmation'>Confirmation:</label><input class='input' id='confirmation' type="password"/></div>
         <div class='row' id="store_location_row"><label>Save Password:</label>
             <select id="store_location" name="store_location">
@@ -29,9 +29,9 @@
             <a id='activatePassword' class="awesome button largebutton" href="#">Show password</a>
         </div>
         <div class='row' id='button-row'>
-          <div id="copypassword"><input class="awesome" type="button" value="Copy"/></div>
-          <div id="injectpasswordrow"><input class="awesome" type="button" value="Fill field" title="Populate all *empty* password fields"/></div>
-          <div id='options'><a class="awesome button" href="#">Options</a></div>
+          <a id="copypassword" class="awesome button" href="#">Copy</a>
+          <a id="injectpasswordrow" class="awesome button" href="#" title="Populate all *empty* password fields">Fill field</a>
+          <a id='options' class="awesome button" href="#">Options</a>
         </div>
         <div id='hidden' class='hide'>
           <input type='text' id='generatedForClipboard' value='' />

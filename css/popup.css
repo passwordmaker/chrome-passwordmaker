@@ -14,7 +14,7 @@ form {
 }
 
 .hide {
-    display:none;
+    display: none;
 }
 
 label {
@@ -77,4 +77,5 @@ select {
 
 #injectpasswordrow,#copypassword {
     float: left;
+    margin-right: 4px;
 }

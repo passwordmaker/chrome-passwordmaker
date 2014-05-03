@@ -61,7 +61,7 @@ function updateFields(e) {
 
     if (password === "") {
         $("#generatedForClipboard").val("");
-        $("#generated").val("Enter Password");
+        $("#generated").val("Please Enter Password");
         setPasswordColors("#000000", "#85FFAB");
     } else if ( !matchesHash(password) ) {
         $("#generatedForClipboard").val("");
@@ -215,9 +215,9 @@ $(function() {
     $("#store_location").on('change', updateFields);
     $("#profile").on('change', onProfileChanged);
     $("#activatePassword").on('click', showPasswordField);
-    $("#copypassword>input").on('click', copyPassword);
-    $("#injectpasswordrow>input").on('click', fillPassword);
-    $("#options>a").on('click', openOptions);
+    $("#copypassword").on('click', copyPassword);
+    $("#injectpasswordrow").on('click', fillPassword);
+    $("#options").on('click', openOptions);
 
     $("#injectpasswordrow").hide();
     $("#copypassword").hide();
