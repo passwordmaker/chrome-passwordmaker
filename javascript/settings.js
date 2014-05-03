@@ -196,8 +196,8 @@ Settings.saveSyncedProfiles = function(data) {
     threshold = Math.round(chrome.storage.sync.QUOTA_BYTES_PER_ITEM * 0.9);
     if (data.length <= threshold) {
         chrome.storage.sync.set({ 'synced_profiles' : data }, function() {
-            if (chrome.extension.lastError !== undefined) {
-              alert("Could not sync data : " + chrome.extension.lastError);
+            if (chrome.runtime.lastError !== undefined) {
+              alert("Could not sync data : " + chrome.runtime.lastError);
             }
         });
     } else {
@@ -212,10 +212,10 @@ Settings.saveSyncedProfiles = function(data) {
         }
         output.synced_profiles = keys;
         chrome.storage.sync.set(output, function() {
-            if (chrome.extension.lastError === undefined) {
+            if (chrome.runtime.lastError === undefined) {
                 chrome.storage.sync.remove(oldKeys.split(","));
             } else {
-              alert("Could not sync data : " + chrome.extension.lastError);
+              alert("Could not sync data : " + chrome.runtime.lastError);
             }
         });
     }
@@ -272,17 +272,17 @@ Settings.setPassword = function(password) {
     if (Settings.storeLocation === "memory") {
         Settings.password = password;
         localStorage["password"] = "";
-        chrome.extension.sendMessage({setPassword: true, password: password});
+        chrome.runtime.sendMessage({setPassword: true, password: password});
     } else if (Settings.storeLocation === "disk") {
         Settings.password = password;
         key = Settings.makeKey();
         localStorage["password_key"] = key;
         localStorage["password_crypt"] = sjcl.encrypt(key, password, { ks: 256, ts: 128 });
-        chrome.extension.sendMessage({setPassword: true, password: password});
+        chrome.runtime.sendMessage({setPassword: true, password: password});
     } else {
         Settings.password = null;
         localStorage["password"] = "";
-        chrome.extension.sendMessage({setPassword: true, password: null});
+        chrome.runtime.sendMessage({setPassword: true, password: null});
     }
 };
 
@@ -290,7 +290,7 @@ Settings.getPassword = function(callback) {
     if (Settings.password !== null && Settings.password.length > 0) {
         callback(Settings.password);
     } else {
-        chrome.extension.sendMessage({getPassword: true}, function(response) {
+        chrome.runtime.sendMessage({getPassword: true}, function(response) {
             if (response.password !== null && response.password.length > 0) {
                 callback(response.password);
             } else if (localStorage["password_crypt"] !== undefined && localStorage["password_crypt"].length > 0) {
@@ -328,7 +328,7 @@ Settings.setDisablePasswordSaving = function(bool) {
         localStorage["password_crypt"] = "";
         Settings.password = "";
 
-        chrome.extension.sendMessage({setPassword: true, password: null}, function(response) {});
+        chrome.runtime.sendMessage({setPassword: true, password: null}, function(response) {});
     }
 };
 
@@ -379,7 +379,7 @@ Settings.syncProfilesPassword = function() {
 
 Settings.clearSyncData = function(callback) {
     chrome.storage.sync.clear(function() {
-        if (chrome.extension.lastError === undefined) {
+        if (chrome.runtime.lastError === undefined) {
             Settings.syncDataAvailable = false;
             Settings.syncPasswordOk = false;
             localStorage['synced_profiles'] = "";
@@ -388,7 +388,7 @@ Settings.clearSyncData = function(callback) {
             callback(true);
         } else {
             alert("Could not delete synced data: " +
-                  chrome.extension.lastError);
+                  chrome.runtime.lastError);
             callback(false);
         }
     });

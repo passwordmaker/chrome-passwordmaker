@@ -1,6 +1,6 @@
 var password = null;
 
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     response = {};
 
     if (request.setPassword) {
@@ -27,7 +27,7 @@ function updateSyncedProfiles(data) {
 }
 
 chrome.storage.sync.get(null, function(data) {
-    if (chrome.extension.lastError === undefined) {
+    if (chrome.runtime.lastError === undefined) {
         updateSyncedProfiles(data);
     }
 });
