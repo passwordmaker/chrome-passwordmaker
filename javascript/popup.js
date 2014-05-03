@@ -44,7 +44,7 @@ function getAutoProfileIdForUrl(url) {
 function updateFields(e) {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
-    var usedURL = $("#usedtext").attr('alt');
+    var usedURL = $("#usedtext").prop('alt');
 
     var profileId = $("#profile").val();
     if (profileId === "auto") {
@@ -74,19 +74,22 @@ function updateFields(e) {
     } else {
         if (profile !== null) {
             var generatedPassword = profile.getPassword($("#usedtext").val(), password);
-            $("#generated").val(generatedPassword);
-            $("#generatedForClipboard").val(generatedPassword);
+            $("#generated, #generatedForClipboard").val(generatedPassword);
             enableCopy = true;
         } else {
-            $("#generated").val("");
-            $("#generatedForClipboard").val("");
+            $("#generated, #generatedForClipboard").val("");
         }
         setPasswordColors("#000000", "#FFFFFF");
     }
     if (enableCopy) {
-        showCopy();
+        $("#copypassword").show()
+        chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
+            if (response && response.hasField) {
+                $("#injectpasswordrow").show();
+            }
+        });
     } else {
-        hideCopy();
+        $("#copypassword, #injectpasswordrow").hide();
     }
     if (Settings.keepMasterPasswordHash()) {
       $("#confirmation_row").hide();
@@ -109,30 +112,16 @@ function updateURL(url) {
     }
     var profile = Settings.getProfile(profileId);
     // Store url in ALT attribute
-    $("#usedtext").attr('alt', url);
+    $("#usedtext").prop('alt', url);
     // Store either matched url or, if set, use profiles own "use text"
     $("#usedtext").val(((profile.getText()) ? profile.getText() : profile.getUrl(url)));
 }
 
 function onProfileChanged() {
-    chrome.windows.getCurrent(function(obj) {
-        chrome.tabs.query({active:true, windowId: obj.id}, function(tabs) {
-            updateURL(tabs[0].url);
-            updateFields();
-        });
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        updateURL(tabs[0].url);
+        updateFields();
     });
-}
-
-function showInject() {
-    $("#injectpasswordrow").show();
-}
-
-function hideCopy() {
-    $("#copypassword").hide();
-}
-
-function showCopy() {
-    $("#copypassword").show();
 }
 
 function init(url) {
@@ -162,12 +151,6 @@ function init(url) {
         $("#store_location").val(Settings.storeLocation);
         updateFields();
 
-        chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
-            if (response && response.hasField) {
-                showInject();
-            }
-        });
-
         password = $("#password").val();
         if (password === null || password.length === 0 || (password !== $("#confirmation").val())) {
             $("#password").focus();
@@ -196,8 +179,7 @@ function openOptions() {
 
 function showPasswordField() {
     $("#activatePassword").hide();
-    $("#generated").show();
-    $("#generated").focus();
+    $("#generated").show().focus();
 }
 
 function sendFillPassword() {
@@ -244,12 +226,9 @@ $(function() {
         }
     });
 
-    chrome.windows.getCurrent(function(obj) {
-        chrome.tabs.query({active:true, windowId: obj.id}, function(tabs) {
-            currentTab = tabs[0].id;
-            init(tabs[0].url);
-            $("form").show();
-        });
+    chrome.tabs.query({active: true}, function(tabs) {
+        currentTab = tabs[0].id;
+        init(tabs[0].url);
     });
 
     // Tab navigation workaround, see http://code.google.com/p/chromium/issues/detail?id=122352

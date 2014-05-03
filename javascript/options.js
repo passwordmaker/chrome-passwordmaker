@@ -30,8 +30,8 @@ function updateExample() {
 }
 
 function updateLeet() {
-    $("#leetLevelLB").attr("disabled", $("#whereLeetLB").val() == "off");
-    updateStyle($("#leetLevelLabel"), "disabled", $("#whereLeetLB").val() == "off");
+    $("#leetLevelLB").prop("disabled", $("#whereLeetLB").val() === "off");
+    updateStyle($("#leetLevelLabel"), "disabled", $("#whereLeetLB").val() === "off");
 }
 
 function updateRemoveButton() {
