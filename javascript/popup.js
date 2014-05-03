@@ -1,7 +1,7 @@
 var currentTab = null;
 
 function setPasswordColors(foreground, background) {
-    $("#generated, #password, #confirmation").css({ "background-color": background, "color": foreground });
+    $("#generated, #password, #confirmation").css({"background-color": background,"color": foreground});
 }
 
 function getAutoProfileIdForUrl(url) {
@@ -28,7 +28,7 @@ function getAutoProfileIdForUrl(url) {
                 var re;
                 try {
                     re = new RegExp(pat);
-                } catch(e) {
+                } catch (e) {
                     console.log(e + "\n");
                 }
 
@@ -92,9 +92,9 @@ function updateFields(e) {
         $("#copypassword, #injectpasswordrow").hide();
     }
     if (Settings.keepMasterPasswordHash()) {
-      $("#confirmation_row").hide();
+        $("#confirmation_row").hide();
     } else {
-      $("#confirmation_row").show();
+        $("#confirmation_row").show();
     }
 }
 
@@ -118,7 +118,7 @@ function updateURL(url) {
 }
 
 function onProfileChanged() {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.query({active: true,currentWindow: true}, function(tabs) {
         updateURL(tabs[0].url);
         updateFields();
     });
@@ -139,9 +139,9 @@ function init(url) {
 
         profiles.forEach(function(profile) {
             if (autoProfileId === profile.id) {
-                options = options.add("<option value='"+profile.id+"' selected>"+profile.title+"</option>");
+                options = options.add("<option value='" + profile.id + "' selected>" + profile.title + "</option>");
             } else {
-                options = options.add("<option value='"+profile.id+"'>"+profile.title+"</option>");
+                options = options.add("<option value='" + profile.id + "'>" + profile.title + "</option>");
             }
         });
 
@@ -185,7 +185,7 @@ function showPasswordField() {
 function sendFillPassword() {
     chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
         if (response && response.hasField) {
-          fillPassword();
+            fillPassword();
         }
     });
 }
@@ -204,7 +204,7 @@ $(function() {
     $("#injectpasswordrow").hide();
     $("#copypassword").hide();
 
-    if (Settings.shouldHidePassword()){
+    if (Settings.shouldHidePassword()) {
         $("#generated").hide();
         $("#activatePassword").show();
     } else {
@@ -214,7 +214,7 @@ $(function() {
 
     if (Settings.keepMasterPasswordHash()) {
         var saved_hash = Settings.masterPasswordHash();
-        if(saved_hash.charAt(0) !== 'n') {
+        if (saved_hash.charAt(0) !== 'n') {
             saved_hash = ChromePasswordMaker_SecureHash.update_old_hash(saved_hash);
             Settings.setMasterPasswordHash(saved_hash);
         }

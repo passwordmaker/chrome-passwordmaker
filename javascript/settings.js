@@ -155,8 +155,8 @@ Settings.loadProfilesFromString = function(profiles) {
             });
             Settings.profiles.push(p);
         });
-       return true;
-    } catch(e) {
+        return true;
+    } catch (e) {
         return false;
     }
 };
@@ -173,19 +173,17 @@ Settings.loadLocalProfiles = function() {
 
 Settings.loadProfiles = function() {
     Settings.loadLocalProfiles();
-    if (localStorage["synced_profiles"] === null ||
-        localStorage["synced_profiles"] === "") {
+    if (localStorage["synced_profiles"] === null || localStorage["synced_profiles"] === "") {
         return;
     }
 
     Settings.syncDataAvailable = true;
 
-    profiles = Settings.decrypt(
-        localStorage["synced_profiles"], Settings.syncProfilesPassword());
+    profiles = Settings.decrypt(localStorage["synced_profiles"], Settings.syncProfilesPassword());
     if (profiles !== null) {
         Settings.syncPasswordOk = true;
         if (Settings.shouldSyncProfiles()) {
-          Settings.loadProfilesFromString(profiles.value);
+            Settings.loadProfilesFromString(profiles.value);
         }
     }
 };
@@ -195,9 +193,9 @@ Settings.saveSyncedProfiles = function(data) {
 
     threshold = Math.round(chrome.storage.sync.QUOTA_BYTES_PER_ITEM * 0.9);
     if (data.length <= threshold) {
-        chrome.storage.sync.set({ 'synced_profiles' : data }, function() {
+        chrome.storage.sync.set({'synced_profiles': data}, function() {
             if (chrome.runtime.lastError !== undefined) {
-              alert("Could not sync data : " + chrome.runtime.lastError);
+                alert("Could not sync data : " + chrome.runtime.lastError);
             }
         });
     } else {
@@ -215,7 +213,7 @@ Settings.saveSyncedProfiles = function(data) {
             if (chrome.runtime.lastError === undefined) {
                 chrome.storage.sync.remove(oldKeys.split(","));
             } else {
-              alert("Could not sync data : " + chrome.runtime.lastError);
+                alert("Could not sync data : " + chrome.runtime.lastError);
             }
         });
     }
@@ -224,15 +222,12 @@ Settings.saveSyncedProfiles = function(data) {
 Settings.saveProfiles = function() {
     stringified = JSON.stringify(Settings.profiles);
     localStorage["profiles"] = stringified;
-    if (Settings.shouldSyncProfiles() &&
-        (!Settings.syncDataAvailable || Settings.syncPasswordOk)) {
-        encrypted = Settings.encrypt(
-            stringified,
-            Settings.syncProfilesPassword()).value;
+    if (Settings.shouldSyncProfiles() && (!Settings.syncDataAvailable || Settings.syncPasswordOk)) {
+        encrypted = Settings.encrypt(stringified, Settings.syncProfilesPassword()).value;
         parsed = JSON.parse(encrypted);
         if (parsed.salt === undefined) {
-          parsed.salt = JSON.parse(localStorage["synced_profiles"]).salt;
-          encrypted = JSON.stringify(parsed);
+            parsed.salt = JSON.parse(localStorage["synced_profiles"]).salt;
+            encrypted = JSON.stringify(parsed);
         }
         Settings.saveSyncedProfiles(encrypted);
     }
@@ -259,12 +254,13 @@ Settings.setStoreLocation = function(store) {
 
 // Make a pseudo-random encryption key... emphasis on *pseudo*
 Settings.makeKey = function() {
-  var hex = ['0','1','2','3','4','5','6','7','8','9','0','a','b','c','d','e','f'];
-  var keySizeInBits = 256/4;
-  var ret = "";
-  while (ret.length < keySizeInBits)
-    ret += hex[Math.floor(Math.random()*17)];
-  return ret;
+    var hex = ['0','1','2','3','4','5','6','7','8','9','0','a','b','c','d','e','f'];
+    var keySizeInBits = 256 / 4;
+    var ret = "";
+    while (ret.length < keySizeInBits) {
+        ret += hex[Math.floor(Math.random() * 17)];
+    }
+    return ret;
 };
 
 Settings.setPassword = function(password) {
@@ -304,7 +300,7 @@ Settings.getPassword = function(callback) {
             } else {
                 callback(null);
             }
-
+        
         });
     }
 };
@@ -338,22 +334,22 @@ Settings.shouldDisablePasswordSaving = function() {
 };
 
 Settings.setKeepMasterPasswordHash = function(bool) {
-  localStorage["keep_master_password_hash"] = bool;
+    localStorage["keep_master_password_hash"] = bool;
 };
 
 Settings.keepMasterPasswordHash = function() {
-  bool = localStorage["keep_master_password_hash"];
-  return bool === "true";
+    bool = localStorage["keep_master_password_hash"];
+    return bool === "true";
 };
 
 Settings.masterPasswordCharSet = "0123456789abcdef";
 
 Settings.setMasterPasswordHash = function(theHash) {
-  localStorage["master_password_hash"] = theHash;
+    localStorage["master_password_hash"] = theHash;
 };
 
 Settings.masterPasswordHash = function() {
-  return localStorage["master_password_hash"];
+    return localStorage["master_password_hash"];
 };
 
 Settings.setSyncProfiles = function(bool) {
@@ -387,8 +383,8 @@ Settings.clearSyncData = function(callback) {
             Settings.loadLocalProfiles();
             callback(true);
         } else {
-            alert("Could not delete synced data: " +
-                  chrome.runtime.lastError);
+            alert("Could not delete synced data: " + 
+            chrome.runtime.lastError);
             callback(false);
         }
     });
@@ -409,30 +405,30 @@ Settings.startSyncWith = function(password, callback) {
             return profiles.key;
         }
     } else {
-        encrypted = Settings.encrypt(JSON.stringify(Settings.profiles),
-            password);
-
+        encrypted = Settings.encrypt(JSON.stringify(Settings.profiles), 
+        password);
+        
         Settings.saveSyncedProfiles(encrypted.value);
         Settings.syncDataAvailable = true;
         Settings.syncPasswordOk = true;
         return encrypted.key;
     }
-
+    
     return null;
 };
 
 Settings.encrypt = function(data, password) {
-    var options = { ks: 256, ts: 128, iter: 10000 };
+    var options = {ks: 256,ts: 128,iter: 10000};
     var rp = {};
     var encrypted = sjcl.encrypt(password, data, options, rp);
-    return {value: encrypted, key: rp.key};
+    return {value: encrypted,key: rp.key};
 };
 
 Settings.decrypt = function(data, password) {
     try {
         rp = {};
         decrypted = sjcl.decrypt(password, data, {}, rp);
-        return {value: decrypted, key: rp.key};
+        return {value: decrypted,key: rp.key};
     } catch (e) {
         return null;
     }
