@@ -127,9 +127,7 @@ Settings.addProfile = function(profile) {
     if (Settings.profiles === null) {
         Settings.getProfiles();
     }
-
     profile.id = Settings.getMaxId() + 1;
-
     Settings.profiles.push(profile);
 };
 
@@ -145,13 +143,11 @@ Settings.deleteProfile = function(profile) {
 
 Settings.loadProfilesFromString = function(profiles) {
     try {
-        json = JSON.parse(profiles);
-
         Settings.profiles = [];
-        $.each(json, function(i) {
+        JSON.parse(profiles).forEach(function(item) {
             p = new Profile();
-            $.each(json[i], function(key, value) {
-                p[key] = value;
+            Object.keys(item).forEach(function(key) {
+                p[key] = item[key];
             });
             Settings.profiles.push(p);
         });
