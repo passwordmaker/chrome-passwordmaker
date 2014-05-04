@@ -11,34 +11,14 @@ function getAutoProfileIdForUrl(url) {
         if (profile.siteList) {
             var usedURL = profile.getUrl(url);
             var sites = profile.siteList.split(' ');
-            for (var j = 0; j < sites.length; j++) {
+            for (var j in sites) {
                 var pat = sites[j];
-
-                if (pat[0] === '/' && pat[pat.length-1] === '/') {
-                    pat = pat.substr(1, pat.length-2);
-                } else {
-                    pat = pat.replace(/[$+()^\[\]\\|{},]/g, '');
-                    pat = pat.replace(/\?/g, '.');
-                    pat = pat.replace(/\*/g, '.*');
-                }
-
-                if (pat[0] !== '^') pat = '^' + pat;
-                if (pat[pat.length-1] !== '$') pat = pat + '$';
-
-                var re;
-                try {
-                    re = new RegExp(pat);
-                } catch (e) {
-                    console.log(e + "\n");
-                }
-
-                if (re.test(usedURL) || re.test(url)) {
+                if (pat.indexOf(usedURL) >= 0 || pat.indexOf(url) >= 0) {
                     return profile.id;
                 }
             }
         }
     }
-    return null;
 }
 
 function updateFields(e) {
