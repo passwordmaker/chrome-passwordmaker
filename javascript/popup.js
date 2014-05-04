@@ -47,17 +47,13 @@ function updateFields(e) {
     var usedURL = $("#usedtext").prop('alt');
 
     var profileId = $("#profile").val();
-    if (profileId === "auto") {
-        profileId = getAutoProfileIdForUrl(usedURL);
-    } else {
-        Settings.setActiveProfileId(profileId);
-    }
+    Settings.setActiveProfileId(profileId);
     var profile = Settings.getProfile(profileId);
 
     Settings.setStoreLocation($("#store_location").val());
     Settings.setPassword(password);
 
-    var enableCopy = false;
+    var enableButtons = false;
 
     if (password === "") {
         $("#generatedForClipboard").val("");
@@ -72,16 +68,12 @@ function updateFields(e) {
         $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else {
-        if (profile !== null) {
-            var generatedPassword = profile.getPassword($("#usedtext").val(), password);
-            $("#generated, #generatedForClipboard").val(generatedPassword);
-            enableCopy = true;
-        } else {
-            $("#generated, #generatedForClipboard").val("");
-        }
+        var generatedPassword = profile.getPassword($("#usedtext").val(), password);
+        $("#generated, #generatedForClipboard").val(generatedPassword);
+        enableButtons = true;
         setPasswordColors("#000000", "#FFFFFF");
     }
-    if (enableCopy) {
+    if (enableButtons) {
         $("#copypassword").show()
         chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
             if (response && response.hasField) {
@@ -107,9 +99,6 @@ function matchesHash(password) {
 
 function updateURL(url) {
     var profileId = $("#profile").val();
-    if (profileId === "auto") {
-        profileId = getAutoProfileIdForUrl(url);
-    }
     var profile = Settings.getProfile(profileId);
     // Store url in ALT attribute
     $("#usedtext").prop('alt', url);
@@ -191,9 +180,7 @@ function sendFillPassword() {
 }
 
 $(function() {
-    $("#password").on('keyup change', updateFields);
-    $("#confirmation").on('keyup change', updateFields);
-    $("#usedtext").on('keyup change', updateFields);
+    $("#password, #confirmation, #usedtext").on('keyup change', updateFields);
     $("#store_location").on('change', updateFields);
     $("#profile").on('change', onProfileChanged);
     $("#activatePassword").on('click', showPasswordField);
@@ -201,8 +188,7 @@ $(function() {
     $("#injectpasswordrow").on('click', fillPassword);
     $("#options").on('click', openOptions);
 
-    $("#injectpasswordrow").hide();
-    $("#copypassword").hide();
+    $("#injectpasswordrow, #copypassword").hide();
 
     if (Settings.shouldHidePassword()) {
         $("#generated").hide();
