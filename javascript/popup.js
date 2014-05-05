@@ -21,10 +21,10 @@ function getAutoProfileIdForUrl(url) {
     }
 }
 
-function updateFields(e) {
+function updateFields() {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
-    var usedURL = $("#usedtext").prop('alt');
+    var usedURL = $("#usedtext").prop("alt");
 
     var profileId = $("#profile").val();
     Settings.setActiveProfileId(profileId);
@@ -53,6 +53,7 @@ function updateFields(e) {
         enableButtons = true;
         setPasswordColors("#000000", "#FFFFFF");
     }
+
     if (enableButtons) {
         $("#copypassword").show()
         chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
@@ -63,6 +64,7 @@ function updateFields(e) {
     } else {
         $("#copypassword, #injectpasswordrow").hide();
     }
+
     if (Settings.keepMasterPasswordHash()) {
         $("#confirmation_row").hide();
     } else {
@@ -81,13 +83,13 @@ function updateURL(url) {
     var profileId = $("#profile").val();
     var profile = Settings.getProfile(profileId);
     // Store url in ALT attribute
-    $("#usedtext").prop('alt', url);
+    $("#usedtext").prop("alt", url);
     // Store either matched url or, if set, use profiles own "use text"
     $("#usedtext").val(((profile.getText()) ? profile.getText() : profile.getUrl(url)));
 }
 
 function onProfileChanged() {
-    chrome.tabs.query({active: true,currentWindow: true}, function(tabs) {
+    chrome.tabs.query({active: true}, function(tabs) {
         updateURL(tabs[0].url);
         updateFields();
     });
@@ -160,15 +162,13 @@ function sendFillPassword() {
 }
 
 $(function() {
-    $("#password, #confirmation, #usedtext").on('keyup change', updateFields);
-    $("#store_location").on('change', updateFields);
-    $("#profile").on('change', onProfileChanged);
-    $("#activatePassword").on('click', showPasswordField);
-    $("#copypassword").on('click', copyPassword);
-    $("#injectpasswordrow").on('click', fillPassword);
-    $("#options").on('click', openOptions);
-
-    $("#injectpasswordrow, #copypassword").hide();
+    $("#password, #confirmation, #usedtext").on("keyup", updateFields);
+    $("#store_location").on("change", updateFields);
+    $("#profile").on("change", onProfileChanged);
+    $("#activatePassword").on("click", showPasswordField);
+    $("#copypassword").on("click", copyPassword);
+    $("#injectpasswordrow").on("click", fillPassword);
+    $("#options").on("click", openOptions);
 
     if (Settings.shouldHidePassword()) {
         $("#generated").hide();
@@ -186,30 +186,13 @@ $(function() {
         }
     }
 
-    $("#generated").keypress(function(event) {
-        if (event.keyCode === 13) {
-            sendFillPassword();
-        }
-    });
-
     chrome.tabs.query({active: true}, function(tabs) {
         currentTab = tabs[0].id;
         init(tabs[0].url);
     });
 
-    // Tab navigation workaround, see http://code.google.com/p/chromium/issues/detail?id=122352
-    // Use Enter instead of Tab
-    $("#password").keypress(function(event) {
-        if (event.keyCode === 13 && !Settings.keepMasterPasswordHash()) {
-            $("#confirmation").focus();
-        }
-        else if (event.keyCode === 13) {
-            sendFillPassword();
-        }
-    });
-
-    $("#confirmation").keypress(function(event) {
-        if (event.keyCode === 13) {
+    $("#confirmation, #generated, #password").on("keydown", function(event) {
+        if (event.keyCode === 13) { // 13 is the character code of the return key
             sendFillPassword();
         }
     });
