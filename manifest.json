@@ -26,7 +26,6 @@
     "all_frames": true
   } ],
   "background": {
-    "persistent": false,
     "scripts": [ "javascript/background.js" ]
   },
   "options_page": "html/options.html",

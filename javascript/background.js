@@ -1,8 +1,7 @@
 var password = null;
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    response = {};
-
+    var response = {};
     if (request.setPassword) {
         password = request.password;
     } else if (request.getPassword) {

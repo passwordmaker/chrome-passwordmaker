@@ -239,7 +239,6 @@ Settings.setStoreLocation = function(store) {
         Settings.storeLocation = store;
         localStorage["store_location"] = store;
         if (Settings.storeLocation !== "disk") {
-            localStorage["password"] = "";
             localStorage["password_crypt"] = "";
         }
         if (Settings.storeLocation !== "memory") {
@@ -260,38 +259,30 @@ Settings.makeKey = function() {
 };
 
 Settings.setPassword = function(password) {
-    // ToDo: CRYPT THIS!!
+    var key = Settings.makeKey();
+    localStorage["password_key"] = key;
     if (Settings.storeLocation === "memory") {
-        Settings.password = password;
-        localStorage["password"] = "";
+        Settings.password = sjcl.encrypt(key, password);
         chrome.runtime.sendMessage({setPassword: true, password: password});
     } else if (Settings.storeLocation === "disk") {
-        Settings.password = password;
-        key = Settings.makeKey();
-        localStorage["password_key"] = key;
+        Settings.password = sjcl.encrypt(key, password);
         localStorage["password_crypt"] = sjcl.encrypt(key, password, { ks: 256, ts: 128 });
         chrome.runtime.sendMessage({setPassword: true, password: password});
     } else {
-        Settings.password = null;
-        localStorage["password"] = "";
+        Settings.password = "";
         chrome.runtime.sendMessage({setPassword: true, password: null});
     }
 };
 
 Settings.getPassword = function(callback) {
-    if (Settings.password !== null && Settings.password.length > 0) {
-        callback(Settings.password);
+    if (Settings.password.length > 0) {
+        callback(sjcl.decrypt(localStorage["password_key"], Settings.password));
     } else {
         chrome.runtime.sendMessage({getPassword: true}, function(response) {
             if (response.password !== null && response.password.length > 0) {
                 callback(response.password);
             } else if (localStorage["password_crypt"] !== undefined && localStorage["password_crypt"].length > 0) {
                 Settings.password = sjcl.decrypt(localStorage["password_key"], localStorage["password_crypt"]);
-                callback(Settings.password);
-            } else if (localStorage["password"]) {
-                Settings.password = localStorage["password"];
-                Settings.setPassword(Settings.password);
-                localStorage["password"] = null;
                 callback(Settings.password);
             } else {
                 callback(null);
@@ -313,10 +304,8 @@ Settings.shouldHidePassword = function() {
 Settings.setDisablePasswordSaving = function(bool) {
     localStorage["disable_password_saving"] = bool;
     if (bool === true) {
-        store = "never";
-        Settings.storeLocation = store;
-        localStorage["store_location"] = store;
-        localStorage["password"] = "";
+        Settings.storeLocation = "never";
+        localStorage["store_location"] = "";
         localStorage["password_crypt"] = "";
         Settings.password = "";
 
