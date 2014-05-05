@@ -103,17 +103,17 @@ function init(url) {
 
         var autoProfileId = getAutoProfileIdForUrl(url);
         var profiles = Settings.getProfiles();
-        var options = $();
+        var profileList = "";
 
         profiles.forEach(function(profile) {
             if (autoProfileId === profile.id) {
-                options = options.add("<option value='" + profile.id + "' selected>" + profile.title + "</option>");
+                profileList += "<option value='" + profile.id + "' selected>" + profile.title + "</option>";
             } else {
-                options = options.add("<option value='" + profile.id + "'>" + profile.title + "</option>");
+                profileList += "<option value='" + profile.id + "'>" + profile.title + "</option>";
             }
         });
 
-        $("#profile").html(options);
+        $("#profile").html(profileList);
 
         updateURL(url);
         $("#store_location").val(Settings.storeLocation);
@@ -141,7 +141,7 @@ function copyPassword() {
 }
 
 function openOptions() {
-    chrome.tabs.create({url: 'html/options.html'});
+    chrome.tabs.create({url: "html/options.html"});
     window.close();
 }
 
@@ -177,7 +177,7 @@ $(function() {
 
     if (Settings.keepMasterPasswordHash()) {
         var saved_hash = Settings.masterPasswordHash();
-        if (saved_hash.charAt(0) !== 'n') {
+        if (saved_hash.charAt(0) !== "n") {
             saved_hash = ChromePasswordMaker_SecureHash.update_old_hash(saved_hash);
             Settings.setMasterPasswordHash(saved_hash);
         }

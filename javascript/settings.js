@@ -184,11 +184,11 @@ Settings.loadProfiles = function() {
 };
 
 Settings.saveSyncedProfiles = function(data) {
-    oldKeys = localStorage["synced_profiles_keys"];
+    var oldKeys = localStorage["synced_profiles_keys"];
+    var threshold = Math.round(chrome.storage.sync.QUOTA_BYTES_PER_ITEM * 0.9);
 
-    threshold = Math.round(chrome.storage.sync.QUOTA_BYTES_PER_ITEM * 0.9);
     if (data.length <= threshold) {
-        chrome.storage.sync.set({'synced_profiles': data}, function() {
+        chrome.storage.sync.set({"synced_profiles": data}, function() {
             if (chrome.runtime.lastError !== undefined) {
                 alert("Could not sync data : " + chrome.runtime.lastError);
             }
@@ -215,10 +215,10 @@ Settings.saveSyncedProfiles = function(data) {
 };
 
 Settings.saveProfiles = function() {
-    stringified = JSON.stringify(Settings.profiles);
+    var stringified = JSON.stringify(Settings.profiles);
     localStorage["profiles"] = stringified;
     if (Settings.shouldSyncProfiles() && (!Settings.syncDataAvailable || Settings.syncPasswordOk)) {
-        encrypted = Settings.encrypt(stringified, Settings.syncProfilesPassword()).value;
+        var encrypted = Settings.encrypt(stringified, Settings.syncProfilesPassword()).value;
         parsed = JSON.parse(encrypted);
         if (parsed.salt === undefined) {
             parsed.salt = JSON.parse(localStorage["synced_profiles"]).salt;
@@ -360,8 +360,8 @@ Settings.clearSyncData = function(callback) {
         if (chrome.runtime.lastError === undefined) {
             Settings.syncDataAvailable = false;
             Settings.syncPasswordOk = false;
-            localStorage['synced_profiles'] = "";
-            localStorage['synced_profiles_keys'] = "";
+            localStorage["synced_profiles"] = "";
+            localStorage["synced_profiles_keys"] = "";
             Settings.loadLocalProfiles();
             callback(true);
         } else {
