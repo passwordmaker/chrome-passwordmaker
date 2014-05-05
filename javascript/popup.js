@@ -32,8 +32,7 @@ function updateFields() {
 
     Settings.setStoreLocation($("#store_location").val());
     Settings.setPassword(password);
-
-    var enableButtons = false;
+    $("#copypassword, #injectpasswordrow").hide();
 
     if (password === "") {
         $("#generatedForClipboard").val("");
@@ -50,19 +49,8 @@ function updateFields() {
     } else {
         var generatedPassword = profile.getPassword($("#usedtext").val(), password);
         $("#generated, #generatedForClipboard").val(generatedPassword);
-        enableButtons = true;
+        showButtons();
         setPasswordColors("#000000", "#FFFFFF");
-    }
-
-    if (enableButtons) {
-        $("#copypassword").show()
-        chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
-            if (response && response.hasField) {
-                $("#injectpasswordrow").show();
-            }
-        });
-    } else {
-        $("#copypassword, #injectpasswordrow").hide();
     }
 
     if (Settings.keepMasterPasswordHash()) {
@@ -92,6 +80,15 @@ function onProfileChanged() {
     chrome.tabs.query({active: true}, function(tabs) {
         updateURL(tabs[0].url);
         updateFields();
+    });
+}
+
+function showButtons() {
+    $("#copypassword").show();
+    chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
+        if (response && response.hasField) {
+            $("#injectpasswordrow").show();
+        }
     });
 }
 
@@ -196,5 +193,4 @@ $(function() {
             sendFillPassword();
         }
     });
-
 });

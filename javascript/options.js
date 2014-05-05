@@ -69,7 +69,7 @@ function setCurrentProfile(profile) {
     $("#subdomainCB").prop('checked', profile.url_subdomain);
     $("#domainCB").prop('checked', profile.url_domain);
     $("#pathCB").prop('checked', profile.url_path);
-    
+
     $("#inputUseThisText").val(profile.strUseText);
     $("#whereLeetLB").val(profile.whereToUseL33t);
     $("#leetLevelLB").val(profile.l33tLevel);
@@ -79,9 +79,9 @@ function setCurrentProfile(profile) {
     $("#modifier").val(profile.modifier);
     $("#passwordPrefix").val(profile.passwordPrefix);
     $("#passwordSuffix").val(profile.passwordSuffix);
-    
+
     $("#charset").empty();
-    
+
     CHARSET_OPTIONS.forEach(function(charset) {
         $("#charset").append("<option>" + charset + "</option>");
     });
@@ -102,12 +102,12 @@ function setCurrentProfile(profile) {
         $("#charset").val("Custom charset");
         $("#customCharset").val(profile.selectedCharset).show();
     }
-    
+
     updateExample();
     updateLeet();
-    
+
     highlightProfile();
-    
+
     showSection('#profile_setting');
 }
 
@@ -136,7 +136,7 @@ function importRdf(){
         Settings.profiles = [];
         Settings.saveProfiles();
     }
-    
+
     var count = RdfImporter.saveProfiles(rdfDoc.profiles);
 
     if(!count){
@@ -215,7 +215,7 @@ function cloneProfile() {
 function updateProfileList() {
     var profiles = Settings.getProfiles();
     var list = "";
-    
+
     profiles.forEach(function(profile) {
         list += "<li id='profile_id_"+profile.id+"'><a id='editProfile_"+profile.id+"' href='#'>"+profile.title+"</a></li>";
     });
@@ -249,7 +249,6 @@ function clearSyncData() {
     Settings.clearSyncData(function(success) {
         if (success) {
             Settings.setSyncProfiles(false);
-
             updateSyncProfiles();
             updateProfileList();
             updateRemoveButton();
@@ -275,7 +274,6 @@ function updateSyncProfiles() {
       }
     } else {
       Settings.stopSync();
-
       updateProfileList();
       updateRemoveButton();
     }
@@ -312,7 +310,7 @@ function testPasswordLength() {
 $(function() {
     updateProfileList();
     setCurrentProfile(Settings.getProfiles()[0]);
-    updateRemoveButton();    
+    updateRemoveButton();
 
     $("#hidePassword").prop('checked', Settings.shouldHidePassword());
     $("#disablePasswordSaving").prop('checked', Settings.shouldDisablePasswordSaving());
@@ -324,7 +322,7 @@ $(function() {
 
     $("#syncProfiles").prop('checked', Settings.shouldSyncProfiles());
     updateSyncProfiles();
-    
+
     $("#add>a").on('click', addProfile);
     $("#showImport>a").on('click', showImport);
     $("#showExport>a").on('click', showExport);

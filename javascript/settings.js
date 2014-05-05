@@ -89,7 +89,6 @@ Settings.getProfiles = function() {
     if (Settings.profiles === null) {
         Settings.loadProfiles();
     }
-
     return Settings.profiles;
 };
 
@@ -287,7 +286,6 @@ Settings.getPassword = function(callback) {
             } else {
                 callback(null);
             }
-        
         });
     }
 };
@@ -339,7 +337,6 @@ Settings.masterPasswordHash = function() {
 
 Settings.setSyncProfiles = function(bool) {
     localStorage["sync_profiles"] = bool;
-
 };
 
 Settings.shouldSyncProfiles = function() {
@@ -398,7 +395,6 @@ Settings.startSyncWith = function(password, callback) {
         Settings.syncPasswordOk = true;
         return encrypted.key;
     }
-    
     return null;
 };
 
