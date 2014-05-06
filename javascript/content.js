@@ -1,10 +1,10 @@
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.password) {
         fillPasswords(request.password);
     } else if (request.hasPasswordField) {
-      if (hasPasswordField()) {
-        sendResponse({hasField: true});
-      }
+        if (hasPasswordField()) {
+            sendResponse({hasField: true});
+        }
     }
 });
 

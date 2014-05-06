@@ -1,55 +1,49 @@
 body {
-    margin: 0px;
+    margin: 0;
 }
 
 #content {
-    width: 800px;
     margin-left: auto;
     margin-right: auto;
+    width: 800px;
 }
 
 #header {
-    border-bottom: 1px solid #aaaaaa;
-    background-color: #eeeeee;
-    margin-bottom: 10px;
+    background-color: #eee;
+    border-bottom: 1px solid #aaa;
+    /* margin-bottom: 10px; */
 }
 
 #header h1 {
-    margin: 0px auto;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    width: 750px;
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    font-family: Georgia, serif;
     font-style: italic;
+    margin: 0 auto;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    width: 750px;
 }
 
 #list {
-    padding: 5px;
-    width: 180px;
+    border-right: 1px solid #aaa;
     float: left;
-    border-right: 1px solid #aaaaaa;
+    padding: 20px 20px;
 }
 
 #list ul {
-    padding-left: 10px;
-    list-style-type: none;
+    list-style-type: decimal;
 }
 
-#list li:before {
-    content: "\0020 \0020 \0020 \00BB \0020";
-    color: #aaaaaa;
-}
 
 #list .button {
     width: 140px;
 }
 
 h2 {
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    font-family: Georgia, serif;
 }
 
 #profileNameTB {
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    font-family: Georgia, serif;
     font-size: 2em;
 }
 
@@ -74,148 +68,67 @@ h2 {
 }
 
 .help_sitelist {
-    margin-bottom: 10px;
     color: #9f9f9f;
-    margin-left: 165px;
     font-size: 13px;
-
-}
-
-#showSettings {
-    margin-top: 20px;
-}
-
-#showInformation {
-    margin-top: 20px;
-}
-
-#showImport {
-    margin-top: 20px;
-}
-
-#showExport {
-    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-left: 165px;
 }
 
 #list h2 {
-    padding-top: 0px;
-    margin-top: 0px;
+    margin-top: 0;
+    padding-top: 0;
 }
 
 #profile_setting {
-    padding: 20px;
-    height: 800px;
-    width: 520px;
     float: left;
-}
-
-#general_settings {
-    padding: 5px;
-    width: 505px;
-    float: right;
-    display: none;
-}
-
-#general_information {
-    padding: 5px;
-    width: 505px;
-    float: right;
-    display: none;
-}
-
-#import_settings {
-    padding: 5px;
-    width: 505px;
-    float: right;
-    display: none;
+    height: 780px;
+    padding: 20px;
+    width: 520px;
 }
 
 #import_settings p {
     padding-left: 2px;
 }
 
-#export_settings {
-    padding: 5px;
-    width: 505px;
-    float: right;
-    display: none;
-}
-
-#importText {
-    width: 505px;
-    height: 150px;
-}
-
-#exportText {
-    width: 505px;
-    height: 150px;
-}
-
 #buttons {
-    margin-top: 20px;
     margin-left: 165px;
+    margin-top: 20px;
     width: 300px;
 }
 
-#buttons #remove {
-    float: right;
-}
-
-#buttons #save {
-    float: left;
-}
-
 #sync_buttons {
-    margin-top: 20px;
     margin-left: 135px;
+    margin-top: 20px;
     width: 300px;
 }
 
 .message {
+    font-size: .9em;
     margin-left: 135px;
-    width: 300px;
-    font-size: 0.9em;
     padding-top: 10px;
+    width: 300px;
 }
 
 .indented_text {
+    font-size: .9em;
     margin-left: 24px;
-    width: 411px;
-    font-size: 0.9em;
     padding-bottom: 10px;
+    width: 411px;
 }
 
 .section_header {
     clear: both;
-    width: 500px;
     height: 30px;
-}
-
-#sync_buttons #set_sync_password {
-    float: left;
-}
-
-#sync_buttons #clear_sync_data {
-    float: right;
-}
-
-#import_buttons {
-    width: 505px;
-    text-align: right;
+    width: 500px;
 }
 
 #divImportOverride {
-    width: 505px;
     text-align: left;
+    width: 505px;
 }
 
 #inputImportOverwrite {
     margin-left: 5px;
-}
-
-#export_buttons {
-    width: 505px;
-    text-align: right;
 }
 
 .row {
@@ -227,14 +140,14 @@ h2 {
 }
 
 label {
+    margin-top: .2em;
     position: absolute;
     text-align: right;
     width: 150px;
-    margin-top: 0.2em;
 }
 
 label.disabled {
-    color: #aaaaaa;
+    color: #aaa;
 }
 
 label.checkbox {
@@ -245,33 +158,23 @@ input[type="checkbox"] {
     width: 20px;
 }
 
-select {
-    margin-left: 165px;
-    width: 300px;
-}
-
-input {
-    margin-left: 165px;
-    width: 300px;
-}
-
 .url_example span.selected {
     color: #FFDB13;
 }
 
 .url_example {
-    margin-left: 165px;
-    width: 300px;
-    text-align: center;
-    background-color: #000000;
-    border-radius: 7px !important;
-    margin-bottom: 10px;
-    color: #ffffff;
+    background-color: #000;
+    border-radius: 7px;
+    color: #fff;
+    font-family: Georgia, serif;
     font-size: 12px;
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-style: italic;
-    padding-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 165px;
     padding-bottom: 10px;
+    padding-top: 10px;
+    text-align: center;
+    width: 300px;
 }
 
 #pledgie {
@@ -279,23 +182,57 @@ input {
 }
 
 #footer {
-    position: fixed;
-    left: 0;
+    background-color: #eee;
+    border-top: 1px solid #aaa;
     bottom: 0;
-    width: 100%;
-    border-top: 1px solid #aaaaaa;
-    background-color: #eeeeee;
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    font-family: Georgia, serif;
+    font-size: .8em;
     font-style: italic;
-    font-size: 0.8em;
+    left: 0;
     padding: 10px;
+    position: fixed;
     text-align: center;
+    width: 100%;
 }
 
 #footer a {
-    background-color: #dddddd;
+    background-color: #ddd;
+    border-radius: 5px;
+    color: #000;
     font-style: normal;
-    color: #000000;
     padding: 4px;
-    border-radius: 5px !important;
+}
+
+#showSettings, #showInformation, #showImport, #showExport {
+    margin-top: 20px;
+}
+
+#general_settings, #general_information, #import_settings, #export_settings {
+    display: none;
+    float: right;
+    width: 505px;
+    height: 600px;
+}
+
+#importText, #exportText {
+    height: 150px;
+    width: 505px;
+}
+
+#remove, #clear_sync_data {
+    float: right;
+}
+
+#save, #set_sync_password {
+    float: left;
+}
+
+#import_buttons, #export_buttons {
+    text-align: right;
+    width: 505px;
+}
+
+select,input {
+    margin-left: 165px;
+    width: 300px;
 }

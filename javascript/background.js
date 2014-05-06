@@ -1,8 +1,7 @@
 var password = null;
 
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-    response = {};
-
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    var response = {};
     if (request.setPassword) {
         password = request.password;
     } else if (request.getPassword) {
@@ -14,20 +13,20 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 function updateSyncedProfiles(data) {
     localStorage["synced_profiles_keys"] = "";
     if (data.synced_profiles === undefined) {
-      data.synced_profiles = "";
-    } else if (typeof(data.synced_profiles) !== "string") {
-      profiles = "";
-      for (var i in data.synced_profiles) {
-        profiles = profiles + data[data.synced_profiles[i]];
-      }
-      localStorage["synced_profiles_keys"] = data.synced_profiles.join();
-      data.synced_profiles = profiles;
+        data.synced_profiles = "";
+    } else if (typeof (data.synced_profiles) !== "string") {
+        profiles = "";
+        for (var i in data.synced_profiles) {
+            profiles = profiles + data[data.synced_profiles[i]];
+        }
+        localStorage["synced_profiles_keys"] = data.synced_profiles.join();
+        data.synced_profiles = profiles;
     }
     localStorage["synced_profiles"] = data.synced_profiles;
 }
 
 chrome.storage.sync.get(null, function(data) {
-    if (chrome.extension.lastError === undefined) {
+    if (chrome.runtime.lastError === undefined) {
         updateSyncedProfiles(data);
     }
 });
@@ -39,7 +38,7 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
     if (changes.synced_profiles !== undefined) {
         var flattened = {};
         for (var i in changes) {
-          flattened[i] = changes[i].newValue;
+            flattened[i] = changes[i].newValue;
         }
         updateSyncedProfiles(flattened);
     }

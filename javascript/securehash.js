@@ -6,7 +6,7 @@ if (typeof(ChromePasswordMaker_SecureHash) != "object") {
         md5_charset: 'BPVB1oCrr2BJzhH6qM43kq9lLUqMQWxj',
         md4_charset: 'szPBOPb2WZwWCOYylDNb0kda4HPdp9I7',
         
-        make_hash: function (text) {
+        make_hash: function(text) {
             var hash = PasswordMaker_SHA256.any_sha256(text, Settings.masterPasswordCharSet);
             return this._hash(hash);
         },
@@ -15,8 +15,8 @@ if (typeof(ChromePasswordMaker_SecureHash) != "object") {
             return this._hash(oldhash);
         },
         
-        _hash: function (hash) {
-            for(var i = 0; i < 16; i++) {
+        _hash: function(hash) {
+            for (var i = 0; i < 16; i++) {
                 hash = PasswordMaker_SHA256.any_sha256(hash + this.seed, this.sha256_charset);
                 hash = PasswordMaker_SHA1.any_sha1(hash + this.seed, this.sha1_charset);
                 hash = PasswordMaker_MD5.any_md5(hash + this.seed, this.md5_charset);
