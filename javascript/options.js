@@ -302,6 +302,27 @@ function testPasswordLength() {
     this.value = parseInt(this.value);
 }
 
+function fileImport() {
+    var file = $("#fileInput")[0].files[0];
+    if (file.type.match(/rdf|xml|text/)) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            $("#importText").val(reader.result)
+        }
+        reader.readAsBinaryString(file);
+    } else {
+        $("#importText").val("Please select a supported filetype!")
+    }
+}
+
+function fileExport() {
+    var textFileAsBlob = new Blob([$("#exportText").val()], {type:"application/rdf+xml"});
+    var downloadLink = document.createElement("a");
+    downloadLink.href = webkitURL.createObjectURL(textFileAsBlob);
+    downloadLink.download = "PasswordMaker Profile Data.rdf";
+    downloadLink.click();
+}
+
 $(function() {
     updateProfileList();
     setCurrentProfile(Settings.getProfiles()[0]);
@@ -334,8 +355,10 @@ $(function() {
     $("#cloneProfileButton").on("click", cloneProfile);
     $("#remove>a").on("click", removeProfile);
     $("#save>a").on("click", saveProfile);
-    $("#import_buttons>a").on("click", importRdf);
-    $("#export_buttons>a").on("click", copyRdfExport);
+    $("#importButton").on("click", importRdf);
+    $("#fileInput").on("change", fileImport);
+    $("#copyButton").on("click", copyRdfExport);
+    $("#exportFileButton").on("click", fileExport);
 
     $("#hidePassword").on("change", updateHidePassword);
     $("#disablePasswordSaving").on("change", updateDisablePasswordSaving);

@@ -175,6 +175,7 @@
             <div id="import_settings">
                 <div id="form">
                     <h2>Import Profiles</h2>
+                    <input type="file" id="fileInput"></input>
                     <div class="row">
                         <p class="import_help">
                           <em>
@@ -195,7 +196,7 @@
                         <input id="inputImportOverwrite" type="checkbox" value="import_overwrite">Delete all profiles, then import (backup first!)</input>
                     </div>
                     <div id="import_buttons">
-                        <a href="#" class="awesome button">Import</a>
+                        <button class="awesome" id="importButton">Import</button>
                     </div>
                 </div>
             </div>
@@ -225,7 +226,8 @@
                         <textarea id="exportText"></textarea>
                     </div>
                     <div id="export_buttons">
-                        <a href="#" class="awesome button">Copy</a>
+                        <button class="awesome" id="copyButton">Copy</button>
+                        <button class="awesome" id="exportFileButton">Export To File</button>
                     </div>
                 </div>
             </div>

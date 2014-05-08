@@ -104,9 +104,7 @@ h2 {
 
 .message {
     font-size: .9em;
-    margin-left: 135px;
-    padding-top: 10px;
-    width: 300px;
+    padding: 20px 0 20px 0;
 }
 
 .indented_text {
@@ -215,8 +213,12 @@ input[type="checkbox"] {
 }
 
 #importText, #exportText {
-    height: 150px;
-    width: 505px;
+    height: 200px;
+    width: 500px;
+}
+
+#fileInput {
+    margin-left: 0;
 }
 
 #remove, #clear_sync_data {
@@ -235,4 +237,8 @@ input[type="checkbox"] {
 select,input {
     margin-left: 165px;
     width: 300px;
+}
+
+#master_password_row {
+    padding: 20px 0 10px 0;
 }
