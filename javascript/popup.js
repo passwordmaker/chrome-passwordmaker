@@ -32,7 +32,7 @@ function updateFields() {
 
     Settings.setStoreLocation($("#store_location").val());
     Settings.setPassword(password);
-    $("#copypassword, #injectpasswordrow").hide();
+    $("#copypassword, #injectpasswordrow").css("visibility", "hidden");
 
     if (password === "") {
         $("#generatedForClipboard").val("");
@@ -84,10 +84,10 @@ function onProfileChanged() {
 }
 
 function showButtons() {
-    $("#copypassword").show();
+    $("#copypassword").css("visibility", "visible");
     chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
         if (response && response.hasField) {
-            $("#injectpasswordrow").show();
+            $("#injectpasswordrow").css("visibility", "visible");
         }
     });
 }

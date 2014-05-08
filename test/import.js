@@ -10,66 +10,66 @@ QUnit.testStart = function () {
 test("parse global settings", function () {
     var s = rdf_doc1.settings;
 
-    same(s.rdf_about, 'http://passwordmaker.mozdev.org/globalSettings');
-    same(s.hideMasterPassword, false);
-    same(s.storeLocation, 'memory');
+    deepEqual(s.rdf_about, 'http://passwordmaker.mozdev.org/globalSettings');
+    deepEqual(s.hideMasterPassword, false);
+    deepEqual(s.storeLocation, 'memory');
 });
 
 test("find profiles", function () {
-    same(rdf_doc1.profiles.length, 2);
+    deepEqual(rdf_doc1.profiles.length, 2);
 });
 
 test("load profile", function () {
     var p = rdf_doc1.profiles[1];
 
-    same(p.rdf_about, 'rdf:#$5PGpU1');
-    same(p.title,'nospecial');
-    same(p.url_protocol, false);
-    same(p.url_subdomain, false);
-    same(p.url_domain, true);
-    same(p.url_path, true);
-    same(p.hashAlgorithm, 'hmac-sha256_fix');
-    same(p.username, 'username1');
-    same(p.modifier, 'modifier1');
-    same(p.passwordLength, 20);
-    same(p.selectedCharset, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
-    same(p.passwordPrefix, 'prefix1');
-    same(p.passwordSuffix, 'suffix1');
-    same(p.whereToUseL33t, 'before-hashing');
-    same(p.l33tLevel, 1);
-    same(p.siteList, '/https?://mail\\.yahoo\\.com/.*/ http?://github.com/* ');
+    deepEqual(p.rdf_about, 'rdf:#$5PGpU1');
+    deepEqual(p.title,'nospecial');
+    deepEqual(p.url_protocol, false);
+    deepEqual(p.url_subdomain, false);
+    deepEqual(p.url_domain, true);
+    deepEqual(p.url_path, true);
+    deepEqual(p.hashAlgorithm, 'hmac-sha256_fix');
+    deepEqual(p.username, 'username1');
+    deepEqual(p.modifier, 'modifier1');
+    deepEqual(p.passwordLength, 20);
+    deepEqual(p.selectedCharset, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
+    deepEqual(p.passwordPrefix, 'prefix1');
+    deepEqual(p.passwordSuffix, 'suffix1');
+    deepEqual(p.whereToUseL33t, 'before-hashing');
+    deepEqual(p.l33tLevel, 1);
+    deepEqual(p.siteList, '/https?://mail\\.yahoo\\.com/.*/ http?://github.com/* ');
 });
 
 test("load default profile", function () {
     var p = rdf_doc1.profiles[0];
 
-    same(p.rdf_about, 'http://passwordmaker.mozdev.org/defaults');
-    same(p.title,'Defaults');
-    same(p.url_protocol, false);
-    same(p.url_subdomain, false);
-    same(p.url_domain, true);
-    same(p.url_path, true);
-    same(p.hashAlgorithm, 'sha256');
-    same(p.username, 'username1');
-    same(p.modifier, 'modifier1');
-    same(p.passwordLength, 15);
-    same(p.selectedCharset, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%');
-    same(p.passwordPrefix, 'prefix1');
-    same(p.passwordSuffix, 'suffix1');
-    same(p.whereToUseL33t, 'off');
-    same(p.l33tLevel, 1);
-    same(p.siteList, '');
+    deepEqual(p.rdf_about, 'http://passwordmaker.mozdev.org/defaults');
+    deepEqual(p.title,'Defaults');
+    deepEqual(p.url_protocol, false);
+    deepEqual(p.url_subdomain, false);
+    deepEqual(p.url_domain, true);
+    deepEqual(p.url_path, true);
+    deepEqual(p.hashAlgorithm, 'sha256');
+    deepEqual(p.username, 'username1');
+    deepEqual(p.modifier, 'modifier1');
+    deepEqual(p.passwordLength, 15);
+    deepEqual(p.selectedCharset, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%');
+    deepEqual(p.passwordPrefix, 'prefix1');
+    deepEqual(p.passwordSuffix, 'suffix1');
+    deepEqual(p.whereToUseL33t, 'off');
+    deepEqual(p.l33tLevel, 1);
+    deepEqual(p.siteList, '');
 });
 
 test("save profiles", function () {
     var profiles = rdf_doc1.profiles;
 
-    same(profiles.length, 2);
-    same(Settings.getProfiles().length, 1);
+    deepEqual(profiles.length, 2);
+    deepEqual(Settings.getProfiles().length, 1);
 
     RdfImporter.saveProfiles(profiles);
 
-    same(Settings.getProfiles().length, 3);
+    deepEqual(Settings.getProfiles().length, 3);
 });
 
 test("save settings", function () {
@@ -78,63 +78,63 @@ test("save settings", function () {
     Settings.setHidePassword(false);
     Settings.setStoreLocation('disk');
 
-    same(Settings.shouldHidePassword(), false);
-    same(Settings.storeLocation, 'disk');
+    deepEqual(Settings.shouldHidePassword(), false);
+    deepEqual(Settings.storeLocation, 'disk');
 
     RdfImporter.saveSettings({hideMasterPassword: true, storeLocation: 'memory'});
 
-    same(Settings.shouldHidePassword(), true);
-    same(Settings.storeLocation, 'memory');
+    deepEqual(Settings.shouldHidePassword(), true);
+    deepEqual(Settings.storeLocation, 'memory');
 });
 
 module("rdf export");
 
 test("dump profile to rdf", function () {
     RdfImporter.saveProfiles(rdf_doc1.profiles);
-    same(Settings.getProfiles().length, 3);
+    deepEqual(Settings.getProfiles().length, 3);
     var doc2 = RdfImporter.loadDoc(RdfImporter.dumpDoc());
 
     var p = doc2.profiles[2];
-    same(p.rdf_about, 'rdf:#$CHROME3');
-    same(p.title,'nospecial');
-    same(p.url_protocol, false);
-    same(p.url_subdomain, false);
-    same(p.url_domain, true);
-    same(p.url_path, true);
-    same(p.hashAlgorithm, 'hmac-sha256_fix');
-    same(p.username, 'username1');
-    same(p.modifier, 'modifier1');
-    same(p.passwordLength, 20);
-    same(p.selectedCharset, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
-    same(p.passwordPrefix, 'prefix1');
-    same(p.passwordSuffix, 'suffix1');
-    same(p.whereToUseL33t, 'before-hashing');
-    same(p.l33tLevel, 1);
-    same(p.siteList, '/https?://mail\\.yahoo\\.com/.*/ http?://github.com/* ');
+    deepEqual(p.rdf_about, 'rdf:#$CHROME3');
+    deepEqual(p.title,'nospecial');
+    deepEqual(p.url_protocol, false);
+    deepEqual(p.url_subdomain, false);
+    deepEqual(p.url_domain, true);
+    deepEqual(p.url_path, true);
+    deepEqual(p.hashAlgorithm, 'hmac-sha256_fix');
+    deepEqual(p.username, 'username1');
+    deepEqual(p.modifier, 'modifier1');
+    deepEqual(p.passwordLength, 20);
+    deepEqual(p.selectedCharset, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
+    deepEqual(p.passwordPrefix, 'prefix1');
+    deepEqual(p.passwordSuffix, 'suffix1');
+    deepEqual(p.whereToUseL33t, 'before-hashing');
+    deepEqual(p.l33tLevel, 1);
+    deepEqual(p.siteList, '/https?://mail\\.yahoo\\.com/.*/ http?://github.com/* ');
 });
 
 test("dump defaults profile to rdf", function () {
     RdfImporter.saveProfiles(rdf_doc1.profiles);
-    same(Settings.getProfiles().length, 3);
+    deepEqual(Settings.getProfiles().length, 3);
     var doc2 = RdfImporter.loadDoc(RdfImporter.dumpDoc());
 
     var p = doc2.profiles[1];
 
-    same(p.rdf_about, 'rdf:#$CHROME2');
-    same(p.title,'Defaults');
-    same(p.url_protocol, false);
-    same(p.url_subdomain, false);
-    same(p.url_domain, true);
-    same(p.url_path, true);
-    same(p.hashAlgorithm, 'sha256');
-    same(p.username, 'username1');
-    same(p.modifier, 'modifier1');
-    same(p.passwordLength, 15);
-    same(p.selectedCharset, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%');
-    same(p.passwordPrefix, 'prefix1');
-    same(p.passwordSuffix, 'suffix1');
-    same(p.whereToUseL33t, 'off');
-    same(p.l33tLevel, 1);
-    same(p.siteList, '');
+    deepEqual(p.rdf_about, 'rdf:#$CHROME2');
+    deepEqual(p.title,'Defaults');
+    deepEqual(p.url_protocol, false);
+    deepEqual(p.url_subdomain, false);
+    deepEqual(p.url_domain, true);
+    deepEqual(p.url_path, true);
+    deepEqual(p.hashAlgorithm, 'sha256');
+    deepEqual(p.username, 'username1');
+    deepEqual(p.modifier, 'modifier1');
+    deepEqual(p.passwordLength, 15);
+    deepEqual(p.selectedCharset, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%');
+    deepEqual(p.passwordPrefix, 'prefix1');
+    deepEqual(p.passwordSuffix, 'suffix1');
+    deepEqual(p.whereToUseL33t, 'off');
+    deepEqual(p.l33tLevel, 1);
+    deepEqual(p.siteList, '');
 });
 

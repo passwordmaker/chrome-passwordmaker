@@ -6,12 +6,12 @@
         <link rel="stylesheet" type="text/css" href="../css/popup.css">
     </head>
     <body>
-        <div id='head'>
-            <img src='../images/passwdmaker48.png' width='20' height='20' alt=""/><span>PasswordMaker Pro</span>
+        <div id='header'>
+            <img src='../images/passwdmaker48.png' width='20' height='20' /><span>PasswordMaker Pro</span>
         </div>
-        <form>
-        <div class='row' id='first_row'><label for='password'>Password:</label><input class='input' id='password' type="password" autofocus /></div>
-        <div class='row' id='confirmation_row'><label for='confirmation'>Confirmation:</label><input class='input' id='confirmation' type="password"/></div>
+        <div id='content'>
+        <div class='row' id='first_row'><label for='password'>Password:</label><input class='input' id='password' type='password' autofocus /></div>
+        <div class='row' id='confirmation_row'><label for='confirmation'>Confirmation:</label><input class='input' id='confirmation' type='password' /></div>
         <div class='row' id="store_location_row"><label>Save Password:</label>
             <select id="store_location" name="store_location">
                   <option value="memory">In memory</option>
@@ -26,30 +26,30 @@
         <div class='row'>
             <label for='generated'>Generated Password:</label>
             <input id='generated' readonly value=""/>
-            <a id='activatePassword' class="awesome button largebutton" href="#">Show password</a>
+            <button id='activatePassword' class="awesome largebutton">Show Password</button>
         </div>
         <div class='row' id='button-row'>
-          <a id="copypassword" class="awesome button" href="#">Copy</a>
-          <a id="injectpasswordrow" class="awesome button" href="#" title="Populate all *empty* password fields">Fill Field</a>
-          <a id='options' class="awesome button" href="#">Options</a>
+          <button id="copypassword" class="awesome">Copy</button>
+          <button id="injectpasswordrow" class="awesome" title="Populate all *empty* password fields">Fill Field</button>
+          <button id="options" class="awesome">Options</button>
         </div>
         <div id='hidden' class='hide'>
           <input type='text' id='generatedForClipboard' value='' />
         </div>
-        </form>
-        <script type="text/javascript" src="../javascript/jquery.min.js"></script>
-        <script type="text/javascript" src="../javascript/passwordmaker/hashutils.js"></script>
-        <script type="text/javascript" src="../javascript/passwordmaker/md4.js"></script>
-        <script type="text/javascript" src="../javascript/passwordmaker/md5.js"></script>
-        <script type="text/javascript" src="../javascript/passwordmaker/md5_v6.js"></script>
-        <script type="text/javascript" src="../javascript/passwordmaker/sha256.js"></script>
-        <script type="text/javascript" src="../javascript/passwordmaker/sha1.js"></script>
-        <script type="text/javascript" src="../javascript/passwordmaker/ripemd160.js"></script>
-        <script type="text/javascript" src="../javascript/passwordmaker/l33t.js"></script>
-        <script type="text/javascript" src="../javascript/securehash.js"></script>
-        <script type="text/javascript" src="../javascript/settings.js" ></script>
-        <script type="text/javascript" src="../javascript/profile.js"></script>
-        <script type="text/javascript" src="../javascript/popup.js"></script>
-        <script type="text/javascript" src="../javascript/sjcl.js"></script>
+        </div>
+        <script src="../javascript/jquery.min.js"></script>
+        <script src="../javascript/passwordmaker/hashutils.js"></script>
+        <script src="../javascript/passwordmaker/md4.js"></script>
+        <script src="../javascript/passwordmaker/md5.js"></script>
+        <script src="../javascript/passwordmaker/md5_v6.js"></script>
+        <script src="../javascript/passwordmaker/sha256.js"></script>
+        <script src="../javascript/passwordmaker/sha1.js"></script>
+        <script src="../javascript/passwordmaker/ripemd160.js"></script>
+        <script src="../javascript/passwordmaker/l33t.js"></script>
+        <script src="../javascript/securehash.js"></script>
+        <script src="../javascript/settings.js" ></script>
+        <script src="../javascript/profile.js"></script>
+        <script src="../javascript/popup.js"></script>
+        <script src="../javascript/sjcl.js"></script>
     </body>
 </html>
