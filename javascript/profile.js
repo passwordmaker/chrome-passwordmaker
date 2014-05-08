@@ -128,7 +128,7 @@ Profile.prototype.generateCharacter = function(hashAlgorithm, key, data, whereTo
 Profile.prototype.splitSubdomain = function(segments) {
     for (var i = 0; i < segments.length; ++i) {
         var suffix = segments.slice(i).join('.');
-        if (suffix in TOPLEVELDOMAINS) {
+        if (TOPLEVELDOMAINS[suffix]) {
             var pivot = Math.max(0, i - 1);
             return [segments.slice(0, pivot).join('.'), segments.slice(pivot).join('.')];
         }
@@ -148,8 +148,7 @@ Profile.prototype.getUrl = function(url) {
         return "";
     }
 
-    //var temp = location.href.match("([^://]*://)([^/]*)(.*)");
-    temp = url.match("([^://]*://)?([^:/]*)([^#]*)");
+    var temp = url.match("([^://]*://)?([^:/]*)([^#]*)");
     if (!temp) {
         temp = ['','','','']; // Helps prevent an undefine based error
     }

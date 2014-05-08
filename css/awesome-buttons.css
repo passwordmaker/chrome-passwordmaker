@@ -14,22 +14,18 @@
     cursor: pointer;
     display: inline-block;
     font: inherit;
-    line-height: 1;
-    margin-top: 0;
     padding: 5px 10px 6px;
     text-align: center;
     text-decoration: none;
-    
-    /* Who needs images these days? */
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(0,0,0,.0)));
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#666), to(#000));
 }
 
 .awesome:active {
     padding: 6px 10px 5px;
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0,0,0,.2)), color-stop(0.5, rgba(150,150,150,.2)), to(rgba(255,255,255,.2)));
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#000), to(#444));
 }
 
 .awesome:focus,
 .awesome:hover {
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,.4)), color-stop(0.5, rgba(150,150,150,.3)), to(rgba(0,0,0,.0)));
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#444), to(#000));
 }

@@ -1,16 +1,5 @@
-body {
-    font-size: 13px;
-    margin: 10px;
-}
-
 .row {
-    padding-bottom: 5px;
-    width: 206px;
-}
-
-form {
-    width: 206px;
-    padding-top: 5px;
+    width: 220px;
 }
 
 .hide {
@@ -24,58 +13,51 @@ label {
     color: #888;
 }
 
-#head {
+#header {
     font-family: Georgia, serif;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #ccc;
     padding-bottom: 5px;
-    font-size: 16px;
-    position: relative;
 }
 
-#head img {
-    position: absolute;
-    top: 0;
-}
-
-#head span {
-    margin-left: 24px;
+#header span {
+    padding-left: 4px;
     font-weight: bold;
+    vertical-align: top;
 }
 
 .input {
-    width: 204px;
+    width: 97%;
     border: 1px solid #000;
-    margin: 0;
+    padding-left: 4px;
 }
 
 #generated {
+    font-size: 15px;
     font-weight: bold;
+    line-height: 1.0;
     text-align: center;
-    width: 204px;
+    width: 99%;
     border: 1px solid #000;
     font-family: monospace;
 }
 
 select {
-    width: 206px;
+    width: 99%;
     border: 1px solid #000;
     margin: 0;
 }
 
-#options {
-    float: right;
+.largebutton {
+    width: 100%;
+    line-height: 0.7;
 }
 
 #button-row {
-    display: inline-block;
-    padding-bottom: 0;
+    font-size: 13px;
+    line-height: 1;
+    padding-top: 2px;
 }
 
-.largebutton {
-    width: 186px;
-}
-
-#injectpasswordrow,#copypassword {
-    float: left;
-    margin-right: 4px;
+#options {
+    float: right;
 }
