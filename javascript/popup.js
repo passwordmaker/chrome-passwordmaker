@@ -50,7 +50,7 @@ function updateFields() {
         var generatedPassword = profile.getPassword($("#usedtext").val(), password);
         $("#generated, #generatedForClipboard").val(generatedPassword);
         showButtons();
-        setPasswordColors("#000000", "#FFFFFF");
+        setPasswordColors("#006400", "#FFFFFF");
     }
 
     if (Settings.keepMasterPasswordHash()) {
@@ -134,8 +134,9 @@ function fillPassword() {
 }
 
 function copyPassword() {
-    document.getElementById("hidden").classList.remove("hide");
-    document.getElementById("generatedForClipboard").select();
+    var hidden = document.getElementById("generatedForClipboard");
+    hidden.type = "text";
+    hidden.select();
     document.execCommand("Copy");
     window.close();
 }
