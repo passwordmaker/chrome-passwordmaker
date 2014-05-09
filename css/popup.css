@@ -1,9 +1,19 @@
-.row {
-    width: 220px;
+body {
+    width: 280px;
 }
 
-.hide {
-    display: none;
+td {
+    padding: 0;
+}
+
+#header {
+    font-family: Georgia, serif;
+    text-align: left;
+}
+
+#header span {
+    padding-left: 4px;
+    vertical-align: top;
 }
 
 label {
@@ -13,51 +23,40 @@ label {
     color: #888;
 }
 
-#header {
-    font-family: Georgia, serif;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 5px;
-}
-
-#header span {
-    padding-left: 4px;
-    font-weight: bold;
-    vertical-align: top;
-}
-
-.input {
-    width: 97%;
+input {
     border: 1px solid #000;
     padding-left: 4px;
+    width: 96%;
 }
 
 #generated {
-    font-size: 15px;
-    font-weight: bold;
-    line-height: 1.0;
-    text-align: center;
-    width: 99%;
-    border: 1px solid #000;
     font-family: monospace;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.35;
+    text-align: center;
+    width: 98%;
 }
 
 select {
-    width: 99%;
+    width: 100%;
     border: 1px solid #000;
-    margin: 0;
 }
 
 .largebutton {
     width: 100%;
-    line-height: 0.7;
+    line-height: 1.1;
+}
+
+.smallbutton {
+    width: 76px;
 }
 
 #button-row {
-    font-size: 13px;
-    line-height: 1;
-    padding-top: 2px;
+    font-size: 14px;
+    text-align: center;
 }
 
-#options {
-    float: right;
+#copypassword, #injectpasswordrow, #options {
+    width: 32%;
 }

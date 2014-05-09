@@ -6,37 +6,56 @@
         <link rel="stylesheet" type="text/css" href="../css/popup.css">
     </head>
     <body>
-        <div id='header'>
-            <img src='../images/passwdmaker48.png' width='20' height='20' /><span>PasswordMaker Pro</span>
-        </div>
-        <div id='content'>
-        <div class='row' id='first_row'><label for='password'>Password:</label><input class='input' id='password' type='password' autofocus /></div>
-        <div class='row' id='confirmation_row'><label for='confirmation'>Confirmation:</label><input class='input' id='confirmation' type='password' /></div>
-        <div class='row' id="store_location_row"><label>Save Password:</label>
-            <select id="store_location" name="store_location">
-                  <option value="memory">In memory</option>
-                  <option value="disk">On disk</option>
-                  <option value="never">Never store</option>
-            </select>
-        </div>
-        <div class='row'><label>Use Profile:</label>
-            <select id="profile" name="profile"></select>
-        </div>
-        <div class='row'><label for='usedtext'>Used text:</label><input class='input' id='usedtext'/></div>
-        <div class='row'>
-            <label for='generated'>Generated Password:</label>
-            <input id='generated' readonly value=""/>
-            <button id='activatePassword' class="awesome largebutton">Show Password</button>
-        </div>
-        <div class='row' id='button-row'>
-          <button id="copypassword" class="awesome">Copy</button>
-          <button id="injectpasswordrow" class="awesome" title="Populate all *empty* password fields">Fill Field</button>
-          <button id="options" class="awesome">Options</button>
-        </div>
-        <div id='hidden' class='hide'>
-          <input type='text' id='generatedForClipboard' value='' />
-        </div>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2" id="header"><img src="../images/passwdmaker48.png" width="20" height="20"><span>PasswordMaker Pro</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><label for="password">Password:</label></td>
+                    <td><input class="input" id="password" type="password" autofocus=""></td>
+                </tr>
+                <tr id="confirmation_row">
+                    <td><label for="confirmation">Confirmation:</label></td>
+                    <td><input class="input" id="confirmation" type="password"></td>
+                </tr>
+                <tr id="store_location_row">
+                    <td><label>Save Password:</label></td>
+                    <td>
+                        <select id="store_location" name="store_location">
+                            <option value="memory">In memory</option>
+                            <option value="disk">On disk</option>
+                            <option value="never">Never store</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>Use Profile:</label></td>
+                    <td><select id="profile" name="profile"></select></td>
+                </tr>
+                <tr>
+                    <td><label for="usedtext">Used text:</label></td>
+                    <td><input class="input" id="usedtext"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="generated">Generated Password:</label>
+                        <input id="generated" readonly value="">
+                        <input id="generatedForClipboard" type="hidden" readonly value="">
+                        <button id="activatePassword" class="awesome largebutton" style="display: none;">Show Password</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" id="button-row">
+                        <button id="copypassword" class="awesome">Copy</button>
+                        <button id="injectpasswordrow" class="awesome" title="Populate all *empty* password fields">Fill Field</button>
+                        <button id="options" class="awesome">Options</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         <script src="../javascript/jquery.min.js"></script>
         <script src="../javascript/passwordmaker/hashutils.js"></script>
         <script src="../javascript/passwordmaker/md4.js"></script>
@@ -47,7 +66,7 @@
         <script src="../javascript/passwordmaker/ripemd160.js"></script>
         <script src="../javascript/passwordmaker/l33t.js"></script>
         <script src="../javascript/securehash.js"></script>
-        <script src="../javascript/settings.js" ></script>
+        <script src="../javascript/settings.js"></script>
         <script src="../javascript/profile.js"></script>
         <script src="../javascript/popup.js"></script>
         <script src="../javascript/sjcl.js"></script>
