@@ -53,13 +53,10 @@ select {
 }
 
 #button-row {
-    font-size: 13px;
+    font-size: 14px;
+    text-align: center;
 }
 
 #copypassword, #injectpasswordrow, #options {
-    width: 72px;
-}
-
-#options {
-    float: right;
+    width: 32%;
 }

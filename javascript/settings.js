@@ -246,16 +246,17 @@ Settings.setStoreLocation = function(store) {
     }
 };
 
-// Make a pseudo-random encryption key... emphasis on *pseudo*
+// Make IV & encryption key using the Web Crypto API
 Settings.makeKey = function() {
-    var hex = ['0','1','2','3','4','5','6','7','8','9','0','a','b','c','d','e','f'];
+    var hexChars = "0123456789abcdef".split("");
     var keySizeInBits = 256 / 4;
-    var ret = "";
-    while (ret.length < keySizeInBits) {
-        ret += hex[Math.floor(Math.random() * 17)];
+    var bytes = window.crypto.getRandomValues(new Uint8Array(keySizeInBits));
+    var keyString = "";
+    for (var i = 0; i < keySizeInBits; i++) {
+        keyString += hexChars[bytes[i] % 16];
     }
-    return ret;
-};
+    return keyString;
+}
 
 Settings.setPassword = function(password) {
     var key = Settings.makeKey();
@@ -407,8 +408,8 @@ Settings.encrypt = function(data, password) {
 
 Settings.decrypt = function(data, password) {
     try {
-        rp = {};
-        decrypted = sjcl.decrypt(password, data, {}, rp);
+        var rp = {};
+        var decrypted = sjcl.decrypt(password, data, {}, rp);
         return {value: decrypted,key: rp.key};
     } catch (e) {
         return null;
