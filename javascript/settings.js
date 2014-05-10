@@ -246,23 +246,11 @@ Settings.setStoreLocation = function(store) {
     }
 };
 
-// Make IV & encryption key using the Web Crypto API
-Settings.makeKey = function() {
-    var hexChars = "0123456789abcdef".split("");
-    var keySizeInBits = 256 / 4;
-    var bytes = window.crypto.getRandomValues(new Uint8Array(keySizeInBits));
-    var keyString = "";
-    for (var i = 0; i < keySizeInBits; i++) {
-        keyString += hexChars[bytes[i] % 16];
-    }
-    return keyString;
-}
-
 Settings.setPassword = function(password) {
-    var key = Settings.makeKey();
+    var key = sjcl.codec.hex.fromBits(crypto.getRandomValues(new Uint32Array(8)));
     localStorage["password_key"] = key;
     if (Settings.storeLocation === "memory") {
-        Settings.password = sjcl.encrypt(key, password);
+        Settings.password = sjcl.encrypt(key, password, { ks: 256, ts: 128 });
         chrome.extension.getBackgroundPage().password = Settings.password;
     } else if (Settings.storeLocation === "disk") {
         Settings.password = sjcl.encrypt(key, password);
@@ -393,17 +381,16 @@ Settings.startSyncWith = function(password, callback) {
 };
 
 Settings.encrypt = function(data, password) {
-    var options = {ks: 256,ts: 128,iter: 10000};
-    var rp = {};
-    var encrypted = sjcl.encrypt(password, data, options, rp);
-    return {value: encrypted,key: rp.key};
+    var params = {};
+    var encrypted = sjcl.encrypt(password, data, {ks: 256,ts: 128}, params);
+    return {value: encrypted,key: params.key};
 };
 
 Settings.decrypt = function(data, password) {
     try {
-        var rp = {};
-        var decrypted = sjcl.decrypt(password, data, {}, rp);
-        return {value: decrypted,key: rp.key};
+        var params = {};
+        var decrypted = sjcl.decrypt(password, data, {}, params);
+        return {value: decrypted,key: params.key};
     } catch (e) {
         return null;
     }
