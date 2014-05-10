@@ -142,11 +142,13 @@ Settings.deleteProfile = function(profile) {
 
 Settings.loadProfilesFromString = function(profiles) {
     try {
+        json = JSON.parse(profiles);
+
         Settings.profiles = [];
-        JSON.parse(profiles).forEach(function(item) {
+        $.each(json, function(i) {
             p = new Profile();
-            Object.keys(item).forEach(function(key) {
-                p[key] = item[key];
+            $.each(json[i], function(key, value) {
+                p[key] = value;
             });
             Settings.profiles.push(p);
         });
@@ -174,7 +176,7 @@ Settings.loadProfiles = function() {
 
     Settings.syncDataAvailable = true;
 
-    profiles = Settings.decrypt(localStorage["synced_profiles"], Settings.syncProfilesPassword());
+    profiles = Settings.decrypt(localStorage["synced_profiles"], localStorage["sync_profiles_password"]);
     if (profiles !== null) {
         Settings.syncPasswordOk = true;
         if (Settings.shouldSyncProfiles()) {
@@ -218,7 +220,7 @@ Settings.saveProfiles = function() {
     var stringified = JSON.stringify(Settings.profiles);
     localStorage["profiles"] = stringified;
     if (Settings.shouldSyncProfiles() && (!Settings.syncDataAvailable || Settings.syncPasswordOk)) {
-        var encrypted = Settings.encrypt(stringified, Settings.syncProfilesPassword()).value;
+        var encrypted = Settings.encrypt(stringified, localStorage["sync_profiles_password"]).value;
         parsed = JSON.parse(encrypted);
         if (parsed.salt === undefined) {
             parsed.salt = JSON.parse(localStorage["synced_profiles"]).salt;
@@ -327,18 +329,6 @@ Settings.shouldSyncProfiles = function() {
     return localStorage["sync_profiles"] === "true";
 };
 
-Settings.setSyncProfilesPassword = function(password) {
-    localStorage["sync_profiles_password"] = JSON.stringify(password);
-};
-
-Settings.syncProfilesPassword = function() {
-    try {
-        return JSON.parse(localStorage["sync_profiles_password"]);
-    } catch (e) {
-        return "";
-    }
-};
-
 Settings.clearSyncData = function(callback) {
     chrome.storage.sync.clear(function() {
         if (chrome.runtime.lastError === undefined) {
@@ -362,7 +352,7 @@ Settings.stopSync = function() {
     Settings.loadLocalProfiles();
 };
 
-Settings.startSyncWith = function(password, callback) {
+Settings.startSyncWith = function(password) {
     if (Settings.syncDataAvailable) {
         profiles = Settings.decrypt(localStorage["synced_profiles"], password);
         if (profiles !== null) {
@@ -382,15 +372,15 @@ Settings.startSyncWith = function(password, callback) {
 
 Settings.encrypt = function(data, password) {
     var params = {};
-    var encrypted = sjcl.encrypt(password, data, {ks: 256,ts: 128}, params);
-    return {value: encrypted,key: params.key};
+    var encrypted = sjcl.encrypt(password, data, { ks: 256, ts: 128}, params);
+    return {value: encrypted, key: params.key};
 };
 
 Settings.decrypt = function(data, password) {
     try {
         var params = {};
         var decrypted = sjcl.decrypt(password, data, {}, params);
-        return {value: decrypted,key: params.key};
+        return {value: decrypted, key: params.key};
     } catch (e) {
         return null;
     }

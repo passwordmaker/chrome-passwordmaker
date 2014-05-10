@@ -16,12 +16,6 @@ function updateSyncedProfiles(data) {
     localStorage["synced_profiles"] = data.synced_profiles;
 }
 
-chrome.storage.sync.get(null, function(data) {
-    if (chrome.runtime.lastError === undefined) {
-        updateSyncedProfiles(data);
-    }
-});
-
 chrome.storage.onChanged.addListener(function(changes, namespace) {
     if (namespace !== "sync") {
         return;
