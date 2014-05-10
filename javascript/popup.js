@@ -1,5 +1,3 @@
-var currentTab = null;
-
 function setPasswordColors(foreground, background) {
     $("#generated, #password, #confirmation").css({"background-color": background,"color": foreground});
 }
@@ -77,7 +75,7 @@ function updateURL(url) {
 }
 
 function onProfileChanged() {
-    chrome.tabs.query({active: true}, function(tabs) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         updateURL(tabs[0].url);
         updateFields();
     });
@@ -85,7 +83,8 @@ function onProfileChanged() {
 
 function showButtons() {
     $("#copypassword").css("visibility", "visible");
-    chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
+    var tabId = chrome.extension.getBackgroundPage().currentTab;
+    chrome.tabs.sendMessage(tabId, {hasPasswordField: true}, function(response) {
         if (response && response.hasField) {
             $("#injectpasswordrow").css("visibility", "visible");
         }
@@ -93,43 +92,41 @@ function showButtons() {
 }
 
 function init(url) {
-    Settings.getPassword(function(password) {
-        $("#password").val(password);
-        $("#confirmation").val(password);
+    var pass = Settings.getPassword();
+    $("#password").val(pass);
+    $("#confirmation").val(pass);
 
-        if (Settings.shouldDisablePasswordSaving()) {
-            $("#store_location_row").hide();
-        }
+    if (Settings.shouldDisablePasswordSaving()) {
+        $("#store_location_row").hide();
+    }
 
-        var autoProfileId = getAutoProfileIdForUrl(url);
-        var profiles = Settings.getProfiles();
-        var profileList = "";
+    var autoProfileId = getAutoProfileIdForUrl(url);
+    var profiles = Settings.getProfiles();
 
-        profiles.forEach(function(profile) {
-            if (autoProfileId === profile.id) {
-                profileList += "<option value='" + profile.id + "' selected>" + profile.title + "</option>";
-            } else {
-                profileList += "<option value='" + profile.id + "'>" + profile.title + "</option>";
-            }
-        });
-
-        $("#profile").html(profileList);
-
-        updateURL(url);
-        $("#store_location").val(Settings.storeLocation);
-        updateFields();
-
-        password = $("#password").val();
-        if (password === null || password.length === 0 || (password !== $("#confirmation").val())) {
-            $("#password").focus();
+    var profileList = "";
+    profiles.forEach(function(profile) {
+        if (autoProfileId === profile.id) {
+            profileList += "<option value='" + profile.id + "' selected>" + profile.title + "</option>";
         } else {
-            $("#generated").focus();
+            profileList += "<option value='" + profile.id + "'>" + profile.title + "</option>";
         }
     });
+    $("#profile").html(profileList);
+
+    updateURL(url);
+    $("#store_location").val(Settings.storeLocation);
+    updateFields();
+
+    if (pass === null || pass.length === 0 || (pass !== $("#confirmation").val())) {
+        $("#password").focus();
+    } else {
+        $("#generated").focus();
+    }
 }
 
 function fillPassword() {
-    chrome.tabs.sendMessage(currentTab, {password: $("#generated").val()});
+    var tabId = chrome.extension.getBackgroundPage().currentTab;
+    chrome.tabs.sendMessage(tabId, {password: $("#generated").val()});
     window.close();
 }
 
@@ -152,7 +149,8 @@ function showPasswordField() {
 }
 
 function sendFillPassword() {
-    chrome.tabs.sendMessage(currentTab, {hasPasswordField: true}, function(response) {
+    var tabId = chrome.extension.getBackgroundPage().currentTab;
+    chrome.tabs.sendMessage(tabId, {hasPasswordField: true}, function(response) {
         if (response && response.hasField) {
             fillPassword();
         }
@@ -184,12 +182,12 @@ $(function() {
         }
     }
 
-    chrome.tabs.query({active: true}, function(tabs) {
-        currentTab = tabs[0].id;
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.extension.getBackgroundPage().currentTab = tabs[0].id;
         init(tabs[0].url);
     });
 
-    $("#confirmation, #generated, #password").on("keydown", function(event) {
+    $("#password, #confirmation, #generated").on("keydown", function(event) {
         if (event.keyCode === 13) { // 13 is the character code of the return key
             sendFillPassword();
         }
