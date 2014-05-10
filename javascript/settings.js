@@ -82,7 +82,7 @@ var TOPLEVELDOMAINS = {
   "sebastopol.ua":1, "sumy.ua":1, "te.ua":1, "ternopil.ua":1, "vinnica.ua":1,
   "vn.ua":1, "zaporizhzhe.ua":1, "zp.ua":1, "uz.ua":1, "uzhgorod.ua":1,
   "zhitomir.ua":1, "zt.ua":1, "ac.il":1, "co.il":1, "org.il":1, "net.il":1,
-  "k12.il":1, "gov.il":1, "muni.il":1, "idf.il":1, "co.im":1, "org.im":1
+  "k12.il":1, "gov.il":1, "muni.il":1, "idf.il":1, "co.im":1, "org.im":1, "com.sg":1
 };
 
 Settings.getProfiles = function() {
@@ -263,31 +263,26 @@ Settings.setPassword = function(password) {
     localStorage["password_key"] = key;
     if (Settings.storeLocation === "memory") {
         Settings.password = sjcl.encrypt(key, password);
-        chrome.runtime.sendMessage({setPassword: true, password: password});
+        chrome.extension.getBackgroundPage().password = Settings.password;
     } else if (Settings.storeLocation === "disk") {
         Settings.password = sjcl.encrypt(key, password);
         localStorage["password_crypt"] = sjcl.encrypt(key, password, { ks: 256, ts: 128 });
-        chrome.runtime.sendMessage({setPassword: true, password: password});
+        chrome.extension.getBackgroundPage().password = Settings.password
     } else {
         Settings.password = "";
-        chrome.runtime.sendMessage({setPassword: true, password: null});
+        chrome.extension.getBackgroundPage().password = "";
     }
 };
 
-Settings.getPassword = function(callback) {
-    if (Settings.password.length > 0) {
-        callback(sjcl.decrypt(localStorage["password_key"], Settings.password));
+Settings.getPassword = function() {
+    var bg_pass = chrome.extension.getBackgroundPage().password;
+    if (bg_pass.length > 0) { 
+        return sjcl.decrypt(localStorage["password_key"], bg_pass);
+    } else if (localStorage["password_crypt"] !== undefined && localStorage["password_crypt"].length > 0) {
+        Settings.password = sjcl.decrypt(localStorage["password_key"], localStorage["password_crypt"]);
+        return Settings.password;
     } else {
-        chrome.runtime.sendMessage({getPassword: true}, function(response) {
-            if (response.password !== null && response.password.length > 0) {
-                callback(response.password);
-            } else if (localStorage["password_crypt"] !== undefined && localStorage["password_crypt"].length > 0) {
-                Settings.password = sjcl.decrypt(localStorage["password_key"], localStorage["password_crypt"]);
-                callback(Settings.password);
-            } else {
-                callback(null);
-            }
-        });
+        return "";
     }
 };
 
@@ -308,7 +303,7 @@ Settings.setDisablePasswordSaving = function(bool) {
         localStorage["password_crypt"] = "";
         Settings.password = "";
 
-        chrome.runtime.sendMessage({setPassword: true, password: null}, function(response) {});
+        chrome.extension.getBackgroundPage().password = "";
     }
 };
 
@@ -388,9 +383,7 @@ Settings.startSyncWith = function(password, callback) {
             return profiles.key;
         }
     } else {
-        encrypted = Settings.encrypt(JSON.stringify(Settings.profiles), 
-        password);
-        
+        encrypted = Settings.encrypt(JSON.stringify(Settings.profiles), password);
         Settings.saveSyncedProfiles(encrypted.value);
         Settings.syncDataAvailable = true;
         Settings.syncPasswordOk = true;
