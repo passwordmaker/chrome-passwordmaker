@@ -229,7 +229,7 @@ function setSyncPassword() {
     var result = Settings.startSyncWith($("#syncProfilesPassword").val());
     if (result !== null) {
         Settings.setSyncProfiles(true);
-        Settings.setSyncProfilesPassword(result);
+        localStorage["sync_profiles_password"] = result;
         $("#syncProfilesPassword").val("");
         updateSyncProfiles();
         updateProfileList();

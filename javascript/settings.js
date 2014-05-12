@@ -157,7 +157,7 @@ Settings.loadProfilesFromString = function(profiles) {
 };
 
 Settings.loadLocalProfiles = function() {
-    if (localStorage["profiles"] === null || localStorage["profiles"] === "") {
+    if (localStorage["profiles"] === undefined || localStorage["profiles"] === "") {
         Settings.profiles = [new Profile()];
     } else {
         if (!Settings.loadProfilesFromString(localStorage["profiles"])) {
@@ -168,13 +168,13 @@ Settings.loadLocalProfiles = function() {
 
 Settings.loadProfiles = function() {
     Settings.loadLocalProfiles();
-    if (localStorage["synced_profiles"] === null || localStorage["synced_profiles"] === "") {
+    if (localStorage["synced_profiles"] === undefined || localStorage["synced_profiles"] === "") {
         return;
     }
 
     Settings.syncDataAvailable = true;
 
-    profiles = Settings.decrypt(localStorage["synced_profiles"], Settings.syncProfilesPassword());
+    var profiles = Settings.decrypt(localStorage["synced_profiles"], localStorage["sync_profiles_password"]);
     if (profiles !== null) {
         Settings.syncPasswordOk = true;
         if (Settings.shouldSyncProfiles()) {
@@ -218,7 +218,7 @@ Settings.saveProfiles = function() {
     var stringified = JSON.stringify(Settings.profiles);
     localStorage["profiles"] = stringified;
     if (Settings.shouldSyncProfiles() && (!Settings.syncDataAvailable || Settings.syncPasswordOk)) {
-        var encrypted = Settings.encrypt(stringified, Settings.syncProfilesPassword()).value;
+        var encrypted = Settings.encrypt(stringified, localStorage["sync_profiles_password"]).value;
         parsed = JSON.parse(encrypted);
         if (parsed.salt === undefined) {
             parsed.salt = JSON.parse(localStorage["synced_profiles"]).salt;
@@ -309,8 +309,6 @@ Settings.keepMasterPasswordHash = function() {
     return bool === "true";
 };
 
-Settings.masterPasswordCharSet = "0123456789abcdef";
-
 Settings.setMasterPasswordHash = function(theHash) {
     localStorage["master_password_hash"] = theHash;
 };
@@ -325,18 +323,6 @@ Settings.setSyncProfiles = function(bool) {
 
 Settings.shouldSyncProfiles = function() {
     return localStorage["sync_profiles"] === "true";
-};
-
-Settings.setSyncProfilesPassword = function(password) {
-    localStorage["sync_profiles_password"] = JSON.stringify(password);
-};
-
-Settings.syncProfilesPassword = function() {
-    try {
-        return JSON.parse(localStorage["sync_profiles_password"]);
-    } catch (e) {
-        return "";
-    }
 };
 
 Settings.clearSyncData = function(callback) {
@@ -362,20 +348,21 @@ Settings.stopSync = function() {
     Settings.loadLocalProfiles();
 };
 
-Settings.startSyncWith = function(password, callback) {
+Settings.startSyncWith = function(password) {
+    var syncHash = ChromePasswordMaker_SecureHash.make_hash(password);
     if (Settings.syncDataAvailable) {
-        profiles = Settings.decrypt(localStorage["synced_profiles"], password);
+        var profiles = Settings.decrypt(localStorage["synced_profiles"], syncHash);
         if (profiles !== null) {
             Settings.syncPasswordOk = true;
             Settings.loadProfilesFromString(profiles.value);
-            return profiles.key;
+            return syncHash;
         }
     } else {
-        encrypted = Settings.encrypt(JSON.stringify(Settings.profiles), password);
+        var encrypted = Settings.encrypt(JSON.stringify(Settings.profiles), syncHash);
         Settings.saveSyncedProfiles(encrypted.value);
         Settings.syncDataAvailable = true;
         Settings.syncPasswordOk = true;
-        return encrypted.key;
+        return syncHash;
     }
     return null;
 };
