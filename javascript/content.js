@@ -1,8 +1,10 @@
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.password) {
         fillPasswords(request.password);
-    } else if (request.hasPasswordField()) {
-        sendResponse({hasField: true});
+    } else if (request.hasPasswordField) {
+        if (document.querySelector("input[type='password']") !== null) {
+            sendResponse({hasField: true});
+        }
     }
 });
 
@@ -14,12 +16,4 @@ function fillPasswords(password) {
             passFields[index].value = password;
         }
     });
-}
-
-function hasPasswordField() {
-    var hasFields = false;
-    if (document.querySelector("input[type='password']") !== null) {
-        hasFields = true;
-    }
-    return hasFields;
 }
