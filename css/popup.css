@@ -30,7 +30,7 @@ input {
 }
 
 #generated {
-    font-family: monospace;
+    font-family: "DejaVu Sans Mono", monospace;
     font-size: 18px;
     font-weight: bold;
     line-height: 1.35;

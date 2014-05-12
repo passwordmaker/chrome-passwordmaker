@@ -7,7 +7,7 @@ if (typeof(ChromePasswordMaker_SecureHash) != "object") {
         md4_charset: 'szPBOPb2WZwWCOYylDNb0kda4HPdp9I7',
         
         make_hash: function(text) {
-            var hash = PasswordMaker_SHA256.any_sha256(text, Settings.masterPasswordCharSet);
+            var hash = PasswordMaker_SHA256.any_sha256(text, "0123456789abcdef");
             return this._hash(hash);
         },
 
