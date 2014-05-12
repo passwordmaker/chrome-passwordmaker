@@ -131,9 +131,7 @@ function fillPassword() {
 }
 
 function copyPassword() {
-    var hidden = document.getElementById("generatedForClipboard");
-    hidden.type = "text";
-    hidden.select();
+    document.getElementById("generatedForClipboard").select();
     document.execCommand("Copy");
     window.close();
 }
