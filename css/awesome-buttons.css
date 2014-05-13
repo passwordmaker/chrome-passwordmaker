@@ -19,6 +19,7 @@
     text-align: center;
     text-decoration: none;
     background-image: -webkit-gradient(linear, left top, left bottom, from(#666), to(#000));
+    vertical-align: middle;
 }
 
 .awesome:active {
