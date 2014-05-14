@@ -6,10 +6,10 @@
         <link rel="stylesheet" type="text/css" href="../css/popup.css">
     </head>
     <body>
-        <table>
+        <table id="content">
             <thead>
                 <tr>
-                    <th colspan="2" id="header"><img src="../images/passwdmaker48.png" width="20" height="20"><span>PasswordMaker Pro</span></th>
+                    <th colspan="2" id="header"><img src="../images/passwdmaker48.png" width="20" height="20"><span id="title">PasswordMaker Pro</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -42,9 +42,9 @@
                 <tr>
                     <td colspan="2">
                         <label for="generated">Generated Password:</label>
-                        <input id="generated" readonly value="">
-                        <input id="generatedForClipboard" style="position:absolute;top:-100px;" readonly value="">
-                        <button id="activatePassword" class="awesome largebutton" style="display: none;">Show Password</button>
+                        <input id="generated" readonly>
+                        <input id="generatedForClipboard" style="position:absolute;top:-100px;" readonly>
+                        <button id="activatePassword" class="awesome">Show Password</button>
                     </td>
                 </tr>
                 <tr>
