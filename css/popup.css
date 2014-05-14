@@ -2,6 +2,10 @@ body {
     width: 280px;
 }
 
+#content {
+    width: 100%;
+}
+
 td {
     padding: 0;
 }
@@ -11,7 +15,7 @@ td {
     text-align: left;
 }
 
-#header span {
+#title {
     padding-left: 4px;
     vertical-align: top;
 }
@@ -43,13 +47,9 @@ select {
     border: 1px solid #000;
 }
 
-.largebutton {
+#activatePassword {
     width: 100%;
     line-height: 1.1;
-}
-
-.smallbutton {
-    width: 76px;
 }
 
 #button-row {
