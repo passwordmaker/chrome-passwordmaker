@@ -55,15 +55,9 @@ h2 {
 }
 
 @-webkit-keyframes highlight1 {
-    0% {
-        background: white;
-    }
-    50% {
-        background: yellow;
-    }
-    100% {
-        background: white;
-    }
+    0% { background: white; }
+    50% { background: yellow; }
+    100% { background: white; }
 }
 
 .subrow {

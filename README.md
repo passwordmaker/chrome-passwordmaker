@@ -1,8 +1,8 @@
 # Chrome PasswordMaker Pro
 
-![Example Screenshot](http://img405.imageshack.us/img405/6676/bildschirmfoto20100418u.png)
+![Example Screenshot](http://i.imgur.com/4dhnDEK.png)
 
-The only thing that kept me from switching to Chrome completely was a missing port of the [passwordmaker.org](http://passwordmaker.org/) extension. Luckily, there was one available in the [Chrome Extension Directory](http://chrome.google.com/extensions/detail/doblembglfahhpiilfhajboogopikhcm). Sadly, that extension is only a simple port of the HTML page that is offered on [passwordmaker.org](http://passwordmaker.org/).
+The only thing that kept me from switching to Chrome completely was a missing port of the [passwordmaker.org](http://www.passwordmaker.org/) extension. Luckily, there was one available in the [Chrome Web Store](https://chrome.google.com/webstore/detail/passwordmaker/doblembglfahhpiilfhajboogopikhcm). Sadly, that extension is only a simple port of the HTML page that is offered on [passwordmaker.org](http://www.passwordmaker.org/passwordmaker.html).
 
 This extension fixes that. It's a real port with all the bells and whistles you'd expect.
 
@@ -12,7 +12,7 @@ Currently there is no active development on this plugin. If you want to take ove
 
 # Installation
 
-You can install this plugin from the [Chrome Extensions Library](https://chrome.google.com/extensions/detail/ocjkdaaapapjpmipmhiadedofjiokogj).
+You can install this plugin from the [Chrome Web Store](https://chrome.google.com/webstore/detail/passwordmaker-pro/ocjkdaaapapjpmipmhiadedofjiokogj).
 
 # Note on Patches/Pull Requests:
 
