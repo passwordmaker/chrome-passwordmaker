@@ -335,8 +335,7 @@ Settings.clearSyncData = function(callback) {
             Settings.loadLocalProfiles();
             callback(true);
         } else {
-            alert("Could not delete synced data: " + 
-            chrome.runtime.lastError);
+            alert("Could not delete synced data: " + chrome.runtime.lastError);
             callback(false);
         }
     });

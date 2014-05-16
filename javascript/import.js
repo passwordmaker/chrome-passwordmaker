@@ -260,5 +260,5 @@ function dumpedProfilesToRdf(profiles) {
 }
 
 function attrEscape(txt){
-    return $('<div/>').text(txt).html().replace(/"/g, "&quot;");
+    return $(document.createElement("div")).text(txt).html().replace(/"/g, "&quot;");
 }
