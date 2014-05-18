@@ -1,3 +1,13 @@
+0.6.0 - 2014-05-18
+
+This release includes lots of stuff done by @heavensrevenge .
+A small list of the many things he did:
+
+* Lots of css and ui improvments
+* Refactored some parts of the javascript code
+* Updating included libraries
+* Closes Request #87: It fills only password fields that are not populated yet
+
 0.5.5 - 2014-04-26
 
 * Fixes Bug #93: Removed warning in Console about jquery sourcemap
