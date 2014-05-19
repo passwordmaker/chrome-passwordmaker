@@ -10,8 +10,7 @@ var CHARSET_OPTIONS = [
 ];
 
 function editProfile(event) {
-    p = Settings.getProfile(event.data.id);
-    setCurrentProfile(p);
+    setCurrentProfile(Settings.getProfile(event.data.id));
 }
 
 function updateStyle(element, selected, isSelected) {
@@ -43,7 +42,7 @@ function updateRemoveButton() {
 }
 
 function addProfile() {
-    p = new Profile();
+    var p = new Profile();
     p.title = "No name";
     Settings.addProfile(p);
     updateProfileList();

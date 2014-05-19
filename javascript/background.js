@@ -1,5 +1,4 @@
 var password = "";
-var currentTab = "";
 
 function updateSyncedProfiles(data) {
     localStorage["synced_profiles_keys"] = "";

@@ -11,7 +11,15 @@ function getAutoProfileIdForUrl(url) {
             var sites = profile.siteList.split(' ');
             for (var j in sites) {
                 var pat = sites[j];
-                if (pat.indexOf(usedURL) >= 0 || pat.indexOf(url) >= 0) {
+                pat = pat.replace(/[$+()^\[\]\\|{},]/g, '');
+                pat = pat.replace(/\?/g, '.');
+                pat = pat.replace(/\*/g, '.*');
+
+                if (pat[0] !== '^') pat = '^' + pat;
+                if (pat[pat.length-1] !== '$') pat = pat + '$';
+
+                var re = new RegExp(pat);
+                if (re.test(usedURL) || re.test(url)) {
                     return profile.id;
                 }
             }
@@ -83,11 +91,12 @@ function onProfileChanged() {
 
 function showButtons() {
     $("#copypassword").css("visibility", "visible");
-    var tabId = chrome.extension.getBackgroundPage().currentTab;
-    chrome.tabs.sendMessage(tabId, {hasPasswordField: true}, function(response) {
-        if (response && response.hasField) {
-            $("#injectpasswordrow").css("visibility", "visible");
-        }
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {hasPasswordField: true}, function(response) {
+            if (response && response.hasField) {
+                $("#injectpasswordrow").css("visibility", "visible");
+            }
+        });
     });
 }
 
@@ -100,18 +109,10 @@ function init(url) {
         $("#store_location_row").hide();
     }
 
-    var autoProfileId = getAutoProfileIdForUrl(url);
-    var profiles = Settings.getProfiles();
-
-    var profileList = "";
-    profiles.forEach(function(profile) {
-        if (autoProfileId === profile.id) {
-            profileList += "<option value='" + profile.id + "' selected>" + profile.title + "</option>";
-        } else {
-            profileList += "<option value='" + profile.id + "'>" + profile.title + "</option>";
-        }
+    Settings.getProfiles().forEach(function(profile) {
+        $("#profile").append("<option value='" + profile.id + "'>" + profile.title + "</option>");
     });
-    $("#profile").html(profileList);
+    $("#profile").val(getAutoProfileIdForUrl(url) || Settings.profiles[0].id);
 
     updateURL(url);
     $("#store_location").val(Settings.storeLocation);
@@ -125,8 +126,9 @@ function init(url) {
 }
 
 function fillPassword() {
-    var tabId = chrome.extension.getBackgroundPage().currentTab;
-    chrome.tabs.sendMessage(tabId, {password: $("#generated").val()});
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {password: $("#generated").val()});
+    });
     window.close();
 }
 
@@ -147,11 +149,12 @@ function showPasswordField() {
 }
 
 function sendFillPassword() {
-    var tabId = chrome.extension.getBackgroundPage().currentTab;
-    chrome.tabs.sendMessage(tabId, {hasPasswordField: true}, function(response) {
-        if (response && response.hasField) {
-            fillPassword();
-        }
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {hasPasswordField: true}, function(response) {
+            if (response && response.hasField) {
+                fillPassword();
+            }
+        });
     });
 }
 
@@ -181,7 +184,6 @@ $(function() {
     }
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.extension.getBackgroundPage().currentTab = tabs[0].id;
         init(tabs[0].url);
     });
 

@@ -1,11 +1,10 @@
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.password) {
         fillPasswords(request.password);
-    } else if (request.hasPasswordField) {
+    }
+    if (request.hasPasswordField) {
         if (document.querySelector("input[type=password]") !== null) {
             sendResponse({hasField: true});
-        } else {
-            sendResponse({hasField: false});
         }
     }
 });
