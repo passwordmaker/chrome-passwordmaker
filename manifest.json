@@ -21,7 +21,7 @@
     "javascript/jquery-2.1.1.min.map"
   ],
   "content_scripts": [ {
-    "js": [ "javascript/content.js" ],
+    "js": [ "javascript/jquery.min.js", "javascript/content.js" ],
     "matches": [ "http://*/*", "https://*/*" ],
     "all_frames": true
   } ],
