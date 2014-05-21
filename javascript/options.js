@@ -95,7 +95,7 @@ function setCurrentProfile(profile) {
     updateLeet();
     highlightProfile();
     // Keeps profile #1 around so it can only be re-named
-    if (Settings.getProfiles().length <= 1 || currentProfile.id === 1) {
+    if (Settings.getProfiles().length <= 1) {
         $("#remove").hide();
     } else {
         $("#remove").show();

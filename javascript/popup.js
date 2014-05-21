@@ -9,22 +9,34 @@ function getAutoProfileIdForUrl(url) {
         if (profile.siteList) {
             var usedURL = profile.getUrl(url);
             var sites = profile.siteList.split(' ');
-            for (var j in sites) {
+            for (var j = 0; j < sites.length; j++) {
                 var pat = sites[j];
-                pat = pat.replace(/[$+()^\[\]\\|{},]/g, '');
-                pat = pat.replace(/\?/g, '.');
-                pat = pat.replace(/\*/g, '.*');
 
-                if (pat[0] !== '^') pat = '^' + pat;
-                if (pat[pat.length-1] !== '$') pat = pat + '$';
+                if (pat[0] == '/' && pat[pat.length-1] == '/') {
+                    pat = pat.substr(1, pat.length-2);
+                } else {
+                    pat = pat.replace(/[$+()^\[\]\\|{},]/g, '');
+                    pat = pat.replace(/\?/g, '.');
+                    pat = pat.replace(/\*/g, '.*');
+                }
 
-                var re = new RegExp(pat);
-                if (re.test(usedURL) || re.test(url)) {
+                if (pat[0] != '^') pat = '^' + pat;
+                if (pat[pat.length-1] != '$') pat = pat + '$';
+
+                var re;
+                try {
+                    re = new RegExp(pat);
+                } catch(e) {
+                    console.log(e + "\n");
+                }
+
+                if ((re.test(usedURL) && usedURL !== "") || re.test(url)) {
                     return profile.id;
                 }
             }
         }
     }
+    return null;
 }
 
 function updateFields() {
@@ -33,7 +45,11 @@ function updateFields() {
     var usedURL = $("#usedtext").prop("alt");
 
     var profileId = $("#profile").val();
-    Settings.setActiveProfileId(profileId);
+    if (getAutoProfileIdForUrl(usedURL) !== null) {
+        profileId = getAutoProfileIdForUrl(usedURL);
+    } else {
+        Settings.setActiveProfileId(profileId);
+    }
     var profile = Settings.getProfile(profileId);
 
     Settings.setStoreLocation($("#store_location").val());
@@ -53,10 +69,15 @@ function updateFields() {
         $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else {
-        var generatedPassword = profile.getPassword($("#usedtext").val(), password);
-        $("#generated, #generatedForClipboard").val(generatedPassword);
+        if (profile !== null) {
+            var generatedPassword = profile.getPassword($("#usedtext").val(), password);
+            $("#generated").val(generatedPassword);
+            $("#generatedForClipboard").val(generatedPassword);
+        } else {
+            $("#generated, #generatedForClipboard").val("");
+        }
         showButtons();
-        setPasswordColors("#006400", "#FFFFFF");
+        setPasswordColors("#008000", "#FFFFFF");
     }
 
     if (Settings.keepMasterPasswordHash()) {
@@ -75,11 +96,18 @@ function matchesHash(password) {
 
 function updateURL(url) {
     var profileId = $("#profile").val();
+
     var profile = Settings.getProfile(profileId);
     // Store url in ALT attribute
     $("#usedtext").prop("alt", url);
     // Store either matched url or, if set, use profiles own "use text"
-    $("#usedtext").val(((profile.getText()) ? profile.getText() : profile.getUrl(url)));
+    var text = ""
+    if (profile.getText() !== "") {
+        text = profile.getText();
+    } else {
+        text = profile.getUrl(url);
+    }
+    $("#usedtext").val(text);
 }
 
 function onProfileChanged() {
@@ -112,7 +140,8 @@ function init(url) {
     Settings.getProfiles().forEach(function(profile) {
         $("#profile").append("<option value='" + profile.id + "'>" + profile.title + "</option>");
     });
-    $("#profile").val(getAutoProfileIdForUrl(url) || Settings.profiles[0].id);
+    $("#profile").val(getAutoProfileIdForUrl(url) || Settings.getProfiles()[0].id);
+
 
     updateURL(url);
     $("#store_location").val(Settings.storeLocation);

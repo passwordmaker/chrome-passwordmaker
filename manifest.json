@@ -14,14 +14,14 @@
     "default_popup": "html/popup.html"
   },
   "permissions": [
-    "activeTab",
+    "tabs",
     "storage"
   ],
   "web_accessible_resources": [
     "javascript/jquery-2.1.1.min.map"
   ],
   "content_scripts": [ {
-    "js": [ "javascript/jquery.min.js", "javascript/content.js" ],
+    "js": [ "javascript/content.js" ],
     "matches": [ "http://*/*", "https://*/*" ],
     "all_frames": true
   } ],
