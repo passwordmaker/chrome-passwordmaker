@@ -1,21 +1,28 @@
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.password) {
         fillPasswords(request.password);
-    } else if (request.hasPasswordField) {
-        if (document.querySelector("input[type=password]") !== null) {
+    }
+    if (request.hasPasswordField) {
+        if (hasPassFields()) {
             sendResponse({hasField: true});
-        } else {
-            sendResponse({hasField: false});
         }
     }
 });
 
 function fillPasswords(password) {
-    var passFields = document.querySelectorAll("input[type=password]");
-    [].forEach.call(passFields, function (element, index) {
+    var fields = document.querySelectorAll("input[type='password']");
+    [].forEach.call(fields, function (element, index) {
         // Only fill password fields that are empty and aren't already populated (for change password pages)
-        if (passFields[index].value.length === 0) {
-            passFields[index].value = password;
+        if (fields[index].value.length === 0) {
+            fields[index].value = password.toString();
         }
     });
+}
+
+function hasPassFields() {
+    var hasFields = false;
+    if (document.querySelector("input[type='password']") !== null) {
+        hasFields = true;
+    }
+    return hasFields;
 }

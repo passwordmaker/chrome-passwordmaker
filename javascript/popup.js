@@ -9,14 +9,34 @@ function getAutoProfileIdForUrl(url) {
         if (profile.siteList) {
             var usedURL = profile.getUrl(url);
             var sites = profile.siteList.split(' ');
-            for (var j in sites) {
+            for (var j = 0; j < sites.length; j++) {
                 var pat = sites[j];
-                if (pat.indexOf(usedURL) >= 0 || pat.indexOf(url) >= 0) {
+
+                if (pat[0] == '/' && pat[pat.length-1] == '/') {
+                    pat = pat.substr(1, pat.length-2);
+                } else {
+                    pat = pat.replace(/[$+()^\[\]\\|{},]/g, '');
+                    pat = pat.replace(/\?/g, '.');
+                    pat = pat.replace(/\*/g, '.*');
+                }
+
+                if (pat[0] != '^') pat = '^' + pat;
+                if (pat[pat.length-1] != '$') pat = pat + '$';
+
+                var re;
+                try {
+                    re = new RegExp(pat);
+                } catch(e) {
+                    console.log(e + "\n");
+                }
+
+                if ((re.test(usedURL) && usedURL !== "") || re.test(url)) {
                     return profile.id;
                 }
             }
         }
     }
+    return null;
 }
 
 function updateFields() {
@@ -25,7 +45,11 @@ function updateFields() {
     var usedURL = $("#usedtext").prop("alt");
 
     var profileId = $("#profile").val();
-    Settings.setActiveProfileId(profileId);
+    if (getAutoProfileIdForUrl(usedURL) !== null) {
+        profileId = getAutoProfileIdForUrl(usedURL);
+    } else {
+        Settings.setActiveProfileId(profileId);
+    }
     var profile = Settings.getProfile(profileId);
 
     Settings.setStoreLocation($("#store_location").val());
@@ -45,10 +69,15 @@ function updateFields() {
         $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else {
-        var generatedPassword = profile.getPassword($("#usedtext").val(), password);
-        $("#generated, #generatedForClipboard").val(generatedPassword);
+        if (profile !== null) {
+            var generatedPassword = profile.getPassword($("#usedtext").val(), password);
+            $("#generated").val(generatedPassword);
+            $("#generatedForClipboard").val(generatedPassword);
+        } else {
+            $("#generated, #generatedForClipboard").val("");
+        }
         showButtons();
-        setPasswordColors("#006400", "#FFFFFF");
+        setPasswordColors("#008000", "#FFFFFF");
     }
 
     if (Settings.keepMasterPasswordHash()) {
@@ -67,11 +96,18 @@ function matchesHash(password) {
 
 function updateURL(url) {
     var profileId = $("#profile").val();
+
     var profile = Settings.getProfile(profileId);
     // Store url in ALT attribute
     $("#usedtext").prop("alt", url);
     // Store either matched url or, if set, use profiles own "use text"
-    $("#usedtext").val(((profile.getText()) ? profile.getText() : profile.getUrl(url)));
+    var text = ""
+    if (profile.getText() !== "") {
+        text = profile.getText();
+    } else {
+        text = profile.getUrl(url);
+    }
+    $("#usedtext").val(text);
 }
 
 function onProfileChanged() {
@@ -83,11 +119,12 @@ function onProfileChanged() {
 
 function showButtons() {
     $("#copypassword").css("visibility", "visible");
-    var tabId = chrome.extension.getBackgroundPage().currentTab;
-    chrome.tabs.sendMessage(tabId, {hasPasswordField: true}, function(response) {
-        if (response && response.hasField) {
-            $("#injectpasswordrow").css("visibility", "visible");
-        }
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {hasPasswordField: true}, function(response) {
+            if (response && response.hasField) {
+                $("#injectpasswordrow").css("visibility", "visible");
+            }
+        });
     });
 }
 
@@ -100,18 +137,11 @@ function init(url) {
         $("#store_location_row").hide();
     }
 
-    var autoProfileId = getAutoProfileIdForUrl(url);
-    var profiles = Settings.getProfiles();
-
-    var profileList = "";
-    profiles.forEach(function(profile) {
-        if (autoProfileId === profile.id) {
-            profileList += "<option value='" + profile.id + "' selected>" + profile.title + "</option>";
-        } else {
-            profileList += "<option value='" + profile.id + "'>" + profile.title + "</option>";
-        }
+    Settings.getProfiles().forEach(function(profile) {
+        $("#profile").append("<option value='" + profile.id + "'>" + profile.title + "</option>");
     });
-    $("#profile").html(profileList);
+    $("#profile").val(getAutoProfileIdForUrl(url) || Settings.getProfiles()[0].id);
+
 
     updateURL(url);
     $("#store_location").val(Settings.storeLocation);
@@ -125,8 +155,9 @@ function init(url) {
 }
 
 function fillPassword() {
-    var tabId = chrome.extension.getBackgroundPage().currentTab;
-    chrome.tabs.sendMessage(tabId, {password: $("#generated").val()});
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {password: $("#generated").val()});
+    });
     window.close();
 }
 
@@ -147,11 +178,12 @@ function showPasswordField() {
 }
 
 function sendFillPassword() {
-    var tabId = chrome.extension.getBackgroundPage().currentTab;
-    chrome.tabs.sendMessage(tabId, {hasPasswordField: true}, function(response) {
-        if (response && response.hasField) {
-            fillPassword();
-        }
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {hasPasswordField: true}, function(response) {
+            if (response && response.hasField) {
+                fillPassword();
+            }
+        });
     });
 }
 
@@ -181,7 +213,6 @@ $(function() {
     }
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.extension.getBackgroundPage().currentTab = tabs[0].id;
         init(tabs[0].url);
     });
 

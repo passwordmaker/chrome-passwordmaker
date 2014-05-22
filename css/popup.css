@@ -34,7 +34,7 @@ input {
 }
 
 #generated {
-    font-family: "DejaVu Sans Mono", monospace;
+    font-family: "DejaVu Sans Mono", "Lucida Console", monospace;
     font-size: 18px;
     font-weight: bold;
     line-height: 1.35;

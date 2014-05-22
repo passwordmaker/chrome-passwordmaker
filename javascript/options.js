@@ -10,8 +10,7 @@ var CHARSET_OPTIONS = [
 ];
 
 function editProfile(event) {
-    p = Settings.getProfile(event.data.id);
-    setCurrentProfile(p);
+    setCurrentProfile(Settings.getProfile(event.data.id));
 }
 
 function updateStyle(element, selected, isSelected) {
@@ -34,21 +33,12 @@ function updateLeet() {
     updateStyle($("#leetLevelLabel"), "disabled", $("#whereLeetLB").val() === "off");
 }
 
-function updateRemoveButton() {
-    if (Settings.getProfiles().length <= 1) {
-        $("#remove").hide();
-    } else {
-        $("#remove").show();
-    }
-}
-
 function addProfile() {
-    p = new Profile();
+    var p = new Profile();
     p.title = "No name";
     Settings.addProfile(p);
     updateProfileList();
     setCurrentProfile(p);
-    updateRemoveButton();
 }
 
 function removeProfile() {
@@ -57,7 +47,6 @@ function removeProfile() {
         currentProfile = Settings.getProfiles()[0];
         updateProfileList();
         setCurrentProfile(currentProfile);
-        updateRemoveButton();
     }
 }
 
@@ -105,6 +94,12 @@ function setCurrentProfile(profile) {
     updateExample();
     updateLeet();
     highlightProfile();
+    // Keeps profile #1 around so it can only be re-named
+    if (Settings.getProfiles().length <= 1) {
+        $("#remove").hide();
+    } else {
+        $("#remove").show();
+    }
 
     showSection("#profile_setting");
 }
@@ -143,7 +138,6 @@ function importRdf(){
     }
 
     updateProfileList();
-    updateRemoveButton();
 }
 
 function copyRdfExport(){
@@ -160,8 +154,8 @@ function showInformation() {
 }
 
 function showSection(showId) {
-    if(!$(showId).is(":visible")){
-        $("#profile_setting:visible,#import_settings:visible,#export_settings:visible,#general_settings:visible,#general_information:visible").hide();
+    if($(showId).is(":hidden")){
+        $("#profile_setting, #import_settings, #export_settings, #general_settings, #general_information").hide();
         $(showId).show();
     }
 }
@@ -205,7 +199,6 @@ function cloneProfile() {
     Settings.addProfile(p);
     updateProfileList();
     setCurrentProfile(p);
-    updateRemoveButton();
 }
 
 function updateProfileList() {
@@ -233,10 +226,8 @@ function setSyncPassword() {
         $("#syncProfilesPassword").val("");
         updateSyncProfiles();
         updateProfileList();
-        updateRemoveButton();
     } else {
-        alert("Wrong password. Please specify the password you used when " +
-              "initially syncing your data");
+        alert("Wrong password. Please specify the password you used when initially syncing your data");
     }
 }
 
@@ -246,7 +237,6 @@ function clearSyncData() {
             Settings.setSyncProfiles(false);
             updateSyncProfiles();
             updateProfileList();
-            updateRemoveButton();
         }
     });
 }
@@ -270,7 +260,6 @@ function updateSyncProfiles() {
     } else {
       Settings.stopSync();
       updateProfileList();
-      updateRemoveButton();
     }
 }
 
@@ -289,7 +278,7 @@ function updateMasterHash() {
 }
 
 function updateHidePassword() {
-    Settings.setHidePassword($("#hidePassword").prop("checked") === true);    
+    Settings.setHidePassword($("#hidePassword").prop("checked") === true);
 }
 
 function updateDisablePasswordSaving() {
@@ -326,7 +315,6 @@ function fileExport() {
 $(function() {
     updateProfileList();
     setCurrentProfile(Settings.getProfiles()[0]);
-    updateRemoveButton();
 
     $("#hidePassword").prop("checked", Settings.shouldHidePassword());
     $("#disablePasswordSaving").prop("checked", Settings.shouldDisablePasswordSaving());
@@ -337,7 +325,7 @@ $(function() {
         $("#master_password_row").css("visibility", "hidden");
     }
 
-    $("#syncProfiles").prop("checked", Settings.shouldSyncProfiles());
+    $("#syncProfiles").prop("checked", localStorage["sync_profiles"] === "true");
     updateSyncProfiles();
 
     $("#add>a").on("click", addProfile);
