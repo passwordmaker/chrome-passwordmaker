@@ -155,9 +155,11 @@ function init(url) {
 }
 
 function fillPassword() {
+    var pass = $("#generatedForClipboard").val();
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {password: $("#generated").val()});
+        chrome.tabs.sendMessage(tabs[0].id, {password: pass});
     });
+    alert("Password: "+pass+" should now be filled");
     window.close();
 }
 
