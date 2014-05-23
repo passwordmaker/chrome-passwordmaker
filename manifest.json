@@ -1,6 +1,6 @@
 {
   "name": "PasswordMaker Pro",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "manifest_version": 2,
   "description": "A chrome extension based on passwordmaker.org . Create unique passwords for every webpage using a hashing algorithm.",
   "homepage_url": "https://github.com/bitboxer/chrome-passwordmaker",
@@ -21,7 +21,7 @@
     "javascript/jquery-2.1.1.min.map"
   ],
   "content_scripts": [ {
-    "js": [ "javascript/content.js" ],
+    "js": [ "javascript/jquery.min.js", "javascript/content.js" ],
     "matches": [ "http://*/*", "https://*/*" ],
     "all_frames": true
   } ],
