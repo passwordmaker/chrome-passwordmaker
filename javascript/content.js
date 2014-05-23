@@ -11,6 +11,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 function fillPasswords(password) {
     jQuery("input[type=password]").val(password);
+    alert("Passwords should now be filled");
 }
 
 function hasPassFields() {

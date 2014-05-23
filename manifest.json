@@ -14,7 +14,7 @@
     "default_popup": "html/popup.html"
   },
   "permissions": [
-    "activeTab",
+    "tabs",
     "storage"
   ],
   "web_accessible_resources": [
