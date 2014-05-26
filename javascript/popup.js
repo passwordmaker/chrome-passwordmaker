@@ -42,7 +42,7 @@ function updateFields() {
     var confirmation = $("#confirmation").val();
     var usedURL = $("#usedtext").prop("alt");
 
-    var profileId = getAutoProfileIdForUrl(usedURL) || $("#profile").val();
+    var profileId = $("#profile").val();
     Settings.setActiveProfileId(profileId);
     var profile = Settings.getProfile(profileId);
 

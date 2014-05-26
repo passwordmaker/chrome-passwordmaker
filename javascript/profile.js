@@ -144,14 +144,11 @@ Profile.prototype.getText = function(url) {
 }
 
 Profile.prototype.getUrl = function(url) {
-    if (url == null) {
-        return "";
-    }
-
     var temp = url.match("([^://]*://)?([^:/]*)([^#]*)");
     if (!temp) {
         temp = ['','','','']; // Helps prevent an undefine based error
     }
+
     var domainSegments = temp[2].split(".");
     while (domainSegments.length < 3) {
         domainSegments.unshift(''); // Helps prevent the URL from displaying undefined in the URL to use box
@@ -159,19 +156,17 @@ Profile.prototype.getUrl = function(url) {
 
     var resultURL = '';
     var protocol= this.url_protocol ? temp[1] : ''; // set the protocol or empty string
-
     var splitSegments = this.splitSubdomain(domainSegments);
-    
     if (this.url_subdomain) {
         resultURL += splitSegments[0];
     }
-
     if (this.url_domain) {
         if (resultURL != "" && resultURL[resultURL.length - 1] != ".") {
             resultURL += ".";
         }
         resultURL += splitSegments[1];
     }
+
     resultURL = protocol + resultURL;
 
     if (this.url_path) {

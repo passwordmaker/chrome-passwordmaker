@@ -165,8 +165,8 @@ function highlightProfile(){
 }
 
 function saveProfile() {
-    currentProfile.title          = $("#profileNameTB").val();
-    currentProfile.siteList       = $("#siteList").val();
+    currentProfile.title          = $("#profileNameTB").val().trim();
+    currentProfile.siteList       = $("#siteList").val().trim();
     currentProfile.url_protocol   = $("#protocolCB").prop("checked");
     currentProfile.url_subdomain  = $("#subdomainCB").prop("checked");
     currentProfile.url_domain     = $("#domainCB").prop("checked");
@@ -176,7 +176,7 @@ function saveProfile() {
     currentProfile.l33tLevel      = $("#leetLevelLB").val();
     currentProfile.hashAlgorithm  = $("#hashAlgorithmLB").val();
     currentProfile.passwordLength = $("#passwdLength").val();
-    currentProfile.username       = $("#usernameTB").val();
+    currentProfile.username       = $("#usernameTB").val().trim();
     currentProfile.modifier       = $("#modifier").val();
     currentProfile.passwordPrefix = $("#passwordPrefix").val();
     currentProfile.passwordSuffix = $("#passwordSuffix").val();
@@ -359,4 +359,3 @@ $(function() {
 
     $("#passwdLength").on("blur", testPasswordLength);
 });
-
