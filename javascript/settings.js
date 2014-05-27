@@ -144,7 +144,7 @@ Settings.loadProfilesFromString = function(profiles) {
     try {
         Settings.profiles = [];
         JSON.parse(profiles).forEach(function(item) {
-            p = new Profile();
+            var p = new Profile();
             Object.keys(item).forEach(function(key) {
                 p[key] = item[key];
             });
@@ -196,7 +196,7 @@ Settings.saveSyncedProfiles = function(data) {
     } else {
         var splitter = new RegExp("[\\s\\S]{1," + threshold + "}", "g");
         var parts = data.match(splitter);
-        var date = new Date().getTime();
+        var date = Date.now();
         var output = {};
         var keys = [];
         for (i = 0; i < parts.length; ++i) {

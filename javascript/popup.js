@@ -4,39 +4,37 @@ function setPasswordColors(foreground, background) {
 
 function getAutoProfileIdForUrl(url) {
     var profiles = Settings.getProfiles();
-    for (var i in profiles) {
+    for (var i = 0; i < profiles.length; i++) {
         var profile = profiles[i];
-        if (profile.siteList) {
+        if (profile.siteList !== "") {
             var usedURL = profile.getUrl(url);
-            var sites = profile.siteList.split(' ');
+            var sites = profile.siteList.split(" ");
             for (var j = 0; j < sites.length; j++) {
-                var pat = sites[j];
+                var pattern = sites[j];
+                pattern = pattern.replace(/[$+()^\[\]\\|{},]/g, "");
+                pattern = pattern.replace(/\?/g, ".");
+                pattern = pattern.replace(/\*/g, ".*");
 
-                if (pat[0] == '/' && pat[pat.length-1] == '/') {
-                    pat = pat.substr(1, pat.length-2);
-                } else {
-                    pat = pat.replace(/[$+()^\[\]\\|{},]/g, '');
-                    pat = pat.replace(/\?/g, '.');
-                    pat = pat.replace(/\*/g, '.*');
+                var anchoredPattern = pattern;
+                if (anchoredPattern[0] !== "^") {
+                    anchoredPattern = "^" + anchoredPattern;
+                }
+                if (pattern[pattern.length - 1] !== "$") {
+                    anchoredPattern = anchoredPattern + "$";
                 }
 
-                if (pat[0] != '^') pat = '^' + pat;
-                if (pat[pat.length-1] != '$') pat = pat + '$';
+                var reg1 = new RegExp(anchoredPattern);
+                var reg2 = new RegExp(pattern);
 
-                var re;
-                try {
-                    re = new RegExp(pat);
-                } catch(e) {
-                    console.log(e + "\n");
-                }
-
-                if ((re.test(usedURL) && usedURL !== "") || re.test(url)) {
+                // Matches url's from siteList when using a "url component" via anchored regex
+                if ((reg1.test(usedURL) && usedURL !== "") || reg1.test(url) || 
+                // Matches remaining cases with non-anchored regex
+                (reg2.test(url) && pattern !== "")) {
                     return profile.id;
                 }
             }
         }
     }
-    return null;
 }
 
 function updateFields() {
@@ -45,11 +43,7 @@ function updateFields() {
     var usedURL = $("#usedtext").prop("alt");
 
     var profileId = $("#profile").val();
-    if (getAutoProfileIdForUrl(usedURL) !== null) {
-        profileId = getAutoProfileIdForUrl(usedURL);
-    } else {
-        Settings.setActiveProfileId(profileId);
-    }
+    Settings.setActiveProfileId(profileId);
     var profile = Settings.getProfile(profileId);
 
     Settings.setStoreLocation($("#store_location").val());
@@ -69,13 +63,8 @@ function updateFields() {
         $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else {
-        if (profile !== null) {
-            var generatedPassword = profile.getPassword($("#usedtext").val(), password);
-            $("#generated").val(generatedPassword);
-            $("#generatedForClipboard").val(generatedPassword);
-        } else {
-            $("#generated, #generatedForClipboard").val("");
-        }
+        var generatedPassword = profile.getPassword($("#usedtext").val(), password);
+        $("#generated, #generatedForClipboard").val(generatedPassword);
         showButtons();
         setPasswordColors("#008000", "#FFFFFF");
     }
@@ -101,7 +90,7 @@ function updateURL(url) {
     // Store url in ALT attribute
     $("#usedtext").prop("alt", url);
     // Store either matched url or, if set, use profiles own "use text"
-    var text = ""
+    var text = "";
     if (profile.getText() !== "") {
         text = profile.getText();
     } else {
