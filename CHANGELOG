@@ -1,3 +1,14 @@
+0.6.3 - 2014-05-29
+
+* Another fix for the fill form function
+* Removed usage of jQuery
+* Reduced permission to active tab
+* Removed sourcemap for jQuery
+
+0.6.2 - 2014-05-23
+
+Fixed fill form bug
+
 0.6.1 - 2014-05-22
 
 Emergency release that should fix problems created
