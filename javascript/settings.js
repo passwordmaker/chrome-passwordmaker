@@ -321,6 +321,15 @@ Settings.setSyncProfiles = function(bool) {
     localStorage["sync_profiles"] = bool;
 };
 
+Settings.setUseVerificationCode = function(bool) {
+    localStorage["use_verification_code"] = bool;
+};
+
+Settings.useVerificationCode = function() {
+    bool = localStorage["use_verification_code"];
+    return bool === "true";
+};
+
 Settings.clearSyncData = function(callback) {
     chrome.storage.sync.clear(function() {
         if (chrome.runtime.lastError === undefined) {

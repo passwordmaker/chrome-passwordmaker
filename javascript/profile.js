@@ -175,3 +175,25 @@ Profile.prototype.getUrl = function(url) {
 
     return resultURL;
 }
+
+Profile.prototype.getVerificationCode = function(masterPassword) {
+    var charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    var maxLen = 3;
+    var count = 0;
+    var code = "";
+
+    while (code.length < maxLen) {
+        if (count == 0) {
+            code += PasswordMaker_SHA256.any_sha256(masterPassword, charset);
+        }
+        else {
+            code += PasswordMaker_SHA256.any_sha256(masterPassword + "\n" + count, charset);
+        }
+        count++;
+    }
+
+    if (code.length > maxLen) {
+        code = code.substring(0, maxLen);
+    }
+    return code;
+}
