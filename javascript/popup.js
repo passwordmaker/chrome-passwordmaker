@@ -51,22 +51,18 @@ function updateFields() {
     $("#copypassword, #injectpasswordrow").css("visibility", "hidden");
 
     if (password === "") {
-        $("#generatedForClipboard").val("");
         $("#generated").val("Please Enter Password");
         setPasswordColors("#000000", "#85FFAB");
     } else if ( !matchesHash(password) ) {
-        $("#generatedForClipboard").val("");
         $("#generated").val("Master Password Mismatch");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else if (!Settings.keepMasterPasswordHash() && password !== confirmation) {
-        $("#generatedForClipboard").val("");
         $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else {
-        var generatedPassword = profile.getPassword($("#usedtext").val(), password);
-        $("#generated, #generatedForClipboard").val(generatedPassword);
-        showButtons();
+        $("#generated").val(profile.getPassword(usedText, password));
         setPasswordColors("#008000", "#FFFFFF");
+        showButtons();
     }
 
     if (Settings.keepMasterPasswordHash()) {
@@ -151,7 +147,8 @@ function fillPassword() {
 }
 
 function copyPassword() {
-    document.getElementById("generatedForClipboard").select();
+    $("#activatePassword").hide();
+    $("#generated").show().select();
     document.execCommand("Copy");
     window.close();
 }
