@@ -35,6 +35,11 @@ body {
     list-style-type: decimal;
 }
 
+.profile {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+}
 
 #list .button {
     width: 140px;
@@ -223,7 +228,7 @@ input[type="checkbox"] {
     width: 505px;
 }
 
-select,input {
+select, input {
     margin-left: 165px;
     width: 300px;
 }

@@ -6,7 +6,7 @@
         <link rel="stylesheet" type="text/css" href="../css/popup.css">
     </head>
     <body>
-        <table id="content">
+        <table>
             <thead>
                 <tr>
                     <th colspan="2" id="header"><img src="../images/passwdmaker48.png" width="20" height="20"><span id="title">PasswordMaker Pro</span></th>
@@ -44,14 +44,13 @@
                         <label for="generated">Generated Password:</label>
                         <input id="generated" readonly>
                         <button class="awesome" id="activatePassword">Show Password</button>
-                        <button id="activatePassword" class="awesome">Show Password</button>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2" id="button-row">
-                        <button id="copypassword" class="awesome">Copy</button>
-                        <button id="injectpasswordrow" class="awesome" title="Populate all *empty* password fields">Fill Field</button>
-                        <button id="options" class="awesome">Options</button>
+                        <button class="awesome" id="copypassword">Copy</button>
+                        <button class="awesome" id="injectpasswordrow" title="Populate all *empty* password fields">Fill Fields</button>
+                        <button class="awesome" id="options">Options</button>
                     </td>
                 </tr>
             </tbody>

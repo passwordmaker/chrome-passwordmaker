@@ -1,18 +1,5 @@
 var currentProfile = null;
 
-var CHARSET_OPTIONS = [
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./",
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-    "0123456789abcdef",
-    "0123456789",
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-    "`~!@#$%^&*()_-+={}|[]:\";'<>?,./"
-];
-
-function editProfile(event) {
-    setCurrentProfile(Settings.getProfile(event.data.id));
-}
-
 function updateStyle(element, selected, isSelected) {
     if (isSelected) {
         element.addClass(selected);
@@ -54,11 +41,10 @@ function setCurrentProfile(profile) {
     currentProfile = profile;
     $("#profileNameTB").val(profile.title);
     $("#siteList").val(profile.siteList);
-    $("#protocolCB").prop('checked', profile.url_protocol);
-    $("#subdomainCB").prop('checked', profile.url_subdomain);
-    $("#domainCB").prop('checked', profile.url_domain);
-    $("#pathCB").prop('checked', profile.url_path);
-
+    $("#protocolCB").prop("checked", profile.url_protocol);
+    $("#subdomainCB").prop("checked", profile.url_subdomain);
+    $("#domainCB").prop("checked", profile.url_domain);
+    $("#pathCB").prop("checked", profile.url_path);
     $("#inputUseThisText").val(profile.strUseText);
     $("#whereLeetLB").val(profile.whereToUseL33t);
     $("#leetLevelLB").val(profile.l33tLevel);
@@ -70,9 +56,9 @@ function setCurrentProfile(profile) {
     $("#passwordSuffix").val(profile.passwordSuffix);
 
     $("#charset").empty();
-    CHARSET_OPTIONS.forEach(function(charset) {
-        $("#charset").append("<option>" + charset + "</option>");
-    });
+    for (var i = 0; i < CHARSET_OPTIONS.length; i++) {
+        $("#charset").append("<option>" + CHARSET_OPTIONS[i] + "</option>");
+    }
     $("#charset").append("<option>Custom charset</option>");
 
     $("#charset").on("change", function() {
@@ -115,14 +101,12 @@ function showExport(){
 
 function importRdf(){
     var txt = $("#importText").val();
-
     if(txt.trim() === ""){
         alert("Import text is empty");
         return false;
     }
 
     var rdfDoc = RdfImporter.loadDoc(txt);
-
     // Check that profiles have been parsed and are available before wiping current data
     if ((rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length) && ($("#inputImportOverwrite").prop("checked") === true)) {
         // Setting to null triggers creation of default profile, settings to empty array bypasses that code ([] != null)
@@ -131,7 +115,6 @@ function importRdf(){
     }
 
     var count = RdfImporter.saveProfiles(rdfDoc.profiles);
-
     if(!count){
       alert("Sorry, no profiles found");
       return false;
@@ -171,13 +154,13 @@ function saveProfile() {
     currentProfile.url_subdomain  = $("#subdomainCB").prop("checked");
     currentProfile.url_domain     = $("#domainCB").prop("checked");
     currentProfile.url_path       = $("#pathCB").prop("checked");
-    currentProfile.strUseText     = $("#inputUseThisText").val();
+    currentProfile.strUseText     = $("#inputUseThisText").val().trim();
     currentProfile.whereToUseL33t = $("#whereLeetLB").val();
     currentProfile.l33tLevel      = $("#leetLevelLB").val();
     currentProfile.hashAlgorithm  = $("#hashAlgorithmLB").val();
     currentProfile.passwordLength = $("#passwdLength").val();
     currentProfile.username       = $("#usernameTB").val().trim();
-    currentProfile.modifier       = $("#modifier").val();
+    currentProfile.modifier       = $("#modifier").val().trim();
     currentProfile.passwordPrefix = $("#passwordPrefix").val();
     currentProfile.passwordSuffix = $("#passwordSuffix").val();
 
@@ -201,17 +184,19 @@ function cloneProfile() {
     setCurrentProfile(p);
 }
 
+function editProfile(event) {
+    setCurrentProfile(Settings.getProfile(event.data.id));
+}
+
 function updateProfileList() {
     var profiles = Settings.getProfiles();
-    var list = "";
-    profiles.forEach(function(profile) {
-        list += "<li id='profile_id_"+profile.id+"'><a id='editProfile_"+profile.id+"' href='#'>"+profile.title+"</a></li>";
-    });
+    var list = [];
+    for (var i = 0; i < profiles.length; i++) {
+        var entry = $("<li id='profile_id_" + profiles[i].id + "'><a class='profile'>" + profiles[i].title + "</a></li>");
+        entry.find("a").on("click", {id: profiles[i].id}, editProfile);
+        list.push(entry);
+    }
     $("#profile_list").html(list);
-
-    profiles.forEach(function(profile) {
-        $("#editProfile_"+profile.id).on("click", {id: profile.id}, editProfile);
-    });
 }
 
 function setSyncPassword() {
@@ -265,14 +250,14 @@ function updateSyncProfiles() {
 
 function updateMasterHash() {
     var should_keep = ($("#keepMasterPasswordHash").prop("checked") === true);
-    Settings.setKeepMasterPasswordHash(should_keep);    
+    Settings.setKeepMasterPasswordHash(should_keep);
     if ( should_keep ) {
       var master_pass = $("#masterPassword").val();
       var new_hash = ChromePasswordMaker_SecureHash.make_hash(master_pass);
       Settings.setMasterPasswordHash(new_hash);
       $("#master_password_row").css("visibility", "visible");
     } else {
-      Settings.setMasterPasswordHash("");    
+      Settings.setMasterPasswordHash("");
       $("#master_password_row").css("visibility", "hidden");
     }
 }
@@ -307,8 +292,8 @@ function fileImport() {
 function fileExport() {
     var textFileAsBlob = new Blob([$("#exportText").val()], {type:"application/rdf+xml"});
     var downloadLink = document.createElement("a");
-    downloadLink.href = webkitURL.createObjectURL(textFileAsBlob);
-    downloadLink.download = "PasswordMaker Profile Data.rdf";
+    downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+    downloadLink.download = "PasswordMaker Pro Profile Data.rdf";
     downloadLink.click();
 }
 
@@ -319,6 +304,7 @@ $(function() {
     $("#hidePassword").prop("checked", Settings.shouldHidePassword());
     $("#disablePasswordSaving").prop("checked", Settings.shouldDisablePasswordSaving());
     $("#keepMasterPasswordHash").prop("checked", Settings.keepMasterPasswordHash());
+
     if (Settings.keepMasterPasswordHash()) {
         $("#master_password_row").css("visibility", "visible");
     } else {

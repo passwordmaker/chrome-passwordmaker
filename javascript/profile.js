@@ -13,10 +13,10 @@ function Profile() {
     this.strUseText = "";
 
     // Settings for the key generation
-    this.hashAlgorithm = "md5"
-    this.username = ""
-    this.modifier = ""
-    this.passwordLength = 8
+    this.hashAlgorithm = "md5";
+    this.username = "";
+    this.modifier = "";
+    this.passwordLength = 8;
     this.selectedCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./";
     this.passwordPrefix = "";
     this.passwordSuffix = "";

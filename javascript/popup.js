@@ -40,11 +40,8 @@ function getAutoProfileIdForUrl(url) {
 function updateFields() {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
-    var usedURL = $("#usedtext").prop("alt");
-
-    var profileId = $("#profile").val();
-    Settings.setActiveProfileId(profileId);
-    var profile = Settings.getProfile(profileId);
+    var usedText = $("#usedtext").val();
+    var profile = Settings.getProfile($("#profile").val());
 
     Settings.setStoreLocation($("#store_location").val());
     Settings.setPassword(password);
@@ -80,19 +77,13 @@ function matchesHash(password) {
 }
 
 function updateURL(url) {
-    var profileId = $("#profile").val();
-
-    var profile = Settings.getProfile(profileId);
-    // Store url in ALT attribute
-    $("#usedtext").prop("alt", url);
+    var profile = Settings.getProfile($("#profile").val());
     // Store either matched url or, if set, use profiles own "use text"
-    var text = "";
-    if (profile.getText() !== "") {
-        text = profile.getText();
+    if (profile.getText().length !== 0) {
+        $("#usedtext").val(profile.getText());
     } else {
-        text = profile.getUrl(url);
+        $("#usedtext").val(profile.getUrl(url));
     }
-    $("#usedtext").val(text);
 }
 
 function onProfileChanged() {
@@ -106,7 +97,7 @@ function showButtons() {
     $("#copypassword").css("visibility", "visible");
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {hasPasswordField: true}, function(response) {
-            if (response && response.hasField) {
+            if (response !== undefined && response.hasField) {
                 $("#injectpasswordrow").css("visibility", "visible");
             }
         });
@@ -120,19 +111,20 @@ function init(url) {
 
     if (Settings.shouldDisablePasswordSaving()) {
         $("#store_location_row").hide();
+        Settings.storeLocation = "never";
     }
 
-    Settings.getProfiles().forEach(function(profile) {
-        $("#profile").append("<option value='" + profile.id + "'>" + profile.title + "</option>");
-    });
+    var profiles = Settings.getProfiles();
+    for (var i = 0; i < profiles.length; i++) {
+        $("#profile").append(new Option(profiles[i].title, profiles[i].id));
+    }
     $("#profile").val(getAutoProfileIdForUrl(url) || Settings.getProfiles()[0].id);
-
 
     updateURL(url);
     $("#store_location").val(Settings.storeLocation);
     updateFields();
 
-    if (pass === null || pass.length === 0 || (pass !== $("#confirmation").val())) {
+    if (pass.length === 0 || pass !== $("#confirmation").val()) {
         $("#password").focus();
     } else {
         $("#generated").focus();
@@ -161,16 +153,6 @@ function openOptions() {
 function showPasswordField() {
     $("#activatePassword").hide();
     $("#generated").show().focus();
-}
-
-function sendFillPassword() {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {hasPasswordField: true}, function(response) {
-            if (response && response.hasField) {
-                fillPassword();
-            }
-        });
-    });
 }
 
 $(function() {
@@ -204,7 +186,7 @@ $(function() {
 
     $("#password, #confirmation, #generated").on("keydown", function(event) {
         if (event.keyCode === 13) { // 13 is the character code of the return key
-            sendFillPassword();
+            fillPassword();
         }
     });
 });

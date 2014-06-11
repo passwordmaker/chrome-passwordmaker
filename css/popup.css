@@ -2,10 +2,6 @@ body {
     width: 280px;
 }
 
-#content {
-    width: 100%;
-}
-
 td {
     padding: 0;
 }
@@ -29,8 +25,15 @@ label {
 
 input {
     border: 1px solid #000;
+    float: right;
     padding-left: 4px;
-    width: 96%;
+    width: 152px;
+}
+
+select {
+    border: 1px solid #000;
+    float: right;
+    width: 158px;
 }
 
 #generated {
@@ -39,17 +42,12 @@ input {
     font-weight: bold;
     line-height: 1.35;
     text-align: center;
-    width: 98%;
-}
-
-select {
-    width: 100%;
-    border: 1px solid #000;
+    width: 270px;
 }
 
 #activatePassword {
-    width: 100%;
     line-height: 1.1;
+    width: 276px;
 }
 
 #button-row {
@@ -58,5 +56,5 @@ select {
 }
 
 #copypassword, #injectpasswordrow, #options {
-    width: 32%;
+    width: 88px;
 }
