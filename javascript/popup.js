@@ -40,40 +40,39 @@ function getAutoProfileIdForUrl(url) {
 function updateFields() {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
-    var usedText = $("#usedtext").val();
+    var usedUrl = $("#usedtext").val();
     var profile = Settings.getProfile($("#profile").val());
 
     Settings.setStoreLocation($("#store_location").val());
-    Settings.setPassword(password);
     $("#copypassword, #injectpasswordrow").css("visibility", "hidden");
 
-    if (password === "") {
+    if (password.length === 0) {
         $("#generated").val("Please Enter Password");
         setPasswordColors("#000000", "#85FFAB");
-    } else if ( !matchesHash(password) ) {
+    } else if (!matchesHash(password)) {
         $("#generated").val("Master Password Mismatch");
         setPasswordColors("#FFFFFF", "#FF7272");
-    } else if (!Settings.keepMasterPasswordHash() && password !== confirmation) {
+    } else if (!Settings.useVerificationCode() && !Settings.keepMasterPasswordHash() && password !== confirmation) {
         $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else {
-        $("#generated").val(profile.getPassword(usedText, password));
+        $("#generated").val(profile.getPassword(usedUrl, password));
         setPasswordColors("#008000", "#FFFFFF");
+        Settings.setPassword(password);
         showButtons();
     }
 
-    if (Settings.keepMasterPasswordHash()) {
-        $("#confirmation_row").hide();
+    if (Settings.useVerificationCode()) {
+        $("#verificationCode").val(profile.getVerificationCode(password));
+        $("#verification_row").show();
     } else {
-        $("#confirmation_row").show();
+        $("#verification_row").hide();
     }
 }
 
 function matchesHash(password) {
     if (!Settings.keepMasterPasswordHash()) return true;
-    var saved_hash = Settings.masterPasswordHash();
-    var new_hash = ChromePasswordMaker_SecureHash.make_hash(password);
-    return new_hash === saved_hash;
+    return ChromePasswordMaker_SecureHash.make_hash(password) === Settings.masterPasswordHash();
 }
 
 function updateURL(url) {
@@ -178,6 +177,11 @@ $(function() {
             saved_hash = ChromePasswordMaker_SecureHash.update_old_hash(saved_hash);
             Settings.setMasterPasswordHash(saved_hash);
         }
+        $("#confirmation_row").hide();
+    } else if (Settings.useVerificationCode()) {
+        $("#confirmation_row").hide();
+    } else {
+        $("#confirmation_row").show();
     }
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {

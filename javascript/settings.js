@@ -116,7 +116,6 @@ Settings.getProfile = function(id) {
             return profiles[i];
         }
     }
-    return null;
 };
 
 Settings.getMaxId = function() {
@@ -312,6 +311,14 @@ Settings.masterPasswordHash = function() {
 
 Settings.setSyncProfiles = function(bool) {
     localStorage["sync_profiles"] = bool;
+};
+
+Settings.setUseVerificationCode = function(bool) {
+    localStorage["use_verification_code"] = bool;
+};
+
+Settings.useVerificationCode = function() {
+    return localStorage["use_verification_code"] === "true";
 };
 
 Settings.clearSyncData = function(callback) {
