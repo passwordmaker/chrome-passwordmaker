@@ -40,25 +40,25 @@ function getAutoProfileIdForUrl(url) {
 function updateFields() {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
-    var usedText = $("#usedtext").val();
+    var usedUrl = $("#usedtext").val();
     var profile = Settings.getProfile($("#profile").val());
 
     Settings.setStoreLocation($("#store_location").val());
-    Settings.setPassword(password);
     $("#copypassword, #injectpasswordrow").css("visibility", "hidden");
 
-    if (password === "") {
+    if (password.length === 0) {
         $("#generated").val("Please Enter Password");
         setPasswordColors("#000000", "#85FFAB");
-    } else if ( !matchesHash(password) ) {
+    } else if (!matchesHash(password)) {
         $("#generated").val("Master Password Mismatch");
         setPasswordColors("#FFFFFF", "#FF7272");
-    } else if ( !Settings.useVerificationCode() && !Settings.keepMasterPasswordHash() && password !== confirmation) {
+    } else if (!Settings.useVerificationCode() && !Settings.keepMasterPasswordHash() && password !== confirmation) {
         $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else {
-        $("#generated").val(profile.getPassword(usedText, password));
+        $("#generated").val(profile.getPassword(usedUrl, password));
         setPasswordColors("#008000", "#FFFFFF");
+        Settings.setPassword(password);
         showButtons();
     }
 
@@ -72,9 +72,7 @@ function updateFields() {
 
 function matchesHash(password) {
     if (!Settings.keepMasterPasswordHash()) return true;
-    var saved_hash = Settings.masterPasswordHash();
-    var new_hash = ChromePasswordMaker_SecureHash.make_hash(password);
-    return new_hash === saved_hash;
+    return ChromePasswordMaker_SecureHash.make_hash(password) === Settings.masterPasswordHash();
 }
 
 function updateURL(url) {

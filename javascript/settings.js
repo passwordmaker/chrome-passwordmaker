@@ -116,7 +116,6 @@ Settings.getProfile = function(id) {
             return profiles[i];
         }
     }
-    return null;
 };
 
 Settings.getMaxId = function() {

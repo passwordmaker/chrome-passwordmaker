@@ -27,13 +27,13 @@ input {
     border: 1px solid #000;
     float: right;
     padding-left: 4px;
-    width: 152px;
+    width: 150px;
 }
 
 select {
     border: 1px solid #000;
     float: right;
-    width: 158px;
+    width: 156px;
 }
 
 #generated {
