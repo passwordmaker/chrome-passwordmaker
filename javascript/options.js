@@ -270,6 +270,10 @@ function updateDisablePasswordSaving() {
     Settings.setDisablePasswordSaving($("#disablePasswordSaving").prop("checked") === true);
 }
 
+function updateUseVerificationCode() {
+    Settings.setUseVerificationCode($("#useVerificationCode").prop("checked") === true);
+}
+
 function testPasswordLength() {
     if (this.value < 8) this.value = 8;
     if (this.value > 512) this.value = 512;
@@ -304,7 +308,7 @@ $(function() {
     $("#hidePassword").prop("checked", Settings.shouldHidePassword());
     $("#disablePasswordSaving").prop("checked", Settings.shouldDisablePasswordSaving());
     $("#keepMasterPasswordHash").prop("checked", Settings.keepMasterPasswordHash());
-
+    $("#useVerificationCode").prop("checked", Settings.useVerificationCode());
     if (Settings.keepMasterPasswordHash()) {
         $("#master_password_row").css("visibility", "visible");
     } else {
@@ -339,6 +343,8 @@ $(function() {
     $("#keepMasterPasswordHash").on("change", updateMasterHash);
     $("#syncProfiles").on("change", updateSyncProfiles);
     $("#masterPassword").on("blur", updateMasterHash);
+
+    $("#useVerificationCode").on("change", updateUseVerificationCode);
 
     $("#set_sync_password").on("click", setSyncPassword);
     $("#clear_sync_data").on("click", clearSyncData);

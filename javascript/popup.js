@@ -53,7 +53,7 @@ function updateFields() {
     } else if ( !matchesHash(password) ) {
         $("#generated").val("Master Password Mismatch");
         setPasswordColors("#FFFFFF", "#FF7272");
-    } else if (!Settings.keepMasterPasswordHash() && password !== confirmation) {
+    } else if ( !Settings.useVerificationCode() && !Settings.keepMasterPasswordHash() && password !== confirmation) {
         $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else {
@@ -62,7 +62,16 @@ function updateFields() {
         showButtons();
     }
 
-    if (Settings.keepMasterPasswordHash()) {
+    if (Settings.useVerificationCode()) {
+        var verificationCode = profile.getVerificationCode(password);
+        $("#verificationCode").val(verificationCode);
+        $("#verification_row").show();
+    }
+    else {
+        $("#verification_row").hide();
+    }
+
+    if (Settings.keepMasterPasswordHash() || Settings.useVerificationCode()) {
         $("#confirmation_row").hide();
     } else {
         $("#confirmation_row").show();

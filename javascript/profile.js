@@ -175,3 +175,11 @@ Profile.prototype.getUrl = function(url) {
 
     return resultURL;
 }
+
+Profile.prototype.getVerificationCode = function(masterPassword) {
+    var p = new Profile();
+    p.hashAlgorithm = "sha256";
+    p.passwordLength = 3;
+    p.selectedCharset = CHARSET_OPTIONS[4];
+    return p.getPassword("", masterPassword);
+}
