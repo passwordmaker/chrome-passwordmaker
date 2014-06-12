@@ -319,8 +319,7 @@ Settings.setUseVerificationCode = function(bool) {
 };
 
 Settings.useVerificationCode = function() {
-    bool = localStorage["use_verification_code"];
-    return bool === "true";
+    return localStorage["use_verification_code"] === "true";
 };
 
 Settings.clearSyncData = function(callback) {

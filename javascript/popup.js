@@ -63,18 +63,10 @@ function updateFields() {
     }
 
     if (Settings.useVerificationCode()) {
-        var verificationCode = profile.getVerificationCode(password);
-        $("#verificationCode").val(verificationCode);
+        $("#verificationCode").val(profile.getVerificationCode(password));
         $("#verification_row").show();
-    }
-    else {
-        $("#verification_row").hide();
-    }
-
-    if (Settings.keepMasterPasswordHash() || Settings.useVerificationCode()) {
-        $("#confirmation_row").hide();
     } else {
-        $("#confirmation_row").show();
+        $("#verification_row").hide();
     }
 }
 
@@ -187,6 +179,11 @@ $(function() {
             saved_hash = ChromePasswordMaker_SecureHash.update_old_hash(saved_hash);
             Settings.setMasterPasswordHash(saved_hash);
         }
+        $("#confirmation_row").hide();
+    } else if (Settings.useVerificationCode()) {
+        $("#confirmation_row").hide();
+    } else {
+        $("#confirmation_row").show();
     }
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
