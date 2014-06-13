@@ -6,7 +6,7 @@
         <link rel="stylesheet" type="text/css" href="../css/popup.css">
     </head>
     <body>
-        <table id="content">
+        <table>
             <thead>
                 <tr>
                     <th colspan="2" id="header"><img src="../images/passwdmaker48.png" width="20" height="20"><span id="title">PasswordMaker Pro</span></th>
@@ -15,11 +15,15 @@
             <tbody>
                 <tr>
                     <td><label for="password">Password:</label></td>
-                    <td><input class="input" id="password" type="password" autofocus=""></td>
+                    <td><input class="input" id="password" type="password"></td>
                 </tr>
                 <tr id="confirmation_row">
                     <td><label for="confirmation">Confirmation:</label></td>
                     <td><input class="input" id="confirmation" type="password"></td>
+                </tr>
+                <tr id="verification_row">
+                    <td><label for="verification">Verification Code:</label></td>
+                    <td><input class="input" id="verificationCode" readonly></td>
                 </tr>
                 <tr id="store_location_row">
                     <td><label>Save Password:</label></td>
@@ -37,21 +41,20 @@
                 </tr>
                 <tr>
                     <td><label for="usedtext">Used text:</label></td>
-                    <td><input class="input" id="usedtext" type="text" ></td>
+                    <td><input class="input" id="usedtext"></td>
                 </tr>
                 <tr>
                     <td colspan="2">
                         <label for="generated">Generated Password:</label>
                         <input id="generated" readonly>
-                        <input id="generatedForClipboard" style="position:absolute;top:-100px;" readonly>
-                        <button id="activatePassword" class="awesome">Show Password</button>
+                        <button class="awesome" id="activatePassword">Show Password</button>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2" id="button-row">
-                        <button id="copypassword" class="awesome">Copy</button>
-                        <button id="injectpasswordrow" class="awesome" title="Populate all *empty* password fields">Fill Field</button>
-                        <button id="options" class="awesome">Options</button>
+                        <button class="awesome" id="copypassword">Copy</button>
+                        <button class="awesome" id="injectpasswordrow" title="Populate all *empty* password fields">Fill Fields</button>
+                        <button class="awesome" id="options">Options</button>
                     </td>
                 </tr>
             </tbody>

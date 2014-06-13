@@ -40,63 +40,49 @@ function getAutoProfileIdForUrl(url) {
 function updateFields() {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
-    var usedURL = $("#usedtext").prop("alt");
-
-    var profileId = $("#profile").val();
-    Settings.setActiveProfileId(profileId);
-    var profile = Settings.getProfile(profileId);
+    var usedUrl = $("#usedtext").val();
+    var profile = Settings.getProfile($("#profile").val());
 
     Settings.setStoreLocation($("#store_location").val());
-    Settings.setPassword(password);
     $("#copypassword, #injectpasswordrow").css("visibility", "hidden");
 
-    if (password === "") {
-        $("#generatedForClipboard").val("");
+    if (password.length === 0) {
         $("#generated").val("Please Enter Password");
         setPasswordColors("#000000", "#85FFAB");
-    } else if ( !matchesHash(password) ) {
-        $("#generatedForClipboard").val("");
+    } else if (!matchesHash(password)) {
         $("#generated").val("Master Password Mismatch");
         setPasswordColors("#FFFFFF", "#FF7272");
-    } else if (!Settings.keepMasterPasswordHash() && password !== confirmation) {
-        $("#generatedForClipboard").val("");
+    } else if (!Settings.useVerificationCode() && !Settings.keepMasterPasswordHash() && password !== confirmation) {
         $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else {
-        var generatedPassword = profile.getPassword($("#usedtext").val(), password);
-        $("#generated, #generatedForClipboard").val(generatedPassword);
-        showButtons();
+        $("#generated").val(profile.getPassword(usedUrl, password));
         setPasswordColors("#008000", "#FFFFFF");
+        Settings.setPassword(password);
+        showButtons();
     }
 
-    if (Settings.keepMasterPasswordHash()) {
-        $("#confirmation_row").hide();
+    if (Settings.useVerificationCode()) {
+        $("#verificationCode").val(profile.getVerificationCode(password));
+        $("#verification_row").show();
     } else {
-        $("#confirmation_row").show();
+        $("#verification_row").hide();
     }
 }
 
 function matchesHash(password) {
     if (!Settings.keepMasterPasswordHash()) return true;
-    var saved_hash = Settings.masterPasswordHash();
-    var new_hash = ChromePasswordMaker_SecureHash.make_hash(password);
-    return new_hash === saved_hash;
+    return ChromePasswordMaker_SecureHash.make_hash(password) === Settings.masterPasswordHash();
 }
 
 function updateURL(url) {
-    var profileId = $("#profile").val();
-
-    var profile = Settings.getProfile(profileId);
-    // Store url in ALT attribute
-    $("#usedtext").prop("alt", url);
+    var profile = Settings.getProfile($("#profile").val());
     // Store either matched url or, if set, use profiles own "use text"
-    var text = "";
-    if (profile.getText() !== "") {
-        text = profile.getText();
+    if (profile.getText().length !== 0) {
+        $("#usedtext").val(profile.getText());
     } else {
-        text = profile.getUrl(url);
+        $("#usedtext").val(profile.getUrl(url));
     }
-    $("#usedtext").val(text);
 }
 
 function onProfileChanged() {
@@ -110,7 +96,7 @@ function showButtons() {
     $("#copypassword").css("visibility", "visible");
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {hasPasswordField: true}, function(response) {
-            if (response && response.hasField) {
+            if (response !== undefined && response.hasField) {
                 $("#injectpasswordrow").css("visibility", "visible");
             }
         });
@@ -124,19 +110,20 @@ function init(url) {
 
     if (Settings.shouldDisablePasswordSaving()) {
         $("#store_location_row").hide();
+        Settings.storeLocation = "never";
     }
 
-    Settings.getProfiles().forEach(function(profile) {
-        $("#profile").append("<option value='" + profile.id + "'>" + profile.title + "</option>");
-    });
+    var profiles = Settings.getProfiles();
+    for (var i = 0; i < profiles.length; i++) {
+        $("#profile").append(new Option(profiles[i].title, profiles[i].id));
+    }
     $("#profile").val(getAutoProfileIdForUrl(url) || Settings.getProfiles()[0].id);
-
 
     updateURL(url);
     $("#store_location").val(Settings.storeLocation);
     updateFields();
 
-    if (pass === null || pass.length === 0 || (pass !== $("#confirmation").val())) {
+    if (pass.length === 0 || pass !== $("#confirmation").val()) {
         $("#password").focus();
     } else {
         $("#generated").focus();
@@ -151,7 +138,8 @@ function fillPassword() {
 }
 
 function copyPassword() {
-    document.getElementById("generatedForClipboard").select();
+    $("#activatePassword").hide();
+    $("#generated").show().select();
     document.execCommand("Copy");
     window.close();
 }
@@ -164,16 +152,6 @@ function openOptions() {
 function showPasswordField() {
     $("#activatePassword").hide();
     $("#generated").show().focus();
-}
-
-function sendFillPassword() {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {hasPasswordField: true}, function(response) {
-            if (response && response.hasField) {
-                fillPassword();
-            }
-        });
-    });
 }
 
 $(function() {
@@ -199,6 +177,11 @@ $(function() {
             saved_hash = ChromePasswordMaker_SecureHash.update_old_hash(saved_hash);
             Settings.setMasterPasswordHash(saved_hash);
         }
+        $("#confirmation_row").hide();
+    } else if (Settings.useVerificationCode()) {
+        $("#confirmation_row").hide();
+    } else {
+        $("#confirmation_row").show();
     }
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -207,7 +190,7 @@ $(function() {
 
     $("#password, #confirmation, #generated").on("keydown", function(event) {
         if (event.keyCode === 13) { // 13 is the character code of the return key
-            sendFillPassword();
+            fillPassword();
         }
     });
 });

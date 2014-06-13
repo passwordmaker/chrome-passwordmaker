@@ -13,10 +13,10 @@ function Profile() {
     this.strUseText = "";
 
     // Settings for the key generation
-    this.hashAlgorithm = "md5"
-    this.username = ""
-    this.modifier = ""
-    this.passwordLength = 8
+    this.hashAlgorithm = "md5";
+    this.username = "";
+    this.modifier = "";
+    this.passwordLength = 8;
     this.selectedCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./";
     this.passwordPrefix = "";
     this.passwordSuffix = "";
@@ -174,4 +174,12 @@ Profile.prototype.getUrl = function(url) {
     }
 
     return resultURL;
+}
+
+Profile.prototype.getVerificationCode = function(masterPassword) {
+    var p = new Profile();
+    p.hashAlgorithm = "sha256";
+    p.passwordLength = 3;
+    p.selectedCharset = CHARSET_OPTIONS[4];
+    return p.getPassword("", masterPassword);
 }
