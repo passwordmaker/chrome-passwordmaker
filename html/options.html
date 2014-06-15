@@ -13,23 +13,13 @@
 
         <div id="content">
             <div id="list">
-                <h2>Profiles</h2>
-                <ul id="profile_list"></ul>
-                <div id="add">
-                    <a href="#" class="awesome button">Add new profile</a>
-                </div>
-                <div id="showImport">
-                    <a href="#" class="awesome button">Import Profiles</a>
-                </div>
-                <div id="showExport">
-                    <a href="#" class="awesome button">Export Profiles</a>
-                </div>
-                <div id="showSettings">
-                    <a href="#" class="awesome button">General Options</a>
-                </div>
-                <div id="showInformation">
-                    <a href="#" class="awesome button">Information</a>
-                </div>
+                <h2>Profile List</h2>
+                <ol id="profile_list"></ol>
+                <button class="awesome button" id="add">Add new profile</button>
+                <button class="awesome button" id="showImport">Import Profiles</button>
+                <button class="awesome button" id="showExport">Export Profiles</button>
+                <button class="awesome button" id="showSettings">General Options</button>
+                <button class="awesome button" id="showInformation">Information</button>
             </div>
 
             <div id="profile_setting">
@@ -77,7 +67,7 @@
 
                     <div class="row">
                         <label id="labelUseThisText">Use This Text:</label>
-                        <input id="inputUseThisText" class="standard" maxlength="256" size="80" value="" alt="Use this text instead of domain" />
+                        <input id="inputUseThisText" class="standard" maxlength="256" size="80" alt="Use this text instead of domain" />
                         <div class="subrow help_sitelist">
                           <span>If you want to use a fixed url everytime, you can fill it here. E.g. to use the same password on example.com and anotherexample.com, enter example.com here and it always uses example.com for this profile.</span>
                         </div>
@@ -159,15 +149,12 @@
                         <input class="standard" id="passwordSuffix"/>
                     </div>
 
-
-                    <div class="row">
-                        <a id="cloneProfileButton" class="secondColumn" href="#">Clone this profile.</a>
-                    </div>
+                    <div class="row" id="cloneProfileButton">Clone this profile</div>
                 </div>
 
                 <div id="buttons">
-                    <div id="remove"><a href="#" class="awesome button">Remove</a></div>
-                    <div id="save"><a href="#" class="awesome button">Save</a></div>
+                    <button class="awesome button" id="save">Save</button>
+                    <button class="awesome button" id="remove">Remove</button>
                 </div>
             </div>
 
@@ -287,12 +274,8 @@
                                 <input class="standard" type="password" id="syncProfilesPassword" />
                             </div>
                             <div id="sync_buttons">
-                                <div id="set_sync_password" style="visibility:hidden;">
-                                    <a href="#" class="awesome button">Set password</a>
-                                </div>
-                                <div id="clear_sync_data" style="visibility:hidden;">
-                                    <a href="#" class="awesome button">Delete</a>
-                                </div>
+                                <button class="awesome button" id="set_sync_password">Set password</button>
+                                <button class="awesome button" id="clear_sync_data">Delete</button>
                             </div>
                         </div>
                     </div>

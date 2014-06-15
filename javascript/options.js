@@ -318,11 +318,11 @@ $(function() {
     $("#syncProfiles").prop("checked", localStorage["sync_profiles"] === "true");
     updateSyncProfiles();
 
-    $("#add>a").on("click", addProfile);
-    $("#showImport>a").on("click", showImport);
-    $("#showExport>a").on("click", showExport);
-    $("#showSettings>a").on("click", showOptions);
-    $("#showInformation>a").on("click", showInformation);
+    $("#add").on("click", addProfile);
+    $("#showImport").on("click", showImport);
+    $("#showExport").on("click", showExport);
+    $("#showSettings").on("click", showOptions);
+    $("#showInformation").on("click", showInformation);
 
     $("#protocolCB").on("change", updateExample);
     $("#subdomainCB").on("click", updateExample);
@@ -331,8 +331,8 @@ $(function() {
     $("#whereLeetLB").on("change", updateLeet);
 
     $("#cloneProfileButton").on("click", cloneProfile);
-    $("#remove>a").on("click", removeProfile);
-    $("#save>a").on("click", saveProfile);
+    $("#remove").on("click", removeProfile);
+    $("#save").on("click", saveProfile);
     $("#importButton").on("click", importRdf);
     $("#fileInput").on("change", fileImport);
     $("#copyButton").on("click", copyRdfExport);
@@ -343,9 +343,7 @@ $(function() {
     $("#keepMasterPasswordHash").on("change", updateMasterHash);
     $("#syncProfiles").on("change", updateSyncProfiles);
     $("#masterPassword").on("blur", updateMasterHash);
-
     $("#useVerificationCode").on("change", updateUseVerificationCode);
-
     $("#set_sync_password").on("click", setSyncPassword);
     $("#clear_sync_data").on("click", clearSyncData);
 
