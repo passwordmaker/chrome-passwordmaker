@@ -1,4 +1,4 @@
-var currentProfile = null;
+var currentProfile = undefined;
 
 function updateStyle(element, selected, isSelected) {
     if (isSelected) {
@@ -211,7 +211,7 @@ function setSyncPassword() {
     }
 
     var result = Settings.startSyncWith($("#syncProfilesPassword").val());
-    if (result !== null) {
+    if (result) {
         Settings.setSyncProfiles(true);
         localStorage["sync_profiles_password"] = result;
         $("#syncProfilesPassword").val("");
