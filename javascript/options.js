@@ -112,6 +112,9 @@ function importRdf() {
     // Check that profiles have been parsed and are available before wiping current data
     if (rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length && $("#inputImportOverwrite").prop("checked")) {
         Settings.profiles = JSON.parse(JSON.stringify(rdfDoc.profiles));
+        for (var i = 0; i < Settings.profiles.length; i++) {
+            Settings.profiles[i].id = i + 1;
+        }
         count = rdfDoc.profiles.length;
         Settings.saveProfiles();
     } else {
