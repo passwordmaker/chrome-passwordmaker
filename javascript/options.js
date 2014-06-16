@@ -62,7 +62,7 @@ function setCurrentProfile(profile) {
     $("#charset").append("<option>Custom charset</option>");
 
     $("#charset").on("change", function() {
-        if ($("#charset").val() === "Custom charset"){
+        if ($("#charset").val() === "Custom charset") {
             $("#customCharset").val(profile.selectedCharset).show();
         } else {
             $("#customCharset").hide();
@@ -90,18 +90,20 @@ function setCurrentProfile(profile) {
     showSection("#profile_setting");
 }
 
-function showImport(){
+function showImport() {
     showSection("#import_settings");
 }
 
-function showExport(){
+function showExport() {
     showSection("#export_settings");
     $("#exportText").val(RdfImporter.dumpDoc());
 }
 
-function importRdf(){
+function importRdf() {
     var txt = $("#importText").val();
-    if(txt.trim() === ""){
+    var count = 0;
+
+    if (txt.trim().length === 0) {
         alert("Import text is empty");
         return false;
     }
@@ -109,22 +111,22 @@ function importRdf(){
     var rdfDoc = RdfImporter.loadDoc(txt);
     // Check that profiles have been parsed and are available before wiping current data
     if (rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length && $("#inputImportOverwrite").prop("checked")) {
-        // Setting to null triggers creation of default profile, settings to empty array bypasses that code ([] != null)
-        Settings.profiles = [];
-        localStorage["synced_profiles"] = "";
+        Settings.profiles = JSON.parse(JSON.stringify(rdfDoc.profiles));
+        count = rdfDoc.profiles.length;
         Settings.saveProfiles();
+    } else {
+        count = RdfImporter.saveProfiles(rdfDoc.profiles);
     }
 
-    var count = RdfImporter.saveProfiles(rdfDoc.profiles);
-    if(!count){
-      alert("Sorry, no profiles found");
-      return false;
+    if (count === 0) {
+        alert("Sorry, no profiles found");
+        return false;
     }
 
     updateProfileList();
 }
 
-function copyRdfExport(){
+function copyRdfExport() {
     $("#exportText").select();
     document.execCommand("Copy");
 }
@@ -138,13 +140,13 @@ function showInformation() {
 }
 
 function showSection(showId) {
-    if($(showId).is(":hidden")){
+    if ($(showId).is(":hidden")) {
         $("#profile_setting, #import_settings, #export_settings, #general_settings, #general_information").hide();
         $(showId).show();
     }
 }
 
-function highlightProfile(){
+function highlightProfile() {
     $("#profile_id_" + currentProfile.id).toggleClass("highlight");
 }
 
@@ -165,7 +167,7 @@ function saveProfile() {
     currentProfile.passwordPrefix = $("#passwordPrefix").val();
     currentProfile.passwordSuffix = $("#passwordSuffix").val();
 
-    if ($("#charset").val() === "Custom charset"){
+    if ($("#charset").val() === "Custom charset") {
         currentProfile.selectedCharset = $("#customCharset").val();
     } else {
         currentProfile.selectedCharset = $("#charset").val();
@@ -231,48 +233,48 @@ function updateSyncProfiles() {
     $("#sync_profiles_row, #no_sync_password, #sync_data_exists, #sync_password_set").hide();
     $("#set_sync_password, #clear_sync_data").css("visibility", "hidden");
 
-    var should_sync = ($("#syncProfiles").prop("checked") === true);
+    var should_sync = $("#syncProfiles").prop("checked");
     if (should_sync) {
-      if (Settings.syncPasswordOk) {
-          $("#sync_password_set").show();
-          $("#clear_sync_data").css("visibility", "visible");
-      } else if (Settings.syncDataAvailable) {
-          $("#sync_profiles_row, #sync_data_exists").show();
-          $("#set_sync_password, #clear_sync_data").css("visibility", "visible");
-      } else {
-          $("#sync_profiles_row, #no_sync_password").show();
-          $("#set_sync_password").css("visibility", "visible");
-      }
+        if (Settings.syncPasswordOk) {
+            $("#sync_password_set").show();
+            $("#clear_sync_data").css("visibility", "visible");
+        } else if (Settings.syncDataAvailable) {
+            $("#sync_profiles_row, #sync_data_exists").show();
+            $("#set_sync_password, #clear_sync_data").css("visibility", "visible");
+        } else {
+            $("#sync_profiles_row, #no_sync_password").show();
+            $("#set_sync_password").css("visibility", "visible");
+        }
     } else {
-      Settings.stopSync();
-      updateProfileList();
+        Settings.stopSync();
+        updateProfileList();
     }
 }
 
 function updateMasterHash() {
-    var should_keep = ($("#keepMasterPasswordHash").prop("checked") === true);
+    var should_keep = $("#keepMasterPasswordHash").prop("checked");
     Settings.setKeepMasterPasswordHash(should_keep);
-    if ( should_keep ) {
-      var master_pass = $("#masterPassword").val();
-      var new_hash = ChromePasswordMaker_SecureHash.make_hash(master_pass);
-      Settings.setMasterPasswordHash(new_hash);
-      $("#master_password_row").css("visibility", "visible");
+    if (should_keep) {
+        var master_pass = $("#masterPassword").val();
+        var new_hash = ChromePasswordMaker_SecureHash.make_hash(master_pass);
+        Settings.setMasterPasswordHash(new_hash);
+        $("#master_password_row").css("visibility", "visible");
     } else {
-      Settings.setMasterPasswordHash("");
-      $("#master_password_row").css("visibility", "hidden");
+        Settings.setMasterPasswordHash("");
+        $("#master_password_row").css("visibility", "hidden");
     }
 }
 
 function updateHidePassword() {
-    Settings.setHidePassword($("#hidePassword").prop("checked") === true);
+    Settings.setHidePassword($("#hidePassword").prop("checked"));
 }
 
 function updateDisablePasswordSaving() {
-    Settings.setDisablePasswordSaving($("#disablePasswordSaving").prop("checked") === true);
+    Settings.setDisablePasswordSaving($("#disablePasswordSaving").prop("checked"));
 }
 
 function updateUseVerificationCode() {
-    Settings.setUseVerificationCode($("#useVerificationCode").prop("checked") === true);
+    Settings.setUseVerificationCode($("#useVerificationCode").prop("checked"));
 }
 
 function testPasswordLength() {
@@ -295,7 +297,7 @@ function fileImport() {
 }
 
 function fileExport() {
-    var textFileAsBlob = new Blob([$("#exportText").val()], {type:"application/rdf+xml"});
+    var textFileAsBlob = new Blob([$("#exportText").val()], {type: "application/rdf+xml"});
     var downloadLink = document.createElement("a");
     downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
     downloadLink.download = "PasswordMaker Pro Profile Data.rdf";
@@ -310,6 +312,7 @@ $(function() {
     $("#disablePasswordSaving").prop("checked", Settings.shouldDisablePasswordSaving());
     $("#keepMasterPasswordHash").prop("checked", Settings.keepMasterPasswordHash());
     $("#useVerificationCode").prop("checked", Settings.useVerificationCode());
+
     if (Settings.keepMasterPasswordHash()) {
         $("#master_password_row").css("visibility", "visible");
     } else {
