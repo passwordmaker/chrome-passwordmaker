@@ -20,18 +20,18 @@ function strToBool(v) {
 }
 
 // rename 'store-on-disk' -> 'disk' or vice versa
-function renameStoreLocation(key){
+function renameStoreLocation(key) {
     return renameImportMap(key, RdfImporter.storeLocations);
 }
 
 // rename 'md5-v0.6' -> 'md5_v6' or vice versa
-function renameHashAlgorithm(key){
+function renameHashAlgorithm(key) {
     return renameImportMap(key, RdfImporter.hashAlgorithms);
 }
 
 function renameImportMap(key, list) {
     var map = {};
-    for(var i=0;i<list.length;i++){
+    for (var i = 0; i < list.length; i++) {
         map[list[i][0]] = list[i][1];
         map[list[i][1]] = list[i][0];
     }
@@ -75,21 +75,23 @@ var RdfImporter = {
     ],
 
     // use FF as key for lookup
-    getImportOpts: function () {
+    getImportOpts: function() {
         var rv = {};
-        for(var i=0;i<this.attrs.length;i++){
-             rv[this.attrs[i][1].toLowerCase()] = {name: this.attrs[i][2], convert: this.attrs[i][3]};
+        for (var i = 0; i < this.attrs.length; i++) {
+            rv[this.attrs[i][1].toLowerCase()] = {name: this.attrs[i][2],convert: this.attrs[i][3]};
         }
         return rv;
     },
 
     // use option group as key for separate lists
-    getExportOpts: function () {
+    getExportOpts: function() {
         var rv = {};
-        for(var i=0;i<this.attrs.length;i++){
+        for (var i = 0; i < this.attrs.length; i++) {
             var k = this.attrs[i][0];
-            if(!rv[k]) rv[k] = [];
-            rv[k].push({to: this.attrs[i][1], from: this.attrs[i][2], convert: this.attrs[i][4]});
+            if (!rv[k]) {
+                rv[k] = [];
+            }
+            rv[k].push({to: this.attrs[i][1],from: this.attrs[i][2],convert: this.attrs[i][4]});
         }
         return rv;
     }
@@ -102,15 +104,15 @@ RdfImporter.loadDoc = function(rdf) {
 
     // check over every Description, but will ignore groups and anything without
     // settings/profile attributes
-    $(rdf).find('RDF\\:Description').each(function(){
+    $(rdf).find('RDF\\:Description').each(function() {
         var prof = {},
             attrMap = RdfImporter.getImportOpts();
-        for(var i=0;i<this.attributes.length;i++){
+        for (var i = 0; i < this.attributes.length; i++) {
             // remove namespace
-            var attrName = this.attributes[i].name.replace(/.*:/g,''),
+            var attrName = this.attributes[i].name.replace(/.*:/g, ''),
                 opts = attrMap[attrName],
                 val = this.attributes[i].value;
-            if(opts){
+            if (opts) {
                 prof[opts.name] = opts.convert ? opts.convert(val) : val;
             }
         }
@@ -120,10 +122,10 @@ RdfImporter.loadDoc = function(rdf) {
             patternType = [],
             patternEnabled = [],
             siteList = '';
-        for(var i=0;i<this.attributes.length;i++){
-            var attrName = this.attributes[i].name.replace(/.*:/g,'');
+        for (var i = 0; i < this.attributes.length; i++) {
+            var attrName = this.attributes[i].name.replace(/.*:/g, '');
             var m = attrName.match(/pattern(|type|enabled)(\d+)/);
-            if(m){
+            if (m) {
                 if (m[1] == '') {
                     patterns[m[2]] = this.attributes[i].value;
                 } else if (m[1] == 'type') {
@@ -133,23 +135,23 @@ RdfImporter.loadDoc = function(rdf) {
                 }
             }
         }
-        for(var i=0;i<patterns.length;i++){
-            if(patternEnabled[i] == 'true'){
-                if(patternType[i]=='regex'){
-                    siteList += '/'+patterns[i]+'/ ';
-                }else{
-                    siteList += patterns[i]+' ';
+        for (var i = 0; i < patterns.length; i++) {
+            if (patternEnabled[i] == 'true') {
+                if (patternType[i] == 'regex') {
+                    siteList += '/' + patterns[i] + '/ ';
+                } else {
+                    siteList += patterns[i] + ' ';
                 }
             }
         }
         prof['siteList'] = siteList;
 
-        if(prof.rdf_about == 'http://passwordmaker.mozdev.org/globalSettings'){
+        if (prof.rdf_about == 'http://passwordmaker.mozdev.org/globalSettings') {
             settings = prof;
-        }else if(prof.selectedCharset){
-            if(prof.rdf_about == 'http://passwordmaker.mozdev.org/defaults'){
+        } else if (prof.selectedCharset) {
+            if (prof.rdf_about == 'http://passwordmaker.mozdev.org/defaults') {
                 defaultProfile = prof;
-            }else{
+            } else {
                 profiles.push(prof);
             }
         }
@@ -159,22 +161,24 @@ RdfImporter.loadDoc = function(rdf) {
     var fromChrome = rdf.indexOf('http://passwordmaker.mozdev.org/remotes') == -1;
 
     // chrome -> chrome doesn't need "default" profile. would create duplicate.
-    if(!fromChrome){
+    if (!fromChrome) {
         profiles.unshift(defaultProfile);
         // FF version uses a "default" profile that has attributes we need for each
         // profile (such as url_{protocol,subdomain,domain,path})
-        for(var i=0;i<profiles.length;i++){
+        for (var i = 0; i < profiles.length; i++) {
             profiles[i] = jQuery.extend(new Profile(), defaultProfile, profiles[i]);
         }
     }
 
-    return {settings: settings, profiles: profiles};
+    return {settings: settings,profiles: profiles};
 }
 
 // returns number of profiles imported
 RdfImporter.saveProfiles = function(profiles) {
-    if(!profiles || !profiles.length) return 0;
-    for(var i=0;i<profiles.length;i++){
+    if (!profiles || !profiles.length) {
+        return 0;
+    }
+    for (var i = 0; i < profiles.length; i++) {
         Settings.addProfile(profiles[i]);
     }
     Settings.saveProfiles();
@@ -187,10 +191,10 @@ RdfImporter.saveSettings = function(settings) {
 }
 
 RdfImporter.dumpDoc = function() {
-    var rv = "<?xml version=\"1.0\"?>"+
-             "<RDF:RDF xmlns:NS1=\"http://passwordmaker.mozdev.org/rdf#\"\n"+
-             "        xmlns:NC=\"http://home.netscape.com/NC-rdf#\"\n"+
-             "        xmlns:RDF=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n";
+    var rv = "<?xml version=\"1.0\"?>\n" + 
+             "<RDF:RDF xmlns:NS1=\"http://passwordmaker.mozdev.org/rdf#\"\n" + 
+             "         xmlns:NC=\"http://home.netscape.com/NC-rdf#\"\n" + 
+             "         xmlns:RDF=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n";
     rv += dumpedProfilesToRdf(dumpedProfiles());
     rv +=    "</RDF:RDF>\n";
     return rv;
@@ -202,35 +206,33 @@ function dumpedProfiles() {
         dumpProfiles = [],
         expOpts = RdfImporter.getExportOpts();
 
-    for(var i=0;i<profiles.length;i++){
+    for (var i = 0; i < profiles.length; i++) {
         var prof = profiles[i],
             newProf = {},
             attrMap = expOpts['profile'].concat(expOpts['default']);
 
         // regular attributes
-        for(var j=0;j<attrMap.length;j++){
+        for (var j = 0; j < attrMap.length; j++) {
             var opts = attrMap[j],
                 val = prof[opts.from];
             newProf[opts.to] = opts.convert ? opts.convert(val) : val;
         }
 
         // patterns
-        if(prof.siteList){
+        if (prof.siteList) {
             var pats = jQuery.trim(prof.siteList).split(' ');
-            for(var j=0;j<pats.length;j++){
-                var pat = pats[j],
-                    ptype = (pat[0] == '/' && pat[pat.length-1] == '/') ? 'regex' : 'wildcard';
+            for (var j = 0; j < pats.length; j++) {
+                var pat = pats[j], 
+                    ptype = (pat[0] == '/' && pat[pat.length - 1] == '/') ? 'regex' : 'wildcard';
 
-                newProf['pattern' + j] = ptype == 'regex' ? pat.substring(1, pat.length-1) : pat;
+                newProf['pattern' + j] = ptype == 'regex' ? pat.substring(1, pat.length - 1) : pat;
                 newProf['patternenabled' + j] = 'true';
                 newProf['patterndesc' + j] = '';
                 newProf['patterntype' + j] = ptype;
             }
         }
-
         dumpProfiles.push(newProf);
     }
-
     return dumpProfiles;
 }
 
@@ -239,19 +241,17 @@ function dumpedProfilesToRdf(profiles) {
         abouts = [];
     // use first as defaults profile, necessary for FF
     profiles.unshift(jQuery.extend({}, profiles[0], {name: 'Defaults'}));
-    for(var i=0;i<profiles.length;i++) {
+    for (var i = 0; i < profiles.length; i++) {
         var about = (i == 0) ? "http://passwordmaker.mozdev.org/defaults" : 'rdf:#$CHROME' + i;
         abouts.push(about);
-
         rv += "<RDF:Description RDF:about=\"" + attrEscape(about) + "\"\n";
-        for(var key in profiles[i]) {
+        for (var key in profiles[i]) {
             rv += " NS1:" + key + "=\"" + attrEscape(profiles[i][key]) + "\"\n ";
         }
         rv += " />\n";
     }
-
     rv += "<RDF:Seq RDF:about=\"http://passwordmaker.mozdev.org/accounts\">\n";
-    for(var i=0;i<abouts.length;i++){
+    for (var i = 0; i < abouts.length; i++) {
         rv += "<RDF:li RDF:resource=\"" + attrEscape(abouts[i]) + "\"/>\n";
     }
     rv += "</RDF:Seq>\n";
@@ -259,6 +259,6 @@ function dumpedProfilesToRdf(profiles) {
     return rv;
 }
 
-function attrEscape(txt){
+function attrEscape(txt) {
     return $(document.createElement("div")).text(txt).html().replace(/"/g, "&quot;");
 }
