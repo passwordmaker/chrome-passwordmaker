@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    overflow-y: scroll;
 }
 
 #content {
@@ -27,12 +28,13 @@ body {
     border-right: 1px solid #aaa;
     float: left;
     padding: 40px;
+    width: 150px;
 }
 
-#list ul {
+#list ol {
     font-size: large;
     line-height: 1.6;
-    list-style-type: decimal;
+    overflow: auto;
 }
 
 .profile {
@@ -41,8 +43,8 @@ body {
     text-decoration: underline;
 }
 
-#list .button {
-    width: 140px;
+#list button {
+    width: 150px;
 }
 
 h2 {
@@ -130,8 +132,11 @@ h2 {
     margin-bottom: 5px;
 }
 
-.secondColumn {
+#cloneProfileButton {
+    color: blue;
+    cursor: pointer;
     margin-left: 165px;
+    text-decoration: underline;
 }
 
 label {
