@@ -1,4 +1,4 @@
-var currentProfile = null;
+var currentProfile = undefined;
 
 function updateStyle(element, selected, isSelected) {
     if (isSelected) {
@@ -112,6 +112,9 @@ function importRdf() {
     // Check that profiles have been parsed and are available before wiping current data
     if (rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length && $("#inputImportOverwrite").prop("checked")) {
         Settings.profiles = JSON.parse(JSON.stringify(rdfDoc.profiles));
+        for (var i = 0; i < Settings.profiles.length; i++) {
+            Settings.profiles[i].id = i + 1;
+        }
         count = rdfDoc.profiles.length;
         Settings.saveProfiles();
     } else {
@@ -208,7 +211,7 @@ function setSyncPassword() {
     }
 
     var result = Settings.startSyncWith($("#syncProfilesPassword").val());
-    if (result !== null) {
+    if (result) {
         Settings.setSyncProfiles(true);
         localStorage["sync_profiles_password"] = result;
         $("#syncProfilesPassword").val("");

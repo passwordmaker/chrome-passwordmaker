@@ -175,7 +175,7 @@ Settings.loadProfiles = function() {
     Settings.syncDataAvailable = true;
 
     var profiles = Settings.decrypt(localStorage["synced_profiles"], localStorage["sync_profiles_password"]);
-    if (profiles !== null) {
+    if (profiles) {
         Settings.syncPasswordOk = true;
         if (Settings.shouldSyncProfiles()) {
             Settings.loadProfilesFromString(profiles.value);
@@ -351,7 +351,7 @@ Settings.startSyncWith = function(password) {
     var syncHash = ChromePasswordMaker_SecureHash.make_hash(password);
     if (Settings.syncDataAvailable) {
         var profiles = Settings.decrypt(localStorage["synced_profiles"], syncHash);
-        if (profiles !== null) {
+        if (profiles) {
             Settings.syncPasswordOk = true;
             Settings.loadProfilesFromString(profiles.value);
             return syncHash;
@@ -363,7 +363,7 @@ Settings.startSyncWith = function(password) {
         Settings.syncPasswordOk = true;
         return syncHash;
     }
-    return null;
+    return false;
 };
 
 Settings.encrypt = function(data, password) {
@@ -378,6 +378,6 @@ Settings.decrypt = function(data, password) {
         var decrypted = sjcl.decrypt(password, data, {}, params);
         return {value: decrypted, key: params.key};
     } catch (e) {
-        return null;
+        return false;
     }
 };
