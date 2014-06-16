@@ -315,7 +315,7 @@ $(function() {
         $("#master_password_row").css("visibility", "hidden");
     }
 
-    $("#syncProfiles").prop("checked", localStorage["sync_profiles"] === "true");
+    $("#syncProfiles").prop("checked", Settings.shouldSyncProfiles());
     updateSyncProfiles();
 
     $("#add").on("click", addProfile);

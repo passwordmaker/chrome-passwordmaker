@@ -133,20 +133,23 @@ function init(url) {
 function fillPassword() {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {password: $("#generated").val()});
-        window.close()
+        window.close();
     });
 }
 
 function copyPassword() {
-    $("#activatePassword").hide();
-    $("#generated").show().select();
-    document.execCommand("Copy");
-    window.close();
+    chrome.tabs.query({windowType: "popup"}, function(tabs) {
+        $("#activatePassword").hide();
+        $("#generated").show().select();
+        document.execCommand("copy");
+        window.close();
+    });
 }
 
 function openOptions() {
-    chrome.tabs.create({url: "html/options.html"});
-    window.close();
+    chrome.tabs.create({url: "html/options.html"}, function() {
+        window.close();
+    });
 }
 
 function showPasswordField() {
