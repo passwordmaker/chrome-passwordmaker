@@ -6,8 +6,8 @@ function updateSyncedProfiles(data) {
         data.synced_profiles = "";
     } else if (typeof (data.synced_profiles) !== "string") {
         var profiles = "";
-        for (var i = 0; i < data.synced_profiles.length; i++) {
-            profiles = profiles + data[data.synced_profiles[i]];
+        for (var i in data.synced_profiles) {
+            profiles += data[data.synced_profiles[i]];
         }
         localStorage["synced_profiles_keys"] = data.synced_profiles.join();
         data.synced_profiles = profiles;
@@ -27,7 +27,7 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
     }
     if (changes.synced_profiles !== undefined) {
         var flattened = {};
-        for (var i = 0; i < changes.length; i++) {
+        for (var i in changes) {
             flattened[i] = changes[i].newValue;
         }
         updateSyncedProfiles(flattened);
