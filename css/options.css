@@ -11,7 +11,7 @@ body {
 }
 
 #content {
-    font-family: sans-serif;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     margin: 0 auto;
     width: 910px;
 }
@@ -22,11 +22,11 @@ body {
 }
 
 #header h1 {
-    font-family: Georgia, serif;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-style: italic;
     margin: 0 auto;
     padding: 15px 0 15px 0;
-    width: 55%;
+    width: 50%;
 }
 
 #list {
@@ -38,14 +38,15 @@ body {
 }
 
 #list ol {
-    font-size: large;
-    line-height: 1.6;
+    font-size: 1.1em;
+    line-height: 1.5;
     overflow: auto;
 }
 
 .link {
-    color: blue;
+    color: #551a8b;
     cursor: pointer;
+    font-size: 1.1em;
     text-decoration: underline;
 }
 
@@ -54,13 +55,17 @@ body {
     white-space: nowrap;
 }
 
+button {
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif !important;
+}
+
 h2 {
-    font-family: Georgia, serif;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     margin: 0;
 }
 
 #profileNameTB {
-    font-family: Georgia, serif;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-size: 2em;
 }
 
@@ -93,7 +98,6 @@ h2 {
     color: #808080;
     font-size: .8em;
     margin: 0 0 10px 165px;
-    width: 300px;
 }
 
 #profile_settings {
@@ -114,11 +118,11 @@ h2 {
 
 .info_text {
     font-size: .9em;
-    margin: 20px 0 20px 20px;
+    margin: 20px;
 }
 
 #fileInput, #importOverwrite {
-    margin: 20px 0 0 5px;
+    margin-left: 5px;
 }
 
 .row {
@@ -126,14 +130,15 @@ h2 {
 }
 
 #cloneProfileButton {
-    color: blue;
+    color: #551a8b;
     cursor: pointer;
+    font-size: 1.1em;
     margin-left: 165px;
     text-decoration: underline;
 }
 
 label {
-    margin-top: .2em;
+    margin-top: 3px;
     position: absolute;
     text-align: right;
     width: 150px;
@@ -159,8 +164,8 @@ input[type="checkbox"] {
     background-color: #000;
     border-radius: 7px;
     color: #fff;
-    font-family: Georgia, serif;
-    font-size: 12px;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    font-size: .75em;
     font-style: italic;
     margin: 0 0 10px 165px;
     padding: 10px 0 10px 0;
@@ -172,7 +177,7 @@ input[type="checkbox"] {
     background-color: #eee;
     border-top: 1px solid #aaa;
     bottom: 0;
-    font-family: Georgia, serif;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-size: .8em;
     font-style: italic;
     left: 0;
@@ -205,17 +210,16 @@ input[type="checkbox"] {
 
 textarea {
     height: 200px;
+    margin-top: 20px;
     width: 100%;
 }
 
 #save, #set_sync_password {
     float: left;
-    margin-top: 15px;
 }
 
 #clear_sync_data, #export_buttons, #importButton, #remove {
     float: right;
-    margin-top: 15px;
 }
 
 select, input {
