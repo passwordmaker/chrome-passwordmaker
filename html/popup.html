@@ -2,14 +2,15 @@
 <html>
     <head>
         <title>PasswordMaker Pro</title>
-        <link rel="stylesheet" type="text/css" href="../css/awesome-buttons.css">
-        <link rel="stylesheet" type="text/css" href="../css/popup.css">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../css/awesome-buttons.css">
+        <link rel="stylesheet" href="../css/popup.css">
     </head>
     <body>
         <table>
             <thead>
                 <tr>
-                    <th colspan="2" id="header"><img src="../images/passwdmaker48.png" width="20" height="20"><span id="title">PasswordMaker Pro</span></th>
+                    <th colspan="2" id="header"><img src="../images/passwdmaker48.png" alt="PasswordMaker Pro" width="20" height="20"><span id="title">PasswordMaker Pro</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -22,13 +23,13 @@
                     <td><input class="input" id="confirmation" type="password"></td>
                 </tr>
                 <tr id="verification_row">
-                    <td><label for="verification">Verification Code:</label></td>
+                    <td><label>Verification Code:</label></td>
                     <td><input class="input" id="verificationCode" readonly></td>
                 </tr>
                 <tr id="store_location_row">
-                    <td><label>Save Password:</label></td>
+                    <td><label for="store_location">Save Password:</label></td>
                     <td>
-                        <select id="store_location" name="store_location">
+                        <select id="store_location">
                             <option value="memory">In memory</option>
                             <option value="disk">On disk</option>
                             <option value="never">Never store</option>
@@ -36,8 +37,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><label>Use Profile:</label></td>
-                    <td><select id="profile" name="profile"></select></td>
+                    <td><label for="profile">Use Profile:</label></td>
+                    <td><select id="profile"></select></td>
                 </tr>
                 <tr>
                     <td><label for="usedtext">Used text:</label></td>
