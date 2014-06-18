@@ -87,7 +87,7 @@ function setCurrentProfile(profile) {
         $("#remove").show();
     }
 
-    showSection("#profile_setting");
+    showSection("#profile_settings");
 }
 
 function showImport() {
@@ -110,7 +110,7 @@ function importRdf() {
 
     var rdfDoc = RdfImporter.loadDoc(txt);
     // Check that profiles have been parsed and are available before wiping current data
-    if (rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length && $("#inputImportOverwrite").prop("checked")) {
+    if (rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length && $("#importOverwrite").prop("checked")) {
         Settings.profiles = JSON.parse(JSON.stringify(rdfDoc.profiles));
         for (var i = 0; i < Settings.profiles.length; i++) {
             Settings.profiles[i].id = i + 1;
@@ -144,7 +144,7 @@ function showInformation() {
 
 function showSection(showId) {
     if ($(showId).is(":hidden")) {
-        $("#profile_setting, #import_settings, #export_settings, #general_settings, #general_information").hide();
+        $("#profile_settings, #import_settings, #export_settings, #general_settings, #general_information").hide();
         $(showId).show();
     }
 }
@@ -198,7 +198,7 @@ function updateProfileList() {
     var profiles = Settings.getProfiles();
     var list = [];
     for (var i = 0; i < profiles.length; i++) {
-        var entry = $("<li id='profile_id_" + profiles[i].id + "'><a class='profile'>" + profiles[i].title + "</a></li>");
+        var entry = $("<li id='profile_id_" + profiles[i].id + "'><a class='link'>" + profiles[i].title + "</a></li>");
         entry.find("a").on("click", {id: profiles[i].id}, editProfile);
         list.push(entry);
     }
