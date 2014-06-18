@@ -3,10 +3,16 @@ body {
     overflow-y: scroll;
 }
 
+#banner {
+    border: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
 #content {
     font-family: sans-serif;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
     width: 910px;
 }
 
@@ -19,16 +25,16 @@ body {
     font-family: Georgia, serif;
     font-style: italic;
     margin: 0 auto;
-    padding-bottom: 15px;
-    padding-top: 15px;
-    width: 750px;
+    padding: 15px 0 15px 0;
+    width: 55%;
 }
 
 #list {
     border-right: 1px solid #aaa;
     float: left;
+    margin-bottom: 50px;
     padding: 40px;
-    width: 150px;
+    width: 155px;
 }
 
 #list ol {
@@ -37,19 +43,20 @@ body {
     overflow: auto;
 }
 
-.profile {
+.link {
     color: blue;
     cursor: pointer;
     text-decoration: underline;
 }
 
 #list button {
-    width: 150px;
+    width: 155px;
+    white-space: nowrap;
 }
 
 h2 {
     font-family: Georgia, serif;
-    margin-top: 0;
+    margin: 0;
 }
 
 #profileNameTB {
@@ -62,25 +69,36 @@ h2 {
 }
 
 @-webkit-keyframes highlight1 {
-    0% { background: white; }
-    50% { background: yellow; }
-    100% { background: white; }
+    0% {
+        background: white;
+    }
+    50% {
+        background: yellow;
+    }
+    100% {
+        background: white;
+    }
 }
 
 .subrow {
     padding-top: 3px;
 }
 
-.help_sitelist {
-    color: #9f9f9f;
-    font-size: 13px;
-    margin-bottom: 10px;
-    margin-left: 165px;
+.section_info {
+    font-style: italic;
+    margin: 15px 0 15px 0;
 }
 
-#profile_setting {
+.extra_info {
+    color: #808080;
+    font-size: .8em;
+    margin: 0 0 10px 165px;
+    width: 300px;
+}
+
+#profile_settings {
     float: left;
-    height: 780px;
+    margin-bottom: 60px;
     padding: 40px;
     width: 520px;
 }
@@ -89,43 +107,18 @@ h2 {
     padding-left: 2px;
 }
 
-#buttons {
-    margin-left: 165px;
-    margin-top: 20px;
+#profile_buttons, #sync_buttons {
+    margin: 20px 0 0 165px;
     width: 300px;
 }
 
-#sync_buttons {
-    margin-left: 135px;
-    margin-top: 20px;
-    width: 300px;
-}
-
-.message {
+.info_text {
     font-size: .9em;
-    padding: 20px 0 20px 0;
+    margin: 20px 0 20px 20px;
 }
 
-.indented_text {
-    font-size: .9em;
-    margin-left: 24px;
-    padding-bottom: 10px;
-    width: 411px;
-}
-
-.section_header {
-    clear: both;
-    height: 30px;
-    width: 500px;
-}
-
-#divImportOverride {
-    text-align: left;
-    width: 505px;
-}
-
-#inputImportOverwrite {
-    margin-left: 5px;
+#fileInput, #importOverwrite {
+    margin: 20px 0 0 5px;
 }
 
 .row {
@@ -146,11 +139,11 @@ label {
     width: 150px;
 }
 
-label.disabled {
+.disabled {
     color: #aaa;
 }
 
-label.checkbox {
+.checkbox {
     position: relative;
 }
 
@@ -158,8 +151,8 @@ input[type="checkbox"] {
     width: 20px;
 }
 
-.url_example span.selected {
-    color: #FFDB13;
+.selected {
+    color: #ffdb13;
 }
 
 .url_example {
@@ -169,10 +162,8 @@ input[type="checkbox"] {
     font-family: Georgia, serif;
     font-size: 12px;
     font-style: italic;
-    margin-bottom: 10px;
-    margin-left: 165px;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    margin: 0 0 10px 165px;
+    padding: 10px 0 10px 0;
     text-align: center;
     width: 300px;
 }
@@ -188,6 +179,7 @@ input[type="checkbox"] {
     padding: 10px;
     position: fixed;
     text-align: center;
+    white-space: nowrap;
     width: 100%;
 }
 
@@ -206,31 +198,24 @@ input[type="checkbox"] {
 #general_settings, #general_information, #import_settings, #export_settings {
     display: none;
     float: left;
+    margin-bottom: 60px;
     padding: 40px;
     width: 580px;
-    height: 600px;
 }
 
-#importText, #exportText {
+textarea {
     height: 200px;
-    width: 500px;
-}
-
-#fileInput {
-    margin-left: 0;
-}
-
-#remove, #clear_sync_data {
-    float: right;
+    width: 100%;
 }
 
 #save, #set_sync_password {
     float: left;
+    margin-top: 15px;
 }
 
-#import_buttons, #export_buttons {
-    text-align: right;
-    width: 505px;
+#clear_sync_data, #export_buttons, #importButton, #remove {
+    float: right;
+    margin-top: 15px;
 }
 
 select, input {
