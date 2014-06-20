@@ -250,7 +250,7 @@ Settings.setPassword = function(password) {
     } else if (Settings.storeLocation === "disk") {
         Settings.password = sjcl.encrypt(key, password);
         localStorage["password_crypt"] = sjcl.encrypt(key, password, { ks: 256, ts: 128 });
-        chrome.extension.getBackgroundPage().password = Settings.password
+        chrome.extension.getBackgroundPage().password = Settings.password;
     } else {
         Settings.password = "";
         chrome.extension.getBackgroundPage().password = "";

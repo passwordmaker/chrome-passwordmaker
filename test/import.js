@@ -5,7 +5,7 @@ QUnit.testStart = function () {
     localStorage.clear();
     Settings.profiles = [];
     rdf_doc1 = RdfImporter.loadDoc($('#rdf1').val());
-}
+};
 
 test("parse global settings", function () {
     var s = rdf_doc1.settings;
@@ -137,4 +137,3 @@ test("dump defaults profile to rdf", function () {
     deepEqual(p.l33tLevel, 1);
     deepEqual(p.siteList, '');
 });
-

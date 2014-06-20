@@ -1,4 +1,4 @@
-var currentProfile = undefined;
+var currentProfile = "";
 
 function updateStyle(element, selected, isSelected) {
     if (isSelected) {
@@ -291,11 +291,11 @@ function fileImport() {
     if (file.type.match(/rdf|xml|text/)) {
         var reader = new FileReader();
         reader.onload = function() {
-            $("#importText").val(reader.result)
-        }
+            $("#importText").val(reader.result);
+        };
         reader.readAsBinaryString(file);
     } else {
-        $("#importText").val("Please select a supported filetype!")
+        $("#importText").val("Please select a supported filetype!");
     }
 }
 

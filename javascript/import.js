@@ -95,7 +95,7 @@ var RdfImporter = {
         }
         return rv;
     }
-}
+};
 
 RdfImporter.loadDoc = function(rdf) {
     var profiles = [],
@@ -126,7 +126,7 @@ RdfImporter.loadDoc = function(rdf) {
             var attrName = this.attributes[i].name.replace(/.*:/g, '');
             var m = attrName.match(/pattern(|type|enabled)(\d+)/);
             if (m) {
-                if (m[1] == '') {
+                if (m[1] === '') {
                     patterns[m[2]] = this.attributes[i].value;
                 } else if (m[1] == 'type') {
                     patternType[m[2]] = this.attributes[i].value;
@@ -242,7 +242,7 @@ function dumpedProfilesToRdf(profiles) {
     // use first as defaults profile, necessary for FF
     profiles.unshift(jQuery.extend({}, profiles[0], {name: 'Defaults'}));
     for (var i = 0; i < profiles.length; i++) {
-        var about = (i == 0) ? "http://passwordmaker.mozdev.org/defaults" : 'rdf:#$CHROME' + i;
+        var about = (i === 0) ? "http://passwordmaker.mozdev.org/defaults" : 'rdf:#$CHROME' + i;
         abouts.push(about);
         rv += "<RDF:Description RDF:about=\"" + attrEscape(about) + "\"\n";
         for (var key in profiles[i]) {
