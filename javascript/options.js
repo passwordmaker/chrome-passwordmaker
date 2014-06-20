@@ -81,7 +81,7 @@ function setCurrentProfile(profile) {
     updateLeet();
     highlightProfile();
     // Keeps profile #1 around so it can only be re-named
-    if (Settings.getProfiles().length <= 1) {
+    if (Settings.getProfiles()[0].id === profile.id) {
         $("#remove").hide();
     } else {
         $("#remove").show();
@@ -131,7 +131,7 @@ function importRdf() {
 
 function copyRdfExport() {
     $("#exportText").select();
-    document.execCommand("Copy");
+    document.execCommand("copy");
 }
 
 function showOptions() {
@@ -150,7 +150,8 @@ function showSection(showId) {
 }
 
 function highlightProfile() {
-    $("#profile_id_" + currentProfile.id).toggleClass("highlight");
+    $(".highlight").removeClass("highlight");
+    $("#profile_" + currentProfile.id).addClass("highlight");
 }
 
 function saveProfile() {
@@ -183,7 +184,7 @@ function saveProfile() {
 }
 
 function cloneProfile() {
-    var p = jQuery.extend({}, currentProfile);
+    var p = JSON.parse(JSON.stringify(currentProfile));
     p.title = p.title + " Copy";
     Settings.addProfile(p);
     updateProfileList();
@@ -191,18 +192,15 @@ function cloneProfile() {
 }
 
 function editProfile(event) {
-    setCurrentProfile(Settings.getProfile(event.data.id));
+    setCurrentProfile(Settings.getProfile(event.target.id.slice(8)));
 }
 
 function updateProfileList() {
     var profiles = Settings.getProfiles();
-    var list = [];
+    $("#profile_list").empty();
     for (var i = 0; i < profiles.length; i++) {
-        var entry = $("<li id='profile_id_" + profiles[i].id + "'><a class='link'>" + profiles[i].title + "</a></li>");
-        entry.find("a").on("click", {id: profiles[i].id}, editProfile);
-        list.push(entry);
+        $("#profile_list").append("<li><span id='profile_" + profiles[i].id + "' class='link'>" + profiles[i].title + "</span></li>")
     }
-    $("#profile_list").html(list);
 }
 
 function setSyncPassword() {
@@ -256,15 +254,22 @@ function updateSyncProfiles() {
 
 function updateMasterHash() {
     var should_keep = $("#keepMasterPasswordHash").prop("checked");
-    Settings.setKeepMasterPasswordHash(should_keep);
     if (should_keep) {
-        var master_pass = $("#masterPassword").val();
-        var new_hash = ChromePasswordMaker_SecureHash.make_hash(master_pass);
-        Settings.setMasterPasswordHash(new_hash);
         $("#master_password_row").css("visibility", "visible");
+        var master_pass = $("#masterPassword").val();
+        if (master_pass.length > 0) {
+            var new_hash = ChromePasswordMaker_SecureHash.make_hash(master_pass);
+            Settings.setKeepMasterPasswordHash(should_keep);
+            Settings.setMasterPasswordHash(new_hash);
+        } else {
+            Settings.setKeepMasterPasswordHash(false);
+            Settings.setMasterPasswordHash("");
+        }
     } else {
-        Settings.setMasterPasswordHash("");
         $("#master_password_row").css("visibility", "hidden");
+        $("#masterPassword").val("")
+        Settings.setKeepMasterPasswordHash(should_keep);
+        Settings.setMasterPasswordHash("");
     }
 }
 
@@ -283,7 +288,6 @@ function updateUseVerificationCode() {
 function testPasswordLength() {
     if (this.value < 8) this.value = 8;
     if (this.value > 512) this.value = 512;
-    this.value = parseInt(this.value);
 }
 
 function fileImport() {
@@ -325,6 +329,7 @@ $(function() {
     $("#syncProfiles").prop("checked", Settings.shouldSyncProfiles());
     updateSyncProfiles();
 
+    $("#profile_list").on("click", ".link", editProfile);
     $("#add").on("click", addProfile);
     $("#showImport").on("click", showImport);
     $("#showExport").on("click", showExport);
@@ -349,7 +354,7 @@ $(function() {
     $("#disablePasswordSaving").on("change", updateDisablePasswordSaving);
     $("#keepMasterPasswordHash").on("change", updateMasterHash);
     $("#syncProfiles").on("change", updateSyncProfiles);
-    $("#masterPassword").on("blur", updateMasterHash);
+    $("#masterPassword").on("keyup", updateMasterHash);
     $("#useVerificationCode").on("change", updateUseVerificationCode);
     $("#set_sync_password").on("click", setSyncPassword);
     $("#clear_sync_data").on("click", clearSyncData);
