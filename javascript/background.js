@@ -6,9 +6,9 @@ function updateSyncedProfiles(data) {
         data.synced_profiles = "";
     } else if (typeof (data.synced_profiles) !== "string") {
         var profiles = "";
-        for (var i in data.synced_profiles) {
-            profiles += data[data.synced_profiles[i]];
-        }
+        data.synced_profiles.forEach(function(key) {
+            profiles += data[key];
+        });
         localStorage["synced_profiles_keys"] = data.synced_profiles.join();
         data.synced_profiles = profiles;
     }
@@ -27,9 +27,9 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
     }
     if (changes.synced_profiles !== undefined) {
         var flattened = {};
-        for (var i in changes) {
-            flattened[i] = changes[i].newValue;
-        }
+        Object.keys(changes).forEach(function(key) {
+            flattened[key] = changes[key].newValue;
+        });
         updateSyncedProfiles(flattened);
     }
 });

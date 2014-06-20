@@ -1,5 +1,3 @@
-var currentProfile = undefined;
-
 function updateStyle(element, selected, isSelected) {
     if (isSelected) {
         element.addClass(selected);
@@ -30,15 +28,14 @@ function addProfile() {
 
 function removeProfile() {
     if (confirm("Really delete this profile?")) {
-        Settings.deleteProfile(currentProfile);
-        currentProfile = Settings.getProfiles()[0];
+        Settings.deleteProfile(Settings.currentProfile);
         updateProfileList();
-        setCurrentProfile(currentProfile);
+        setCurrentProfile(Settings.getProfiles()[0]);
     }
 }
 
 function setCurrentProfile(profile) {
-    currentProfile = profile;
+    Settings.currentProfile = profile.id;
     $("#profileNameTB").val(profile.title);
     $("#siteList").val(profile.siteList);
     $("#protocolCB").prop("checked", profile.url_protocol);
@@ -81,7 +78,7 @@ function setCurrentProfile(profile) {
     updateLeet();
     highlightProfile();
     // Keeps profile #1 around so it can only be re-named
-    if (Settings.getProfiles().length <= 1) {
+    if (Settings.getProfiles()[0].id === profile.id) {
         $("#remove").hide();
     } else {
         $("#remove").show();
@@ -112,11 +109,8 @@ function importRdf() {
     // Check that profiles have been parsed and are available before wiping current data
     if (rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length && $("#importOverwrite").prop("checked")) {
         Settings.profiles = JSON.parse(JSON.stringify(rdfDoc.profiles));
-        for (var i = 0; i < Settings.profiles.length; i++) {
-            Settings.profiles[i].id = i + 1;
-        }
-        count = rdfDoc.profiles.length;
         Settings.saveProfiles();
+        count = rdfDoc.profiles.length;
     } else {
         count = RdfImporter.saveProfiles(rdfDoc.profiles);
     }
@@ -131,7 +125,7 @@ function importRdf() {
 
 function copyRdfExport() {
     $("#exportText").select();
-    document.execCommand("Copy");
+    document.execCommand("copy");
 }
 
 function showOptions() {
@@ -150,40 +144,42 @@ function showSection(showId) {
 }
 
 function highlightProfile() {
-    $("#profile_id_" + currentProfile.id).toggleClass("highlight");
+    $(".highlight").removeClass("highlight");
+    $("#profile_" + Settings.currentProfile).addClass("highlight");
 }
 
 function saveProfile() {
-    currentProfile.title          = $("#profileNameTB").val().trim();
-    currentProfile.siteList       = $("#siteList").val().trim();
-    currentProfile.url_protocol   = $("#protocolCB").prop("checked");
-    currentProfile.url_subdomain  = $("#subdomainCB").prop("checked");
-    currentProfile.url_domain     = $("#domainCB").prop("checked");
-    currentProfile.url_path       = $("#pathCB").prop("checked");
-    currentProfile.strUseText     = $("#inputUseThisText").val().trim();
-    currentProfile.whereToUseL33t = $("#whereLeetLB").val();
-    currentProfile.l33tLevel      = $("#leetLevelLB").val();
-    currentProfile.hashAlgorithm  = $("#hashAlgorithmLB").val();
-    currentProfile.passwordLength = $("#passwdLength").val();
-    currentProfile.username       = $("#usernameTB").val().trim();
-    currentProfile.modifier       = $("#modifier").val().trim();
-    currentProfile.passwordPrefix = $("#passwordPrefix").val();
-    currentProfile.passwordSuffix = $("#passwordSuffix").val();
+    var selected = Settings.getProfile(Settings.currentProfile);
+
+    selected.title          = $("#profileNameTB").val().trim();
+    selected.siteList       = $("#siteList").val().trim();
+    selected.url_protocol   = $("#protocolCB").prop("checked");
+    selected.url_subdomain  = $("#subdomainCB").prop("checked");
+    selected.url_domain     = $("#domainCB").prop("checked");
+    selected.url_path       = $("#pathCB").prop("checked");
+    selected.strUseText     = $("#inputUseThisText").val().trim();
+    selected.whereToUseL33t = $("#whereLeetLB").val();
+    selected.l33tLevel      = $("#leetLevelLB").val();
+    selected.hashAlgorithm  = $("#hashAlgorithmLB").val();
+    selected.passwordLength = $("#passwdLength").val();
+    selected.username       = $("#usernameTB").val().trim();
+    selected.modifier       = $("#modifier").val().trim();
+    selected.passwordPrefix = $("#passwordPrefix").val();
+    selected.passwordSuffix = $("#passwordSuffix").val();
 
     if ($("#charset").val() === "Custom charset") {
-        currentProfile.selectedCharset = $("#customCharset").val();
+        selected.selectedCharset = $("#customCharset").val();
     } else {
-        currentProfile.selectedCharset = $("#charset").val();
+        selected.selectedCharset = $("#charset").val();
     }
 
-    Settings.setProfile(currentProfile);
     Settings.saveProfiles();
     updateProfileList();
     highlightProfile();
 }
 
 function cloneProfile() {
-    var p = jQuery.extend({}, currentProfile);
+    var p = JSON.parse(JSON.stringify(Settings.getProfile(Settings.currentProfile)));
     p.title = p.title + " Copy";
     Settings.addProfile(p);
     updateProfileList();
@@ -191,18 +187,15 @@ function cloneProfile() {
 }
 
 function editProfile(event) {
-    setCurrentProfile(Settings.getProfile(event.data.id));
+    setCurrentProfile(Settings.getProfile(event.target.id.slice(8)));
 }
 
 function updateProfileList() {
     var profiles = Settings.getProfiles();
-    var list = [];
+    $("#profile_list").empty();
     for (var i = 0; i < profiles.length; i++) {
-        var entry = $("<li id='profile_id_" + profiles[i].id + "'><a class='link'>" + profiles[i].title + "</a></li>");
-        entry.find("a").on("click", {id: profiles[i].id}, editProfile);
-        list.push(entry);
+        $("#profile_list").append("<li><span id='profile_" + profiles[i].id + "' class='link'>" + profiles[i].title + "</span></li>")
     }
-    $("#profile_list").html(list);
 }
 
 function setSyncPassword() {
@@ -256,15 +249,22 @@ function updateSyncProfiles() {
 
 function updateMasterHash() {
     var should_keep = $("#keepMasterPasswordHash").prop("checked");
-    Settings.setKeepMasterPasswordHash(should_keep);
     if (should_keep) {
-        var master_pass = $("#masterPassword").val();
-        var new_hash = ChromePasswordMaker_SecureHash.make_hash(master_pass);
-        Settings.setMasterPasswordHash(new_hash);
         $("#master_password_row").css("visibility", "visible");
+        var master_pass = $("#masterPassword").val();
+        if (master_pass.length > 0) {
+            var new_hash = ChromePasswordMaker_SecureHash.make_hash(master_pass);
+            Settings.setKeepMasterPasswordHash(should_keep);
+            Settings.setMasterPasswordHash(new_hash);
+        } else {
+            Settings.setKeepMasterPasswordHash(false);
+            Settings.setMasterPasswordHash("");
+        }
     } else {
-        Settings.setMasterPasswordHash("");
         $("#master_password_row").css("visibility", "hidden");
+        $("#masterPassword").val("")
+        Settings.setKeepMasterPasswordHash(should_keep);
+        Settings.setMasterPasswordHash("");
     }
 }
 
@@ -283,7 +283,6 @@ function updateUseVerificationCode() {
 function testPasswordLength() {
     if (this.value < 8) this.value = 8;
     if (this.value > 512) this.value = 512;
-    this.value = parseInt(this.value);
 }
 
 function fileImport() {
@@ -291,11 +290,11 @@ function fileImport() {
     if (file.type.match(/rdf|xml|text/)) {
         var reader = new FileReader();
         reader.onload = function() {
-            $("#importText").val(reader.result)
-        }
+            $("#importText").val(reader.result);
+        };
         reader.readAsBinaryString(file);
     } else {
-        $("#importText").val("Please select a supported filetype!")
+        $("#importText").val("Please select a supported filetype!");
     }
 }
 
@@ -325,6 +324,7 @@ $(function() {
     $("#syncProfiles").prop("checked", Settings.shouldSyncProfiles());
     updateSyncProfiles();
 
+    $("#profile_list").on("click", ".link", editProfile);
     $("#add").on("click", addProfile);
     $("#showImport").on("click", showImport);
     $("#showExport").on("click", showExport);
@@ -349,7 +349,7 @@ $(function() {
     $("#disablePasswordSaving").on("change", updateDisablePasswordSaving);
     $("#keepMasterPasswordHash").on("change", updateMasterHash);
     $("#syncProfiles").on("change", updateSyncProfiles);
-    $("#masterPassword").on("blur", updateMasterHash);
+    $("#masterPassword").on("keyup", updateMasterHash);
     $("#useVerificationCode").on("change", updateUseVerificationCode);
     $("#set_sync_password").on("click", setSyncPassword);
     $("#clear_sync_data").on("click", clearSyncData);

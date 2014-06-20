@@ -38,7 +38,7 @@ Profile.prototype.getPassword = function(url, masterkey) {
         // the first call to _generatepassword() must use the plain "key".
         // Subsequent calls add a number to the end of the key so each iteration
         // doesn't generate the same hash value.
-        password += (count == 0) ? 
+        password += (count === 0) ? 
         this.generateCharacter(this.hashAlgorithm, masterkey, 
         url + this.username + this.modifier, this.whereToUseL33t, this.l33tLevel, 
         this.selectedCharset) : 
@@ -56,7 +56,7 @@ Profile.prototype.getPassword = function(url, masterkey) {
     }
     
     return password.substring(0, this.passwordLength);
-}
+};
 
 Profile.prototype.generateCharacter = function(hashAlgorithm, key, data, whereToUseL33t, l33tLevel, charset) {
     // for non-hmac algorithms, the key is master pw and url concatenated
@@ -121,7 +121,7 @@ Profile.prototype.generateCharacter = function(hashAlgorithm, key, data, whereTo
         return PasswordMaker_l33t.convert(l33tLevel, password);
     }
     return password;
-}
+};
 
 // Given a list of domain segments like [www,google,co,uk], return the
 // subdomain and domain strings (ie, [www, google.co.uk]).
@@ -136,12 +136,12 @@ Profile.prototype.splitSubdomain = function(segments) {
     // None of the segments are in our TLD list. Assume the last component is
     // the TLD, like ".com". The domain is therefore the last 2 components.
     return [segments.slice(0, -2).join('.'), segments.slice(-2).join('.')];
-}
+};
 
 // Return strUseText
-Profile.prototype.getText = function(url) {
+Profile.prototype.getText = function() {
     return this.strUseText;
-}
+};
 
 Profile.prototype.getUrl = function(url) {
     var temp = url.match("([^://]*://)?([^:/]*)([^#]*)");
@@ -161,7 +161,7 @@ Profile.prototype.getUrl = function(url) {
         resultURL += splitSegments[0];
     }
     if (this.url_domain) {
-        if (resultURL != "" && resultURL[resultURL.length - 1] != ".") {
+        if (resultURL !== "" && resultURL[resultURL.length - 1] !== ".") {
             resultURL += ".";
         }
         resultURL += splitSegments[1];
@@ -174,7 +174,7 @@ Profile.prototype.getUrl = function(url) {
     }
 
     return resultURL;
-}
+};
 
 Profile.prototype.getVerificationCode = function(masterPassword) {
     var p = new Profile();
@@ -182,4 +182,4 @@ Profile.prototype.getVerificationCode = function(masterPassword) {
     p.passwordLength = 3;
     p.selectedCharset = CHARSET_OPTIONS[4];
     return p.getPassword("", masterPassword);
-}
+};
