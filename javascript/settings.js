@@ -100,15 +100,6 @@ Settings.getProfiles = function() {
     return Settings.profiles;
 };
 
-Settings.setProfile = function(profile) {
-    var profiles = Settings.getProfiles();
-    for (var i = 0; i < profiles.length; i++) {
-        if (profiles[i].id === parseInt(profile.id)) {
-            profiles[i] = profile;
-        }
-    }
-};
-
 Settings.getProfile = function(id) {
     var profiles = Settings.getProfiles();
     for (var i = 0; i < profiles.length; i++) {
@@ -130,9 +121,6 @@ Settings.getMaxId = function() {
 };
 
 Settings.addProfile = function(profile) {
-    if (Settings.profiles.length === 0) {
-        Settings.getProfiles();
-    }
     profile.id = Settings.getMaxId() + 1;
     Settings.profiles.push(profile);
 };
@@ -140,7 +128,7 @@ Settings.addProfile = function(profile) {
 Settings.deleteProfile = function(profile) {
     var profiles = Settings.getProfiles();
     for (var i = 0; i < profiles.length; i++) {
-        if (profiles[i].id === parseInt(profile.id)) {
+        if (profiles[i].id === profile) {
             profiles.splice(i, 1);
             Settings.saveProfiles();
         }
@@ -215,6 +203,9 @@ Settings.saveSyncedProfiles = function(data) {
 };
 
 Settings.saveProfiles = function() {
+    for (var i = 0; i < Settings.profiles.length; i++) {
+        Settings.profiles[i].id = i + 1;
+    }
     var stringified = JSON.stringify(Settings.profiles);
     localStorage["profiles"] = stringified;
     if (Settings.shouldSyncProfiles() && (!Settings.syncDataAvailable || Settings.syncPasswordOk)) {

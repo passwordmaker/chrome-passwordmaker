@@ -1,5 +1,3 @@
-var currentProfile = "";
-
 function updateStyle(element, selected, isSelected) {
     if (isSelected) {
         element.addClass(selected);
@@ -30,15 +28,14 @@ function addProfile() {
 
 function removeProfile() {
     if (confirm("Really delete this profile?")) {
-        Settings.deleteProfile(currentProfile);
-        currentProfile = Settings.getProfiles()[0];
+        Settings.deleteProfile(Settings.currentProfile);
         updateProfileList();
-        setCurrentProfile(currentProfile);
+        setCurrentProfile(Settings.getProfiles()[0]);
     }
 }
 
 function setCurrentProfile(profile) {
-    currentProfile = profile;
+    Settings.currentProfile = profile.id;
     $("#profileNameTB").val(profile.title);
     $("#siteList").val(profile.siteList);
     $("#protocolCB").prop("checked", profile.url_protocol);
@@ -112,11 +109,8 @@ function importRdf() {
     // Check that profiles have been parsed and are available before wiping current data
     if (rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length && $("#importOverwrite").prop("checked")) {
         Settings.profiles = JSON.parse(JSON.stringify(rdfDoc.profiles));
-        for (var i = 0; i < Settings.profiles.length; i++) {
-            Settings.profiles[i].id = i + 1;
-        }
-        count = rdfDoc.profiles.length;
         Settings.saveProfiles();
+        count = rdfDoc.profiles.length;
     } else {
         count = RdfImporter.saveProfiles(rdfDoc.profiles);
     }
@@ -151,40 +145,41 @@ function showSection(showId) {
 
 function highlightProfile() {
     $(".highlight").removeClass("highlight");
-    $("#profile_" + currentProfile.id).addClass("highlight");
+    $("#profile_" + Settings.currentProfile).addClass("highlight");
 }
 
 function saveProfile() {
-    currentProfile.title          = $("#profileNameTB").val().trim();
-    currentProfile.siteList       = $("#siteList").val().trim();
-    currentProfile.url_protocol   = $("#protocolCB").prop("checked");
-    currentProfile.url_subdomain  = $("#subdomainCB").prop("checked");
-    currentProfile.url_domain     = $("#domainCB").prop("checked");
-    currentProfile.url_path       = $("#pathCB").prop("checked");
-    currentProfile.strUseText     = $("#inputUseThisText").val().trim();
-    currentProfile.whereToUseL33t = $("#whereLeetLB").val();
-    currentProfile.l33tLevel      = $("#leetLevelLB").val();
-    currentProfile.hashAlgorithm  = $("#hashAlgorithmLB").val();
-    currentProfile.passwordLength = $("#passwdLength").val();
-    currentProfile.username       = $("#usernameTB").val().trim();
-    currentProfile.modifier       = $("#modifier").val().trim();
-    currentProfile.passwordPrefix = $("#passwordPrefix").val();
-    currentProfile.passwordSuffix = $("#passwordSuffix").val();
+    var selected = Settings.getProfile(Settings.currentProfile);
+
+    selected.title          = $("#profileNameTB").val().trim();
+    selected.siteList       = $("#siteList").val().trim();
+    selected.url_protocol   = $("#protocolCB").prop("checked");
+    selected.url_subdomain  = $("#subdomainCB").prop("checked");
+    selected.url_domain     = $("#domainCB").prop("checked");
+    selected.url_path       = $("#pathCB").prop("checked");
+    selected.strUseText     = $("#inputUseThisText").val().trim();
+    selected.whereToUseL33t = $("#whereLeetLB").val();
+    selected.l33tLevel      = $("#leetLevelLB").val();
+    selected.hashAlgorithm  = $("#hashAlgorithmLB").val();
+    selected.passwordLength = $("#passwdLength").val();
+    selected.username       = $("#usernameTB").val().trim();
+    selected.modifier       = $("#modifier").val().trim();
+    selected.passwordPrefix = $("#passwordPrefix").val();
+    selected.passwordSuffix = $("#passwordSuffix").val();
 
     if ($("#charset").val() === "Custom charset") {
-        currentProfile.selectedCharset = $("#customCharset").val();
+        selected.selectedCharset = $("#customCharset").val();
     } else {
-        currentProfile.selectedCharset = $("#charset").val();
+        selected.selectedCharset = $("#charset").val();
     }
 
-    Settings.setProfile(currentProfile);
     Settings.saveProfiles();
     updateProfileList();
     highlightProfile();
 }
 
 function cloneProfile() {
-    var p = JSON.parse(JSON.stringify(currentProfile));
+    var p = JSON.parse(JSON.stringify(Settings.getProfile(Settings.currentProfile)));
     p.title = p.title + " Copy";
     Settings.addProfile(p);
     updateProfileList();
