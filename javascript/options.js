@@ -129,6 +129,7 @@ function copyRdfExport() {
 }
 
 function showOptions() {
+    updateSyncProfiles();
     showSection("#general_settings");
 }
 
@@ -322,7 +323,6 @@ $(function() {
     }
 
     $("#syncProfiles").prop("checked", Settings.shouldSyncProfiles());
-    updateSyncProfiles();
 
     $("#profile_list").on("click", ".link", editProfile);
     $("#add").on("click", addProfile);

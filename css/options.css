@@ -13,7 +13,7 @@ body {
 #content {
     font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     margin: 0 auto;
-    width: 910px;
+    width: 880px;
 }
 
 #header {
@@ -32,15 +32,16 @@ body {
 #list {
     border-right: 1px solid #aaa;
     float: left;
-    margin-bottom: 50px;
     padding: 40px;
-    width: 155px;
+    text-align: center;
+    width: 180px;
 }
 
 #list ol {
     font-size: 1.1em;
     line-height: 1.5;
     overflow: auto;
+    text-align: left;
 }
 
 .link {
@@ -51,8 +52,8 @@ body {
 }
 
 #list button {
-    width: 155px;
     white-space: nowrap;
+    width: 150px;
 }
 
 button {
@@ -98,13 +99,7 @@ h2 {
     color: #808080;
     font-size: .8em;
     margin: 0 0 10px 165px;
-}
-
-#profile_settings {
-    float: left;
-    margin-bottom: 60px;
-    padding: 40px;
-    width: 520px;
+    width: 310px;
 }
 
 #import_settings p {
@@ -141,7 +136,7 @@ label {
     margin-top: 3px;
     position: absolute;
     text-align: right;
-    width: 150px;
+    width: 155px;
 }
 
 .disabled {
@@ -200,12 +195,12 @@ input[type="checkbox"] {
     margin-top: 20px;
 }
 
-#general_settings, #general_information, #import_settings, #export_settings {
+#profile_settings, #general_settings, #general_information, #import_settings, #export_settings {
     display: none;
     float: left;
     margin-bottom: 60px;
     padding: 40px;
-    width: 580px;
+    width: 530px;
 }
 
 textarea {
