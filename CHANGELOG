@@ -1,32 +1,38 @@
+0.6.4 - 2014-06-22
+
+* Closes Request #113: Added 3 letter password verification code option
+* Fixes Bug #115: Never save master password
+* Change suggested keyboard shortcut from Alt+Shift+M to Alt+Z for new installations
+* More css and ui improvements
+
 0.6.3 - 2014-05-29
 
 * Another fix for the fill form function
-* Removed usage of jQuery
-* Reduced permission to active tab
+* Removed usage of jQuery in content script
+* Reduced permissions to activeTab
 * Removed sourcemap for jQuery
 
 0.6.2 - 2014-05-23
 
-Fixed fill form bug
+* Fixed fill form bug
 
 0.6.1 - 2014-05-22
 
-Emergency release that should fix problems created
-in the 0.6.0 release.
+* Emergency release that should fix problems created in the 0.6.0 release.
 
 0.6.0 - 2014-05-18
 
-This release includes lots of stuff done by @heavensrevenge .
-A small list of the many things he did:
+* This release includes lots of stuff done by @heavensrevenge.
+* A small list of the many things he did:
 
-* Lots of css and ui improvments
+* Lots of css and ui improvements
 * Refactored some parts of the javascript code
 * Updating included libraries
 * Closes Request #87: It fills only password fields that are not populated yet
 
 0.5.5 - 2014-04-26
 
-* Fixes Bug #93: Removed warning in Console about jquery sourcemap
+* Fixes Bug #93: Removed warning in Console about jQuery sourcemap
 
 0.5.4 - 2013-11-10
 
@@ -59,4 +65,4 @@ A small list of the many things he did:
 0.4.1 - 2012-01-06
 
 * Starting Changelog
-* #78 - Fixes password not saving on exit
+* Fixes Bug #78: Fixes password not saving on exit
