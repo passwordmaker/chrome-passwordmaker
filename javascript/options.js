@@ -34,6 +34,14 @@ function removeProfile() {
     }
 }
 
+function removeAllProfiles() {
+    if (confirm("Really delete ALL local profile customizations and reset to the default profiles?")) {
+        localStorage["profiles"] = "";
+        Settings.loadLocalProfiles();
+        updateProfileList();
+    }
+}
+
 function setCurrentProfile(profile) {
     Settings.currentProfile = profile.id;
     $("#profileNameTB").val(profile.title);
@@ -353,6 +361,7 @@ $(function() {
     $("#useVerificationCode").on("change", updateUseVerificationCode);
     $("#set_sync_password").on("click", setSyncPassword);
     $("#clear_sync_data").on("click", clearSyncData);
+    $("#resetToDefaultprofiles").on("click", removeAllProfiles);
 
     $("#passwdLength").on("blur", testPasswordLength);
 });

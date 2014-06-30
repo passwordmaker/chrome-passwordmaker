@@ -220,3 +220,8 @@ select.input {
 #master_password_row {
     padding: 20px 0 10px 0;
 }
+
+#resetToDefaultprofiles {
+    font-weight: bold;
+    margin: 50px 0px 50px 165px;
+}
