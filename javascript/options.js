@@ -138,7 +138,7 @@ function showInformation() {
 }
 
 function showSection(showId) {
-    if ($(showId).is(":hidden")) {
+    if ($(showId).css("display") === "none") {
         $("#profile_settings, #import_settings, #export_settings, #general_settings, #general_information").hide();
         $(showId).show();
     }
@@ -227,19 +227,19 @@ function clearSyncData() {
 
 function updateSyncProfiles() {
     $("#sync_profiles_row, #no_sync_password, #sync_data_exists, #sync_password_set").hide();
-    $("#set_sync_password, #clear_sync_data").css("visibility", "hidden");
-
+    $("#set_sync_password, #clear_sync_data").addClass("hidden");
     var should_sync = $("#syncProfiles").prop("checked");
+
     if (should_sync) {
         if (Settings.syncPasswordOk) {
             $("#sync_password_set").show();
-            $("#clear_sync_data").css("visibility", "visible");
+            $("#clear_sync_data").removeClass("hidden");
         } else if (Settings.syncDataAvailable) {
             $("#sync_profiles_row, #sync_data_exists").show();
-            $("#set_sync_password, #clear_sync_data").css("visibility", "visible");
+            $("#set_sync_password, #clear_sync_data").removeClass("hidden");
         } else {
             $("#sync_profiles_row, #no_sync_password").show();
-            $("#set_sync_password").css("visibility", "visible");
+            $("#set_sync_password").removeClass("hidden");
         }
     } else {
         Settings.stopSync();
@@ -250,7 +250,7 @@ function updateSyncProfiles() {
 function updateMasterHash() {
     var should_keep = $("#keepMasterPasswordHash").prop("checked");
     if (should_keep) {
-        $("#master_password_row").css("visibility", "visible");
+        $("#master_password_row").removeClass("hidden");
         var master_pass = $("#masterPassword").val();
         if (master_pass.length > 0) {
             var new_hash = ChromePasswordMaker_SecureHash.make_hash(master_pass);
@@ -261,8 +261,8 @@ function updateMasterHash() {
             Settings.setMasterPasswordHash("");
         }
     } else {
-        $("#master_password_row").css("visibility", "hidden");
-        $("#masterPassword").val("")
+        $("#master_password_row").addClass("hidden");
+        $("#masterPassword").val("");
         Settings.setKeepMasterPasswordHash(should_keep);
         Settings.setMasterPasswordHash("");
     }
@@ -317,9 +317,9 @@ $(function() {
     $("#useVerificationCode").prop("checked", Settings.useVerificationCode());
 
     if (Settings.keepMasterPasswordHash()) {
-        $("#master_password_row").css("visibility", "visible");
+        $("#master_password_row").removeClass("hidden");
     } else {
-        $("#master_password_row").css("visibility", "hidden");
+        $("#master_password_row").addClass("hidden");
     }
 
     $("#syncProfiles").prop("checked", Settings.shouldSyncProfiles());

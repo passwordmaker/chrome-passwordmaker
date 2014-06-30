@@ -43,7 +43,7 @@ function updateFields() {
     var profile = Settings.getProfile($("#profile").val());
 
     Settings.setStoreLocation($("#store_location").val());
-    $("#copypassword, #injectpasswordrow").css("visibility", "hidden");
+    $("#copypassword, #injectpasswordrow").addClass("hidden");
 
     if (password.length === 0) {
         $("#generated").val("Please Enter Password");
@@ -92,11 +92,11 @@ function onProfileChanged() {
 }
 
 function showButtons() {
-    $("#copypassword").css("visibility", "visible");
+    $("#copypassword").removeClass("hidden");
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {hasPasswordField: true}, function(response) {
             if (response !== undefined && response.hasField) {
-                $("#injectpasswordrow").css("visibility", "visible");
+                $("#injectpasswordrow").removeClass("hidden");
             }
         });
     });

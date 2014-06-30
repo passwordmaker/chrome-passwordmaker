@@ -28,6 +28,10 @@ select {
     width: 174px;
 }
 
+.hidden {
+    visibility: hidden;
+}
+
 #generated {
     font-family: "DejaVu Sans Mono", "Lucida Console", monospace;
     font-size: 1.1em;
