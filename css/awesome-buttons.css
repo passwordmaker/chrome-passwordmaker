@@ -8,6 +8,7 @@
     cursor: pointer;
     font: inherit;
     border-radius: 6px;
+    outline: none;
     padding: 4px 15px 6px 15px;
 }
 
