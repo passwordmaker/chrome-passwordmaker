@@ -202,12 +202,11 @@ RdfImporter.dumpDoc = function() {
 
 // get profiles as list of objects w/ FF names as keys
 function dumpedProfiles() {
-    var profiles = Settings.getProfiles(),
-        dumpProfiles = [],
+    var dumpProfiles = [],
         expOpts = RdfImporter.getExportOpts();
 
-    for (var i = 0; i < profiles.length; i++) {
-        var prof = profiles[i],
+    for (var i = 0; i < Settings.profiles.length; i++) {
+        var prof = Settings.profiles[i],
             newProf = {},
             attrMap = expOpts['profile'].concat(expOpts['default']);
 

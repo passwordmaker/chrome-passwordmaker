@@ -65,11 +65,12 @@ test("save profiles", function () {
     var profiles = rdf_doc1.profiles;
 
     deepEqual(profiles.length, 2);
-    deepEqual(Settings.getProfiles().length, 1);
+    Settings.loadProfiles();
+    deepEqual(Settings.profiles.length, 2);
 
     RdfImporter.saveProfiles(profiles);
 
-    deepEqual(Settings.getProfiles().length, 3);
+    deepEqual(Settings.profiles.length, 4);
 });
 
 test("save settings", function () {
@@ -90,12 +91,13 @@ test("save settings", function () {
 module("rdf export");
 
 test("dump profile to rdf", function () {
+    Settings.loadProfiles();
     RdfImporter.saveProfiles(rdf_doc1.profiles);
-    deepEqual(Settings.getProfiles().length, 3);
+    deepEqual(Settings.profiles.length, 4);
     var doc2 = RdfImporter.loadDoc(RdfImporter.dumpDoc());
 
-    var p = doc2.profiles[2];
-    deepEqual(p.rdf_about, 'rdf:#$CHROME3');
+    var p = doc2.profiles[3];
+    deepEqual(p.rdf_about, 'rdf:#$CHROME4');
     deepEqual(p.title,'nospecial');
     deepEqual(p.url_protocol, false);
     deepEqual(p.url_subdomain, false);
@@ -114,13 +116,14 @@ test("dump profile to rdf", function () {
 });
 
 test("dump defaults profile to rdf", function () {
+    Settings.loadProfiles();
     RdfImporter.saveProfiles(rdf_doc1.profiles);
-    deepEqual(Settings.getProfiles().length, 3);
+    deepEqual(Settings.profiles.length, 4);
     var doc2 = RdfImporter.loadDoc(RdfImporter.dumpDoc());
 
-    var p = doc2.profiles[1];
+    var p = doc2.profiles[2];
 
-    deepEqual(p.rdf_about, 'rdf:#$CHROME2');
+    deepEqual(p.rdf_about, 'rdf:#$CHROME3');
     deepEqual(p.title,'Defaults');
     deepEqual(p.url_protocol, false);
     deepEqual(p.url_subdomain, false);

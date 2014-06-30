@@ -93,28 +93,19 @@ var TOPLEVELDOMAINS = {
   "k12.il":1, "gov.il":1, "muni.il":1, "idf.il":1, "co.im":1, "org.im":1, "com.sg":1
 };
 
-Settings.getProfiles = function() {
-    if (Settings.profiles.length === 0) {
-        Settings.loadProfiles();
-    }
-    return Settings.profiles;
-};
-
 Settings.getProfile = function(id) {
-    var profiles = Settings.getProfiles();
-    for (var i = 0; i < profiles.length; i++) {
-        if (profiles[i].id === parseInt(id)) {
-            return profiles[i];
+    for (var i = 0; i < Settings.profiles.length; i++) {
+        if (Settings.profiles[i].id === parseInt(id)) {
+            return Settings.profiles[i];
         }
     }
 };
 
 Settings.getMaxId = function() {
     var maxId = 0;
-    var profiles = Settings.getProfiles();
-    for (var i = 0; i < profiles.length; i++) {
-        if (profiles[i].id > maxId) {
-            maxId = profiles[i].id;
+    for (var i = 0; i < Settings.profiles.length; i++) {
+        if (Settings.profiles[i].id > maxId) {
+            maxId = Settings.profiles[i].id;
         }
     }
     return maxId;
@@ -125,11 +116,10 @@ Settings.addProfile = function(profile) {
     Settings.profiles.push(profile);
 };
 
-Settings.deleteProfile = function(profile) {
-    var profiles = Settings.getProfiles();
-    for (var i = 0; i < profiles.length; i++) {
-        if (profiles[i].id === profile) {
-            profiles.splice(i, 1);
+Settings.deleteProfile = function(id) {
+    for (var i = 0; i < Settings.profiles.length; i++) {
+        if (Settings.profiles[i].id === parseInt(id)) {
+            Settings.profiles.splice(i, 1);
             Settings.saveProfiles();
         }
     }
@@ -138,17 +128,19 @@ Settings.deleteProfile = function(profile) {
 Settings.loadProfilesFromString = function(profiles) {
     Settings.profiles = [];
     JSON.parse(profiles).forEach(function(item) {
-        var p = new Profile();
-        Object.keys(item).forEach(function(key) {
-            p[key] = item[key];
-        });
-        Settings.profiles.push(p);
+        Settings.profiles.push($.extend(new Profile, item));
     });
 };
 
 Settings.loadLocalProfiles = function() {
     if (localStorage["profiles"] === undefined || localStorage["profiles"] === "") {
-        Settings.profiles = [new Profile()];
+        var normal = new Profile();
+        var alpha = new Profile();
+        alpha.id = 2;
+        alpha.title = "Alphanumeric";
+        alpha.selectedCharset = CHARSET_OPTIONS[1];
+        Settings.profiles = [normal, alpha];
+        Settings.saveProfiles();
     } else {
         Settings.loadProfilesFromString(localStorage["profiles"]);
     }

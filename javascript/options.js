@@ -30,7 +30,7 @@ function removeProfile() {
     if (confirm("Really delete this profile?")) {
         Settings.deleteProfile(Settings.currentProfile);
         updateProfileList();
-        setCurrentProfile(Settings.getProfiles()[0]);
+        setCurrentProfile(Settings.profiles[0]);
     }
 }
 
@@ -78,7 +78,7 @@ function setCurrentProfile(profile) {
     updateLeet();
     highlightProfile();
     // Keeps profile #1 around so it can only be re-named
-    if (Settings.getProfiles()[0].id === profile.id) {
+    if (Settings.profiles[0].id === profile.id) {
         $("#remove").hide();
     } else {
         $("#remove").show();
@@ -192,10 +192,9 @@ function editProfile(event) {
 }
 
 function updateProfileList() {
-    var profiles = Settings.getProfiles();
     $("#profile_list").empty();
-    for (var i = 0; i < profiles.length; i++) {
-        $("#profile_list").append("<li><span id='profile_" + profiles[i].id + "' class='link'>" + profiles[i].title + "</span></li>")
+    for (var i = 0; i < Settings.profiles.length; i++) {
+        $("#profile_list").append("<li><span id='profile_" + Settings.profiles[i].id + "' class='link'>" + Settings.profiles[i].title + "</span></li>");
     }
 }
 
@@ -308,8 +307,9 @@ function fileExport() {
 }
 
 $(function() {
+    Settings.loadProfiles();
     updateProfileList();
-    setCurrentProfile(Settings.getProfiles()[0]);
+    setCurrentProfile(Settings.profiles[0]);
 
     $("#hidePassword").prop("checked", Settings.shouldHidePassword());
     $("#disablePasswordSaving").prop("checked", Settings.shouldDisablePasswordSaving());

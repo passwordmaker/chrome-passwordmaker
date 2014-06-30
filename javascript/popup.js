@@ -3,10 +3,9 @@ function setPasswordColors(foreground, background) {
 }
 
 function getAutoProfileIdForUrl(url) {
-    var profiles = Settings.getProfiles();
-    for (var i = 0; i < profiles.length; i++) {
-        var profile = profiles[i];
-        if (profile.siteList !== "") {
+    for (var i = 0; i < Settings.profiles.length; i++) {
+        var profile = Settings.profiles[i];
+        if (profile.siteList.trim().length !== 0) {
             var usedURL = profile.getUrl(url);
             var sites = profile.siteList.split(" ");
             for (var j = 0; j < sites.length; j++) {
@@ -113,11 +112,10 @@ function init(url) {
         Settings.storeLocation = "never";
     }
 
-    var profiles = Settings.getProfiles();
-    for (var i = 0; i < profiles.length; i++) {
-        $("#profile").append(new Option(profiles[i].title, profiles[i].id));
+    for (var i = 0; i < Settings.profiles.length; i++) {
+        $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
     }
-    $("#profile").val(getAutoProfileIdForUrl(url) || Settings.getProfiles()[0].id);
+    $("#profile").val(getAutoProfileIdForUrl(url) || Settings.profiles[0].id);
 
     updateURL(url);
     $("#store_location").val(Settings.storeLocation);
@@ -158,6 +156,7 @@ function showPasswordField() {
 }
 
 $(function() {
+    Settings.loadProfiles();
     $("#password, #confirmation, #usedtext").on("keyup", updateFields);
     $("#store_location").on("change", updateFields);
     $("#profile").on("change", onProfileChanged);
