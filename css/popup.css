@@ -1,13 +1,5 @@
-body {
-    width: 280px;
-}
-
-td {
-    padding: 0;
-}
-
 #header {
-    font-family: Georgia, serif;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     text-align: left;
 }
 
@@ -17,8 +9,8 @@ td {
 }
 
 label {
-    font-family: Georgia, serif;
-    font-size: 12px;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    font-size: .75em;
     font-weight: bold;
     color: #888;
 }
@@ -27,34 +19,37 @@ input {
     border: 1px solid #000;
     float: right;
     padding-left: 4px;
-    width: 150px;
+    width: 168px;
 }
 
 select {
     border: 1px solid #000;
     float: right;
-    width: 156px;
+    width: 174px;
 }
 
 #generated {
     font-family: "DejaVu Sans Mono", "Lucida Console", monospace;
-    font-size: 18px;
+    font-size: 1.1em;
     font-weight: bold;
-    line-height: 1.35;
+    height: 26px;
     text-align: center;
-    width: 270px;
+    width: 288px;
 }
 
 #activatePassword {
-    line-height: 1.1;
-    width: 276px;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    height: 30px;
+    width: 294px;
 }
 
 #button-row {
-    font-size: 14px;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    font-size: .9em;
     text-align: center;
+    white-space: nowrap;
 }
 
 #copypassword, #injectpasswordrow, #options {
-    width: 88px;
+    width: 32%;
 }

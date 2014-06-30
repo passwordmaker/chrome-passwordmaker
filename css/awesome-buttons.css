@@ -1,33 +1,47 @@
 /*  
-    Awesome buttons are based on a blog post by ZERB
-    Read their blog post for more information:
-    "Super awesome Buttons with CSS3 and RGBA":http://www.zurb.com/article/266/super-awesome-buttons-with-css3-and-rgba 
-
-    These buttons are even more awesome, as they need only one color for all three states and have a super awesome onclick state.
+    CSS3 buttons are based on a blog post by Nick La (@nickla)
+    Read the blog post for more information:
+    "CSS3 Gradient Buttons": http://webdesignerwall.com/tutorials/css3-gradient-buttons
 */
 
-.awesome {
-    background-color: #111;
-    border: 0;
-    border-radius: 5px;
-    color: #fff;
+.button {
     cursor: pointer;
-    display: inline-block;
     font: inherit;
-    font-family: sans-serif;
-    padding: 5px 10px 6px;
-    text-align: center;
-    text-decoration: none;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#666), to(#000));
-    vertical-align: middle;
+    border-radius: 6px;
+    padding: 4px 15px 6px 15px;
 }
 
-.awesome:active {
-    padding: 6px 10px 5px;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#000), to(#444));
+.button:active {
+    position: relative;
+    top: 1px;
 }
 
-.awesome:focus,
-.awesome:hover {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#444), to(#000));
+.black {
+    color: #fff;
+    border: solid 1px #333;
+    background: -webkit-gradient(linear, left top, left bottom, from(#666), to(#000));
+}
+
+.black:hover {
+    background: -webkit-gradient(linear, left top, left bottom, from(#444), to(#000));
+}
+
+.black:active {
+    color: #ddd;
+    background: -webkit-gradient(linear, left top, left bottom, from(#000), to(#444));
+}
+
+.red {
+    color: #fff;
+    border: solid 1px #980c10;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ed1c24), to(#aa1317));
+}
+
+.red:hover {
+    background: -webkit-gradient(linear, left top, left bottom, from(#c9151b), to(#a11115));
+}
+
+.red:active {
+    color: #faddde;
+    background: -webkit-gradient(linear, left top, left bottom, from(#aa1317), to(#ed1c24));
 }

@@ -102,10 +102,6 @@ h2 {
     width: 310px;
 }
 
-#import_settings p {
-    padding-left: 2px;
-}
-
 #profile_buttons, #sync_buttons {
     margin: 20px 0 0 165px;
     width: 300px;
@@ -124,14 +120,6 @@ h2 {
     margin-bottom: 5px;
 }
 
-#cloneProfileButton {
-    color: #551a8b;
-    cursor: pointer;
-    font-size: 1.1em;
-    margin-left: 165px;
-    text-decoration: underline;
-}
-
 label {
     margin-top: 3px;
     position: absolute;
@@ -147,8 +135,8 @@ label {
     position: relative;
 }
 
-input[type="checkbox"] {
-    width: 20px;
+.input {
+    width: 300px;
 }
 
 .selected {
@@ -217,9 +205,12 @@ textarea {
     float: right;
 }
 
-select, input {
+#cloneProfileButton, select, input {
     margin-left: 165px;
-    width: 300px;
+}
+
+select.input {
+    width: 304px;
 }
 
 #master_password_row {
