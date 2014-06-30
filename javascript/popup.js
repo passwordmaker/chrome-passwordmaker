@@ -69,6 +69,11 @@ function updateFields() {
     }
 }
 
+function delayedUpdate() {
+    window.clearTimeout(window.delayedUpdateID);
+    window.delayedUpdateID = window.setTimeout(updateFields, 600);
+}
+
 function matchesHash(password) {
     if (!Settings.keepMasterPasswordHash()) return true;
     return ChromePasswordMaker_SecureHash.make_hash(password) === Settings.masterPasswordHash();
@@ -160,7 +165,7 @@ function showPasswordField() {
 
 $(function() {
     Settings.loadProfiles();
-    $("#password, #confirmation, #usedtext").on("keyup", updateFields);
+    $("#password, #confirmation, #usedtext").on("keyup", delayedUpdate);
     $("#store_location").on("change", updateFields);
     $("#profile").on("change", onProfileChanged);
     $("#activatePassword").on("click", showPasswordField);
