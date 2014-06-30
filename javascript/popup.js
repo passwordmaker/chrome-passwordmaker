@@ -7,7 +7,7 @@ function getAutoProfileIdForUrl(url) {
         var profile = Settings.profiles[i];
         if (profile.siteList.trim().length !== 0) {
             var usedURL = profile.getUrl(url);
-            var sites = profile.siteList.split(" ");
+            var sites = profile.siteList.trim().split(" ");
             for (var j = 0; j < sites.length; j++) {
                 var pattern = sites[j];
                 pattern = pattern.replace(/[$+()^\[\]\\|{},]/g, "");
@@ -26,9 +26,9 @@ function getAutoProfileIdForUrl(url) {
                 var reg2 = new RegExp(pattern);
 
                 // Matches url's from siteList when using a "url component" via anchored regex
-                if ((reg1.test(usedURL) && usedURL !== "") || reg1.test(url) || 
+                if ((reg1.test(usedURL) && usedURL.length !== 0) || reg1.test(url) || 
                 // Matches remaining cases with non-anchored regex
-                (reg2.test(url) && pattern !== "")) {
+                (reg2.test(url) && pattern.length !== 0)) {
                     return profile.id;
                 }
             }
@@ -62,7 +62,7 @@ function updateFields() {
     }
 
     if (Settings.useVerificationCode()) {
-        $("#verificationCode").val(profile.getVerificationCode(password));
+        $("#verificationCode").val(getVerificationCode(password));
         $("#verification_row").show();
     } else {
         $("#verification_row").hide();
@@ -107,11 +107,6 @@ function init(url) {
     $("#password").val(pass);
     $("#confirmation").val(pass);
 
-    if (Settings.shouldDisablePasswordSaving()) {
-        $("#store_location_row").hide();
-        Settings.storeLocation = "never";
-    }
-
     for (var i = 0; i < Settings.profiles.length; i++) {
         $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
     }
@@ -136,9 +131,9 @@ function fillPassword() {
 }
 
 function copyPassword() {
-    chrome.tabs.query({windowType: "popup"}, function(tabs) {
+    chrome.tabs.query({windowType: "popup"}, function() {
         $("#activatePassword").hide();
-        $("#generated").show().select();
+        $("#generated").show().get(0).select();
         document.execCommand("copy");
         window.close();
     });
@@ -148,6 +143,14 @@ function openOptions() {
     chrome.tabs.create({url: "html/options.html"}, function() {
         window.close();
     });
+}
+
+function getVerificationCode(pass) {
+    var p = new Profile();
+    p.hashAlgorithm = "sha256";
+    p.passwordLength = 3;
+    p.selectedCharset = CHARSET_OPTIONS[4];
+    return p.getPassword("", pass);
 }
 
 function showPasswordField() {
@@ -165,6 +168,11 @@ $(function() {
     $("#injectpasswordrow").on("click", fillPassword);
     $("#options").on("click", openOptions);
 
+    if (Settings.shouldDisablePasswordSaving()) {
+        $("#store_location_row").hide();
+        Settings.storeLocation = "never";
+    }
+
     if (Settings.shouldHidePassword()) {
         $("#generated").hide();
         $("#activatePassword").show();
@@ -175,7 +183,7 @@ $(function() {
 
     if (Settings.keepMasterPasswordHash()) {
         var saved_hash = Settings.masterPasswordHash();
-        if (saved_hash.charAt(0) !== "n") {
+        if (saved_hash.indexOf("pwm_") !== 0) {
             saved_hash = ChromePasswordMaker_SecureHash.update_old_hash(saved_hash);
             Settings.setMasterPasswordHash(saved_hash);
         }

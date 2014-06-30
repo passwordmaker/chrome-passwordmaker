@@ -15,7 +15,7 @@ if (typeof(ChromePasswordMaker_SecureHash) != "object") {
             for (var i = 0; i < 16; i++) {
                 hash = PasswordMaker_SHA256.any_sha256(hash + this.seed, this.sha256_charset);
             }
-            hash = 'n' + hash.substring(1);
+            hash = 'pwm_' + hash.substring(1);
             return hash;
         }
     };

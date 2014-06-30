@@ -62,26 +62,18 @@ function setCurrentProfile(profile) {
 
     $("#charset").empty();
     for (var i = 0; i < CHARSET_OPTIONS.length; i++) {
-        $("#charset").append("<option>" + CHARSET_OPTIONS[i] + "</option>");
+        $("#charset").append(new Option(CHARSET_OPTIONS[i]));
     }
-    $("#charset").append("<option>Custom charset</option>");
-
-    $("#charset").on("change", function() {
-        if ($("#charset").val() === "Custom charset") {
-            $("#customCharset").val(profile.selectedCharset).show();
-        } else {
-            $("#customCharset").hide();
-        }
-    });
+    $("#charset").append(new Option("Custom charset"));
 
     if (CHARSET_OPTIONS.indexOf(profile.selectedCharset) >= 0) {
         $("#charset").val(profile.selectedCharset);
-        $("#customCharset").hide();
     } else {
         $("#charset").val("Custom charset");
-        $("#customCharset").val(profile.selectedCharset).show();
+        $("#customCharset").val(profile.selectedCharset);
     }
 
+    updateCustomCharsetField();
     updateExample();
     updateLeet();
     highlightProfile();
@@ -93,6 +85,14 @@ function setCurrentProfile(profile) {
     }
 
     showSection("#profile_settings");
+}
+
+function updateCustomCharsetField() {
+    if ($("#charset").val() === "Custom charset") {
+        $("#customCharset").val(Settings.getProfile(Settings.currentProfile).selectedCharset).show();
+    } else {
+        $("#customCharset").hide();
+    }
 }
 
 function showImport() {
@@ -132,11 +132,17 @@ function importRdf() {
 }
 
 function copyRdfExport() {
-    $("#exportText").select();
+    document.getElementById("exportText").select();
     document.execCommand("copy");
 }
 
 function showOptions() {
+    chrome.storage.sync.getBytesInUse(null, function (bytes) {
+        if (bytes > 0) {
+            Settings.syncDataAvailable = true;
+        }
+    });
+
     updateSyncProfiles();
     showSection("#general_settings");
 }
@@ -208,6 +214,7 @@ function updateProfileList() {
 
 function setSyncPassword() {
     if ($("#syncProfilesPassword").val() === "") {
+        alert("Please enter a password to enable sync");
         return;
     }
 
@@ -344,6 +351,7 @@ $(function() {
     $("#domainCB").on("click", updateExample);
     $("#pathCB").on("click", updateExample);
     $("#whereLeetLB").on("change", updateLeet);
+    $("#charset").on("change", updateCustomCharsetField);
 
     $("#cloneProfileButton").on("click", cloneProfile);
     $("#remove").on("click", removeProfile);

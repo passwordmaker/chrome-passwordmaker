@@ -166,7 +166,7 @@ RdfImporter.loadDoc = function(rdf) {
         // FF version uses a "default" profile that has attributes we need for each
         // profile (such as url_{protocol,subdomain,domain,path})
         for (var i = 0; i < profiles.length; i++) {
-            profiles[i] = jQuery.extend(new Profile(), defaultProfile, profiles[i]);
+            profiles[i] = $.extend(new Profile(), defaultProfile, profiles[i]);
         }
     }
 
@@ -219,7 +219,7 @@ function dumpedProfiles() {
 
         // patterns
         if (prof.siteList) {
-            var pats = jQuery.trim(prof.siteList).split(' ');
+            var pats = prof.siteList.trim().split(' ');
             for (var j = 0; j < pats.length; j++) {
                 var pat = pats[j], 
                     ptype = (pat[0] == '/' && pat[pat.length - 1] == '/') ? 'regex' : 'wildcard';
@@ -239,7 +239,7 @@ function dumpedProfilesToRdf(profiles) {
     var rv = '',
         abouts = [];
     // use first as defaults profile, necessary for FF
-    profiles.unshift(jQuery.extend({}, profiles[0], {name: 'Defaults'}));
+    profiles.unshift($.extend({}, profiles[0], {name: 'Defaults'}));
     for (var i = 0; i < profiles.length; i++) {
         var about = (i === 0) ? "http://passwordmaker.mozdev.org/defaults" : 'rdf:#$CHROME' + i;
         abouts.push(about);
