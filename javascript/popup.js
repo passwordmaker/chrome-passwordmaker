@@ -132,6 +132,7 @@ function init(url) {
 
 function fillPassword() {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        updateFields();
         chrome.tabs.sendMessage(tabs[0].id, {password: $("#generated").val()});
         window.close();
     });
@@ -139,6 +140,7 @@ function fillPassword() {
 
 function copyPassword() {
     chrome.tabs.query({windowType: "popup"}, function() {
+        updateFields();
         $("#activatePassword").hide();
         $("#generated").show().get(0).select();
         document.execCommand("copy");
