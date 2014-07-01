@@ -187,7 +187,7 @@ label {
     margin-top: 20px;
 }
 
-#profile_settings, #general_settings, #general_information, #import_settings, #export_settings {
+.section {
     display: none;
     float: left;
     margin-bottom: 60px;

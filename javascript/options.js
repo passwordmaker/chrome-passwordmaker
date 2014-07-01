@@ -152,10 +152,8 @@ function showInformation() {
 }
 
 function showSection(showId) {
-    if ($(showId).css("display") === "none") {
-        $("#profile_settings, #import_settings, #export_settings, #general_settings, #general_information").hide();
-        $(showId).show();
-    }
+    $(".section").not(showId).hide();
+    $(showId).show();
 }
 
 function highlightProfile() {
