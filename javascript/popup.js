@@ -10,6 +10,8 @@ function getAutoProfileIdForUrl(url) {
             var sites = profile.siteList.trim().split(" ");
             for (var j = 0; j < sites.length; j++) {
                 var pattern = sites[j];
+                var unmodified = sites[j];
+
                 pattern = pattern.replace(/[$+()^\[\]\\|{},]/g, "");
                 pattern = pattern.replace(/\?/g, ".");
                 pattern = pattern.replace(/\*/g, ".*");
@@ -22,13 +24,13 @@ function getAutoProfileIdForUrl(url) {
                     anchoredPattern = anchoredPattern + "$";
                 }
 
-                var reg1 = new RegExp(anchoredPattern);
-                var reg2 = new RegExp(pattern);
+                var reg1 = new RegExp(anchoredPattern, "i");
+                var reg2 = new RegExp(pattern, "i");
 
                 // Matches url's from siteList when using a "url component" via anchored regex
                 if ((reg1.test(usedURL) && usedURL.length !== 0) || reg1.test(url) || 
-                // Matches remaining cases with non-anchored regex
-                (reg2.test(url) && pattern.length !== 0)) {
+                // Matches remaining cases with non-anchored regex or plain string match
+                (reg2.test(url) && pattern.length !== 0) || url.indexOf(unmodified) >= 0) {
                     return profile.id;
                 }
             }
