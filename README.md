@@ -24,4 +24,4 @@ You can install this plugin from the [Chrome Web Store](https://chrome.google.co
 
 # Copyright
 
-Copyright (c) 2010 Bodo Tasche, PasswordMaker.org . See LICENSE for details. A list of all contributors can be found [here](http://github.com/bitboxer/chrome-passwordmaker/contributors).
+Copyright (c) 2010 Bodo Tasche, PasswordMaker.org . See LICENSE for details. A list of all contributors can be found [here](http://github.com/passwordmaker/chrome-passwordmaker/contributors).
