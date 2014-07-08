@@ -86,6 +86,10 @@ h2 {
     }
 }
 
+.hidden {
+    visibility: hidden;
+}
+
 .subrow {
     padding-top: 3px;
 }
@@ -100,10 +104,6 @@ h2 {
     font-size: .8em;
     margin: 0 0 10px 165px;
     width: 310px;
-}
-
-#import_settings p {
-    padding-left: 2px;
 }
 
 #profile_buttons, #sync_buttons {
@@ -124,14 +124,6 @@ h2 {
     margin-bottom: 5px;
 }
 
-#cloneProfileButton {
-    color: #551a8b;
-    cursor: pointer;
-    font-size: 1.1em;
-    margin-left: 165px;
-    text-decoration: underline;
-}
-
 label {
     margin-top: 3px;
     position: absolute;
@@ -147,8 +139,8 @@ label {
     position: relative;
 }
 
-input[type="checkbox"] {
-    width: 20px;
+.input {
+    width: 300px;
 }
 
 .selected {
@@ -160,7 +152,7 @@ input[type="checkbox"] {
     border-radius: 7px;
     color: #fff;
     font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
-    font-size: .75em;
+    font-size: .8em;
     font-style: italic;
     margin: 0 0 10px 165px;
     padding: 10px 0 10px 0;
@@ -195,7 +187,7 @@ input[type="checkbox"] {
     margin-top: 20px;
 }
 
-#profile_settings, #general_settings, #general_information, #import_settings, #export_settings {
+.section {
     display: none;
     float: left;
     margin-bottom: 60px;
@@ -217,11 +209,19 @@ textarea {
     float: right;
 }
 
-select, input {
+#cloneProfileButton, select, input {
     margin-left: 165px;
-    width: 300px;
+}
+
+select.input {
+    width: 304px;
 }
 
 #master_password_row {
     padding: 20px 0 10px 0;
+}
+
+#resetToDefaultprofiles {
+    font-weight: bold;
+    margin: 50px 0px 50px 165px;
 }

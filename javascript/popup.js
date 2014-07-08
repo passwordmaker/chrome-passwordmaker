@@ -3,14 +3,15 @@ function setPasswordColors(foreground, background) {
 }
 
 function getAutoProfileIdForUrl(url) {
-    var profiles = Settings.getProfiles();
-    for (var i = 0; i < profiles.length; i++) {
-        var profile = profiles[i];
-        if (profile.siteList !== "") {
+    for (var i = 0; i < Settings.profiles.length; i++) {
+        var profile = Settings.profiles[i];
+        if (profile.siteList.trim().length !== 0) {
             var usedURL = profile.getUrl(url);
-            var sites = profile.siteList.split(" ");
+            var sites = profile.siteList.trim().split(" ");
             for (var j = 0; j < sites.length; j++) {
                 var pattern = sites[j];
+                var unmodified = sites[j];
+
                 pattern = pattern.replace(/[$+()^\[\]\\|{},]/g, "");
                 pattern = pattern.replace(/\?/g, ".");
                 pattern = pattern.replace(/\*/g, ".*");
@@ -23,13 +24,13 @@ function getAutoProfileIdForUrl(url) {
                     anchoredPattern = anchoredPattern + "$";
                 }
 
-                var reg1 = new RegExp(anchoredPattern);
-                var reg2 = new RegExp(pattern);
+                var reg1 = new RegExp(anchoredPattern, "i");
+                var reg2 = new RegExp(pattern, "i");
 
                 // Matches url's from siteList when using a "url component" via anchored regex
-                if ((reg1.test(usedURL) && usedURL !== "") || reg1.test(url) || 
-                // Matches remaining cases with non-anchored regex
-                (reg2.test(url) && pattern !== "")) {
+                if ((reg1.test(usedURL) && usedURL.length !== 0) || reg1.test(url) || 
+                // Matches remaining cases with non-anchored regex or plain string match
+                (reg2.test(url) && pattern.length !== 0) || url.indexOf(unmodified) >= 0) {
                     return profile.id;
                 }
             }
@@ -44,12 +45,12 @@ function updateFields() {
     var profile = Settings.getProfile($("#profile").val());
 
     Settings.setStoreLocation($("#store_location").val());
-    $("#copypassword, #injectpasswordrow").css("visibility", "hidden");
+    $("#copypassword, #injectpasswordrow").addClass("hidden");
 
     if (password.length === 0) {
         $("#generated").val("Please Enter Password");
         setPasswordColors("#000000", "#85FFAB");
-    } else if (!matchesHash(password)) {
+    } else if (!matchesMasterHash(password)) {
         $("#generated").val("Master Password Mismatch");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else if (!Settings.useVerificationCode() && !Settings.keepMasterPasswordHash() && password !== confirmation) {
@@ -63,16 +64,26 @@ function updateFields() {
     }
 
     if (Settings.useVerificationCode()) {
-        $("#verificationCode").val(profile.getVerificationCode(password));
+        $("#verificationCode").val(getVerificationCode(password));
         $("#verification_row").show();
     } else {
         $("#verification_row").hide();
     }
 }
 
-function matchesHash(password) {
-    if (!Settings.keepMasterPasswordHash()) return true;
-    return ChromePasswordMaker_SecureHash.make_hash(password) === Settings.masterPasswordHash();
+function delayedUpdate() {
+    window.clearTimeout(window.delayedUpdateID);
+    window.delayedUpdateID = window.setTimeout(updateFields, 600);
+}
+
+function matchesMasterHash(password) {
+    if (Settings.keepMasterPasswordHash()) {
+        var saved = JSON.parse(Settings.masterPasswordHash());
+        var derived = Settings.make_pbkdf2(password, saved.salt);
+        return derived.hash === saved.hash;
+    } else {
+        return true;
+    }
 }
 
 function updateURL(url) {
@@ -86,18 +97,18 @@ function updateURL(url) {
 }
 
 function onProfileChanged() {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.query({active: true, windowType: "normal"}, function(tabs) {
         updateURL(tabs[0].url);
         updateFields();
     });
 }
 
 function showButtons() {
-    $("#copypassword").css("visibility", "visible");
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    $("#copypassword").removeClass("hidden");
+    chrome.tabs.query({active: true, windowType: "normal"}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {hasPasswordField: true}, function(response) {
             if (response !== undefined && response.hasField) {
-                $("#injectpasswordrow").css("visibility", "visible");
+                $("#injectpasswordrow").removeClass("hidden");
             }
         });
     });
@@ -108,16 +119,10 @@ function init(url) {
     $("#password").val(pass);
     $("#confirmation").val(pass);
 
-    if (Settings.shouldDisablePasswordSaving()) {
-        $("#store_location_row").hide();
-        Settings.storeLocation = "never";
+    for (var i = 0; i < Settings.profiles.length; i++) {
+        $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
     }
-
-    var profiles = Settings.getProfiles();
-    for (var i = 0; i < profiles.length; i++) {
-        $("#profile").append(new Option(profiles[i].title, profiles[i].id));
-    }
-    $("#profile").val(getAutoProfileIdForUrl(url) || Settings.getProfiles()[0].id);
+    $("#profile").val(getAutoProfileIdForUrl(url) || Settings.profiles[0].id);
 
     updateURL(url);
     $("#store_location").val(Settings.storeLocation);
@@ -131,16 +136,18 @@ function init(url) {
 }
 
 function fillPassword() {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.query({active: true, windowType: "normal"}, function(tabs) {
+        updateFields();
         chrome.tabs.sendMessage(tabs[0].id, {password: $("#generated").val()});
         window.close();
     });
 }
 
 function copyPassword() {
-    chrome.tabs.query({windowType: "popup"}, function(tabs) {
+    chrome.tabs.query({windowType: "popup"}, function() {
+        updateFields();
         $("#activatePassword").hide();
-        $("#generated").show().select();
+        $("#generated").show().get(0).select();
         document.execCommand("copy");
         window.close();
     });
@@ -152,19 +159,33 @@ function openOptions() {
     });
 }
 
+function getVerificationCode(pass) {
+    var p = new Profile();
+    p.hashAlgorithm = "sha256";
+    p.passwordLength = 3;
+    p.selectedCharset = CHARSET_OPTIONS[4];
+    return p.getPassword("", pass);
+}
+
 function showPasswordField() {
     $("#activatePassword").hide();
     $("#generated").show().focus();
 }
 
 $(function() {
-    $("#password, #confirmation, #usedtext").on("keyup", updateFields);
+    Settings.loadProfiles();
+    $("#password, #confirmation, #usedtext").on("keyup", delayedUpdate);
     $("#store_location").on("change", updateFields);
     $("#profile").on("change", onProfileChanged);
     $("#activatePassword").on("click", showPasswordField);
     $("#copypassword").on("click", copyPassword);
     $("#injectpasswordrow").on("click", fillPassword);
     $("#options").on("click", openOptions);
+
+    if (Settings.shouldDisablePasswordSaving()) {
+        $("#store_location_row").hide();
+        Settings.storeLocation = "never";
+    }
 
     if (Settings.shouldHidePassword()) {
         $("#generated").hide();
@@ -174,20 +195,13 @@ $(function() {
         $("#activatePassword").hide();
     }
 
-    if (Settings.keepMasterPasswordHash()) {
-        var saved_hash = Settings.masterPasswordHash();
-        if (saved_hash.charAt(0) !== "n") {
-            saved_hash = ChromePasswordMaker_SecureHash.update_old_hash(saved_hash);
-            Settings.setMasterPasswordHash(saved_hash);
-        }
-        $("#confirmation_row").hide();
-    } else if (Settings.useVerificationCode()) {
+    if (Settings.keepMasterPasswordHash() || Settings.useVerificationCode()) {
         $("#confirmation_row").hide();
     } else {
         $("#confirmation_row").show();
     }
 
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.query({active: true, windowType: "normal"}, function(tabs) {
         init(tabs[0].url);
     });
 

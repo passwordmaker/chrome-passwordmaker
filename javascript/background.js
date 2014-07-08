@@ -18,6 +18,9 @@ function updateSyncedProfiles(data) {
 chrome.storage.sync.get(null, function(data) {
     if (chrome.runtime.lastError === undefined) {
         updateSyncedProfiles(data);
+        if (data.sync_profiles_password !== undefined) {
+            localStorage["sync_profiles_password"] = data.sync_profiles_password;
+        }
     }
 });
 
@@ -31,5 +34,8 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
             flattened[key] = changes[key].newValue;
         });
         updateSyncedProfiles(flattened);
+    }
+    if (changes.sync_profiles_password !== undefined) {
+        localStorage["sync_profiles_password"] = changes.sync_profiles_password.newValue || "";
     }
 });

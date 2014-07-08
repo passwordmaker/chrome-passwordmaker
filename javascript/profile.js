@@ -17,7 +17,7 @@ function Profile() {
     this.username = "";
     this.modifier = "";
     this.passwordLength = 8;
-    this.selectedCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./";
+    this.selectedCharset = CHARSET_OPTIONS[0];
     this.passwordPrefix = "";
     this.passwordSuffix = "";
     this.whereToUseL33t = "off";
@@ -38,13 +38,13 @@ Profile.prototype.getPassword = function(url, masterkey) {
         // the first call to _generatepassword() must use the plain "key".
         // Subsequent calls add a number to the end of the key so each iteration
         // doesn't generate the same hash value.
-        password += (count === 0) ? 
-        this.generateCharacter(this.hashAlgorithm, masterkey, 
-        url + this.username + this.modifier, this.whereToUseL33t, this.l33tLevel, 
-        this.selectedCharset) : 
-        this.generateCharacter(this.hashAlgorithm, masterkey + '\n' + count, 
-        url + this.username + this.modifier, this.whereToUseL33t, this.l33tLevel, 
-        this.selectedCharset);
+        if (count === 0) {
+            password += this.generateCharacter(this.hashAlgorithm, masterkey,
+                url + this.username + this.modifier, this.whereToUseL33t, this.l33tLevel, this.selectedCharset);
+        } else {
+            password += this.generateCharacter(this.hashAlgorithm, masterkey + "\n" + count,
+                url + this.username + this.modifier, this.whereToUseL33t, this.l33tLevel, this.selectedCharset);
+        }
         count++;
     }
 
@@ -52,21 +52,21 @@ Profile.prototype.getPassword = function(url, masterkey) {
         password = this.passwordPrefix + password;
     }
     if (this.passwordSuffix) {
-        password = password.substring(0, this.passwordLength - this.passwordSuffix.length) + this.passwordSuffix;
+        password = password.slice(0, this.passwordLength - this.passwordSuffix.length) + this.passwordSuffix;
     }
-    
-    return password.substring(0, this.passwordLength);
+
+    return password.slice(0, this.passwordLength);
 };
 
 Profile.prototype.generateCharacter = function(hashAlgorithm, key, data, whereToUseL33t, l33tLevel, charset) {
     // for non-hmac algorithms, the key is master pw and url concatenated
-    var usingHMAC = hashAlgorithm.indexOf("hmac") > -1;
+    var usingHMAC = hashAlgorithm.indexOf("hmac") >= 0;
     if (!usingHMAC) {
         key += data;
     }
 
     // apply l33t before the algorithm?
-    if (whereToUseL33t == "both" || whereToUseL33t == "before-hashing") {
+    if (whereToUseL33t === "both" || whereToUseL33t === "before-hashing") {
         key = PasswordMaker_l33t.convert(l33tLevel, key);
         if (usingHMAC) {
             data = PasswordMaker_l33t.convert(l33tLevel, data); // new for 0.3; 0.2 didn't apply l33t to _data_ for HMAC algorithms
@@ -117,7 +117,7 @@ Profile.prototype.generateCharacter = function(hashAlgorithm, key, data, whereTo
             break;
     }
     // apply l33t after the algorithm?
-    if (whereToUseL33t == "both" || whereToUseL33t == "after-hashing") {
+    if (whereToUseL33t === "both" || whereToUseL33t === "after-hashing") {
         return PasswordMaker_l33t.convert(l33tLevel, password);
     }
     return password;
@@ -127,15 +127,15 @@ Profile.prototype.generateCharacter = function(hashAlgorithm, key, data, whereTo
 // subdomain and domain strings (ie, [www, google.co.uk]).
 Profile.prototype.splitSubdomain = function(segments) {
     for (var i = 0; i < segments.length; ++i) {
-        var suffix = segments.slice(i).join('.');
+        var suffix = segments.slice(i).join(".");
         if (TOPLEVELDOMAINS[suffix]) {
             var pivot = Math.max(0, i - 1);
-            return [segments.slice(0, pivot).join('.'), segments.slice(pivot).join('.')];
+            return [segments.slice(0, pivot).join("."), segments.slice(pivot).join(".")];
         }
     }
     // None of the segments are in our TLD list. Assume the last component is
     // the TLD, like ".com". The domain is therefore the last 2 components.
-    return [segments.slice(0, -2).join('.'), segments.slice(-2).join('.')];
+    return [segments.slice(0, -2).join("."), segments.slice(-2).join(".")];
 };
 
 // Return strUseText
@@ -144,18 +144,15 @@ Profile.prototype.getText = function() {
 };
 
 Profile.prototype.getUrl = function(url) {
-    var temp = url.match("([^://]*://)?([^:/]*)([^#]*)");
-    if (!temp) {
-        temp = ['','','','']; // Helps prevent an undefine based error
-    }
+    var groups = url.match(/([^:\/]*?:\/\/)?([^:\/]*)([^#]*)/);
 
-    var domainSegments = temp[2].split(".");
+    var domainSegments = groups[2].split(".");
     while (domainSegments.length < 3) {
-        domainSegments.unshift(''); // Helps prevent the URL from displaying undefined in the URL to use box
+        domainSegments.unshift(""); // Helps prevent the URL from displaying undefined in the URL to use box
     }
 
-    var resultURL = '';
-    var protocol= this.url_protocol ? temp[1] : ''; // set the protocol or empty string
+    var resultURL = "";
+    var protocol = this.url_protocol ? groups[1] : ""; // set the protocol or empty string
     var splitSegments = this.splitSubdomain(domainSegments);
     if (this.url_subdomain) {
         resultURL += splitSegments[0];
@@ -170,16 +167,8 @@ Profile.prototype.getUrl = function(url) {
     resultURL = protocol + resultURL;
 
     if (this.url_path) {
-        resultURL += temp[3];
+        resultURL += groups[3];
     }
 
     return resultURL;
-};
-
-Profile.prototype.getVerificationCode = function(masterPassword) {
-    var p = new Profile();
-    p.hashAlgorithm = "sha256";
-    p.passwordLength = 3;
-    p.selectedCharset = CHARSET_OPTIONS[4];
-    return p.getPassword("", masterPassword);
 };
