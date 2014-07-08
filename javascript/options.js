@@ -66,6 +66,10 @@ function setCurrentProfile(profile) {
     }
     $("#charset").append(new Option("Custom charset"));
 
+    if ($("#hashAlgorithmLB")[0].value.length === 0) {
+        $("#hashAlgorithmLB").val("bugged");
+    }
+
     if (CHARSET_OPTIONS.indexOf(profile.selectedCharset) >= 0) {
         $("#charset").val(profile.selectedCharset);
     } else {
@@ -173,12 +177,16 @@ function saveProfile() {
     selected.strUseText     = $("#inputUseThisText").val().trim();
     selected.whereToUseL33t = $("#whereLeetLB").val();
     selected.l33tLevel      = $("#leetLevelLB").val();
-    selected.hashAlgorithm  = $("#hashAlgorithmLB").val();
     selected.passwordLength = $("#passwdLength").val();
     selected.username       = $("#usernameTB").val().trim();
     selected.modifier       = $("#modifier").val().trim();
     selected.passwordPrefix = $("#passwordPrefix").val();
     selected.passwordSuffix = $("#passwordSuffix").val();
+
+    // Keep old/bugged algorithm unless explicitly changed & saved
+    if ($("#hashAlgorithmLB").val() !== "bugged") {
+        selected.hashAlgorithm  = $("#hashAlgorithmLB").val();
+    }
 
     if ($("#charset").val() === "Custom charset") {
         selected.selectedCharset = $("#customCharset").val();

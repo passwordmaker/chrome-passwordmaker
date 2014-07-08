@@ -341,7 +341,7 @@ Settings.startSyncWith = function(password) {
         return derived;
     }
     return false;
-}
+};
 
 Settings.getSyncSalt = function() {
     try {
