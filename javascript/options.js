@@ -219,7 +219,8 @@ function setSyncPassword() {
     var result = Settings.startSyncWith($("#syncProfilesPassword").val());
     if (result) {
         Settings.setSyncProfiles(true);
-        localStorage["sync_profiles_password"] = result;
+        Settings.syncDataAvailable = true;
+        Settings.syncPasswordOk = true;
         $("#syncProfilesPassword").val("");
         updateSyncProfiles();
         updateProfileList();
@@ -266,9 +267,8 @@ function updateMasterHash() {
         $("#master_password_row").removeClass("hidden");
         var master_pass = $("#masterPassword").val();
         if (master_pass.length > 0) {
-            var new_hash = ChromePasswordMaker_SecureHash.make_hash(master_pass);
-            Settings.setKeepMasterPasswordHash(should_keep);
-            Settings.setMasterPasswordHash(new_hash);
+            Settings.setKeepMasterPasswordHash(true);
+            Settings.setMasterPasswordHash(JSON.stringify(Settings.make_pbkdf2(master_pass,"")));
         } else {
             Settings.setKeepMasterPasswordHash(false);
             Settings.setMasterPasswordHash("");
@@ -276,7 +276,7 @@ function updateMasterHash() {
     } else {
         $("#master_password_row").addClass("hidden");
         $("#masterPassword").val("");
-        Settings.setKeepMasterPasswordHash(should_keep);
+        Settings.setKeepMasterPasswordHash(false);
         Settings.setMasterPasswordHash("");
     }
 }

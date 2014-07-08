@@ -150,11 +150,13 @@ Settings.loadProfiles = function() {
     Settings.loadLocalProfiles();
     if (localStorage["synced_profiles"] !== undefined && localStorage["synced_profiles"] !== "") {
         Settings.syncDataAvailable = true;
-        var profiles = Settings.decrypt(localStorage["synced_profiles"], localStorage["sync_profiles_password"]);
-        if (profiles) {
-            Settings.syncPasswordOk = true;
-            if (Settings.shouldSyncProfiles()) {
-                Settings.loadProfilesFromString(profiles.value);
+        if (localStorage["sync_profiles_password"] !== undefined && localStorage["sync_profiles_password"] !== "") {
+            var profiles = Settings.decrypt(localStorage["synced_profiles"], JSON.parse(localStorage["sync_profiles_password"]).hash);
+            if (profiles) {
+                Settings.syncPasswordOk = true;
+                if (Settings.shouldSyncProfiles()) {
+                    Settings.loadProfilesFromString(profiles.value);
+                }
             }
         }
     }
@@ -164,6 +166,7 @@ Settings.saveSyncedProfiles = function(data) {
     var oldKeys = localStorage["synced_profiles_keys"];
     var threshold = Math.round(chrome.storage.sync.QUOTA_BYTES_PER_ITEM * 0.9);
     var output = {};
+    output.sync_profiles_password = localStorage["sync_profiles_password"];
 
     if (data.length <= threshold) {
         output.synced_profiles = data;
@@ -199,13 +202,7 @@ Settings.saveProfiles = function() {
     var stringified = JSON.stringify(Settings.profiles);
     localStorage["profiles"] = stringified;
     if (Settings.shouldSyncProfiles() && (!Settings.syncDataAvailable || Settings.syncPasswordOk)) {
-        var encrypted = Settings.encrypt(stringified, localStorage["sync_profiles_password"]).value;
-        var parsed = JSON.parse(encrypted);
-        if (parsed.salt === undefined) {
-            parsed.salt = JSON.parse(localStorage["synced_profiles"]).salt;
-            encrypted = JSON.stringify(parsed);
-        }
-        Settings.saveSyncedProfiles(encrypted);
+        Settings.saveSyncedProfiles(Settings.encrypt(stringified, JSON.parse(localStorage["sync_profiles_password"]).hash).value);
     }
 };
 
@@ -313,6 +310,7 @@ Settings.clearSyncData = function(callback) {
             Settings.syncPasswordOk = false;
             localStorage["synced_profiles"] = "";
             localStorage["synced_profiles_keys"] = "";
+            localStorage["sync_profiles_password"] = "";
             Settings.loadLocalProfiles();
             callback(true);
         } else {
@@ -329,23 +327,34 @@ Settings.stopSync = function() {
 };
 
 Settings.startSyncWith = function(password) {
-    var syncHash = ChromePasswordMaker_SecureHash.make_hash(password);
-
+    var syncSalt = Settings.getSyncSalt();
+    var derived = Settings.make_pbkdf2(password, syncSalt);
     if (Settings.syncDataAvailable) {
-        var profiles = Settings.decrypt(localStorage["synced_profiles"], syncHash);
+        var profiles = Settings.decrypt(localStorage["synced_profiles"], derived.hash);
         if (profiles) {
-            Settings.syncPasswordOk = true;
             Settings.loadProfilesFromString(profiles.value);
-            return syncHash;
+            return derived;
         }
     } else {
-        var encrypted = Settings.encrypt(JSON.stringify(Settings.profiles), syncHash);
-        Settings.saveSyncedProfiles(encrypted.value);
-        Settings.syncDataAvailable = true;
-        Settings.syncPasswordOk = true;
-        return syncHash;
+        localStorage["sync_profiles_password"] = JSON.stringify(derived);
+        Settings.saveSyncedProfiles(Settings.encrypt(JSON.stringify(Settings.profiles), derived.hash).value);
+        return derived;
     }
     return false;
+}
+
+Settings.getSyncSalt = function() {
+    try {
+        return JSON.parse(localStorage["sync_profiles_password"]).salt;
+    } catch (e) {
+        return "";
+    }
+};
+
+Settings.make_pbkdf2 = function(password, previousSalt) {
+    var usedSalt = previousSalt || sjcl.codec.hex.fromBits(crypto.getRandomValues(new Uint32Array(8)));
+    var derived = sjcl.codec.hex.fromBits(sjcl.misc.pbkdf2(password, usedSalt));
+    return {hash: derived, salt: usedSalt};
 };
 
 Settings.encrypt = function(data, password) {
@@ -359,7 +368,7 @@ Settings.decrypt = function(data, password) {
         var params = {};
         var decrypted = sjcl.decrypt(password, data, {}, params);
         return {value: decrypted, key: params.key};
-    } catch () {
+    } catch (e) {
         return false;
     }
 };
