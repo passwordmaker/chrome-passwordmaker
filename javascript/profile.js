@@ -144,7 +144,7 @@ Profile.prototype.getText = function() {
 };
 
 Profile.prototype.getUrl = function(url) {
-    var groups = url.match(/([^:\/\/]*:\/\/)?([^:\/]*)([^#]*)/);
+    var groups = url.match(/([^:\/]*?:\/\/)?([^:\/]*)([^#]*)/);
 
     var domainSegments = groups[2].split(".");
     while (domainSegments.length < 3) {
