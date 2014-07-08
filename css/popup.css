@@ -1,3 +1,7 @@
+td {
+    padding: 0
+}
+
 #header {
     font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     text-align: left;
@@ -38,13 +42,13 @@ select {
     font-weight: bold;
     height: 26px;
     text-align: center;
-    width: 288px;
+    width: 292px;
 }
 
 #activatePassword {
     font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     height: 30px;
-    width: 294px;
+    width: 298px;
 }
 
 #button-row {

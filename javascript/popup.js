@@ -50,7 +50,7 @@ function updateFields() {
     if (password.length === 0) {
         $("#generated").val("Please Enter Password");
         setPasswordColors("#000000", "#85FFAB");
-    } else if (!matchesHash(password)) {
+    } else if (!matchesMasterHash(password)) {
         $("#generated").val("Master Password Mismatch");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else if (!Settings.useVerificationCode() && !Settings.keepMasterPasswordHash() && password !== confirmation) {
@@ -76,9 +76,14 @@ function delayedUpdate() {
     window.delayedUpdateID = window.setTimeout(updateFields, 600);
 }
 
-function matchesHash(password) {
-    if (!Settings.keepMasterPasswordHash()) return true;
-    return ChromePasswordMaker_SecureHash.make_hash(password) === Settings.masterPasswordHash();
+function matchesMasterHash(password) {
+    if (Settings.keepMasterPasswordHash()) {
+        var saved = JSON.parse(Settings.masterPasswordHash());
+        var derived = Settings.make_pbkdf2(password, saved.salt);
+        return derived.hash === saved.hash;
+    } else {
+        return true;
+    }
 }
 
 function updateURL(url) {
@@ -92,7 +97,7 @@ function updateURL(url) {
 }
 
 function onProfileChanged() {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.query({active: true, windowType: "normal"}, function(tabs) {
         updateURL(tabs[0].url);
         updateFields();
     });
@@ -100,7 +105,7 @@ function onProfileChanged() {
 
 function showButtons() {
     $("#copypassword").removeClass("hidden");
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.query({active: true, windowType: "normal"}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {hasPasswordField: true}, function(response) {
             if (response !== undefined && response.hasField) {
                 $("#injectpasswordrow").removeClass("hidden");
@@ -131,7 +136,7 @@ function init(url) {
 }
 
 function fillPassword() {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.query({active: true, windowType: "normal"}, function(tabs) {
         updateFields();
         chrome.tabs.sendMessage(tabs[0].id, {password: $("#generated").val()});
         window.close();
@@ -190,20 +195,13 @@ $(function() {
         $("#activatePassword").hide();
     }
 
-    if (Settings.keepMasterPasswordHash()) {
-        var saved_hash = Settings.masterPasswordHash();
-        if (saved_hash.indexOf("pwm_") !== 0) {
-            saved_hash = ChromePasswordMaker_SecureHash.update_old_hash(saved_hash);
-            Settings.setMasterPasswordHash(saved_hash);
-        }
-        $("#confirmation_row").hide();
-    } else if (Settings.useVerificationCode()) {
+    if (Settings.keepMasterPasswordHash() || Settings.useVerificationCode()) {
         $("#confirmation_row").hide();
     } else {
         $("#confirmation_row").show();
     }
 
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.query({active: true, windowType: "normal"}, function(tabs) {
         init(tabs[0].url);
     });
 

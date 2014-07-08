@@ -128,7 +128,7 @@ Settings.deleteProfile = function(id) {
 Settings.loadProfilesFromString = function(profiles) {
     Settings.profiles = [];
     JSON.parse(profiles).forEach(function(item) {
-        Settings.profiles.push($.extend(new Profile, item));
+        Settings.profiles.push($.extend(new Profile(), item));
     });
 };
 
@@ -359,7 +359,7 @@ Settings.decrypt = function(data, password) {
         var params = {};
         var decrypted = sjcl.decrypt(password, data, {}, params);
         return {value: decrypted, key: params.key};
-    } catch (e) {
+    } catch () {
         return false;
     }
 };
