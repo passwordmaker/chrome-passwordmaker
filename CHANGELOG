@@ -1,3 +1,10 @@
+0.6.5 - 2014-07-11
+
+* Added a 2nd default profile called "Alphanumeric".
+* Addresses issue #125 about a potential visual replay attack.
+* Increased security by using PBKDF2 for key derivation.
+* Added a large "Reset All Profiles" button on "General Option" settings page.
+
 0.6.4 - 2014-06-22
 
 * Closes Request #113: Added 3 letter password verification code option
