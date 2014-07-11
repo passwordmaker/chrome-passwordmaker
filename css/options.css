@@ -1,5 +1,4 @@
 body {
-    font-family: Georgia, Palatino, "Palatino Linotype", Times, "Times New Roman", serif;
     margin: 0;
     overflow-y: scroll;
 }
@@ -11,49 +10,36 @@ body {
     top: 0;
 }
 
-main {
-    display: flex;
+#content {
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     margin: 0 auto;
-    min-width: 900px;
-    width: 900px;
+    width: 880px;
 }
 
-header {
+#header {
     background-color: #eee;
     border-bottom: 1px solid #aaa;
 }
 
-h1 {
+#header h1 {
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-style: italic;
     margin: 0 auto;
-    padding: 15px;
-    width: 800px;
+    padding: 15px 0 15px 0;
+    width: 50%;
 }
 
 #list {
     border-right: 1px solid #aaa;
-    min-width: 220px;
+    float: left;
     padding: 40px;
-    width: 220px;
-}
-
-nav {
-    min-width: 850px;
     text-align: center;
-}
-
-#add {
-    border-bottom-left-radius: 1.5em;
-}
-
-#showInformation {
-    border-bottom-right-radius: 1.5em;
+    width: 180px;
 }
 
 #list ol {
     font-size: 1.1em;
     line-height: 1.5;
-    margin: 0;
     overflow: auto;
     text-align: left;
 }
@@ -65,89 +51,22 @@ nav {
     text-decoration: underline;
 }
 
-.nav_button {
-    border-radius: 0;
-    font-weight: bold;
-    margin: 0 -3px;
-    padding: 10px;
+#list button {
     white-space: nowrap;
-    width: 170px;
-}
-
-.nav_button:hover {
-    background: -webkit-linear-gradient(top, #0095cc, #00678e)
-}
-
-.nav_button:active {
-    background: -webkit-linear-gradient(top, #0078a5, #00adee)
-}
-
-h2 {
-    display: inline-block;
-    margin: 0 0 20px 20px;
-}
-
-#strength_section {
-    display: none;
-    margin-top: 40px;
-    max-width: 320px;
-}
-
-#strength {
-    display: inline-block;
-    font-size: 1.1em;
-    margin: 3px 0 0 25px;
-}
-
-#checkStrength {
-    margin: 0;
-}
-
-.strengthInput {
-    margin-left: 110px;
-    text-align: center;
-}
-
-.strengthLabel {
-    width: 105px;
-}
-
-.strength_info {
-    margin: 0 0 20px 20px;
-    display: inline-block;
-}
-
-meter {
-    float: right;
-    width: 145px;
-    margin: 5px 38px;
-}
-
-.testCheck {
-    display: none;
-}
-
-.testCheck + .testLabel {
-    background-repeat: no-repeat;
-    display: inline-block;
-    float: right;
-    line-height: 24px;
-    margin-right: 25px;
-    position: relative;
-    text-align: center;
     width: 150px;
 }
 
-.testCheck:checked + .testLabel {
-    background-position: 0 -24px;
+button {
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif !important;
 }
 
-.testLabel {
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAwCAYAAAALiLqjAAADVUlEQVRYhdWXsWscRxTGf08cLoI4jHGRQgTh0ggXN1cIhRRBEVvYWCAMdmFwZ5epUribJkUgf0ASSBESSKfgxBgOyxiDkYXRXGGEaxXGlRFiESpC8HNxM+t3s3ubi6Qr8mDY2dm33/feN29mdkWZrXVSJzh3QVU3gPlTYh6JyKYL4QBA9CN4ABZFBNVRXk19ewUm9fcB50I4mIusG8Bicmqz9FxV2/qLEZO5OHheRMjaNlCm+5RFQytFZDsfV9X5iqAhii1gTVULVS1tdNm1VNUi+m7Z7FNQFYEh2gbWXQjH/eFwR0QKoGyQqBSRoj8c7rgQjkVkHdhOgSa/uYbUl4ArCdCFUJFkshQuhB1DfEVEliyWnQPL2gUGwbllSxKlKJMsFjw4tywiA1Xt5oo0SQTQVdUxkv5wuAMUSRYLrqoVeC5Rx05IZl1gsNvrVYA2aoDdXm9ZYCAitcjHMshZ2+Rqk6VpDVVbhc1iUr/JJvnWqshmYVoJFLk0UMlVrZO81aqoIYoaeHBuOa8uoCrh9L7NpKqibEsom6oFGJDNiV2M00pUi3y316tKMbbBbq9Xy8TK1SbRHvAqjzyVYnyxKyJ5db0Skb1coqYqWgEeBOfWGW0ZOXhFEuUqYkAP4rtjElULLavhr4DHwFIEmmRdRvOyZ8FtMJ3IdmgfRLKVKU+0roispKiNEkfwcZI3RWS/qdTyfibnpP6+qm5CPJNhdC4DG6o6P825O+ncjpGPH/qztNp2/b8j6Ngb8dwFVk9B/B54op6fKsw0BxH8xxMC53YvkdhIV88IfAzLEpxUlhJYB941YZ12kg+BNfX8CdxvcjgNQQkU6nkZ74/OkuAYuJrAxXML+PWsCP4BbqrneQS/HsE7Tc5tBK8Z1XVu99XzMIL3gd8ngbcRlMAacAf424w/Us/3Efwi8AfwSUuQEwm+Vc9b9fwGXI2ER8A94/MzsNAG3kbwhfjRv5p6toAvgW/U8yZGfwO4/m/gbQTXgKfi+TSSDNXzQwQ/B3w3DXgbAUAfeCGeS9n4baiNnYgARj+Gz8TzmRn7elpwaCkvYwvAX+L5HLiM+fs5KwIi6C+M9p7/ZJagaVFZ25jCp4Zl5+DJFC9Ou7VUWGNfFTM9MmdlM/+q+AASMh6TCcAyXAAAAABJRU5ErkJggg==");
+h2 {
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
+    margin: 0;
 }
 
 #profileNameTB {
-    font-family: Georgia, Palatino, "Palatino Linotype", Times, "Times New Roman", serif;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-size: 2em;
 }
 
@@ -232,20 +151,23 @@ label {
     background-color: #000;
     border-radius: 7px;
     color: #fff;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-size: .8em;
     font-style: italic;
     margin: 0 0 10px 165px;
     padding: 10px 0 10px 0;
     text-align: center;
-    width: 310px;
+    width: 300px;
 }
 
-footer {
+#footer {
     background-color: #eee;
     border-top: 1px solid #aaa;
     bottom: 0;
+    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-size: .8em;
     font-style: italic;
+    left: 0;
     padding: 10px;
     position: fixed;
     text-align: center;
@@ -253,7 +175,7 @@ footer {
     width: 100%;
 }
 
-footer a {
+#footer a {
     background-color: #ddd;
     border-radius: 5px;
     color: #000;
@@ -261,11 +183,16 @@ footer a {
     padding: 4px;
 }
 
-section {
+#showSettings, #showInformation, #showImport, #showExport {
+    margin-top: 20px;
+}
+
+.section {
     display: none;
+    float: left;
     margin-bottom: 60px;
     padding: 40px;
-    width: 520px;
+    width: 530px;
 }
 
 textarea {
@@ -296,5 +223,5 @@ select.input {
 
 #resetToDefaultprofiles {
     font-weight: bold;
-    margin: 50px 0 50px 165px;
+    margin: 50px 0px 50px 165px;
 }

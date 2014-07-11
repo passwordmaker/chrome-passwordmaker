@@ -352,8 +352,8 @@ Settings.getSyncSalt = function() {
 };
 
 Settings.make_pbkdf2 = function(password, previousSalt) {
-    var usedSalt = previousSalt || sjcl.codec.base64.fromBits(sjcl.random.randomWords(4, 0));
-    var derived = sjcl.codec.hex.fromBits(sjcl.misc.pbkdf2(password, usedSalt, 10000));
+    var usedSalt = previousSalt || sjcl.codec.hex.fromBits(crypto.getRandomValues(new Uint32Array(8)));
+    var derived = sjcl.codec.hex.fromBits(sjcl.misc.pbkdf2(password, usedSalt));
     return {hash: derived, salt: usedSalt};
 };
 
