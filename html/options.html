@@ -7,24 +7,31 @@
         <link rel="stylesheet" href="../css/options.css">
     </head>
     <body>
-        <a id="banner" target="_blank" href="https://github.com/passwordmaker/chrome-passwordmaker">
-            <img src="../images/forkme_right_red_aa0000.png" alt="Fork me on GitHub" height="149" width="149">
-        </a>
-        <div id="header">
+        <header>
             <h1>Options</h1>
-        </div>
-        <div id="content">
+            <a id="banner" target="_blank" href="https://github.com/passwordmaker/chrome-passwordmaker">
+                <img src="../images/forkme_right_red_aa0000.png" alt="Fork me on GitHub" height="149" width="149">
+            </a>
+        </header>
+        <nav>
+            <button class="button black nav_button" id="add">Add New Profile</button>
+            <button class="button black nav_button" id="showImport">Import Profiles</button>
+            <button class="button black nav_button" id="showExport">Export Profiles</button>
+            <button class="button black nav_button" id="showSettings">General Options</button>
+            <button class="button black nav_button" id="showInformation">Information</button>
+        </nav> 
+        <main>
             <div id="list">
                 <h2>Profile List</h2>
                 <ol id="profile_list"></ol>
-                <button class="button black" id="add">Add new profile</button>
-                <button class="button black" id="showImport">Import Profiles</button>
-                <button class="button black" id="showExport">Export Profiles</button>
-                <button class="button black" id="showSettings">General Options</button>
-                <button class="button black" id="showInformation">Information</button>
             </div>
 
-            <div class="section" id="profile_settings">
+            <section id="profile_settings">
+                <h2>Selected Profile &#8681;</h2>
+                <div id="strength">
+                    <input id="checkStrength" type="checkbox">
+                    <label class="checkbox row" for="checkStrength">Test Strength of Profile</label>
+                </div>
                 <div class="row">
                     <label for="profileNameTB">Name:</label>
                     <input class="input" id="profileNameTB">
@@ -32,7 +39,7 @@
                 <div class="row">
                     <div class="subrow">
                         <label for="siteList">Use with sites:</label>
-                        <input class="input" id="siteList">
+                        <input class="input testInput" id="siteList">
                     </div>
                     <div class="subrow extra_info">
                         <span>
@@ -48,25 +55,25 @@
                 <div class="row">
                     <label>URL Components:</label>
                     <div class="subrow">
-                        <input id="protocolCB" type="checkbox">
+                        <input class="testInput" id="protocolCB" type="checkbox">
                         <label class="checkbox" for="protocolCB">Protocol</label>
                     </div>
                     <div class="subrow">
-                        <input id="subdomainCB" type="checkbox">
+                        <input class="testInput" id="subdomainCB" type="checkbox">
                         <label class="checkbox" for="subdomainCB">Subdomain(s)</label>
                     </div>
                     <div class="subrow">
-                        <input id="domainCB" type="checkbox">
+                        <input class="testInput" id="domainCB" type="checkbox">
                         <label class="checkbox" for="domainCB">Domain</label>
                     </div>
                     <div class="subrow">
-                        <input id="pathCB" type="checkbox">
+                        <input class="testInput" id="pathCB" type="checkbox">
                         <label class="checkbox" for="pathCB">Port, path, query parameters</label>
                     </div>
                 </div>
                 <div class="row">
                     <label id="labelUseThisText" for="inputUseThisText">Use This Text:</label>
-                    <input class="input" id="inputUseThisText">
+                    <input class="input testInput" id="inputUseThisText">
                     <div class="subrow extra_info">
                         <span>
                             If you want to use a fixed URL every time, you can fill it here.<br>
@@ -76,7 +83,7 @@
                 </div>
                 <div class="row">
                     <label for="whereLeetLB">Use l33t:</label>
-                    <select class="input" id="whereLeetLB">
+                    <select class="input testInput" id="whereLeetLB">
                         <option value="off">not at all</option>
                         <option value="before-hashing">before generating password</option>
                         <option value="after-hashing">after generating password</option>
@@ -85,7 +92,7 @@
                 </div>
                 <div class="row">
                     <label id="leetLevelLabel" for="leetLevelLB">l33t Level:</label>
-                    <select class="input" id="leetLevelLB">
+                    <select class="input testInput" id="leetLevelLB">
                         <option value="0">1</option>
                         <option value="1">2</option>
                         <option value="2">3</option>
@@ -99,7 +106,7 @@
                 </div>
                 <div class="row">
                     <label for="hashAlgorithmLB">Hash Algorithm:</label>
-                    <select class="input" id="hashAlgorithmLB">
+                    <select class="input testInput" id="hashAlgorithmLB">
                         <option value="md4">MD4</option>
                         <option value="hmac-md4">HMAC-MD4</option>
                         <option value="md5">MD5</option>
@@ -115,37 +122,78 @@
                 </div>
                 <div class="row">
                     <label for="passwdLength">Password length:</label>
-                    <input class="input" id="passwdLength" min="8" max="512" type="number">
+                    <input class="input testInput" id="passwdLength" min="8" max="512" type="number">
                 </div>
                 <div class="row">
                     <label for="usernameTB">Username:</label>
-                    <input class="input" id="usernameTB">
+                    <input class="input testInput" id="usernameTB">
                 </div>
                 <div class="row">
                     <label for="modifier">Modifier:</label>
-                    <input class="input" id="modifier">
+                    <input class="input testInput" id="modifier">
                 </div>
                 <div class="row">
                     <label for="charset">Characters:</label>
-                    <select class="input" id="charset"></select>
-                    <input class="input" id="customCharset">
+                    <select class="input testInput" id="charset"></select>
+                    <input class="input testInput" id="customCharset">
                 </div>
                 <div class="row">
                     <label for="passwordPrefix">Password Prefix:</label>
-                    <input class="input" id="passwordPrefix">
+                    <input class="input testInput" id="passwordPrefix">
                 </div>
                 <div class="row">
                     <label for="passwordSuffix">Password Suffix:</label>
-                    <input class="input" id="passwordSuffix">
+                    <input class="input testInput" id="passwordSuffix">
                 </div>
-                <div class="row link" id="cloneProfileButton">Clone this profile</div>
+                <div class="row">
+                    <span class="row link" id="cloneProfileButton">Clone this profile</span>
+                </div>
                 <div id="profile_buttons">
                     <button class="button black" id="save">Save</button>
                     <button class="button black" id="remove">Remove</button>
                 </div>
-            </div>
+            </section>
+            <aside id="strength_section">
+                <h2>Test Strength Below</h2>
+                <div class="strength_info">
+                    Change the configurable Profile options to alter the text/data used for password generation
+                </div>
+                <div class="row">
+                    <label class="strengthLabel" for="testPass">Password:</label>
+                    <input class="strengthInput testInput" id="testPass" type="password">
+                </div>
+                <div class="row">
+                    <label class="strengthLabel" for="testText">Used Text:</label>
+                    <input class="strengthInput" id="testText" readonly>
+                </div>
+                <div class="row">
+                    <label class="strengthLabel" for="genPass">Generated:</label>
+                    <input class="strengthInput" id="genPass" readonly>
+                </div>
+                <div class="row">
+                    <label class="strengthLabel" for="genStrength">Strength:</label>
+                    <input class="strengthInput" id="genStrength" readonly>
+                    <meter class="row" min="0" low="30" high="70" max="100" optimum="80"></meter>
+                </div>
+                <div class="row">
+                    <input class="testCheck" id="hasUpper" type="checkbox" disabled="true">
+                    <label class="testLabel" for="hasUpper">Upper Case</label>
+                </div>
+                <div class="row">
+                    <input class="testCheck" id="hasLower" type="checkbox" disabled="true">
+                    <label class="testLabel" for="hasLower">Lower Case</label>
+                </div>
+                <div class="row">
+                    <input class="testCheck" id="hasDigit" type="checkbox" disabled="true">
+                    <label class="testLabel" for="hasDigit">Digits</label>
+                </div>
+                <div class="row">
+                    <input class="testCheck" id="hasSymbol" type="checkbox" disabled="true">
+                    <label class="testLabel" for="hasSymbol">Symbols</label>
+                </div>
+            </aside>
 
-            <div class="section" id="import_settings">
+            <section id="import_settings">
                 <h2>Import Profiles</h2>
                 <div class="row">
                     <div class="section_info">Paste export into the box below then click "Import".</div>
@@ -163,9 +211,9 @@
                     <label class="checkbox" for="importOverwrite">Delete all profiles, then import (backup first!)</label>
                     <button class="button black" id="importButton">Import</button>
                 </div>
-            </div>
+            </section>
 
-            <div class="section" id="export_settings">
+            <section id="export_settings">
                 <h2>Export Profiles</h2>
                 <div class="row">
                     <div class="section_info">Copy and paste the text below into "Import Profiles" section of Chrome PasswordMaker Pro.</div>
@@ -181,9 +229,9 @@
                     <button class="button black" id="copyButton">Copy</button>
                     <button class="button black" id="exportFileButton">Export To File</button>
                 </div>
-            </div>
+            </section>
 
-            <div class="section" id="general_settings">
+            <section id="general_settings">
                 <h2>Settings</h2>
                 <div class="section_info">Here you find settings that affect all profiles.</div>
                 <div class="row">
@@ -250,9 +298,9 @@
                         <label class="checkbox" for="resetToDefaultprofiles"></label>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="section" id="general_information">
+            <section id="general_information">
                 <h2>Information</h2>
                 <div class="row">
                     <div class="subrow">
@@ -275,14 +323,22 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div id="footer">
+            </section>
+        </main>
+        <footer>
             <a target="_blank" href="https://chrome.google.com/webstore/detail/passwordmaker-pro/ocjkdaaapapjpmipmhiadedofjiokogj">PasswordMaker Pro</a>
             is based on <a target="_blank" href="http://www.passwordmaker.org/">passwordmaker.org</a> and is proudly presented by
             <a target="_blank" href="http://bitboxer.de">Bodo Tasche (bitboxer)</a> and <a target="_blank" href="http://toxprox.tumblr.com/">Eric Aguiar (heavensrevenge)</a>
-        </div>
+        </footer>
         <script src="../javascript/jquery.min.js"></script>
+        <script src="../javascript/passwordmaker/hashutils.js"></script>
+        <script src="../javascript/passwordmaker/md4.js"></script>
+        <script src="../javascript/passwordmaker/md5.js"></script>
+        <script src="../javascript/passwordmaker/md5_v6.js"></script>
+        <script src="../javascript/passwordmaker/sha256.js"></script>
+        <script src="../javascript/passwordmaker/sha1.js"></script>
+        <script src="../javascript/passwordmaker/ripemd160.js"></script>
+        <script src="../javascript/passwordmaker/l33t.js"></script>
         <script src="../javascript/settings.js"></script>
         <script src="../javascript/profile.js"></script>
         <script src="../javascript/options.js"></script>
