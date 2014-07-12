@@ -73,7 +73,7 @@ function updateFields() {
 
 function delayedUpdate() {
     window.clearTimeout(window.delayedUpdateID);
-    window.delayedUpdateID = window.setTimeout(updateFields, 600);
+    window.delayedUpdateID = window.setTimeout(updateFields, 500);
 }
 
 function matchesMasterHash(password) {
@@ -97,7 +97,7 @@ function updateURL(url) {
 }
 
 function onProfileChanged() {
-    chrome.tabs.query({active: true, windowType: "normal"}, function(tabs) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         updateURL(tabs[0].url);
         updateFields();
     });
@@ -105,7 +105,7 @@ function onProfileChanged() {
 
 function showButtons() {
     $("#copypassword").removeClass("hidden");
-    chrome.tabs.query({active: true, windowType: "normal"}, function(tabs) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {hasPasswordField: true}, function(response) {
             if (response !== undefined && response.hasField) {
                 $("#injectpasswordrow").removeClass("hidden");
@@ -136,7 +136,7 @@ function init(url) {
 }
 
 function fillPassword() {
-    chrome.tabs.query({active: true, windowType: "normal"}, function(tabs) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         updateFields();
         chrome.tabs.sendMessage(tabs[0].id, {password: $("#generated").val()});
         window.close();
@@ -201,7 +201,7 @@ $(function() {
         $("#confirmation_row").show();
     }
 
-    chrome.tabs.query({active: true, windowType: "normal"}, function(tabs) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         init(tabs[0].url);
     });
 
