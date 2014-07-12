@@ -8,7 +8,21 @@ This extension fixes that. It's a real port with all the bells and whistles you'
 
 # Status of this project
 
-Currently there is no active development on this plugin. If you want to take over this project, send me some pull requests for features. If I think your code is good enough to takeover the project, I will give you full access to this repo.
+## Update 2014-07-12 by @bitboxer
+
+Sadly I don't have enough time to continue working on this. I got a few pull requests
+by [@heavensrevenge](http://github.com/heavensrevenge). Sadly some of those broke things. I should have tested this
+more thoroughly, but I don't have the energy to do it. I don't use this plugin anymore.
+
+So I do what I think is the most responsible thing to do: remove it from the chrome
+app store and stop working on this. There are several users here on this organization
+who have write access to the code, so I hope they will continue working on this and
+re releasing this to the chrome webstore. And hopefully without the buggy releases
+this plugin had sadly.
+
+I'm out. It was a nice ride. But I can't continue to do a half-assed job on this.
+
+[@bitboxer](http://github.com/bitboxer)
 
 # Installation
 
