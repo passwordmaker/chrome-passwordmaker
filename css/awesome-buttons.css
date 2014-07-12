@@ -20,29 +20,27 @@
 .black {
     color: #fff;
     border: solid 1px #333;
-    background: -webkit-gradient(linear, left top, left bottom, from(#666), to(#000));
+    background: -webkit-linear-gradient(top, #666, #000);
 }
 
 .black:hover {
-    background: -webkit-gradient(linear, left top, left bottom, from(#444), to(#000));
+    background: -webkit-linear-gradient(top, #444, #000);
 }
 
 .black:active {
-    color: #ddd;
-    background: -webkit-gradient(linear, left top, left bottom, from(#000), to(#444));
+    background: -webkit-linear-gradient(top, #000, #444);
 }
 
 .red {
     color: #fff;
     border: solid 1px #980c10;
-    background: -webkit-gradient(linear, left top, left bottom, from(#ed1c24), to(#aa1317));
+    background: -webkit-linear-gradient(top, #ed1c24, #aa1317);
 }
 
 .red:hover {
-    background: -webkit-gradient(linear, left top, left bottom, from(#c9151b), to(#a11115));
+    background: -webkit-linear-gradient(top, #c9151b, #a11115);
 }
 
 .red:active {
-    color: #faddde;
-    background: -webkit-gradient(linear, left top, left bottom, from(#aa1317), to(#ed1c24));
+    background: -webkit-linear-gradient(top, #aa1317, #ed1c24);
 }
