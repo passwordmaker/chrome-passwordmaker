@@ -1,3 +1,9 @@
+0.6.6 - 2014-07-12
+
+* Fixes Bug #130: Fix incognito window usage
+* Put options page navigation at top
+* Added password strength meter to profile customization
+
 0.6.5 - 2014-07-11
 
 * Added a 2nd default profile called "Alphanumeric".
