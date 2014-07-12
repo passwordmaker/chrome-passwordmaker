@@ -1,8 +1,10 @@
+(function(){
+    
 var password = "";
 
 function updateSyncedProfiles(data) {
     localStorage["synced_profiles_keys"] = "";
-    if (data.synced_profiles === undefined) {
+    if (typeof (data.synced_profiles) === "undefined") {
         data.synced_profiles = "";
     } else if (typeof (data.synced_profiles) !== "string") {
         var profiles = "";
@@ -39,3 +41,5 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
         localStorage["sync_profiles_password"] = changes.sync_profiles_password.newValue || "";
     }
 });
+
+})();
