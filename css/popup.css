@@ -1,9 +1,13 @@
+html {
+    font-family: Georgia, Palatino, "Palatino Linotype", Times, "Times New Roman", serif;
+    width: 320px;
+}
+
 td {
     padding: 0;
 }
 
 #header {
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     text-align: left;
 }
 
@@ -13,7 +17,6 @@ td {
 }
 
 label {
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-size: .75em;
     font-weight: bold;
     color: #888;
@@ -46,13 +49,11 @@ select {
 }
 
 #activatePassword {
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     height: 30px;
     width: 298px;
 }
 
 #button-row {
-    font-family: Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;
     font-size: .9em;
     text-align: center;
     white-space: nowrap;
