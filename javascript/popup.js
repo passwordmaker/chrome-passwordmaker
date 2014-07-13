@@ -79,7 +79,7 @@ function delayedUpdate() {
 function matchesMasterHash(password) {
     if (Settings.keepMasterPasswordHash()) {
         var saved = JSON.parse(Settings.masterPasswordHash());
-        var derived = Settings.make_pbkdf2(password, saved.salt);
+        var derived = Settings.make_pbkdf2(password, saved.salt, saved.iter);
         return derived.hash === saved.hash;
     } else {
         return true;

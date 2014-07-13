@@ -327,8 +327,8 @@ Settings.stopSync = function() {
 };
 
 Settings.startSyncWith = function(password) {
-    var syncSalt = Settings.getSyncSalt();
-    var derived = Settings.make_pbkdf2(password, syncSalt);
+    var syncSettings = Settings.getSyncSettings();
+    var derived = Settings.make_pbkdf2(password, syncSettings.salt, syncSettings.iter);
     if (Settings.syncDataAvailable) {
         var profiles = Settings.decrypt(localStorage["synced_profiles"], derived.hash);
         if (profiles) {
@@ -343,18 +343,19 @@ Settings.startSyncWith = function(password) {
     return false;
 };
 
-Settings.getSyncSalt = function() {
+Settings.getSyncSettings = function() {
     try {
-        return JSON.parse(localStorage["sync_profiles_password"]).salt;
+        return JSON.parse(localStorage["sync_profiles_password"]);
     } catch (e) {
-        return "";
+        return {hash: "", salt: "", iter: ""};
     }
 };
 
-Settings.make_pbkdf2 = function(password, previousSalt) {
-    var usedSalt = previousSalt || sjcl.codec.hex.fromBits(crypto.getRandomValues(new Uint32Array(8)));
-    var derived = sjcl.codec.hex.fromBits(sjcl.misc.pbkdf2(password, usedSalt));
-    return {hash: derived, salt: usedSalt};
+Settings.make_pbkdf2 = function(password, previousSalt, iter) {
+    var usedSalt = previousSalt || sjcl.codec.base64.fromBits(crypto.getRandomValues(new Uint32Array(8)));
+    var iterations = iter || 1000;
+    var derived = sjcl.codec.hex.fromBits(sjcl.misc.pbkdf2(password, usedSalt, iterations));
+    return {hash: derived, salt: usedSalt, iter: iterations};
 };
 
 Settings.encrypt = function(data, password) {

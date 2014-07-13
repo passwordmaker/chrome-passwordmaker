@@ -283,7 +283,7 @@ function updateMasterHash() {
         var master_pass = $("#masterPassword").val();
         if (master_pass.length > 0) {
             Settings.setKeepMasterPasswordHash(true);
-            Settings.setMasterPasswordHash(JSON.stringify(Settings.make_pbkdf2(master_pass,"")));
+            Settings.setMasterPasswordHash(JSON.stringify(Settings.make_pbkdf2(master_pass)));
         } else {
             Settings.setKeepMasterPasswordHash(false);
             Settings.setMasterPasswordHash("");
