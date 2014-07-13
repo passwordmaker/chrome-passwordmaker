@@ -36,7 +36,7 @@ function removeProfile() {
 
 function removeAllProfiles() {
     if (confirm("Really delete ALL local profile customizations and reset to the default profiles?")) {
-        localStorage["profiles"] = "";
+        localStorage.setItem("profiles", "");
         Settings.loadLocalProfiles();
         updateProfileList();
     }
@@ -66,10 +66,6 @@ function setCurrentProfile(profile) {
     }
     $("#charset").append(new Option("Custom charset"));
 
-    if ($("#hashAlgorithmLB")[0].value.length === 0) {
-        $("#hashAlgorithmLB").val("bugged");
-    }
-
     if (CHARSET_OPTIONS.indexOf(profile.selectedCharset) >= 0) {
         $("#charset").val(profile.selectedCharset);
     } else {
@@ -89,6 +85,7 @@ function setCurrentProfile(profile) {
     }
 
     showSection("#profile_settings");
+    oldHashWarning(profile.hashAlgorithm);
 }
 
 function updateCustomCharsetField() {
@@ -96,6 +93,14 @@ function updateCustomCharsetField() {
         $("#customCharset").val(Settings.getProfile(Settings.currentProfile).selectedCharset).show();
     } else {
         $("#customCharset").hide();
+    }
+}
+
+function oldHashWarning(hash) {
+    // TODO remove this a few versions in the future, Allow selection but warn of future removal so people can upgrade
+    var bugged = {"md5_v6": 1, "hmac-md5_v6": 1, "hmac-sha256": 1};
+    if (bugged[hash]) {
+        alert("Please change to using a new algorithm, the old bugged items will be removed by version 0.8!\n\nThank you");
     }
 }
 
@@ -110,7 +115,6 @@ function showExport() {
 
 function importRdf() {
     var txt = $("#importText").val();
-    var count = 0;
 
     if (txt.trim().length === 0) {
         alert("Import text is empty");
@@ -120,14 +124,10 @@ function importRdf() {
     var rdfDoc = RdfImporter.loadDoc(txt);
     // Check that profiles have been parsed and are available before wiping current data
     if (rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length && $("#importOverwrite").prop("checked")) {
-        Settings.profiles = JSON.parse(JSON.stringify(rdfDoc.profiles));
-        Settings.saveProfiles();
-        count = rdfDoc.profiles.length;
-    } else {
-        count = RdfImporter.saveProfiles(rdfDoc.profiles);
+        Settings.profiles = [];
     }
 
-    if (count === 0) {
+    if (RdfImporter.saveProfiles(rdfDoc.profiles) === 0) {
         alert("Sorry, no profiles found");
         return false;
     }
@@ -179,20 +179,17 @@ function saveProfile() {
     selected.strUseText     = $("#inputUseThisText").val().trim();
     selected.whereToUseL33t = $("#whereLeetLB").val();
     selected.l33tLevel      = $("#leetLevelLB").val();
+    selected.hashAlgorithm  = $("#hashAlgorithmLB").val();
     selected.passwordLength = $("#passwdLength").val();
     selected.username       = $("#usernameTB").val().trim();
     selected.modifier       = $("#modifier").val().trim();
     selected.passwordPrefix = $("#passwordPrefix").val();
     selected.passwordSuffix = $("#passwordSuffix").val();
 
-    // make sure default profile siteList stays blank
+    // make sure default profile siteList and strUseText stays blank/generic
     if (selected.title === "Default") {
         selected.siteList = "";
-    }
-
-    // Keep old/bugged algorithm unless explicitly changed & saved
-    if ($("#hashAlgorithmLB").val() !== "bugged") {
-        selected.hashAlgorithm = $("#hashAlgorithmLB").val();
+        selected.strUseText = "";
     }
 
     if ($("#charset").val() === "Custom charset") {
@@ -204,6 +201,7 @@ function saveProfile() {
     Settings.saveProfiles();
     updateProfileList();
     highlightProfile();
+    oldHashWarning(selected.hashAlgorithm);
 }
 
 function cloneProfile() {
@@ -384,19 +382,20 @@ function getPasswordStrength(pw) {
     c = lower > quarterLen * 2 ? quarterLen : Math.abs(quarterLen - lower);
     var r5 = 1 - (c / quarterLen);
 
-    var pwstrength = (((r0 + r2 + r3 + r4 + r5) / 5) * 100) + r1;
+    var pwStrength = (((r0 + r2 + r3 + r4 + r5) / 5) * 100) + r1;
 
-    // make sure we're give a value between 0 and 100
-    if (pwstrength < 0) pwstrength = 0;
-    if (pwstrength > 100) pwstrength = 100;
+    // make sure we get a valid value between 0 and 100
+    if (isNaN(pwStrength)) pwStrength = 0;
+    if (pwStrength < 0) pwStrength = 0;
+    if (pwStrength > 100) pwStrength = 100;
 
     return { // return strength as an integer + boolean usage of character type
-        strength: pwstrength |0,
+        strength: Math.floor(pwStrength),
         hasUpper: Boolean(upper),
         hasLower: Boolean(lower),
         hasDigit: Boolean(nums),
         hasSymbol: Boolean(syms)
-    }
+    };
 }
 
 function showStrengthSection() {
@@ -452,10 +451,10 @@ function checkPassStrength() {
     $("#genPass").val(selected.getPassword($("#testText").val(), testPass));
     var values = getPasswordStrength($("#genPass").val());
     $("#genStrength, meter").val(values.strength);
-    $("#hasUpper").prop("checked", values.hasUpper)
-    $("#hasLower").prop("checked", values.hasLower)
-    $("#hasDigit").prop("checked", values.hasDigit)
-    $("#hasSymbol").prop("checked", values.hasSymbol)
+    $("#hasUpper").prop("checked", values.hasUpper);
+    $("#hasLower").prop("checked", values.hasLower);
+    $("#hasDigit").prop("checked", values.hasDigit);
+    $("#hasSymbol").prop("checked", values.hasSymbol);
 }
 
 $(function() {

@@ -1,7 +1,7 @@
 var password = "";
 
 function updateSyncedProfiles(data) {
-    localStorage["synced_profiles_keys"] = "";
+    localStorage.setItem("synced_profiles_keys", "");
     if (data.synced_profiles === undefined) {
         data.synced_profiles = "";
     } else if (typeof (data.synced_profiles) !== "string") {
@@ -9,17 +9,17 @@ function updateSyncedProfiles(data) {
         data.synced_profiles.forEach(function(key) {
             profiles += data[key];
         });
-        localStorage["synced_profiles_keys"] = data.synced_profiles.join();
+        localStorage.setItem("synced_profiles_keys", data.synced_profiles.join());
         data.synced_profiles = profiles;
     }
-    localStorage["synced_profiles"] = data.synced_profiles;
+    localStorage.setItem("synced_profiles", data.synced_profiles);
 }
 
 chrome.storage.sync.get(null, function(data) {
     if (chrome.runtime.lastError === undefined) {
         updateSyncedProfiles(data);
         if (data.sync_profiles_password !== undefined) {
-            localStorage["sync_profiles_password"] = data.sync_profiles_password;
+            localStorage.setItem("sync_profiles_password", data.sync_profiles_password);
         }
     }
 });
@@ -36,6 +36,6 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
         updateSyncedProfiles(flattened);
     }
     if (changes.sync_profiles_password !== undefined) {
-        localStorage["sync_profiles_password"] = changes.sync_profiles_password.newValue || "";
+        localStorage.setItem("sync_profiles_password", changes.sync_profiles_password.newValue || "");
     }
 });

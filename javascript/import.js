@@ -179,7 +179,7 @@ RdfImporter.saveProfiles = function(profiles) {
         return 0;
     }
     for (var i = 0; i < profiles.length; i++) {
-        Settings.addProfile(profiles[i]);
+        Settings.addProfile($.extend(new Profile(), profiles[i]));
     }
     Settings.saveProfiles();
     return profiles.length;
