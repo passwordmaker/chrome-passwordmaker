@@ -152,20 +152,19 @@ Profile.prototype.getUrl = function(url) {
     }
 
     var resultURL = "";
-    var protocol = this.url_protocol ? groups[1] : ""; // set the protocol or empty string
+    if (this.url_protocol && groups[1] !== undefined) {
+        resultURL += groups[1];
+    }
     var splitSegments = this.splitSubdomain(domainSegments);
     if (this.url_subdomain) {
         resultURL += splitSegments[0];
     }
     if (this.url_domain) {
-        if (resultURL !== "" && resultURL[resultURL.length - 1] !== ".") {
+        if (resultURL.length !== 0 && resultURL[resultURL.length - 1] !== "." && resultURL[resultURL.length - 1] !== "/") {
             resultURL += ".";
         }
         resultURL += splitSegments[1];
     }
-
-    resultURL = protocol + resultURL;
-
     if (this.url_path) {
         resultURL += groups[3];
     }
