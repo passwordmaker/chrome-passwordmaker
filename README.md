@@ -11,14 +11,14 @@ This extension fixes that. It's a real port with all the bells and whistles you'
 ## Update 2014-07-12 by @bitboxer
 
 Sadly I don't have enough time to continue working on this. I got a few pull requests
-by [@heavensrevenge](http://github.com/heavensrevenge). Sadly some of those broke things. I should have tested this
-more thoroughly, but I don't have the energy to do it. I don't use this plugin anymore.
+by [@heavensrevenge](http://github.com/heavensrevenge) and sadly some of those broke things.
+I don't use this plugin anymore and do not have the time or energy to continue maintainership.
 
-So I do what I think is the most responsible thing to do: remove it from the chrome
+So I'll do what I think is the most responsible thing to do: remove it from the chrome
 app store and stop working on this. There are several users here on this organization
 who have write access to the code, so I hope they will continue working on this and
-re releasing this to the chrome webstore. And hopefully without the buggy releases
-this plugin had sadly.
+re-release this to the chrome webstore and hopefully fix the remaining bugs
+this plugin had at the time I write this.
 
 I'm out. It was a nice ride. But I can't continue to do a half-assed job on this.
 
