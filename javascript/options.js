@@ -136,7 +136,7 @@ function importRdf() {
 }
 
 function copyRdfExport() {
-    document.getElementById("exportText").select();
+    $("#exportText").get(0).select();
     document.execCommand("copy");
 }
 
@@ -255,8 +255,8 @@ function clearSyncData() {
 function updateSyncProfiles() {
     $("#sync_profiles_row, #no_sync_password, #sync_data_exists, #sync_password_set").hide();
     $("#set_sync_password, #clear_sync_data").addClass("hidden");
-    var should_sync = $("#syncProfiles").prop("checked");
 
+    var should_sync = $("#syncProfiles").prop("checked");
     if (should_sync) {
         if (Settings.syncPasswordOk) {
             $("#sync_password_set").show();

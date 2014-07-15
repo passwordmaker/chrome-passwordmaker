@@ -38,6 +38,8 @@ h1 {
 }
 
 nav {
+    display: flex;
+    justify-content: center;
     min-width: 850px;
     text-align: center;
 }
@@ -69,17 +71,19 @@ nav {
     border-radius: 0;
     font-weight: bold;
     padding: 10px;
-    margin: 0 -3px;
+    margin: 0;
     white-space: nowrap;
     width: 170px;
 }
 
 .nav_button:hover {
-    background: -webkit-linear-gradient(top, #0095cc, #00678e)
+    background: -webkit-linear-gradient(top, #0095cc, #00678e);
 }
 
 .nav_button:active {
-    background: -webkit-linear-gradient(top, #0078a5, #00adee)
+    background: -webkit-linear-gradient(top, #0078a5, #00adee);
+    padding: 11px 10px 8px 10px;
+    position: static;
 }
 
 h2 {

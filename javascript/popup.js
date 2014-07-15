@@ -172,7 +172,7 @@ function copyPassword() {
 }
 
 function openOptions() {
-    chrome.tabs.create({url: "html/options.html"}, function() {
+    chrome.tabs.create({url: chrome.extension.getURL("html/options.html")}, function() {
         window.close();
     });
 }

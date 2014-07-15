@@ -220,7 +220,7 @@ Settings.setStoreLocation = function(store) {
 };
 
 Settings.setPassword = function(password) {
-    var key = sjcl.codec.hex.fromBits(crypto.getRandomValues(new Uint32Array(8)));
+    var key = sjcl.codec.base64.fromBits(crypto.getRandomValues(new Uint32Array(8)));
     localStorage.setItem("password_key", key);
     if (Settings.storeLocation === "memory") {
         Settings.password = sjcl.encrypt(key, password, { ks: 256, ts: 128 });
@@ -268,7 +268,7 @@ Settings.setDisablePasswordSaving = function(bool) {
 };
 
 Settings.ifDataExists = function(entry) {
-    return (localStorage.getItem(entry) !== null && localStorage.getItem(entry).length !== 0);
+    return localStorage.getItem(entry) !== null && localStorage.getItem(entry).length !== 0;
 };
 
 Settings.shouldDisablePasswordSaving = function() {
