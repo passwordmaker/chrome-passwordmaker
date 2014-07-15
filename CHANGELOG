@@ -1,3 +1,9 @@
+0.7.1 - 2014-07-15
+
+* Remove the need for a content script, no more dangerous permissions required!
+* Fixes options.css top nav position bug
+* Submit extension to the opera extension catalog
+
 0.7.0 - 2014-07-12
 
 * Fixes Bug #130: Fix incognito window usage
