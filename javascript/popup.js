@@ -106,11 +106,17 @@ function onProfileChanged() {
 function showButtons() {
     $("#copypassword").removeClass("hidden");
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {hasPasswordField: true}, function(response) {
-            if (response !== undefined && response.hasField) {
-                $("#injectpasswordrow").removeClass("hidden");
-            }
-        });
+        // Don't run executeScript() on built-in chrome:// pages since it isn't allowed anyway
+        if (tabs[0].url.indexOf("chrome") !== 0) {
+            chrome.tabs.executeScript(tabs[0].id, {
+                "allFrames": true,
+                "code": "if (document.querySelector('input[type=password]') !== null) { hasField: true; }"
+            }, function(result) {
+                if (result.indexOf(true) >= 0) {
+                    $("#injectpasswordrow").css("visibility", "visible");
+                }
+            });
+        }
     });
 }
 
@@ -136,10 +142,22 @@ function init(url) {
 }
 
 function fillPassword() {
+    var pass = $("#generated").val();
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        updateFields();
-        chrome.tabs.sendMessage(tabs[0].id, {password: $("#generated").val()});
-        window.close();
+        chrome.tabs.executeScript(tabs[0].id, {
+            "allFrames": true,
+            // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
+            "code": "var b64pass = '" + btoa(pass) + "';" +
+                    "var fields = document.querySelectorAll('input[type=password]');" +
+                    "for (var i = 0; i < fields.length; i++) {" +
+                        // Only fill password input fields that are empty (for change password pages)
+                        "if (fields[i].value.length === 0) {" +
+                            "fields[i].value = atob(b64pass);" +
+                        "}" +
+                    "}"
+        }, function() {
+            window.close();
+        });
     });
 }
 

@@ -18,11 +18,6 @@
     "activeTab",
     "storage"
   ],
-  "content_scripts": [ {
-    "js": [ "javascript/content.js" ],
-    "matches": [ "http://*/*", "https://*/*" ],
-    "all_frames": true
-  } ],
   "background": {
     "scripts": [ "javascript/background.js" ]
   },
