@@ -121,24 +121,25 @@ function showButtons() {
 }
 
 function init(url) {
-    var pass = Settings.getPassword();
-    $("#password").val(pass);
-    $("#confirmation").val(pass);
+    Settings.getPassword(function(pass) {
+        $("#password").val(pass);
+        $("#confirmation").val(pass);
 
-    for (var i = 0; i < Settings.profiles.length; i++) {
-        $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
-    }
-    $("#profile").val(getAutoProfileIdForUrl(url) || Settings.profiles[0].id);
+        for (var i = 0; i < Settings.profiles.length; i++) {
+            $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
+        }
+        $("#profile").val(getAutoProfileIdForUrl(url) || Settings.profiles[0].id);
 
-    updateURL(url);
-    $("#store_location").val(Settings.storeLocation);
-    updateFields();
+        updateURL(url);
+        $("#store_location").val(Settings.storeLocation);
+        updateFields();
 
-    if (pass.length === 0 || pass !== $("#confirmation").val()) {
-        $("#password").focus();
-    } else {
-        $("#generated").focus();
-    }
+        if (pass.length === 0 || pass !== $("#confirmation").val()) {
+            $("#password").focus();
+        } else {
+            $("#generated").focus();
+        }
+    });
 }
 
 function fillPassword() {
@@ -173,7 +174,7 @@ function copyPassword() {
 }
 
 function openOptions() {
-    chrome.tabs.create({url: chrome.extension.getURL("html/options.html")}, function() {
+    chrome.tabs.create({url: chrome.runtime.getURL("html/options.html")}, function() {
         window.close();
     });
 }

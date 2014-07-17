@@ -1,6 +1,5 @@
 var Settings = {
     storeLocation: localStorage.getItem("store_location") || "memory",
-    password: "",
     profiles: [],
     syncDataAvailable: false,
     syncPasswordOk: false
@@ -214,37 +213,40 @@ Settings.setStoreLocation = function(store) {
             localStorage.setItem("password_crypt", "");
         }
         if (Settings.storeLocation !== "memory") {
-            Settings.password = "";
+            Settings.setBgPassword("");
         }
     }
+};
+
+Settings.setBgPassword = function(pw) {
+    chrome.runtime.getBackgroundPage(function(bg) {
+        bg.password = pw;
+    });
 };
 
 Settings.setPassword = function(password) {
     var key = sjcl.codec.base64.fromBits(crypto.getRandomValues(new Uint32Array(8)));
     localStorage.setItem("password_key", key);
     if (Settings.storeLocation === "memory") {
-        Settings.password = sjcl.encrypt(key, password, { ks: 256, ts: 128 });
-        chrome.extension.getBackgroundPage().password = Settings.password;
+        Settings.setBgPassword(sjcl.encrypt(key, password, { ks: 256, ts: 128 }));
     } else if (Settings.storeLocation === "disk") {
-        Settings.password = sjcl.encrypt(key, password);
+        Settings.setBgPassword(sjcl.encrypt(key, password));
         localStorage.setItem("password_crypt", sjcl.encrypt(key, password, { ks: 256, ts: 128 }));
-        chrome.extension.getBackgroundPage().password = Settings.password;
     } else {
-        Settings.password = "";
-        chrome.extension.getBackgroundPage().password = "";
+        Settings.setBgPassword("");
     }
 };
 
-Settings.getPassword = function() {
-    var bg_pass = chrome.extension.getBackgroundPage().password;
-    if (bg_pass.length > 0) { 
-        return sjcl.decrypt(localStorage.getItem("password_key"), bg_pass);
-    } else if (Settings.ifDataExists("password_crypt")) {
-        Settings.password = sjcl.decrypt(localStorage.getItem("password_key"), localStorage.getItem("password_crypt"));
-        return Settings.password;
-    } else {
-        return "";
-    }
+Settings.getPassword = function(callback) {
+    chrome.runtime.getBackgroundPage(function(bg) {
+        if (bg.password.length !== 0) { 
+            callback(sjcl.decrypt(localStorage.getItem("password_key"), bg.password));
+        } else if (Settings.ifDataExists("password_crypt")) {
+            callback(sjcl.decrypt(localStorage.getItem("password_key"), localStorage.getItem("password_crypt")));
+        } else {
+            callback("");
+        }
+    });
 };
 
 Settings.setHidePassword = function(bool) {
@@ -261,9 +263,7 @@ Settings.setDisablePasswordSaving = function(bool) {
         Settings.storeLocation = "never";
         localStorage.setItem("store_location", "");
         localStorage.setItem("password_crypt", "");
-        Settings.password = "";
-
-        chrome.extension.getBackgroundPage().password = "";
+        Settings.setBgPassword("");
     }
 };
 
