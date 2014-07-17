@@ -1,3 +1,9 @@
+0.7.2 - 2014-07-17
+
+* Fixes Bug #133: Incorrect password generation during delayed display
+* Fixes popup button visibility bug
+* Migrate to asynchronous chrome.runtime calls
+
 0.7.1 - 2014-07-15
 
 * Remove the need for a content script, no more dangerous permissions required!
