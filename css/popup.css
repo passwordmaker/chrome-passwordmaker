@@ -59,6 +59,6 @@ select {
     white-space: nowrap;
 }
 
-#copypassword, #injectpasswordrow, #options {
+#copypassword, #injectpassword, #options {
     width: 32%;
 }

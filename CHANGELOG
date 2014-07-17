@@ -2,20 +2,20 @@
 
 * Remove the need for a content script, no more dangerous permissions required!
 * Fixes options.css top nav position bug
-* Submit extension to the opera extension catalog
+* Closes Request #112: Submit extension to the opera extension catalog
 
 0.7.0 - 2014-07-12
 
-* Fixes Bug #130: Fix incognito window usage
+* Fixes Bug #130: Incognito window usage
 * Put options page navigation at top
-* Added password strength meter to profile customization
+* Closes Request #23: Added password strength meter to profile customization
 
 0.6.5 - 2014-07-11
 
-* Added a 2nd default profile called "Alphanumeric".
-* Addresses issue #125 about a potential visual replay attack.
-* Increased security by using PBKDF2 for key derivation.
-* Added a large "Reset All Profiles" button on "General Option" settings page.
+* Added a 2nd default profile called "Alphanumeric"
+* Addresses issue #125 about a potential visual replay attack
+* Increased security by using PBKDF2 for key derivation
+* Added a large "Reset All Profiles" button on "General Option" settings page
 
 0.6.4 - 2014-06-22
 
@@ -37,11 +37,11 @@
 
 0.6.1 - 2014-05-22
 
-* Emergency release that should fix problems created in the 0.6.0 release.
+* Emergency release that should fix problems created in the 0.6.0 release
 
 0.6.0 - 2014-05-18
 
-* This release includes lots of stuff done by @heavensrevenge.
+* This release includes lots of stuff done by @heavensrevenge
 * A small list of the many things he did:
 
 * Lots of css and ui improvements
@@ -63,7 +63,7 @@
 
 0.5.2 - 2013-11-02
 
-* Fixes Bug #84: If passwort_crypt is empty, the popup crashes
+* Fixes Bug #84: If password_crypt is empty, the popup crashes
 * Update usage of chrome extension apis to remove deprecated stuff
 * Updated jQuery and jQuery-UI
 

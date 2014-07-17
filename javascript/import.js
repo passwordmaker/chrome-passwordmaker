@@ -185,11 +185,6 @@ RdfImporter.saveProfiles = function(profiles) {
     return profiles.length;
 }
 
-RdfImporter.saveSettings = function(settings) {
-    Settings.setHidePassword(settings.hideMasterPassword);
-    Settings.setStoreLocation(settings.storeLocation);
-}
-
 RdfImporter.dumpDoc = function() {
     var rv = "<?xml version=\"1.0\"?>\n" + 
              "<RDF:RDF xmlns:NS1=\"http://passwordmaker.mozdev.org/rdf#\"\n" + 

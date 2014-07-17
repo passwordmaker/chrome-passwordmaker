@@ -45,7 +45,7 @@ function updateFields() {
     var profile = Settings.getProfile($("#profile").val());
 
     Settings.setStoreLocation($("#store_location").val());
-    $("#copypassword, #injectpasswordrow").addClass("hidden");
+    $("#copypassword, #injectpassword").addClass("hidden");
 
     if (password.length === 0) {
         $("#generated").val("Please Enter Password");
@@ -113,7 +113,7 @@ function showButtons() {
                 "code": "if (document.querySelector('input[type=password]') !== null) { hasField: true; }"
             }, function(result) {
                 if (result.indexOf(true) >= 0) {
-                    $("#injectpasswordrow").removeClass("hidden");
+                    $("#injectpassword").removeClass("hidden");
                 }
             });
         }
@@ -143,13 +143,12 @@ function init(url) {
 }
 
 function fillPassword() {
-    var pass = $("#generated").val();
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         updateFields();
         chrome.tabs.executeScript(tabs[0].id, {
             "allFrames": true,
             // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
-            "code": "var b64pass = '" + btoa(pass) + "';" +
+            "code": "var b64pass = '" + btoa($("#generated").val()) + "';" +
                     "var fields = document.querySelectorAll('input[type=password]');" +
                     "for (var i = 0; i < fields.length; i++) {" +
                         // Only fill password input fields that are empty (for change password pages)
@@ -199,7 +198,7 @@ $(function() {
     $("#profile").on("change", onProfileChanged);
     $("#activatePassword").on("click", showPasswordField);
     $("#copypassword").on("click", copyPassword);
-    $("#injectpasswordrow").on("click", fillPassword);
+    $("#injectpassword").on("click", fillPassword);
     $("#options").on("click", openOptions);
 
     if (Settings.shouldDisablePasswordSaving()) {

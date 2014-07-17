@@ -239,7 +239,7 @@ Settings.setPassword = function(password) {
 
 Settings.getPassword = function(callback) {
     chrome.runtime.getBackgroundPage(function(bg) {
-        if (bg.password.length !== 0) { 
+        if (bg.password.length > 0) { 
             callback(sjcl.decrypt(localStorage.getItem("password_key"), bg.password));
         } else if (Settings.ifDataExists("password_crypt")) {
             callback(sjcl.decrypt(localStorage.getItem("password_key"), localStorage.getItem("password_crypt")));
@@ -257,9 +257,9 @@ Settings.shouldHidePassword = function() {
     return localStorage.getItem("show_generated_password") === "true";
 };
 
-Settings.setDisablePasswordSaving = function(bool) {
-    localStorage.setItem("disable_password_saving", bool);
-    if (bool === true) {
+Settings.setDisablePasswordSaving = function(disable) {
+    localStorage.setItem("disable_password_saving", disable);
+    if (disable) {
         Settings.storeLocation = "never";
         localStorage.setItem("store_location", "");
         localStorage.setItem("password_crypt", "");
@@ -305,23 +305,6 @@ Settings.setUseVerificationCode = function(bool) {
 
 Settings.useVerificationCode = function() {
     return localStorage.getItem("use_verification_code") === "true";
-};
-
-Settings.clearSyncData = function(callback) {
-    chrome.storage.sync.clear(function() {
-        if (chrome.runtime.lastError === undefined) {
-            Settings.syncDataAvailable = false;
-            Settings.syncPasswordOk = false;
-            localStorage.setItem("synced_profiles", "");
-            localStorage.setItem("synced_profiles_keys", "");
-            localStorage.setItem("sync_profiles_password", "");
-            Settings.loadLocalProfiles();
-            callback(true);
-        } else {
-            alert("Could not delete synced data: " + chrome.runtime.lastError);
-            callback(false);
-        }
-    });
 };
 
 Settings.stopSync = function() {

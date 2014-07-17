@@ -74,15 +74,8 @@ test("save profiles", function () {
 });
 
 test("save settings", function () {
-    var settings = rdf_doc1.settings;
-
-    Settings.setHidePassword(false);
-    Settings.setStoreLocation('disk');
-
-    deepEqual(Settings.shouldHidePassword(), false);
-    deepEqual(Settings.storeLocation, 'disk');
-
-    RdfImporter.saveSettings({hideMasterPassword: true, storeLocation: 'memory'});
+    Settings.setHidePassword(true);
+    Settings.setStoreLocation('memory');
 
     deepEqual(Settings.shouldHidePassword(), true);
     deepEqual(Settings.storeLocation, 'memory');

@@ -100,7 +100,7 @@ function oldHashWarning(hash) {
     // TODO remove this a few versions in the future, Allow selection but warn of future removal so people can upgrade
     var bugged = {"md5_v6": 1, "hmac-md5_v6": 1, "hmac-sha256": 1};
     if (bugged[hash]) {
-        alert("Please change to using a new algorithm, the old bugged items will be removed by version 0.8!\n\nThank you");
+        alert("Please change to using a correct algorithm, the old/bugged hash algorithms will be unable to be selected in version 0.8!\n\nThank you");
     }
 }
 
@@ -146,6 +146,12 @@ function showOptions() {
             Settings.syncDataAvailable = true;
         }
     });
+
+    if (Settings.keepMasterPasswordHash()) {
+        $("#master_password_row").removeClass("hidden");
+    } else {
+        $("#master_password_row").addClass("hidden");
+    }
 
     updateSyncProfiles();
     showSection("#general_settings");
@@ -205,7 +211,7 @@ function saveProfile() {
 }
 
 function cloneProfile() {
-    var p = JSON.parse(JSON.stringify(Settings.getProfile(Settings.currentProfile)));
+    var p = $.extend(new Profile(), Settings.getProfile(Settings.currentProfile));
     p.title = p.title + " Copy";
     Settings.addProfile(p);
     updateProfileList();
@@ -243,11 +249,19 @@ function setSyncPassword() {
 }
 
 function clearSyncData() {
-    Settings.clearSyncData(function(success) {
-        if (success) {
+    chrome.storage.sync.clear(function() {
+        if (chrome.runtime.lastError === undefined) {
             Settings.setSyncProfiles(false);
+            Settings.syncDataAvailable = false;
+            Settings.syncPasswordOk = false;
+            localStorage.setItem("synced_profiles", "");
+            localStorage.setItem("synced_profiles_keys", "");
+            localStorage.setItem("sync_profiles_password", "");
+            Settings.loadLocalProfiles();
             updateSyncProfiles();
             updateProfileList();
+        } else {
+            alert("Could not delete synced data: " + chrome.runtime.lastError);
         }
     });
 }
@@ -413,7 +427,6 @@ function showStrengthSection() {
 }
 
 function checkPassStrength() {
-    var testPass = $("#testPass").val();
     var selected = Settings.getProfile(Settings.currentProfile);
 
     selected.siteList       = $("#siteList").val().trim();
@@ -448,7 +461,7 @@ function checkPassStrength() {
         $("#testText").val(selected.getUrl(selected.siteList));
     }
 
-    $("#genPass").val(selected.getPassword($("#testText").val(), testPass));
+    $("#genPass").val(selected.getPassword($("#testText").val(), $("#testPass").val()));
     var values = getPasswordStrength($("#genPass").val());
     $("#genStrength, meter").val(values.strength);
     $("#hasUpper").prop("checked", values.hasUpper);
@@ -466,13 +479,6 @@ $(function() {
     $("#disablePasswordSaving").prop("checked", Settings.shouldDisablePasswordSaving());
     $("#keepMasterPasswordHash").prop("checked", Settings.keepMasterPasswordHash());
     $("#useVerificationCode").prop("checked", Settings.useVerificationCode());
-
-    if (Settings.keepMasterPasswordHash()) {
-        $("#master_password_row").removeClass("hidden");
-    } else {
-        $("#master_password_row").addClass("hidden");
-    }
-
     $("#syncProfiles").prop("checked", Settings.shouldSyncProfiles());
 
     $("#profile_list").on("click", ".link", editProfile);
@@ -488,6 +494,7 @@ $(function() {
     $("#pathCB").on("click", updateExample);
     $("#whereLeetLB").on("change", updateLeet);
     $("#charset").on("change", updateCustomCharsetField);
+    $("#passwdLength").on("blur", testPasswordLength);
 
     $("#cloneProfileButton").on("click", cloneProfile);
     $("#checkStrength").on("change", showStrengthSection);
@@ -507,6 +514,4 @@ $(function() {
     $("#set_sync_password").on("click", setSyncPassword);
     $("#clear_sync_data").on("click", clearSyncData);
     $("#resetToDefaultprofiles").on("click", removeAllProfiles);
-
-    $("#passwdLength").on("blur", testPasswordLength);
 });
