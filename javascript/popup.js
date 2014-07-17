@@ -113,7 +113,7 @@ function showButtons() {
                 "code": "if (document.querySelector('input[type=password]') !== null) { hasField: true; }"
             }, function(result) {
                 if (result.indexOf(true) >= 0) {
-                    $("#injectpasswordrow").css("visibility", "visible");
+                    $("#injectpasswordrow").removeClass("hidden");
                 }
             });
         }
@@ -144,6 +144,7 @@ function init(url) {
 function fillPassword() {
     var pass = $("#generated").val();
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        updateFields();
         chrome.tabs.executeScript(tabs[0].id, {
             "allFrames": true,
             // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
