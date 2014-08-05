@@ -1,38 +1,59 @@
-html {
-    font-family: Georgia, Palatino, "Palatino Linotype", Times, "Times New Roman", serif;
-    width: 320px;
+body {
+    font-family: Georgia, "Droid Serif", Constantia, serif;
+    font-size: 100%;
+    width: 18em;
 }
 
-td {
-    padding: 0;
+main {
+    display: flex;
+    flex-direction: column;
 }
 
-#header {
-    text-align: left;
+.small_row, .big_row {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
 }
 
-#title {
-    padding-left: 4px;
+.small_row {
+    height: 1.5em;
+}
+
+.big_row {
+    height: 2em;
+}
+
+header > img {
+    height: 1.25em;
+    width: 1.25em;
+}
+
+header > span {
+    font-weight: bold;
+    margin-left: 1%;
     vertical-align: top;
 }
 
 label {
-    font-size: .75em;
-    font-weight: bold;
     color: #888;
+    font-size: 75%;
+    font-weight: bold;
 }
 
 input {
-    border: 1px solid #000;
-    float: right;
-    padding-left: 4px;
-    width: 168px;
+    border: .1em solid #000;
+    width: 54%;
+    height: 1.4em;
+    font-size: 82%;
+    padding: 0 0 0 .8%;
 }
 
 select {
-    border: 1px solid #000;
-    float: right;
-    width: 174px;
+    background-color: #fff;
+    border: .1em solid #000;
+    font-size: 82%;
+    height: 1.5em;
+    width: 55.6%;
 }
 
 .hidden {
@@ -40,25 +61,30 @@ select {
 }
 
 #generated {
-    font-family: "DejaVu Sans Mono", "Lucida Console", monospace;
-    font-size: 1.1em;
+    font-family: "DejaVu Sans Mono", "Lucida Console", Monaco, monospace;
+    font-size: 110%;
     font-weight: bold;
-    height: 26px;
+    height: 90%;
     text-align: center;
-    width: 292px;
+    width: 100%;
 }
 
 #activatePassword {
-    height: 30px;
-    width: 298px;
+    height: 100%;
+    width: 100%;
 }
 
-#button-row {
-    font-size: .9em;
-    text-align: center;
+#button_row {
+    margin: 1% 0 1% 0;
     white-space: nowrap;
 }
 
 #copypassword, #injectpassword, #options {
+    font-size: 90%;
+    height: 90%;
     width: 32%;
+}
+
+body:not(#generated) {
+    -webkit-user-select: none;
 }

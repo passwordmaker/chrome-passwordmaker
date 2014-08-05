@@ -1,70 +1,63 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>PasswordMaker Pro</title>
         <meta charset="utf-8">
+        <title>PasswordMaker Pro</title>
         <link rel="stylesheet" href="../css/awesome-buttons.css">
         <link rel="stylesheet" href="../css/popup.css">
     </head>
     <body>
-        <table>
-            <thead>
-                <tr>
-                    <th colspan="2" id="header"><img src="../images/passwdmaker48.png" alt="PasswordMaker Pro" width="20" height="20"><span id="title">PasswordMaker Pro</span></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><label for="password">Password:</label></td>
-                    <td><input id="password" type="password"></td>
-                </tr>
-                <tr id="confirmation_row">
-                    <td><label for="confirmation">Confirmation:</label></td>
-                    <td><input id="confirmation" type="password"></td>
-                </tr>
-                <tr id="verification_row">
-                    <td><label>Verification Code:</label></td>
-                    <td><input id="verificationCode" readonly></td>
-                </tr>
-                <tr id="store_location_row">
-                    <td><label for="store_location">Save Password:</label></td>
-                    <td>
-                        <select id="store_location">
-                            <option value="memory">In memory</option>
-                            <option value="disk">On disk</option>
-                            <option value="never">Never store</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="profile">Use Profile:</label></td>
-                    <td><select id="profile"></select></td>
-                </tr>
-                <tr>
-                    <td><label for="usedtext">Used text:</label></td>
-                    <td><input id="usedtext"></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <label for="generated">Generated Password:</label>
-                        <input id="generated" readonly>
-                        <button class="button black" id="activatePassword">Show Password</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" id="button-row">
-                        <button class="button black" id="copypassword">Copy</button>
-                        <button class="button black" id="injectpassword" title="Populate all *empty* password fields">Fill Fields</button>
-                        <button class="button black" id="options">Options</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <header>
+            <img alt="PasswordMaker Pro" src="../images/passwdmaker48.png">
+            <span>PasswordMaker Pro</span>
+        </header>
+        <main>
+            <div class="small_row">
+                <label for="password">Password:</label>
+                <input id="password" type="password">
+            </div>
+            <div class="small_row" id="confirmation_row">
+                <label for="confirmation">Confirmation:</label>
+                <input id="confirmation" type="password">
+            </div>
+            <div class="small_row" id="verification_row">
+                <label>Verification Code:</label>
+                <input id="verificationCode" readonly>
+            </div>
+            <div class="small_row" id="store_location_row">
+                <label for="store_location">Save Password:</label>
+                <select id="store_location">
+                    <option value="memory">In memory</option>
+                    <option value="disk">On disk</option>
+                    <option value="never">Never store</option>
+                </select>
+            </div>
+            <div class="small_row">
+                <label for="profile">Use Profile:</label>
+                <select id="profile"></select>
+            </div>
+            <div class="small_row">
+                <label for="usedtext">Used text:</label>
+                <input id="usedtext">
+            </div>
+            <div class="small_row">
+                <label for="generated">Generated Password:</label>
+            </div>
+            <div class="big_row">
+                <input id="generated" readonly>
+                <button class="button black" id="activatePassword">Show Password</button>
+            </div>
+            <div class="big_row" id="button_row">
+                <button class="button black" id="copypassword">Copy</button>
+                <button class="button black" id="injectpassword" title="Populate all *empty* password fields, so please make sure the field you want filled is empty">Fill Fields</button>
+                <button class="button black" id="options">Options</button>
+            </div>
+        </main>
         <script src="../javascript/jquery.min.js"></script>
+        <script src="../javascript/sjcl.js"></script>
         <script src="../javascript/passwordmaker/hashutils.js"></script>
         <script src="../javascript/passwordmaker/md4.js"></script>
         <script src="../javascript/passwordmaker/md5.js"></script>
-        <script src="../javascript/passwordmaker/md5_v6.js"></script>
         <script src="../javascript/passwordmaker/sha256.js"></script>
         <script src="../javascript/passwordmaker/sha1.js"></script>
         <script src="../javascript/passwordmaker/ripemd160.js"></script>
@@ -72,6 +65,5 @@
         <script src="../javascript/settings.js"></script>
         <script src="../javascript/profile.js"></script>
         <script src="../javascript/popup.js"></script>
-        <script src="../javascript/sjcl.js"></script>
     </body>
 </html>

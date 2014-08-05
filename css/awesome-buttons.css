@@ -5,11 +5,12 @@
 */
 
 .button {
+    border-radius: .4em;
     cursor: pointer;
     font: inherit;
-    border-radius: 6px;
     outline: none;
-    padding: 4px 15px 6px 15px;
+    padding-bottom: .4em;
+    padding-top: .2em;
 }
 
 .button:active {
@@ -19,7 +20,7 @@
 
 .black {
     color: #fff;
-    border: solid 1px #333;
+    border: solid .1em #333;
     background: -webkit-linear-gradient(top, #666, #000);
 }
 
@@ -33,7 +34,7 @@
 
 .red {
     color: #fff;
-    border: solid 1px #980c10;
+    border: solid .1em #980c10;
     background: -webkit-linear-gradient(top, #ed1c24, #aa1317);
 }
 
