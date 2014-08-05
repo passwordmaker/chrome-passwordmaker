@@ -74,6 +74,28 @@ select {
     width: 100%;
 }
 
+meter {
+    border: .1em solid #000;
+    height: 1.2em;
+    margin-top: .2em;
+    width: 100%;
+}
+
+meter::-webkit-meter-bar,
+meter::-webkit-meter-even-less-good-value,
+meter::-webkit-meter-suboptimum-value,
+meter::-webkit-meter-optimum-value {
+    transition: width 0.1s ease-out;
+}
+
+#strengthValue {
+    cursor: default;
+    font-family: "DejaVu Sans Mono", "Andale Mono", Consolas, Monaco, monospace;
+    font-weight: bold;
+    margin: 1.4% 0 0 44%;
+    position: absolute;
+}
+
 #button_row {
     margin: 1% 0 1% 0;
     white-space: nowrap;

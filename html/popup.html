@@ -47,6 +47,10 @@
                 <input id="generated" readonly>
                 <button class="button black" id="activatePassword">Show Password</button>
             </div>
+            <div class="small_row" id="strength_row">
+                <span id="strengthValue"></span>
+                <meter min="0" max="100" low="25" high="75" optimum="80" value="0"></meter>
+            </div>
             <div class="big_row" id="button_row">
                 <button class="button black" id="copypassword">Copy</button>
                 <button class="button black" id="injectpassword" title="Populate all *empty* password fields, so please make sure the field you want filled is empty">Fill Fields</button>

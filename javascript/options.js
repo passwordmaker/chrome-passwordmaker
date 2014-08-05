@@ -339,6 +339,10 @@ function updateUseVerificationCode() {
     localStorage.setItem("use_verification_code", $("#useVerificationCode").prop("checked"));
 }
 
+function updateShowStrength() {
+    localStorage.setItem("show_password_strength", $("#showPasswordStrength").prop("checked"));
+}
+
 function testPasswordLength() {
     var field = document.getElementById("passwdLength");
     if (field.value < 8) field.value = 8;
@@ -428,6 +432,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#disablePasswordSaving").prop("checked", Settings.shouldDisablePasswordSaving());
     $("#keepMasterPasswordHash").prop("checked", Settings.keepMasterPasswordHash());
     $("#useVerificationCode").prop("checked", Settings.useVerificationCode());
+    $("#showPasswordStrength").prop("checked", Settings.shouldShowStrength());
     $("#syncProfiles").prop("checked", Settings.shouldSyncProfiles());
 
     $("#profile_list").on("click", ".link", editProfile);
@@ -460,6 +465,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#syncProfiles").on("change", updateSyncProfiles);
     $("#masterPassword").on("keyup", updateMasterHash);
     $("#useVerificationCode").on("change", updateUseVerificationCode);
+    $("#showPasswordStrength").on("change", updateShowStrength);
     $("#set_sync_password").on("click", setSyncPassword);
     $("#clear_sync_data").on("click", clearSyncData);
     $("#resetToDefaultprofiles").on("click", removeAllProfiles);

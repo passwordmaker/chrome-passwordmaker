@@ -32,6 +32,7 @@ function updateFields() {
     var confirmation = $("#confirmation").val();
     var usedUrl = $("#usedtext").val();
     var profile = Settings.getProfile($("#profile").val());
+    var passStrength = 0;
 
     $("#copypassword, #injectpassword").addClass("hidden");
 
@@ -48,7 +49,13 @@ function updateFields() {
         var result = profile.getPassword(usedUrl, password);
         $("#generated").val(result);
         setPasswordColors("#008000", "#FFFFFF");
+        passStrength = Settings.getPasswordStrength(result).strength;
         showButtons();
+    }
+
+    if (Settings.shouldShowStrength()) {
+        $("meter").val(passStrength);
+        $("#strengthValue")[0].textContent = passStrength;
     }
 
     if (Settings.useVerificationCode()) {
@@ -182,6 +189,9 @@ function getVerificationCode(pass) {
 
 function showPasswordField() {
     $("#activatePassword").hide();
+    if (Settings.shouldShowStrength()) {
+        $("#strength_row").show();
+    }
     $("#generated").show().focus();
 }
 
@@ -202,7 +212,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     if (Settings.shouldHidePassword()) {
-        $("#generated").hide();
+        $("#generated, #strength_row").hide();
     } else {
         $("#activatePassword").hide();
     }
@@ -213,6 +223,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (!Settings.useVerificationCode()) {
         $("#verification_row").hide();
+    }
+
+    if (!Settings.shouldShowStrength()) {
+        $("#strength_row").hide();
     }
 
     chrome.tabs.query({ "active": true, "currentWindow": true, "windowType": "normal" }, function(tabs) {

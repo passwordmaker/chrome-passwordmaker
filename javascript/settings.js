@@ -274,6 +274,10 @@ Settings.useVerificationCode = function() {
     return localStorage.getItem("use_verification_code") === "true";
 };
 
+Settings.shouldShowStrength = function() {
+    return localStorage.getItem("show_password_strength") === "true";
+};
+
 Settings.stopSync = function() {
     localStorage.setItem("sync_profiles", false);
     Settings.syncPasswordOk = false;
