@@ -36,7 +36,7 @@ function removeProfile() {
 
 function removeAllProfiles() {
     if (confirm("Really delete ALL local profile customizations and reset to the default profiles?")) {
-        localStorage.setItem("profiles", "");
+        localStorage.removeItem("profiles");
         Settings.loadLocalProfiles();
         updateProfileList();
     }
@@ -85,7 +85,9 @@ function setCurrentProfile(profile) {
     }
 
     showSection("#profile_settings");
-    oldHashWarning(profile.hashAlgorithm);
+    setTimeout(function() {
+        oldHashWarning(profile.hashAlgorithm);
+    }, 250);
 }
 
 function updateCustomCharsetField() {
@@ -97,10 +99,17 @@ function updateCustomCharsetField() {
 }
 
 function oldHashWarning(hash) {
-    // TODO remove this a few versions in the future, Allow selection but warn of future removal so people can upgrade
-    var bugged = {"md5_v6": 1, "hmac-md5_v6": 1, "hmac-sha256": 1};
+    // Be as annoying as possible to try and stop people from using the bugged algorithms
+    var bugged = { "md5_v6": 1, "hmac-md5_v6": 1, "hmac-sha256": 1 };
     if (bugged[hash]) {
-        alert("Please change to using a correct algorithm, the old/bugged hash algorithms will be unable to be selected in version 0.8!\n\nThank you");
+        if (confirm("Are you sure you want to continue using a legacy algorithm which is incorrectly implemented?")) {
+           alert("Please change to using a correct & secure algorithm!\n\nThe old/bugged/legacy algorithms " +
+           "are harmful to your online security and should be avoided at ALL costs.\n\n" +
+           "Please change your passwords on the sites which you are using this algorithm if you are able to " +
+           "as soon as possible.\n\nThank you\n");
+        } else {
+            alert("Please select one of the correct and secure hash algorithms below :)");
+        }
     }
 }
 
@@ -207,7 +216,9 @@ function saveProfile() {
     Settings.saveProfiles();
     updateProfileList();
     highlightProfile();
-    oldHashWarning(selected.hashAlgorithm);
+    setTimeout(function() {
+        oldHashWarning(selected.hashAlgorithm);
+    }, 250);
 }
 
 function cloneProfile() {
@@ -237,7 +248,7 @@ function setSyncPassword() {
 
     var result = Settings.startSyncWith($("#syncProfilesPassword").val());
     if (result) {
-        Settings.setSyncProfiles(true);
+        localStorage.setItem("sync_profiles", true);
         Settings.syncDataAvailable = true;
         Settings.syncPasswordOk = true;
         $("#syncProfilesPassword").val("");
@@ -251,12 +262,12 @@ function setSyncPassword() {
 function clearSyncData() {
     chrome.storage.sync.clear(function() {
         if (chrome.runtime.lastError === undefined) {
-            Settings.setSyncProfiles(false);
+            localStorage.setItem("sync_profiles", false);
             Settings.syncDataAvailable = false;
             Settings.syncPasswordOk = false;
-            localStorage.setItem("synced_profiles", "");
-            localStorage.setItem("synced_profiles_keys", "");
-            localStorage.setItem("sync_profiles_password", "");
+            localStorage.removeItem("synced_profiles");
+            localStorage.removeItem("synced_profiles_keys");
+            localStorage.removeItem("sync_profiles_password");
             Settings.loadLocalProfiles();
             updateSyncProfiles();
             updateProfileList();
@@ -294,35 +305,44 @@ function updateMasterHash() {
         $("#master_password_row").removeClass("hidden");
         var master_pass = $("#masterPassword").val();
         if (master_pass.length > 0) {
-            Settings.setKeepMasterPasswordHash(true);
-            Settings.setMasterPasswordHash(JSON.stringify(Settings.make_pbkdf2(master_pass)));
+            localStorage.setItem("keep_master_password_hash", true);
+            localStorage.setItem("master_password_hash", JSON.stringify(Settings.make_pbkdf2(master_pass)));
         } else {
-            Settings.setKeepMasterPasswordHash(false);
-            Settings.setMasterPasswordHash("");
+            localStorage.setItem("keep_master_password_hash", false);
+            localStorage.removeItem("master_password_hash");
         }
     } else {
         $("#master_password_row").addClass("hidden");
         $("#masterPassword").val("");
-        Settings.setKeepMasterPasswordHash(false);
-        Settings.setMasterPasswordHash("");
+        localStorage.setItem("keep_master_password_hash", false);
+        localStorage.removeItem("master_password_hash");
     }
 }
 
 function updateHidePassword() {
-    Settings.setHidePassword($("#hidePassword").prop("checked"));
+    localStorage.setItem("show_generated_password", $("#hidePassword").prop("checked"));
 }
 
 function updateDisablePasswordSaving() {
-    Settings.setDisablePasswordSaving($("#disablePasswordSaving").prop("checked"));
+    var should_disable = $("#disablePasswordSaving").prop("checked");
+    localStorage.setItem("disable_password_saving", should_disable);
+    if (should_disable) {
+        Settings.storeLocation = "never";
+        localStorage.removeItem("store_location");
+        localStorage.removeItem("password_crypt");
+        Settings.setBgPassword("");
+    }
+
 }
 
 function updateUseVerificationCode() {
-    Settings.setUseVerificationCode($("#useVerificationCode").prop("checked"));
+    localStorage.setItem("use_verification_code", $("#useVerificationCode").prop("checked"));
 }
 
 function testPasswordLength() {
-    if (this.value < 8) this.value = 8;
-    if (this.value > 512) this.value = 512;
+    var field = document.getElementById("passwdLength");
+    if (field.value < 8) field.value = 8;
+    if (field.value > 512) field.value = 512;
 }
 
 function fileImport() {
@@ -344,72 +364,6 @@ function fileExport() {
     downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
     downloadLink.download = "PasswordMaker Pro Profile Data.rdf";
     downloadLink.click();
-}
-
-// strength calculation based on Firefox version
-function getPasswordStrength(pw) {
-    // char frequency
-    var uniques = [];
-    for (var i = 0; i < pw.length; i++) {
-        for (var j = 0; j < uniques.length; j++) {
-            if (i === j) continue;
-            if (pw[i] === uniques[j]) break;
-        }
-        if (j === uniques.length) uniques.push(pw[i]);
-    }
-    var r0 = uniques.length / pw.length;
-    if (uniques.length === 1) r0 = 0;
-
-    //length of the password - 1pt per char over 5, up to 15 for 10 pts total
-    var r1 = pw.length;
-    if (r1 >= 15) {
-        r1 = 10;
-    } else if (r1 < 5) {
-        r1 = -5;
-    } else {
-        r1 -= 5;
-    }
-
-    var quarterLen = Math.round(pw.length / 4);
-
-    //ratio of numbers in the password
-    var c = pw.replace(/[0-9]/g, "");
-    var nums = (pw.length - c.length);
-    c = nums > quarterLen * 2 ? quarterLen : Math.abs(quarterLen - nums);
-    var r2 = 1 - (c / quarterLen);
-
-    //ratio of symbols in the password
-    c = pw.replace(/\W/g, "");
-    var syms = (pw.length - c.length);
-    c = syms > quarterLen * 2 ? quarterLen : Math.abs(quarterLen - syms);
-    var r3 = 1 - (c / quarterLen);
-
-    //ratio of uppercase in the password
-    c = pw.replace(/[A-Z]/g, "");
-    var upper = (pw.length - c.length);
-    c = upper > quarterLen * 2 ? quarterLen : Math.abs(quarterLen - upper);
-    var r4 = 1 - (c / quarterLen);
-
-    //ratio of lowercase in the password
-    c = pw.replace(/[a-z]/g, "");
-    var lower = (pw.length - c.length);
-    c = lower > quarterLen * 2 ? quarterLen : Math.abs(quarterLen - lower);
-    var r5 = 1 - (c / quarterLen);
-
-    var pwStrength = (((r0 + r2 + r3 + r4 + r5) / 5) * 100) + r1;
-
-    // make sure we get a valid value between 0 and 100
-    if (isNaN(pwStrength)) pwStrength = 0;
-    if (pwStrength < 0) pwStrength = 0;
-    if (pwStrength > 100) pwStrength = 100;
-
-    return { // return strength as an integer + boolean usage of character type
-        strength: Math.floor(pwStrength),
-        hasUpper: Boolean(upper),
-        hasLower: Boolean(lower),
-        hasDigit: Boolean(nums),
-        hasSymbol: Boolean(syms)
-    };
 }
 
 function showStrengthSection() {
@@ -437,17 +391,12 @@ function checkPassStrength() {
     selected.strUseText     = $("#inputUseThisText").val().trim();
     selected.whereToUseL33t = $("#whereLeetLB").val();
     selected.l33tLevel      = $("#leetLevelLB").val();
+    selected.hashAlgorithm  = $("#hashAlgorithmLB").val();
     selected.passwordLength = $("#passwdLength").val();
     selected.username       = $("#usernameTB").val().trim();
     selected.modifier       = $("#modifier").val().trim();
     selected.passwordPrefix = $("#passwordPrefix").val();
     selected.passwordSuffix = $("#passwordSuffix").val();
-
-    if ($("#hashAlgorithmLB").val() !== "bugged") {
-        selected.hashAlgorithm = $("#hashAlgorithmLB").val();
-    } else {
-        selected.hashAlgorithm = "md5";
-    }
 
     if ($("#charset").val() === "Custom charset") {
         selected.selectedCharset = $("#customCharset").val();
@@ -462,7 +411,7 @@ function checkPassStrength() {
     }
 
     $("#genPass").val(selected.getPassword($("#testText").val(), $("#testPass").val()));
-    var values = getPasswordStrength($("#genPass").val());
+    var values = Settings.getPasswordStrength($("#genPass").val());
     $("#genStrength, meter").val(values.strength);
     $("#hasUpper").prop("checked", values.hasUpper);
     $("#hasLower").prop("checked", values.hasLower);
@@ -470,7 +419,7 @@ function checkPassStrength() {
     $("#hasSymbol").prop("checked", values.hasSymbol);
 }
 
-$(function() {
+document.addEventListener("DOMContentLoaded", function() {
     Settings.loadProfiles();
     updateProfileList();
     setCurrentProfile(Settings.profiles[0]);

@@ -74,7 +74,7 @@ test("save profiles", function () {
 });
 
 test("save settings", function () {
-    Settings.setHidePassword(true);
+    localStorage.setItem("show_generated_password", true);
     Settings.setStoreLocation('memory');
 
     deepEqual(Settings.shouldHidePassword(), true);

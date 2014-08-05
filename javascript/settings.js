@@ -94,7 +94,7 @@ var TOPLEVELDOMAINS = {
 
 Settings.getProfile = function(id) {
     for (var i = 0; i < Settings.profiles.length; i++) {
-        if (Settings.profiles[i].id === parseInt(id)) {
+        if (Settings.profiles[i].id === parseInt(id, 10)) {
             return Settings.profiles[i];
         }
     }
@@ -117,7 +117,7 @@ Settings.addProfile = function(profile) {
 
 Settings.deleteProfile = function(id) {
     for (var i = 0; i < Settings.profiles.length; i++) {
-        if (Settings.profiles[i].id === parseInt(id)) {
+        if (Settings.profiles[i].id === parseInt(id, 10)) {
             Settings.profiles.splice(i, 1);
             Settings.saveProfiles();
         }
@@ -150,11 +150,11 @@ Settings.loadProfiles = function() {
     if (Settings.ifDataExists("synced_profiles")) {
         Settings.syncDataAvailable = true;
         if (Settings.ifDataExists("sync_profiles_password")) {
-            var profiles = Settings.decrypt(localStorage.getItem("synced_profiles"), JSON.parse(localStorage.getItem("sync_profiles_password")).hash);
+            var profiles = Settings.decrypt(JSON.parse(localStorage.getItem("sync_profiles_password")).hash, localStorage.getItem("synced_profiles"));
             if (profiles) {
                 Settings.syncPasswordOk = true;
                 if (Settings.shouldSyncProfiles()) {
-                    Settings.loadProfilesFromString(profiles.value);
+                    Settings.loadProfilesFromString(profiles);
                 }
             }
         }
@@ -201,7 +201,7 @@ Settings.saveProfiles = function() {
     var stringified = JSON.stringify(Settings.profiles);
     localStorage.setItem("profiles", stringified);
     if (Settings.shouldSyncProfiles() && (!Settings.syncDataAvailable || Settings.syncPasswordOk)) {
-        Settings.saveSyncedProfiles(Settings.encrypt(stringified, JSON.parse(localStorage.getItem("sync_profiles_password")).hash).value);
+        Settings.saveSyncedProfiles(Settings.encrypt(JSON.parse(localStorage.getItem("sync_profiles_password")).hash, stringified));
     }
 };
 
@@ -210,7 +210,7 @@ Settings.setStoreLocation = function(store) {
         Settings.storeLocation = store;
         localStorage.setItem("store_location", store);
         if (Settings.storeLocation !== "disk") {
-            localStorage.setItem("password_crypt", "");
+            localStorage.removeItem("password_crypt");
         }
         if (Settings.storeLocation !== "memory") {
             Settings.setBgPassword("");
@@ -224,83 +224,50 @@ Settings.setBgPassword = function(pw) {
     });
 };
 
-Settings.setPassword = function(password) {
-    var key = sjcl.codec.base64.fromBits(crypto.getRandomValues(new Uint32Array(8)));
+Settings.setPassword = function() {
+    var bits = crypto.getRandomValues(new Uint32Array(8));
+    var key = sjcl.codec.base64.fromBits(bits);
     localStorage.setItem("password_key", key);
+
+    var password = $("#password").val();
     if (Settings.storeLocation === "memory") {
-        Settings.setBgPassword(sjcl.encrypt(key, password, { ks: 256, ts: 128 }));
+        Settings.setBgPassword(Settings.encrypt(key, password));
     } else if (Settings.storeLocation === "disk") {
-        Settings.setBgPassword(sjcl.encrypt(key, password));
-        localStorage.setItem("password_crypt", sjcl.encrypt(key, password, { ks: 256, ts: 128 }));
+        Settings.setBgPassword(Settings.encrypt(key, password));
+        localStorage.setItem("password_crypt", Settings.encrypt(key, password));
     } else {
         Settings.setBgPassword("");
     }
 };
 
-Settings.getPassword = function(callback) {
-    chrome.runtime.getBackgroundPage(function(bg) {
-        if (bg.password.length > 0) { 
-            callback(sjcl.decrypt(localStorage.getItem("password_key"), bg.password));
-        } else if (Settings.ifDataExists("password_crypt")) {
-            callback(sjcl.decrypt(localStorage.getItem("password_key"), localStorage.getItem("password_crypt")));
-        } else {
-            callback("");
-        }
-    });
-};
-
-Settings.setHidePassword = function(bool) {
-    localStorage.setItem("show_generated_password", bool);
-};
-
-Settings.shouldHidePassword = function() {
-    return localStorage.getItem("show_generated_password") === "true";
-};
-
-Settings.setDisablePasswordSaving = function(disable) {
-    localStorage.setItem("disable_password_saving", disable);
-    if (disable) {
-        Settings.storeLocation = "never";
-        localStorage.setItem("store_location", "");
-        localStorage.setItem("password_crypt", "");
-        Settings.setBgPassword("");
+Settings.getPassword = function(bgPass) {
+    var pass = "";
+    if (bgPass.length > 0) {
+        pass = Settings.decrypt(localStorage.getItem("password_key"), bgPass);
+    } else if (Settings.ifDataExists("password_crypt")) {
+        pass = Settings.decrypt(localStorage.getItem("password_key"), localStorage.getItem("password_crypt"));
     }
+    return pass;
 };
 
 Settings.ifDataExists = function(entry) {
     return localStorage.getItem(entry) !== null && localStorage.getItem(entry).length !== 0;
 };
 
-Settings.shouldDisablePasswordSaving = function() {
-    return localStorage.getItem("disable_password_saving") === "true";
+Settings.shouldHidePassword = function() {
+    return localStorage.getItem("show_generated_password") === "true";
 };
 
-Settings.setKeepMasterPasswordHash = function(bool) {
-    localStorage.setItem("keep_master_password_hash", bool);
+Settings.shouldDisablePasswordSaving = function() {
+    return localStorage.getItem("disable_password_saving") === "true";
 };
 
 Settings.keepMasterPasswordHash = function() {
     return localStorage.getItem("keep_master_password_hash") === "true";
 };
 
-Settings.setMasterPasswordHash = function(theHash) {
-    localStorage.setItem("master_password_hash", theHash);
-};
-
-Settings.masterPasswordHash = function() {
-    return localStorage.getItem("master_password_hash");
-};
-
-Settings.setSyncProfiles = function(bool) {
-    localStorage.setItem("sync_profiles", bool);
-};
-
 Settings.shouldSyncProfiles = function() {
     return localStorage.getItem("sync_profiles") === "true";
-};
-
-Settings.setUseVerificationCode = function(bool) {
-    localStorage.setItem("use_verification_code", bool);
 };
 
 Settings.useVerificationCode = function() {
@@ -308,7 +275,7 @@ Settings.useVerificationCode = function() {
 };
 
 Settings.stopSync = function() {
-    Settings.setSyncProfiles(false);
+    localStorage.setItem("sync_profiles", false);
     Settings.syncPasswordOk = false;
     Settings.loadLocalProfiles();
 };
@@ -317,14 +284,14 @@ Settings.startSyncWith = function(password) {
     var syncSettings = Settings.getSyncSettings();
     var derived = Settings.make_pbkdf2(password, syncSettings.salt, syncSettings.iter);
     if (Settings.syncDataAvailable) {
-        var profiles = Settings.decrypt(localStorage.getItem("synced_profiles"), derived.hash);
+        var profiles = Settings.decrypt(derived.hash, localStorage.getItem("synced_profiles"));
         if (profiles) {
-            Settings.loadProfilesFromString(profiles.value);
+            Settings.loadProfilesFromString(profiles);
             return derived;
         }
     } else {
         localStorage.setItem("sync_profiles_password", JSON.stringify(derived));
-        Settings.saveSyncedProfiles(Settings.encrypt(JSON.stringify(Settings.profiles), derived.hash).value);
+        Settings.saveSyncedProfiles(Settings.encrypt(derived.hash, JSON.stringify(Settings.profiles)));
         return derived;
     }
     return false;
@@ -345,18 +312,81 @@ Settings.make_pbkdf2 = function(password, previousSalt, iter) {
     return {hash: derived, salt: usedSalt, iter: iterations};
 };
 
-Settings.encrypt = function(data, password) {
-    var params = {};
-    var encrypted = sjcl.encrypt(password, data, {ks: 256,ts: 128}, params);
-    return {value: encrypted, key: params.key};
+Settings.encrypt = function(password, data) {
+    return sjcl.encrypt(password, data, {ks: 256, ts: 128});
 };
 
-Settings.decrypt = function(data, password) {
+Settings.decrypt = function(password, data) {
     try {
-        var params = {};
-        var decrypted = sjcl.decrypt(password, data, {}, params);
-        return {value: decrypted, key: params.key};
+        return sjcl.decrypt(password, data);
     } catch (e) {
-        return false;
+        return "";
     }
+};
+
+// strength calculation based on Firefox version to return an object
+Settings.getPasswordStrength = function(pw) {
+    // char frequency
+    var uniques = [];
+    for (var i = 0; i < pw.length; i++) {
+        for (var j = 0; j < uniques.length; j++) {
+            if (i === j) continue;
+            if (pw[i] === uniques[j]) break;
+        }
+        if (j === uniques.length) uniques.push(pw[i]);
+    }
+    var r0 = uniques.length / pw.length;
+    if (uniques.length === 1) r0 = 0;
+
+    // length of the password - 1pt per char over 5, up to 15 for 10 pts total
+    var r1 = pw.length;
+    if (r1 >= 15) {
+        r1 = 10;
+    } else if (r1 < 5) {
+        r1 = -5;
+    } else {
+        r1 -= 5;
+    }
+
+    var quarterLen = Math.round(pw.length / 4);
+
+    // ratio of numbers in the password
+    var c = pw.replace(/[0-9]/g, "");
+    var nums = (pw.length - c.length);
+    c = nums > quarterLen * 2 ? quarterLen : Math.abs(quarterLen - nums);
+    var r2 = 1 - (c / quarterLen);
+
+    // ratio of symbols in the password
+    c = pw.replace(/\W/g, "");
+    var syms = (pw.length - c.length);
+    c = syms > quarterLen * 2 ? quarterLen : Math.abs(quarterLen - syms);
+    var r3 = 1 - (c / quarterLen);
+
+    // ratio of uppercase in the password
+    c = pw.replace(/[A-Z]/g, "");
+    var upper = (pw.length - c.length);
+    c = upper > quarterLen * 2 ? quarterLen : Math.abs(quarterLen - upper);
+    var r4 = 1 - (c / quarterLen);
+
+    // ratio of lowercase in the password
+    c = pw.replace(/[a-z]/g, "");
+    var lower = (pw.length - c.length);
+    c = lower > quarterLen * 2 ? quarterLen : Math.abs(quarterLen - lower);
+    var r5 = 1 - (c / quarterLen);
+
+    var pwStrength = (((r0 + r2 + r3 + r4 + r5) / 5) * 100) + r1;
+
+    // make sure we get a valid value between 0 and 100
+    if (isNaN(pwStrength)) pwStrength = 0;
+    if (pwStrength < 0) pwStrength = 0;
+    if (pwStrength > 100) pwStrength = 100;
+
+    // return strength as an integer + boolean usage of character type
+    return {
+        strength: Math.floor(pwStrength),
+        hasUpper: Boolean(upper),
+        hasLower: Boolean(lower),
+        hasDigit: Boolean(nums),
+        hasSymbol: Boolean(syms)
+    };
 };
