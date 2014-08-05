@@ -1,3 +1,11 @@
+0.7.3 - 2014-08-05
+
+* Added a password strength meter to the popup
+* Changed popup to use flexbox layout
+* Fixes Bug #135: Used text not updating on second window
+* Addresses issue #136, Worried about removal of legacy algorithms
+* Massive refactoring of primary algorithms
+
 0.7.2 - 2014-07-17
 
 * Fixes Bug #133: Incorrect password generation during delayed display
