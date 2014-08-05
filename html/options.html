@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>PasswordMaker Pro</title>
         <meta charset="utf-8">
+        <title>PasswordMaker Pro</title>
         <link rel="stylesheet" href="../css/awesome-buttons.css">
         <link rel="stylesheet" href="../css/options.css">
     </head>
@@ -27,10 +27,12 @@
             </div>
 
             <section id="profile_settings">
-                <h2>Selected Profile:</h2>
-                <div id="strength">
-                    <input id="checkStrength" type="checkbox">
-                    <label class="checkbox row" for="checkStrength">Test Strength of Profile</label>
+                <div>
+                    <h2>Selected Profile:</h2>
+                    <div id="strength">
+                        <input id="checkStrength" type="checkbox">
+                        <label class="checkbox row" for="checkStrength">Test Strength of Profile</label>
+                    </div>
                 </div>
                 <div class="row">
                     <label for="profileNameTB">Name:</label>
@@ -93,15 +95,15 @@
                 <div class="row">
                     <label id="leetLevelLabel" for="leetLevelLB">l33t Level:</label>
                     <select class="input testInput" id="leetLevelLB">
-                        <option value="0">1</option>
-                        <option value="1">2</option>
-                        <option value="2">3</option>
-                        <option value="3">4</option>
-                        <option value="4">5</option>
-                        <option value="5">6</option>
-                        <option value="6">7</option>
-                        <option value="7">8</option>
-                        <option value="8">9</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
                     </select>
                 </div>
                 <div class="row">
@@ -176,22 +178,22 @@
                 <div class="row">
                     <label class="strengthLabel" for="genStrength">Strength:</label>
                     <input class="strengthInput" id="genStrength" readonly>
-                    <meter class="row" min="0" low="30" high="70" max="100" optimum="80"></meter>
+                    <meter class="row" min="0" max="100" low="25" high="75" optimum="80" value="0"></meter>
                 </div>
                 <div class="row">
-                    <input class="testCheck" id="hasUpper" type="checkbox" disabled="true">
+                    <input class="testCheck" id="hasUpper" type="checkbox" disabled>
                     <label class="testLabel" for="hasUpper">Upper Case</label>
                 </div>
                 <div class="row">
-                    <input class="testCheck" id="hasLower" type="checkbox" disabled="true">
+                    <input class="testCheck" id="hasLower" type="checkbox" disabled>
                     <label class="testLabel" for="hasLower">Lower Case</label>
                 </div>
                 <div class="row">
-                    <input class="testCheck" id="hasDigit" type="checkbox" disabled="true">
+                    <input class="testCheck" id="hasDigit" type="checkbox" disabled>
                     <label class="testLabel" for="hasDigit">Digits</label>
                 </div>
                 <div class="row">
-                    <input class="testCheck" id="hasSymbol" type="checkbox" disabled="true">
+                    <input class="testCheck" id="hasSymbol" type="checkbox" disabled>
                     <label class="testLabel" for="hasSymbol">Symbols</label>
                 </div>
             </aside>
@@ -337,21 +339,20 @@
         <footer>
             <a target="_blank" href="https://github.com/passwordmaker/chrome-passwordmaker">PasswordMaker Pro</a>
             is based on <a target="_blank" href="http://www.passwordmaker.org/">passwordmaker.org</a> and is proudly presented by
-            <a target="_blank" href="http://toxprox.tumblr.com/">Eric Aguiar (heavensrevenge)</a>
+            <a target="_blank" href="http://toxprox.tumblr.com/">Eric Aguiar (heavensrevenge)</a> *Currently seeking employment*
         </footer>
         <script src="../javascript/jquery.min.js"></script>
+        <script src="../javascript/sjcl.js"></script>
         <script src="../javascript/passwordmaker/hashutils.js"></script>
         <script src="../javascript/passwordmaker/md4.js"></script>
         <script src="../javascript/passwordmaker/md5.js"></script>
-        <script src="../javascript/passwordmaker/md5_v6.js"></script>
         <script src="../javascript/passwordmaker/sha256.js"></script>
         <script src="../javascript/passwordmaker/sha1.js"></script>
         <script src="../javascript/passwordmaker/ripemd160.js"></script>
         <script src="../javascript/passwordmaker/l33t.js"></script>
         <script src="../javascript/settings.js"></script>
         <script src="../javascript/profile.js"></script>
-        <script src="../javascript/options.js"></script>
         <script src="../javascript/import.js"></script>
-        <script src="../javascript/sjcl.js"></script>
+        <script src="../javascript/options.js"></script>
     </body>
 </html>

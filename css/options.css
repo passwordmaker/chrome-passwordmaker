@@ -1,5 +1,6 @@
 body {
-    font-family: Georgia, Palatino, "Palatino Linotype", Times, "Times New Roman", serif;
+    font-family: Georgia, "Droid Serif", Constantia, serif;
+    font-size: 100%;
     margin: 0;
     overflow-y: scroll;
 }
@@ -16,6 +17,11 @@ main {
     margin: 0 auto;
     min-width: 900px;
     width: 900px;
+}
+
+main .button {
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
 header {
