@@ -5,23 +5,31 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="qunit.css">
     <script src="qunit.js"></script>
+    <script src="import.js"></script>
 
-    <script src="../javascript/jquery.min.js"></script>
-    <script src="../javascript/settings.js"></script>
-    <script src="../javascript/profile.js"></script>
-    <script src="../javascript/import.js"></script>
+   <script src="../javascript/jquery.min.js"></script>
+   <script src="../javascript/passwordmaker/hashutils.js"></script>
+   <script src="../javascript/passwordmaker/md4.js"></script>
+   <script src="../javascript/passwordmaker/md5.js"></script>
+   <script src="../javascript/passwordmaker/sha256.js"></script>
+   <script src="../javascript/passwordmaker/sha1.js"></script>
+   <script src="../javascript/passwordmaker/ripemd160.js"></script>
+   <script src="../javascript/passwordmaker/l33t.js"></script>
+   <script src="../javascript/settings.js"></script>
+   <script src="../javascript/profile.js"></script>
+   <script src="../javascript/import.js"></script>
 
     <!-- NOTE: tests included at bottom -->
 </head>
 <body>
     <h1 id="qunit-header">QUnit Test Suite</h1>
-    <h2 id="qunit-banner"></h2>
+    <div id="qunit-banner"></div>
     <div id="qunit-testrunner-toolbar"></div>
-    <h2 id="qunit-userAgent"></h2>
+    <div id="qunit-userAgent"></div>
     <ol id="qunit-tests"><li></li></ol>
 
     <div id="qunit-fixture">
-        <textarea id="rdf1" rows="10" cols="10">
+        <textarea id="rdf1">
       <![CDATA[
 <?xml version="1.0"?>
 <RDF:RDF xmlns:NS1="http://passwordmaker.mozdev.org/rdf#"
@@ -102,8 +110,7 @@
                    NS2:masterPasswordStorage="store-in-memory" />
 </RDF:RDF>
       ]]>
-      </textarea>
+        </textarea>
     </div>
-    <script src="import.js"></script>
 </body>
 </html>
