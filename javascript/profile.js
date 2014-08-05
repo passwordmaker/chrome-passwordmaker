@@ -60,7 +60,7 @@ Profile.prototype.getPassword = function(url, masterkey) {
 
 Profile.prototype.generateCharacter = function(hashAlgorithm, key, data, whereToUseL33t, l33tLevel, charset) {
     // for non-hmac algorithms, the key is master pw and url concatenated
-    var usingHMAC = hashAlgorithm.indexOf("hmac") >= 0;
+    var usingHMAC = (/hmac/i).test(hashAlgorithm);
     if (!usingHMAC) {
         key += data;
     }
@@ -101,13 +101,13 @@ Profile.prototype.generateCharacter = function(hashAlgorithm, key, data, whereTo
             password = PasswordMaker_MD5.any_md5(key, charset);
             break;
         case "md5_v6":
-            password = PasswordMaker_MD5_V6.hex_md5(key, charset);
+            password = PasswordMaker_MD5_V6.hex_md5(key);
             break;
         case "hmac-md5":
             password = PasswordMaker_MD5.any_hmac_md5(key, data, charset);
             break;
         case "hmac-md5_v6":
-            password = PasswordMaker_MD5_V6.hex_hmac_md5(key, data, charset);
+            password = PasswordMaker_MD5_V6.hex_hmac_md5(key, data);
             break;
         case "rmd160":
             password = PasswordMaker_RIPEMD160.any_rmd160(key, charset);

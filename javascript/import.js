@@ -106,11 +106,12 @@ RdfImporter.loadDoc = function(rdf) {
     // settings/profile attributes
     $(rdf).find('RDF\\:Description').each(function() {
         var prof = {},
-            attrMap = RdfImporter.getImportOpts();
+            attrMap = RdfImporter.getImportOpts(),
+            attrName = "";
         for (var i = 0; i < this.attributes.length; i++) {
             // remove namespace
-            var attrName = this.attributes[i].name.replace(/.*:/g, ''),
-                opts = attrMap[attrName],
+            attrName = this.attributes[i].name.replace(/.*:/g, '');
+            var opts = attrMap[attrName],
                 val = this.attributes[i].value;
             if (opts) {
                 prof[opts.name] = opts.convert ? opts.convert(val) : val;
@@ -122,29 +123,29 @@ RdfImporter.loadDoc = function(rdf) {
             patternType = [],
             patternEnabled = [],
             siteList = '';
-        for (var i = 0; i < this.attributes.length; i++) {
-            var attrName = this.attributes[i].name.replace(/.*:/g, '');
+        for (var j = 0; j < this.attributes.length; j++) {
+            attrName = this.attributes[j].name.replace(/.*:/g, '');
             var m = attrName.match(/pattern(|type|enabled)(\d+)/);
             if (m) {
                 if (m[1] === '') {
-                    patterns[m[2]] = this.attributes[i].value;
+                    patterns[m[2]] = this.attributes[j].value;
                 } else if (m[1] == 'type') {
-                    patternType[m[2]] = this.attributes[i].value;
+                    patternType[m[2]] = this.attributes[j].value;
                 } else if (m[1] == 'enabled') {
-                    patternEnabled[m[2]] = this.attributes[i].value;
+                    patternEnabled[m[2]] = this.attributes[j].value;
                 }
             }
         }
-        for (var i = 0; i < patterns.length; i++) {
-            if (patternEnabled[i] == 'true') {
-                if (patternType[i] == 'regex') {
-                    siteList += '/' + patterns[i] + '/ ';
+        for (var k = 0; k < patterns.length; k++) {
+            if (patternEnabled[k] == 'true') {
+                if (patternType[k] == 'regex') {
+                    siteList += '/' + patterns[k] + '/ ';
                 } else {
-                    siteList += patterns[i] + ' ';
+                    siteList += patterns[k] + ' ';
                 }
             }
         }
-        prof['siteList'] = siteList;
+        prof.siteList = siteList;
 
         if (prof.rdf_about == 'http://passwordmaker.mozdev.org/globalSettings') {
             settings = prof;
@@ -171,7 +172,7 @@ RdfImporter.loadDoc = function(rdf) {
     }
 
     return {settings: settings,profiles: profiles};
-}
+};
 
 // returns number of profiles imported
 RdfImporter.saveProfiles = function(profiles) {
@@ -183,7 +184,7 @@ RdfImporter.saveProfiles = function(profiles) {
     }
     Settings.saveProfiles();
     return profiles.length;
-}
+};
 
 RdfImporter.dumpDoc = function() {
     var rv = "<?xml version=\"1.0\"?>\n" + 
@@ -193,7 +194,7 @@ RdfImporter.dumpDoc = function() {
     rv += dumpedProfilesToRdf(dumpedProfiles());
     rv +=    "</RDF:RDF>\n";
     return rv;
-}
+};
 
 // get profiles as list of objects w/ FF names as keys
 function dumpedProfiles() {
@@ -203,7 +204,7 @@ function dumpedProfiles() {
     for (var i = 0; i < Settings.profiles.length; i++) {
         var prof = Settings.profiles[i],
             newProf = {},
-            attrMap = expOpts['profile'].concat(expOpts['default']);
+            attrMap = expOpts.profile.concat(expOpts['default']);
 
         // regular attributes
         for (var j = 0; j < attrMap.length; j++) {
@@ -215,14 +216,14 @@ function dumpedProfiles() {
         // patterns
         if (prof.siteList) {
             var pats = prof.siteList.trim().split(' ');
-            for (var j = 0; j < pats.length; j++) {
-                var pat = pats[j], 
+            for (var k = 0; k < pats.length; k++) {
+                var pat = pats[k], 
                     ptype = (pat[0] == '/' && pat[pat.length - 1] == '/') ? 'regex' : 'wildcard';
 
-                newProf['pattern' + j] = ptype == 'regex' ? pat.substring(1, pat.length - 1) : pat;
-                newProf['patternenabled' + j] = 'true';
-                newProf['patterndesc' + j] = '';
-                newProf['patterntype' + j] = ptype;
+                newProf['pattern' + k] = ptype == 'regex' ? pat.substring(1, pat.length - 1) : pat;
+                newProf['patternenabled' + k] = 'true';
+                newProf['patterndesc' + k] = '';
+                newProf['patterntype' + k] = ptype;
             }
         }
         dumpProfiles.push(newProf);
@@ -240,13 +241,15 @@ function dumpedProfilesToRdf(profiles) {
         abouts.push(about);
         rv += "<RDF:Description RDF:about=\"" + attrEscape(about) + "\"\n";
         for (var key in profiles[i]) {
-            rv += " NS1:" + key + "=\"" + attrEscape(profiles[i][key]) + "\"\n ";
+            if (profiles[i].hasOwnProperty(key)) {
+                rv += " NS1:" + key + "=\"" + attrEscape(profiles[i][key]) + "\"\n ";
+            }
         }
         rv += " />\n";
     }
     rv += "<RDF:Seq RDF:about=\"http://passwordmaker.mozdev.org/accounts\">\n";
-    for (var i = 0; i < abouts.length; i++) {
-        rv += "<RDF:li RDF:resource=\"" + attrEscape(abouts[i]) + "\"/>\n";
+    for (var j = 0; j < abouts.length; j++) {
+        rv += "<RDF:li RDF:resource=\"" + attrEscape(abouts[j]) + "\"/>\n";
     }
     rv += "</RDF:Seq>\n";
 
