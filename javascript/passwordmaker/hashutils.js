@@ -30,7 +30,7 @@
  * Modified by Eric Aguiar (ultimate.evil@gmail.com)
  */
 
-if (typeof(PasswordMaker_HashUtils) !== "object") {
+if (typeof PasswordMaker_HashUtils !== "object") {
     var PasswordMaker_HashUtils = {
         /* bits per input character. 8 - ASCII; 16 - Unicode */
         chrsz: 8,

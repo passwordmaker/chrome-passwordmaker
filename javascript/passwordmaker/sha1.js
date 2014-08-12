@@ -69,7 +69,6 @@ if (typeof PasswordMaker_SHA1 !== "object") {
                 e = PasswordMaker_HashUtils.safe_add(e, olde);
             }
             return [a, b, c, d, e];
-
         },
 
         /*

@@ -99,7 +99,6 @@ if (typeof PasswordMaker_MD4 !== "object") {
                 b = PasswordMaker_HashUtils.safe_add(b, oldb);
                 c = PasswordMaker_HashUtils.safe_add(c, oldc);
                 d = PasswordMaker_HashUtils.safe_add(d, oldd);
-
             }
             return [a, b, c, d];
         },

@@ -128,7 +128,6 @@ if (typeof PasswordMaker_SHA256 !== "object") {
                     b = a;
                     a = PasswordMaker_HashUtils.safe_add(T1, T2);
                 }
-
                 HASH[0] = PasswordMaker_HashUtils.safe_add(a, HASH[0]);
                 HASH[1] = PasswordMaker_HashUtils.safe_add(b, HASH[1]);
                 HASH[2] = PasswordMaker_HashUtils.safe_add(c, HASH[2]);
