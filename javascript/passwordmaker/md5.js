@@ -163,27 +163,28 @@ if (typeof PasswordMaker_MD5 !== "object") {
 
 /* 
  * Refactored to share as much as possible from the primary PasswordMaker_MD5 algorithm while keeping 0.6 api compatilbility.
- * Note: The unintended legacy bug in MD5_V6 is when binl2hex is called, sometimes binl2hex incorrectly prepends an extra 0
- * during an iteration of the loop depending the value of binarray it's passed.
+ * Bug: if the charCodeAt value is less than 15 on the first iteration of the loop, the value is still appended as a 0 as
+ * the first character in the resulting string.
  */
- 
+
 if (typeof PasswordMaker_MD5_V6 !== "object") {
     var PasswordMaker_MD5_V6 = {
         hex_md5: function(key) {
-            return this.binl2hex(PasswordMaker_MD5.binl_md5(PasswordMaker_HashUtils.rstr2binl(key), key.length * 8));
+            return this.buggy2hex(PasswordMaker_MD5.rstr_md5(key));
         },
         hex_hmac_md5: function(key, data) {
-            return this.binl2hex(PasswordMaker_HashUtils.rstr2binl(PasswordMaker_MD5.rstr_hmac_md5(key, data)));
+            return this.buggy2hex(PasswordMaker_MD5.rstr_hmac_md5(key, data));
         },
 
-        binl2hex: function(binarray) {
-            var hex_tab = "0123456789abcdef";
-            var str = "";
-            for (var i = 0; i < binarray.length * 4; i++) {
-                str += hex_tab.charAt((binarray[i >> 2] >> ((i % 4) * 8 + 4)) & 0xF) +
-                       hex_tab.charAt((binarray[i >> 2] >> ((i % 4) * 8    )) & 0xF);
+        buggy2hex: function(input) {
+            var hex = "0123456789abcdef",
+                output = "";
+            for (var i = 0; i < input.length; i++) {
+                var x = input.charCodeAt(i);
+                output += hex.charAt((x >> 4) & 0xF);
+                output += hex.charAt(x & 0xF);
             }
-            return str;
+            return output;
         }
     };
 }
