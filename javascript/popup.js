@@ -35,17 +35,18 @@ function updateFields() {
     var profile = Settings.getProfile($("#profile").val());
     var passStrength = 0;
 
-    $("#copypassword, #injectpassword").addClass("hidden");
-
     if (password.length === 0) {
         $("#generated").val("Please Enter Password");
         setPasswordColors("#000000", "#85FFAB");
+        hideButtons();
     } else if (!matchesMasterHash(password)) {
         $("#generated").val("Master Password Mismatch");
         setPasswordColors("#FFFFFF", "#FF7272");
+        hideButtons();
     } else if (!Settings.useVerificationCode() && !Settings.keepMasterPasswordHash() && password !== confirmation) {
         $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
+        hideButtons();
     } else {
         var result = profile.getPassword(usedUrl, password, userName);
         $("#generated").val(result);
@@ -102,6 +103,15 @@ function onProfileChanged() {
         updateProfileText(tabs[0].url);
         updateFields();
     });
+}
+
+function hideButtons() {
+    if (!$("#copypassword").hasClass("hidden")) {
+        $("#copypassword").addClass("hidden");
+    }
+    if (!$("#injectpassword").hasClass("hidden")) {
+        $("#injectpassword").addClass("hidden");
+    }
 }
 
 function showButtons() {
