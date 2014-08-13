@@ -1,5 +1,9 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Georgia, "Droid Serif", Constantia, serif;
+    font-family: "DejaVu Serif", Georgia, "Droid Serif", serif;
     font-size: 100%;
     width: 18em;
 }
@@ -23,15 +27,19 @@ main {
     height: 2em;
 }
 
+header {
+    align-items: center;
+    display: flex;
+    margin-bottom: 1.5%;
+}
+
 header > img {
     height: 1.25em;
-    width: 1.25em;
 }
 
 header > span {
     font-weight: bold;
-    margin-left: 1%;
-    vertical-align: top;
+    margin-left: 1.5%;
 }
 
 label {
@@ -42,18 +50,20 @@ label {
 
 input {
     border: .1em solid #000;
-    width: 54%;
-    height: 1.4em;
+    border-radius: 0;
     font-size: 82%;
+    height: 1.5em;
     padding: 0 0 0 .8%;
+    width: 54%;
 }
 
 select {
     background-color: #fff;
     border: .1em solid #000;
+    border-radius: 0;
     font-size: 82%;
     height: 1.5em;
-    width: 55.6%;
+    width: 54%;
 }
 
 .hidden {
@@ -61,10 +71,11 @@ select {
 }
 
 #generated {
-    font-family: "DejaVu Sans Mono", "Lucida Console", Monaco, monospace;
+    font-family: "DejaVu Sans Mono", Menlo, "Lucida Console", monospace;
     font-size: 110%;
     font-weight: bold;
-    height: 90%;
+    height: 100%;
+    letter-spacing: .05em;
     text-align: center;
     width: 100%;
 }
@@ -97,7 +108,7 @@ meter::-webkit-meter-optimum-value {
 }
 
 #button_row {
-    margin: 1% 0 1% 0;
+    margin-top: 1.5%;
     white-space: nowrap;
 }
 
@@ -107,6 +118,6 @@ meter::-webkit-meter-optimum-value {
     width: 32%;
 }
 
-body:not(#generated) {
+*:not(input) {
     -webkit-user-select: none;
 }

@@ -6,7 +6,7 @@ function getAutoProfileIdForUrl(url) {
     for (var i = 0; i < Settings.profiles.length; i++) {
         var profile = Settings.profiles[i];
         if (profile.siteList.trim().length !== 0) {
-            var sites = profile.siteList.trim().split(" ");
+            var sites = profile.siteList.trim().split(/\s+/);
             for (var j = 0; j < sites.length; j++) {
                 var regexString = /\s/;
                 try {
@@ -51,6 +51,7 @@ function updateFields() {
         var result = profile.getPassword(usedUrl, password, userName);
         $("#generated").val(result);
         setPasswordColors("#008000", "#FFFFFF");
+        $("#password, #confirmation").removeAttr("style");
         passStrength = Settings.getPasswordStrength(result).strength;
         showButtons();
     }
@@ -121,7 +122,12 @@ function showButtons() {
         if (!(/^chrome/i).test(tabs[0].url)) {
             chrome.tabs.executeScript(tabs[0].id, {
                 "allFrames": true,
-                "code": "document.querySelectorAll('input[type=password]').length"
+                "code": "var fields = document.getElementsByTagName('input'), fieldCount = 0;" +
+                        "for (var i = 0; i < fields.length; i++) {" +
+                            "if ((/password/i).test(fields[i].type + ' ' + fields[i].name)) {" +
+                                "fieldCount += 1;" +
+                            "}" +
+                        "}"
             }, function(results) {
                 for (var frame = 0; frame < results.length; frame++) {
                     if (results[frame] > 0) {
@@ -129,30 +135,6 @@ function showButtons() {
                     }
                 }
             });
-        }
-    });
-}
-
-function init(url) {
-    chrome.runtime.getBackgroundPage(function(bg) {
-        var pass = Settings.getPassword(bg.password);
-
-        $("#password").val(pass);
-        $("#confirmation").val(pass);
-        $("#store_location").val(Settings.storeLocation);
-
-        for (var i = 0; i < Settings.profiles.length; i++) {
-            $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
-        }
-        $("#profile").val(getAutoProfileIdForUrl(url) || Settings.profiles[0].id);
-
-        updateProfileText(url);
-        updateFields();
-
-        if (pass.length === 0 || pass !== $("#confirmation").val()) {
-            $("#password").focus();
-        } else {
-            $("#generated").focus();
         }
     });
 }
@@ -235,6 +217,42 @@ function showPasswordField() {
     $("#generated").show().focus();
 }
 
+function enterKeyPressed(event) {
+    // 13 is the key code of the enter key
+    if (event.keyCode === 13 && !(/select/i).test(event.target.tagName)) {
+        if ((/password/i).test($("#generated").val())) {
+            $("#password").focus();
+        } else {
+            updateFields();
+            fillFields();
+        }
+    }
+}
+
+function init(url) {
+    chrome.runtime.getBackgroundPage(function(bg) {
+        var pass = Settings.getPassword(bg.password);
+
+        $("#password").val(pass);
+        $("#confirmation").val(pass);
+        $("#store_location").val(Settings.storeLocation);
+
+        for (var i = 0; i < Settings.profiles.length; i++) {
+            $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
+        }
+        $("#profile").val(getAutoProfileIdForUrl(url) || Settings.profiles[0].id);
+
+        updateProfileText(url);
+        updateFields();
+
+        if ((/password/i).test($("#generated").val())) {
+            $("#password").focus();
+        } else {
+            $("#password").focus().blur();
+        }
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     Settings.loadProfiles();
     $("#password, #confirmation").on("keyup", Settings.setPassword);
@@ -276,9 +294,5 @@ document.addEventListener("DOMContentLoaded", function() {
         init(tabs[0].url || "");
     });
 
-    $("#password, #confirmation, #generated").on("keydown", function(event) {
-        if (event.keyCode === 13) { // 13 is the key code of the return key
-            fillPassword();
-        }
-    });
+    $(document.body).on("keydown", enterKeyPressed);
 });
