@@ -1,3 +1,9 @@
+0.7.4 - 2014-08-13
+
+* Added a username filling function
+* Improved popup interaction, functionality and appearance
+* Many other small code tweaks and optimizations
+
 0.7.3 - 2014-08-05
 
 * Added a password strength meter to the popup
