@@ -37,7 +37,7 @@ test("load profile", function() {
     deepEqual(p.passwordSuffix, "suffix1");
     deepEqual(p.whereToUseL33t, "before-hashing");
     deepEqual(p.l33tLevel, 1);
-    deepEqual(p.siteList, "/https?://mail\\.yahoo\\.com/.*/ http?://github.com/* ");
+    deepEqual(p.siteList, "/https?://mail\\.yahoo\\.com/.*/ http?://github.com/*");
 });
 
 test("load default profile", function() {
@@ -105,7 +105,7 @@ test("dump profile to rdf", function() {
     deepEqual(p.passwordSuffix, "suffix1");
     deepEqual(p.whereToUseL33t, "before-hashing");
     deepEqual(p.l33tLevel, 1);
-    deepEqual(p.siteList, "/https?://mail\\.yahoo\\.com/.*/ http?://github.com/* ");
+    deepEqual(p.siteList, "/https?://mail\\.yahoo\\.com/.*/ http?://github.com/*");
 });
 
 test("dump default profile to rdf", function() {
