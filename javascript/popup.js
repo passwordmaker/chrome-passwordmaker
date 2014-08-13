@@ -180,7 +180,7 @@ function openOptions() {
 }
 
 function getVerificationCode(pass) {
-    var p = new Profile();
+    var p = Object.create(Profile);
     p.hashAlgorithm = "sha256";
     p.passwordLength = 3;
     p.selectedCharset = CHARSET_OPTIONS[4];

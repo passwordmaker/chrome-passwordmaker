@@ -174,7 +174,7 @@ RdfImporter.loadDoc = function(rdf) {
         // FF version uses a "default" profile that has attributes we need for each
         // profile (such as url_{protocol,subdomain,domain,path})
         for (var i = 0; i < profiles.length; i++) {
-            profiles[i] = $.extend(new Profile(), defaultProfile, profiles[i]);
+            profiles[i] = $.extend(Object.create(Profile), defaultProfile, profiles[i]);
         }
     }
 
@@ -190,7 +190,7 @@ RdfImporter.saveProfiles = function(profiles) {
         return 0;
     }
     for (var i = 0; i < profiles.length; i++) {
-        Settings.addProfile($.extend(new Profile(), profiles[i]));
+        Settings.addProfile($.extend(Object.create(Profile), profiles[i]));
     }
     Settings.saveProfiles();
     return profiles.length;

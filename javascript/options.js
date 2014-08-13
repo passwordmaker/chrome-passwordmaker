@@ -19,7 +19,7 @@ function updateLeet() {
 }
 
 function addProfile() {
-    var p = new Profile();
+    var p = Object.create(Profile);
     p.title = "No name";
     Settings.addProfile(p);
     updateProfileList();
@@ -222,7 +222,7 @@ function saveProfile() {
 }
 
 function cloneProfile() {
-    var p = $.extend(new Profile(), Settings.getProfile(Settings.currentProfile));
+    var p = $.extend(Object.create(Profile), Settings.getProfile(Settings.currentProfile));
     p.title = p.title + " Copy";
     Settings.addProfile(p);
     updateProfileList();

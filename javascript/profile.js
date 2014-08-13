@@ -1,30 +1,30 @@
-function Profile() {
-    this.id = 1;
-    this.title = "Default";
-    this.siteList = "";
+var Profile = {
+    id: 1,
+    title: "Default",
+    siteList: "",
 
     // Settings for the URL generation
-    this.url_protocol = false;
-    this.url_subdomain = false;
-    this.url_domain = true;
-    this.url_path = false;
+    url_protocol: false,
+    url_subdomain: false,
+    url_domain: true,
+    url_path: false,
 
     // Use this text instead of domain if not null
-    this.strUseText = "";
+    strUseText: "",
 
     // Settings for the key generation
-    this.hashAlgorithm = "md5";
-    this.username = "";
-    this.modifier = "";
-    this.passwordLength = 8;
-    this.selectedCharset = CHARSET_OPTIONS[0];
-    this.passwordPrefix = "";
-    this.passwordSuffix = "";
-    this.whereToUseL33t = "off";
-    this.l33tLevel = 0;
-}
+    hashAlgorithm: "md5",
+    username: "",
+    modifier: "",
+    passwordLength: 8,
+    selectedCharset: CHARSET_OPTIONS[0],
+    passwordPrefix: "",
+    passwordSuffix: "",
+    whereToUseL33t: "off",
+    l33tLevel: 0
+};
 
-Profile.prototype.getPassword = function(url, masterkey) {
+Profile.getPassword = function(url, masterkey) {
     if (this.selectedCharset.length < 2) {
         return "Not enough chars!";
     }
@@ -58,7 +58,7 @@ Profile.prototype.getPassword = function(url, masterkey) {
     return password.slice(0, this.passwordLength);
 };
 
-Profile.prototype.generateCharacter = function(hashAlgorithm, key, data, whereToUseL33t, l33tLevel, charset) {
+Profile.generateCharacter = function(hashAlgorithm, key, data, whereToUseL33t, l33tLevel, charset) {
     // for non-hmac algorithms, the key is master pw and url concatenated
     var usingHMAC = (/hmac/i).test(hashAlgorithm);
     if (!usingHMAC) {
@@ -125,7 +125,7 @@ Profile.prototype.generateCharacter = function(hashAlgorithm, key, data, whereTo
 
 // Given a list of domain segments like [www,google,co,uk], return the
 // subdomain and domain strings (ie, [www, google.co.uk]).
-Profile.prototype.splitSubdomain = function(segments) {
+Profile.splitSubdomain = function(segments) {
     for (var i = 0; i < segments.length; ++i) {
         var suffix = segments.slice(i).join(".");
         if (TOPLEVELDOMAINS[suffix]) {
@@ -139,11 +139,11 @@ Profile.prototype.splitSubdomain = function(segments) {
 };
 
 // Return strUseText
-Profile.prototype.getText = function() {
+Profile.getText = function() {
     return this.strUseText;
 };
 
-Profile.prototype.getUrl = function(url) {
+Profile.getUrl = function(url) {
     var groups = url.match(/([^:\/]*?:\/\/)?([^:\/]*)([^#]*)/);
 
     var domainSegments = groups[2].split(".");

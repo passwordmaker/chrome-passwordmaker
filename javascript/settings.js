@@ -127,7 +127,7 @@ Settings.deleteProfile = function(id) {
 Settings.loadProfilesFromString = function(profiles) {
     Settings.profiles = [];
     JSON.parse(profiles).forEach(function(item) {
-        Settings.profiles.push($.extend(new Profile(), item));
+        Settings.profiles.push($.extend(Object.create(Profile), item));
     });
 };
 
@@ -135,8 +135,8 @@ Settings.loadLocalProfiles = function() {
     if (Settings.ifDataExists("profiles")) {
         Settings.loadProfilesFromString(localStorage.getItem("profiles"));
     } else {
-        var normal = new Profile();
-        var alpha = new Profile();
+        var normal = Object.create(Profile);
+        var alpha = Object.create(Profile);
         alpha.id = 2;
         alpha.title = "Alphanumeric";
         alpha.selectedCharset = CHARSET_OPTIONS[1];
