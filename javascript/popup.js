@@ -248,7 +248,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (Settings.shouldDisablePasswordSaving()) {
         $("#store_location_row").hide();
-        Settings.storeLocation = "never";
     }
 
     if (Settings.shouldHidePassword()) {

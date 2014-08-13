@@ -209,6 +209,7 @@ Settings.setStoreLocation = function(store) {
     if (Settings.storeLocation !== store) {
         Settings.storeLocation = store;
         localStorage.setItem("store_location", store);
+
         if (Settings.storeLocation !== "disk") {
             localStorage.removeItem("password_crypt");
         }
@@ -227,16 +228,20 @@ Settings.setBgPassword = function(pw) {
 Settings.setPassword = function() {
     var bits = crypto.getRandomValues(new Uint32Array(8));
     var key = sjcl.codec.base64.fromBits(bits);
+    var password = $("#password").val();
     localStorage.setItem("password_key", key);
 
-    var password = $("#password").val();
-    if (Settings.storeLocation === "memory") {
-        Settings.setBgPassword(Settings.encrypt(key, password));
-    } else if (Settings.storeLocation === "disk") {
-        Settings.setBgPassword(Settings.encrypt(key, password));
-        localStorage.setItem("password_crypt", Settings.encrypt(key, password));
-    } else {
-        Settings.setBgPassword("");
+    switch (Settings.storeLocation) {
+        case "none":
+            Settings.setBgPassword("");
+            break;
+        case "memory":
+            Settings.setBgPassword(Settings.encrypt(key, password));
+            break;
+        case "disk":
+            Settings.setBgPassword(Settings.encrypt(key, password));
+            localStorage.setItem("password_crypt", Settings.encrypt(key, password));
+            break;
     }
 };
 

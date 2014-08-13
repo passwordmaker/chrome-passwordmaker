@@ -327,8 +327,7 @@ function updateDisablePasswordSaving() {
     var should_disable = $("#disablePasswordSaving").prop("checked");
     localStorage.setItem("disable_password_saving", should_disable);
     if (should_disable) {
-        Settings.storeLocation = "never";
-        localStorage.removeItem("store_location");
+        localStorage.setItem("store_location", "never");
         localStorage.removeItem("password_crypt");
         Settings.setBgPassword("");
     }
