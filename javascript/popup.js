@@ -31,6 +31,7 @@ function updateFields() {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
     var usedUrl = $("#usedtext").val();
+    var userName = $("#username").val();
     var profile = Settings.getProfile($("#profile").val());
     var passStrength = 0;
 
@@ -46,7 +47,7 @@ function updateFields() {
         $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
     } else {
-        var result = profile.getPassword(usedUrl, password);
+        var result = profile.getPassword(usedUrl, password, userName);
         $("#generated").val(result);
         setPasswordColors("#008000", "#FFFFFF");
         passStrength = Settings.getPasswordStrength(result).strength;
@@ -78,13 +79,16 @@ function matchesMasterHash(password) {
     }
 }
 
-function updateURL(url) {
+function updateProfileText(url) {
     var profile = Settings.getProfile($("#profile").val());
     // Store either matched url or, if set, use profiles own "use text"
     if (profile.getText().length !== 0) {
         $("#usedtext").val(profile.getText());
     } else {
         $("#usedtext").val(profile.getUrl(url));
+    }
+    if (Settings.shouldFillUsername()) {
+        $("#username").val(profile.getUsername());
     }
 }
 
@@ -95,7 +99,7 @@ function updateStoreLocation() {
 
 function onProfileChanged() {
     chrome.tabs.query({ "active": true, "currentWindow": true, "windowType": "normal" }, function(tabs) {
-        updateURL(tabs[0].url);
+        updateProfileText(tabs[0].url);
         updateFields();
     });
 }
@@ -132,7 +136,7 @@ function init(url) {
         }
         $("#profile").val(getAutoProfileIdForUrl(url) || Settings.profiles[0].id);
 
-        updateURL(url);
+        updateProfileText(url);
         updateFields();
 
         if (pass.length === 0 || pass !== $("#confirmation").val()) {
@@ -143,29 +147,55 @@ function init(url) {
     });
 }
 
-function fillPassword() {
+function fillFields() {
     chrome.tabs.query({ "active": true, "currentWindow": true, "windowType": "normal" }, function(tabs) {
-        updateFields();
-        chrome.tabs.executeScript(tabs[0].id, {
-            "allFrames": true,
-            // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
-            "code": "var b64pass = '" + btoa($("#generated").val()) + "';" +
-                    "var fields = document.querySelectorAll('input[type=password]');" +
-                    "for (var i = 0; i < fields.length; i++) {" +
-                        // Only fill password input fields that are empty (for change password pages)
-                        "if (fields[i].value.length === 0) {" +
-                            "fields[i].value = atob(b64pass);" +
-                        "}" +
-                    "}"
-        }, function() {
+        if (!(/^chrome/i).test(tabs[0].url)) {
+            chrome.tabs.executeScript(tabs[0].id, {
+                "allFrames": true,
+                // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
+                "code": "var b64pass = '" + btoa($("#generated").val()) + "';" +
+                        "var fields = document.getElementsByTagName('input');" +
+                        "for (var i = 0; i < fields.length; i++) {" +
+                            "if (fields[i].value.length === 0 && (/password/i).test(fields[i].type + ' ' + fields[i].name)) {" +
+                                "fields[i].value = atob(b64pass);" +
+                            "}" +
+                        "}"
+            }, function() {
+                if (Settings.shouldFillUsername()) {
+                    fillUsername();
+                } else {
+                    window.close();
+                }
+            });
+        } else {
             window.close();
-        });
+        }
+    });
+}
+
+function fillUsername() {
+    chrome.tabs.query({ "active": true, "currentWindow": true, "windowType": "normal" }, function(tabs) {
+        if (!(/^chrome/i).test(tabs[0].url)) {
+            chrome.tabs.executeScript(tabs[0].id, {
+                "allFrames": true,
+                "code": "var b64name = '" + btoa($("#username").val()) + "';" +
+                        "var fields = document.getElementsByTagName('input');" +
+                        "for (var i = 0; i < fields.length; i++) {" +
+                            "if (fields[i].value.length === 0 && (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name)) {" +
+                                "fields[i].value = atob(b64name);" +
+                            "}" +
+                        "}"
+            }, function() {
+                window.close();
+            });
+        } else {
+            window.close();
+        }
     });
 }
 
 function copyPassword() {
     chrome.tabs.query({windowType: "popup"}, function() {
-        updateFields();
         $("#activatePassword").hide();
         $("#generated").show().get(0).select();
         document.execCommand("copy");
@@ -179,12 +209,12 @@ function openOptions() {
     });
 }
 
-function getVerificationCode(pass) {
+function getVerificationCode(password) {
     var p = Object.create(Profile);
     p.hashAlgorithm = "sha256";
     p.passwordLength = 3;
     p.selectedCharset = CHARSET_OPTIONS[4];
-    return p.getPassword("", pass);
+    return p.getPassword("", password, "");
 }
 
 function showPasswordField() {
@@ -198,12 +228,12 @@ function showPasswordField() {
 document.addEventListener("DOMContentLoaded", function() {
     Settings.loadProfiles();
     $("#password, #confirmation").on("keyup", Settings.setPassword);
-    $("#password, #confirmation, #usedtext").on("keyup", delayedUpdate);
+    $("#password, #confirmation, #usedtext, #username").on("keyup", delayedUpdate);
     $("#store_location").on("change", updateStoreLocation);
     $("#profile").on("change", onProfileChanged);
     $("#activatePassword").on("click", showPasswordField);
     $("#copypassword").on("click", copyPassword);
-    $("#injectpassword").on("click", fillPassword);
+    $("#injectpassword").on("click", fillFields);
     $("#options").on("click", openOptions);
 
     if (Settings.shouldDisablePasswordSaving()) {
@@ -223,6 +253,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (!Settings.useVerificationCode()) {
         $("#verification_row").hide();
+    }
+
+    if (!Settings.shouldFillUsername()) {
+        $("#username_row").hide();
     }
 
     if (!Settings.shouldShowStrength()) {

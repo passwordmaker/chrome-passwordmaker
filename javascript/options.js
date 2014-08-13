@@ -339,6 +339,10 @@ function updateUseVerificationCode() {
     localStorage.setItem("use_verification_code", $("#useVerificationCode").prop("checked"));
 }
 
+function updatefillUsername() {
+    localStorage.setItem("fill_username", $("#fillUsername").prop("checked"));
+}
+
 function updateShowStrength() {
     localStorage.setItem("show_password_strength", $("#showPasswordStrength").prop("checked"));
 }
@@ -432,6 +436,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#disablePasswordSaving").prop("checked", Settings.shouldDisablePasswordSaving());
     $("#keepMasterPasswordHash").prop("checked", Settings.keepMasterPasswordHash());
     $("#useVerificationCode").prop("checked", Settings.useVerificationCode());
+    $("#fillUsername").prop("checked", Settings.shouldFillUsername());
     $("#showPasswordStrength").prop("checked", Settings.shouldShowStrength());
     $("#syncProfiles").prop("checked", Settings.shouldSyncProfiles());
 
@@ -465,6 +470,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#syncProfiles").on("change", updateSyncProfiles);
     $("#masterPassword").on("keyup", updateMasterHash);
     $("#useVerificationCode").on("change", updateUseVerificationCode);
+    $("#fillUsername").on("change", updatefillUsername);
     $("#showPasswordStrength").on("change", updateShowStrength);
     $("#set_sync_password").on("click", setSyncPassword);
     $("#clear_sync_data").on("click", clearSyncData);
