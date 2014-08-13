@@ -1,5 +1,5 @@
 function setPasswordColors(foreground, background) {
-    $("#generated, #password, #confirmation").css({"background-color": background, "color": foreground});
+    $("#generated, #password, #confirmation").css({ "background-color": background, "color": foreground });
 }
 
 function getAutoProfileIdForUrl(url) {
@@ -39,14 +39,17 @@ function updateFields() {
         $("#generated").val("Please Enter Password");
         setPasswordColors("#000000", "#85FFAB");
         hideButtons();
+        Settings.setBgPassword("");
     } else if (!matchesMasterHash(password)) {
         $("#generated").val("Master Password Mismatch");
         setPasswordColors("#FFFFFF", "#FF7272");
         hideButtons();
+        Settings.setBgPassword("");
     } else if (!Settings.useVerificationCode() && !Settings.keepMasterPasswordHash() && password !== confirmation) {
         $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
         hideButtons();
+        Settings.setBgPassword("");
     } else {
         var result = profile.getPassword(usedUrl, password, userName);
         $("#generated").val(result);
@@ -54,11 +57,12 @@ function updateFields() {
         $("#password, #confirmation").removeAttr("style");
         passStrength = Settings.getPasswordStrength(result).strength;
         showButtons();
+        Settings.setPassword();
     }
 
     if (Settings.shouldShowStrength()) {
         $("meter").val(passStrength);
-        $("#strengthValue")[0].textContent = passStrength;
+        $("#strengthValue").text(passStrength);
     }
 
     if (Settings.useVerificationCode()) {
@@ -187,7 +191,7 @@ function fillUsername() {
 }
 
 function copyPassword() {
-    chrome.tabs.query({windowType: "popup"}, function() {
+    chrome.tabs.query({ "windowType": "popup" }, function() {
         $("#activatePassword").hide();
         $("#generated").show().get(0).select();
         document.execCommand("copy");
@@ -196,7 +200,7 @@ function copyPassword() {
 }
 
 function openOptions() {
-    chrome.tabs.create({url: chrome.runtime.getURL("html/options.html")}, function() {
+    chrome.tabs.create({ "url": chrome.runtime.getURL("html/options.html") }, function() {
         window.close();
     });
 }
@@ -211,10 +215,10 @@ function getVerificationCode(password) {
 
 function showPasswordField() {
     $("#activatePassword").hide();
+    $("#generated").show();
     if (Settings.shouldShowStrength()) {
         $("#strength_row").show();
     }
-    $("#generated").show().focus();
 }
 
 function enterKeyPressed(event) {
@@ -255,8 +259,7 @@ function init(url) {
 
 document.addEventListener("DOMContentLoaded", function() {
     Settings.loadProfiles();
-    $("#password, #confirmation").on("keyup", Settings.setPassword);
-    $("#password, #confirmation, #usedtext, #username").on("keyup", delayedUpdate);
+    $("input").on("keyup", delayedUpdate);
     $("#store_location").on("change", updateStoreLocation);
     $("#profile").on("change", onProfileChanged);
     $("#activatePassword").on("click", showPasswordField);

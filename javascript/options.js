@@ -132,7 +132,7 @@ function importRdf() {
 
     var rdfDoc = RdfImporter.loadDoc(txt);
     // Check that profiles have been parsed and are available before wiping current data
-    if (rdfDoc && rdfDoc.profiles && rdfDoc.profiles.length && $("#importOverwrite").prop("checked")) {
+    if (rdfDoc.profiles.length > 0 && $("#importOverwrite").prop("checked")) {
         Settings.profiles = [];
     }
 
@@ -150,7 +150,7 @@ function copyRdfExport() {
 }
 
 function showOptions() {
-    chrome.storage.sync.getBytesInUse(null, function (bytes) {
+    chrome.storage.sync.getBytesInUse(null, function(bytes) {
         if (bytes > 0) {
             Settings.syncDataAvailable = true;
         }
@@ -186,7 +186,7 @@ function saveProfile() {
     var selected = Settings.getProfile(Settings.currentProfile);
 
     selected.title          = $("#profileNameTB").val().trim();
-    selected.siteList       = $("#siteList").val().trim();
+    selected.siteList       = $("#siteList").val().trim().split(/\s+/).join(" ");
     selected.url_protocol   = $("#protocolCB").prop("checked");
     selected.url_subdomain  = $("#subdomainCB").prop("checked");
     selected.url_domain     = $("#domainCB").prop("checked");
@@ -319,10 +319,6 @@ function updateMasterHash() {
     }
 }
 
-function updateHidePassword() {
-    localStorage.setItem("show_generated_password", $("#hidePassword").prop("checked"));
-}
-
 function updateDisablePasswordSaving() {
     var should_disable = $("#disablePasswordSaving").prop("checked");
     localStorage.setItem("disable_password_saving", should_disable);
@@ -332,6 +328,9 @@ function updateDisablePasswordSaving() {
         Settings.setBgPassword("");
     }
 
+}
+function updateHidePassword() {
+    localStorage.setItem("show_generated_password", $("#hidePassword").prop("checked"));
 }
 
 function updateUseVerificationCode() {
@@ -347,21 +346,21 @@ function updateShowStrength() {
 }
 
 function testPasswordLength() {
-    var field = document.getElementById("passwdLength");
-    if (field.value < 8) field.value = 8;
-    if (field.value > 512) field.value = 512;
+    var field = $("#passwdLength");
+    if (field.val() < 8) field.val(8);
+    if (field.val() > 512) field.val(512);
 }
 
 function fileImport() {
     var file = $("#fileInput")[0].files[0];
-    if (file.type.match(/rdf|xml|text/)) {
+    if ((/rdf|xml/i).test(file.type)) {
         var reader = new FileReader();
         reader.onload = function() {
             $("#importText").val(reader.result);
         };
         reader.readAsBinaryString(file);
     } else {
-        $("#importText").val("Please select a supported filetype!");
+        $("#importText").val("Please select an RDF or XML file containing PasswordMaker profile data.");
     }
 }
 
@@ -390,7 +389,7 @@ function showStrengthSection() {
 function checkPassStrength() {
     var selected = Settings.getProfile(Settings.currentProfile);
 
-    selected.siteList       = $("#siteList").val().trim();
+    selected.siteList       = $("#siteList").val().trim().split(/\s+/).join(" ");
     selected.url_protocol   = $("#protocolCB").prop("checked");
     selected.url_subdomain  = $("#subdomainCB").prop("checked");
     selected.url_domain     = $("#domainCB").prop("checked");
