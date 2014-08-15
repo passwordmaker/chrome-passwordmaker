@@ -2,7 +2,7 @@ function setPasswordColors(foreground, background) {
     $("#generated, #password, #confirmation").css({ "background-color": background, "color": foreground });
 }
 
-function getAutoProfileIdForUrl(url) {
+function getAutoProfileIdForUrl() {
     for (var i = 0; i < Settings.profiles.length; i++) {
         var profile = Settings.profiles[i];
         if (profile.siteList.trim().length !== 0) {
@@ -19,7 +19,7 @@ function getAutoProfileIdForUrl(url) {
                 plain2regex = plain2regex.replace(/\*/g, ".*");
                 var wildcardString = new RegExp(plain2regex, "i");
 
-                if (regexString.test(url) || wildcardString.test(url)) {
+                if (regexString.test(Settings.currentUrl) || wildcardString.test(Settings.currentUrl)) {
                     return profile.id;
                 }
             }
@@ -31,7 +31,6 @@ function updateFields() {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
     var usedUrl = $("#usedtext").val();
-    var userName = $("#username").val();
     var profile = Settings.getProfile($("#profile").val());
     var passStrength = 0;
 
@@ -57,7 +56,6 @@ function updateFields() {
         $("#password, #confirmation").removeAttr("style");
         passStrength = Settings.getPasswordStrength(result).strength;
         showButtons();
-        Settings.setPassword();
     }
 
     if (Settings.shouldShowStrength()) {
@@ -85,13 +83,13 @@ function matchesMasterHash(password) {
     }
 }
 
-function updateProfileText(url) {
+function updateProfileText() {
     var profile = Settings.getProfile($("#profile").val());
     // Store either matched url or, if set, use profiles own "use text"
     if (profile.getText().length !== 0) {
         $("#usedtext").val(profile.getText());
     } else {
-        $("#usedtext").val(profile.getUrl(url));
+        $("#usedtext").val(profile.getUrl(Settings.currentUrl));
     }
     if (profile.getUsername().length !== 0) {
         $("#username").val(profile.getUsername());
@@ -106,10 +104,8 @@ function updateStoreLocation() {
 }
 
 function onProfileChanged() {
-    chrome.tabs.query({ "active": true, "currentWindow": true, "windowType": "normal" }, function(tabs) {
-        updateProfileText(tabs[0].url);
-        updateFields();
-    });
+    updateProfileText();
+    updateFields();
 }
 
 function hideButtons() {
@@ -123,52 +119,48 @@ function hideButtons() {
 
 function showButtons() {
     $("#copypassword").removeClass("hidden");
-    chrome.tabs.query({ "active": true, "currentWindow": true, "windowType": "normal" }, function(tabs) {
-        // Don't run executeScript() on built-in chrome:// pages since it isn't allowed anyway
-        if (!(/^chrome/i).test(tabs[0].url)) {
-            chrome.tabs.executeScript(tabs[0].id, {
-                "allFrames": true,
-                "code": "var fields = document.getElementsByTagName('input'), fieldCount = 0;" +
-                        "for (var i = 0; i < fields.length; i++) {" +
-                            "if ((/password/i).test(fields[i].type + ' ' + fields[i].name)) {" +
-                                "fieldCount += 1;" +
-                            "}" +
-                        "}"
-            }, function(results) {
-                for (var frame = 0; frame < results.length; frame++) {
-                    if (results[frame] > 0) {
-                        $("#injectpassword").removeClass("hidden");
-                    }
+    // Don't run executeScript() on built-in chrome:// pages since it isn't allowed anyway
+    if (!(/^chrome/i).test(Settings.currentUrl)) {
+        chrome.tabs.executeScript({
+            "allFrames": true,
+            "code": "var fields = document.getElementsByTagName('input'), fieldCount = 0;" +
+                    "for (var i = 0; i < fields.length; i++) {" +
+                        "if (/password/i.test(fields[i].type + ' ' + fields[i].name)) {" +
+                            "fieldCount += 1;" +
+                        "}" +
+                    "}"
+        }, function(results) {
+            for (var frame = 0; frame < results.length; frame++) {
+                if (results[frame] > 0) {
+                    $("#injectpassword").removeClass("hidden");
                 }
-            });
-        }
-    });
+            }
+        });
+    }
 }
 
 function fillFields() {
-    chrome.tabs.query({ "active": true, "currentWindow": true, "windowType": "normal" }, function(tabs) {
-        if (!(/^chrome/i).test(tabs[0].url)) {
-            chrome.tabs.executeScript(tabs[0].id, {
-                "allFrames": true,
-                // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
-                "code": "var b64pass = '" + btoa($("#generated").val()) + "';" +
-                        "var b64name = '" + btoa($("#username").val()) + "';" +
-                        "var fields = document.getElementsByTagName('input');" +
-                        "for (var i = 0; i < fields.length; i++) {" +
-                            "if (fields[i].value.length === 0 && (/password/i.test(fields[i].type + ' ' + fields[i].name))) {" +
-                                "fields[i].value = atob(b64pass);" +
+    if (!(/^chrome/i).test(Settings.currentUrl)) {
+        chrome.tabs.executeScript({
+            "allFrames": true,
+            // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
+            "code": "var b64pass = '" + btoa($("#generated").val()) + "';" +
+                    "var b64name = '" + btoa($("#username").val()) + "';" +
+                    "var fields = document.getElementsByTagName('input');" +
+                    "for (var i = 0; i < fields.length; i++) {" +
+                        "if (fields[i].value.length === 0 && (/password/i.test(fields[i].type + ' ' + fields[i].name))) {" +
+                            "fields[i].value = atob(b64pass);" +
+                        "}" +
+                        "if (" + Settings.shouldFillUsername() + ") {" +
+                            "if (fields[i].value.length === 0 && (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name)) {" +
+                                "fields[i].value = atob(b64name);" +
                             "}" +
-                            "if (" + Settings.shouldFillUsername() + ") {" +
-                                "if (fields[i].value.length === 0 && (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name)) {" +
-                                    "fields[i].value = atob(b64name);" +
-                                "}" +
-                            "}" +
-                        "}"
-            }, function() {
-                window.close();
-            });
-        }
-    });
+                        "}" +
+                    "}"
+        }, function() {
+            window.close();
+        });
+    }
 }
 
 function copyPassword() {
@@ -214,7 +206,7 @@ function enterKeyPressed(event) {
     }
 }
 
-function init(url) {
+function init() {
     chrome.runtime.getBackgroundPage(function(bg) {
         var pass = Settings.getPassword(bg.password);
 
@@ -225,9 +217,9 @@ function init(url) {
         for (var i = 0; i < Settings.profiles.length; i++) {
             $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
         }
-        $("#profile").val(getAutoProfileIdForUrl(url) || Settings.profiles[0].id);
+        $("#profile").val(getAutoProfileIdForUrl() || Settings.profiles[0].id);
 
-        updateProfileText(url);
+        updateProfileText();
         updateFields();
 
         if ((/password/i).test($("#generated").val())) {
@@ -240,6 +232,7 @@ function init(url) {
 
 document.addEventListener("DOMContentLoaded", function() {
     Settings.loadProfiles();
+    $("#password, #confirmation").on("keyup", Settings.setPassword);
     $("input").on("keyup", delayedUpdate);
     $("#store_location").on("change", updateStoreLocation);
     $("#profile").on("change", onProfileChanged);
@@ -275,7 +268,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     chrome.tabs.query({ "active": true, "currentWindow": true, "windowType": "normal" }, function(tabs) {
-        init(tabs[0].url || "");
+        Settings.currentUrl = tabs[0].url || "";
+        init();
     });
 
     $(document.body).on("keydown", enterKeyPressed);

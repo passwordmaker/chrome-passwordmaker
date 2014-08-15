@@ -1,4 +1,5 @@
 var Settings = {
+    currentUrl: "",
     storeLocation: localStorage.getItem("store_location") || "memory",
     profiles: [],
     syncDataAvailable: false,
@@ -152,22 +153,20 @@ Settings.setBgPassword = function(pw) {
 };
 
 Settings.setPassword = function() {
-    var bits = crypto.getRandomValues(new Uint32Array(8));
-    var key = sjcl.codec.base64.fromBits(bits);
-    var password = $("#password").val();
-    localStorage.setItem("password_key", key);
+    if (Settings.storeLocation === "never" || Settings.shouldDisablePasswordSaving()) {
+        Settings.setBgPassword("");
+    } else {
+        var password = $("#password").val();
+        var bits = crypto.getRandomValues(new Uint32Array(8));
+        var key = sjcl.codec.base64.fromBits(bits);
+        localStorage.setItem("password_key", key);
 
-    switch (Settings.storeLocation) {
-        case "none":
-            Settings.setBgPassword("");
-            break;
-        case "memory":
+        if (Settings.storeLocation === "memory") {
             Settings.setBgPassword(Settings.encrypt(key, password));
-            break;
-        case "disk":
+        } else if (Settings.storeLocation === "disk") {
             Settings.setBgPassword(Settings.encrypt(key, password));
             localStorage.setItem("password_crypt", Settings.encrypt(key, password));
-            break;
+        }
     }
 };
 
