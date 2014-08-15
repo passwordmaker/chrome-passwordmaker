@@ -1,3 +1,10 @@
+0.7.5 - 2014-08-15
+
+* Fixed a username filling bug
+* Changed username field in UI to be static, so a username must be configured in the profile options for it to be populated
+* Fixed a file import bug
+* Some optimizations in popup and settings
+
 0.7.4 - 2014-08-13
 
 * Added a username filling function
