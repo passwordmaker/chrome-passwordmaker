@@ -268,7 +268,5 @@ function dumpedProfilesToRdf(profiles) {
 }
 
 function attrEscape(txt) {
-    var el = document.createElement("div");
-    el.appendChild(document.createTextNode(txt));
-    return el.innerHTML;
+    return String(txt).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/\'/g, "&#39;");
 }
