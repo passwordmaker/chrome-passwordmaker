@@ -51,7 +51,7 @@ function updateFields() {
         hideButtons();
         Settings.setBgPassword("");
     } else {
-        var result = profile.getPassword(usedUrl, password, userName);
+        var result = profile.getPassword(usedUrl, password);
         $("#generated").val(result);
         setPasswordColors("#008000", "#FFFFFF");
         $("#password, #confirmation").removeAttr("style");
@@ -93,8 +93,10 @@ function updateProfileText(url) {
     } else {
         $("#usedtext").val(profile.getUrl(url));
     }
-    if (Settings.shouldFillUsername()) {
+    if (profile.getUsername().length !== 0) {
         $("#username").val(profile.getUsername());
+    } else {
+        $("#username").val("");
     }
 }
 
@@ -150,42 +152,21 @@ function fillFields() {
                 "allFrames": true,
                 // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
                 "code": "var b64pass = '" + btoa($("#generated").val()) + "';" +
+                        "var b64name = '" + btoa($("#username").val()) + "';" +
                         "var fields = document.getElementsByTagName('input');" +
                         "for (var i = 0; i < fields.length; i++) {" +
-                            "if (fields[i].value.length === 0 && (/password/i).test(fields[i].type + ' ' + fields[i].name)) {" +
+                            "if (fields[i].value.length === 0 && (/password/i.test(fields[i].type + ' ' + fields[i].name))) {" +
                                 "fields[i].value = atob(b64pass);" +
                             "}" +
-                        "}"
-            }, function() {
-                if (Settings.shouldFillUsername()) {
-                    fillUsername();
-                } else {
-                    window.close();
-                }
-            });
-        } else {
-            window.close();
-        }
-    });
-}
-
-function fillUsername() {
-    chrome.tabs.query({ "active": true, "currentWindow": true, "windowType": "normal" }, function(tabs) {
-        if (!(/^chrome/i).test(tabs[0].url)) {
-            chrome.tabs.executeScript(tabs[0].id, {
-                "allFrames": true,
-                "code": "var b64name = '" + btoa($("#username").val()) + "';" +
-                        "var fields = document.getElementsByTagName('input');" +
-                        "for (var i = 0; i < fields.length; i++) {" +
-                            "if (fields[i].value.length === 0 && (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name)) {" +
-                                "fields[i].value = atob(b64name);" +
+                            "if (" + Settings.shouldFillUsername() + ") {" +
+                                "if (fields[i].value.length === 0 && (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name)) {" +
+                                    "fields[i].value = atob(b64name);" +
+                                "}" +
                             "}" +
                         "}"
             }, function() {
                 window.close();
             });
-        } else {
-            window.close();
         }
     });
 }
