@@ -1,39 +1,36 @@
-# Chrome PasswordMaker Pro
+# PasswordMaker Pro
 
 ![Example Screenshot](http://i.imgur.com/hjcdo4L.png)
 
-The only thing that kept me from switching to Chrome completely was a missing port of the [passwordmaker.org](http://www.passwordmaker.org/) extension. Luckily, there was one available in the [Chrome Web Store](https://chrome.google.com/webstore/detail/passwordmaker/doblembglfahhpiilfhajboogopikhcm). Sadly, that extension is only a simple port of the HTML page that is offered on [passwordmaker.org](http://www.passwordmaker.org/passwordmaker.html).
+The only thing which kept me from completely switching to Chrome was a missing port of the [passwordmaker.org](http://www.passwordmaker.org/) extension.
+There was one available in the [Chrome Web Store](https://chrome.google.com/webstore/detail/passwordmaker/doblembglfahhpiilfhajboogopikhcm) but sadly, that extension is only a simple port of the HTML page which is offered on [passwordmaker.org](http://www.passwordmaker.org/passwordmaker.html).
 
-This extension fixes that. It's a real port with all the bells and whistles you'd expect.
+This extension fixes that.  This is a native Chrome port with all the bells and whistles you'd expect!
 
 # Installation
 
-You can install this plug-in from the [Chrome Web Store](https://chrome.google.com/webstore/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh) from its new home.
+###Chrome
+  - You can install this extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh) from it's new home.
+
+###Opera
+  - You can install this extension from the [Opera Extension Gallery](https://addons.opera.com/en/extensions/details/passwordmaker-pro/)
+
+If you have previously used the Firefox Extension, you can directly import your .rdf file.
 
 # Status of this project
 
-## Update 2014-07-13 by @heavensrevenge
+## Update 2014-07-13 by [@heavensrevenge](https://github.com/heavensrevenge)
 
-I have uploaded the extension back to the Chrome Web Store and its new URL/ID is https://chrome.google.com/webstore/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh
+I am the new and active maintainer of this project and I have uploaded this extension back to the Chrome Web Store which is located at https://chrome.google.com/webstore/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh
 
-**_PLEASE Export your profile data ASAP_** to be sure you have a back-up of your data to import into the new 0.7.x version. 
-I apologize for any horrible problems the disappearance from the Chrome Web Store may have caused, but I will do my best to keep this extension alive.
+**_PLEASE Export your profile data ASAP_** to be sure you have a back-up of your data which you can import into the new 0.7.x version. 
+I apologize for any problems the disappearance from the Chrome Web Store may have caused, but I will do my best to keep this extension alive and well.
 
-## Update 2014-07-12 by @bitboxer
 
-Sadly I don't have enough time to continue working on this. I got a few pull requests
-by [@heavensrevenge](http://github.com/heavensrevenge) and sadly some of those broke things.
+### Update 2014-07-12 by [@bitboxer](http://github.com/bitboxer)
+
 I don't use this plug-in anymore and do not have the time or energy to continue maintainership.
-
-So I'll do what I think is the most responsible thing to do: remove it from the chrome
-app store and stop working on this. There are several users here on this organization
-who have write access to the code, so I hope they will continue working on this and
-re-release this to the chrome web store and hopefully fix the remaining bugs
-this plug-in had at the time I write this.
-
-I'm out. It was a nice ride. But I can't continue to do a half-assed job on this.
-
-[@bitboxer](http://github.com/bitboxer)
+I'm out. It was a nice ride.
 
 # Note on Patches/Pull Requests:
 
@@ -45,4 +42,5 @@ I'm out. It was a nice ride. But I can't continue to do a half-assed job on this
 
 # Copyright
 
-Copyright (c) 2010 Bodo Tasche, PasswordMaker.org . See LICENSE for details. A list of all contributors can be found [here](http://github.com/passwordmaker/chrome-passwordmaker/contributors).
+Copyright (c) 2014 Eric Aguiar, [PasswordMaker.org](http://www.passwordmaker.org/).
+See LICENSE for details. A list of all contributors can be found [here](http://github.com/passwordmaker/chrome-passwordmaker/contributors).
