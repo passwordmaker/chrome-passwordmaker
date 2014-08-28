@@ -37,12 +37,11 @@ if (typeof PasswordMaker_HashUtils !== "object") {
 
         /*
          * Encode a string as utf-8.
-         * For efficiency, this assumes the input is valid utf-16.
          */
         str2rstr_utf8: function(input) {
             var output = "";
-            for (var n = 0; n < input.length; n++) {
-                var c = input.charCodeAt(n);
+            for (var i = 0; i < input.length; i++) {
+                var c = input.charCodeAt(i);
                 if (c < 128) {
                     output += String.fromCharCode(c);
                 } else if ((c > 127) && (c < 2048)) {
@@ -144,13 +143,10 @@ if (typeof PasswordMaker_HashUtils !== "object") {
         },
 
         /*
-         * Add integers, wrapping at 2^32. This uses 16-bit operations internally
-         * to work around bugs in some JS interpreters.
+         * Add integers, takes care of being passed NaN and undefined.
          */
         safe_add: function(x, y) {
-            var lsw = (x & 0xFFFF) + (y & 0xFFFF);
-            var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-            return (msw << 16) | (lsw & 0xFFFF);
+            return (x | 0) + (y | 0);
         }
     };
 }
