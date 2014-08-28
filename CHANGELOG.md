@@ -6,7 +6,7 @@
 0.7.5 - 2014-08-15
 
 * Fixed a username filling bug
-* Changed username field in UI to be static, so a username must be configured in the profile options for it to be populated
+* Changed username field in UI to be static
 * Fixed a file import bug
 * Some optimizations in popup and settings
 
@@ -75,11 +75,10 @@
 
 * This release includes lots of stuff done by @heavensrevenge
 * A small list of the many things he did:
-
-* Lots of css and ui improvements
-* Refactored some parts of the javascript code
-* Updating included libraries
-* Closes Request #87: It fills only password fields that are not populated yet
+ * Lots of css and ui improvements
+ * Refactored some parts of the javascript code
+ * Updating included libraries
+ * Closes Request #87: It fills only password fields that are not populated yet
 
 0.5.5 - 2014-04-26
 
