@@ -389,7 +389,7 @@ function showStrengthSection() {
 function checkPassStrength() {
     var selected = Settings.getProfile(Settings.currentProfile);
 
-    selected.siteList       = $("#siteList").val().trim().split(/\s+/).join(" ");
+    selected.siteList       = $("#siteList").val().trim().replace(/[*?$+()^\[\]\\|{},]/g, "").split(/\s+/).shift();
     selected.url_protocol   = $("#protocolCB").prop("checked");
     selected.url_subdomain  = $("#subdomainCB").prop("checked");
     selected.url_domain     = $("#domainCB").prop("checked");

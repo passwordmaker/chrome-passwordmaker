@@ -265,16 +265,14 @@ Settings.decrypt = function(password, data) {
 // strength calculation based on Firefox version to return an object
 Settings.getPasswordStrength = function(pw) {
     // char frequency
-    var uniques = [];
+    var uniques = {}; // use an object as a set
     for (var i = 0; i < pw.length; i++) {
-        for (var j = 0; j < uniques.length; j++) {
-            if (i === j) continue;
-            if (pw[i] === uniques[j]) break;
+        var curr = pw.charCodeAt(i);
+        if (uniques[curr] === undefined) {
+            uniques[curr] = curr;
         }
-        if (j === uniques.length) uniques.push(pw[i]);
     }
-    var r0 = uniques.length / pw.length;
-    if (uniques.length === 1) r0 = 0;
+    var r0 = (Object.keys(uniques).length === 1) ? 0 : Object.keys(uniques).length / pw.length;
 
     // length of the password - 1pt per char over 5, up to 15 for 10 pts total
     var r1 = pw.length;
@@ -314,7 +312,7 @@ Settings.getPasswordStrength = function(pw) {
 
     var pwStrength = (((r0 + r2 + r3 + r4 + r5) / 5) * 100) + r1;
 
-    // make sure we get a valid value between 0 and 100
+    // make sure strength is a valid value between 0 and 100
     if (isNaN(pwStrength)) pwStrength = 0;
     if (pwStrength < 0) pwStrength = 0;
     if (pwStrength > 100) pwStrength = 100;
