@@ -1,6 +1,6 @@
 # PasswordMaker Pro
 
-![Example Screenshot](http://i.imgur.com/hjcdo4L.png)
+![Example Screenshot](http://i.imgur.com/OxCD9TN.png)
 
 The only thing which kept me from completely switching to Chrome was a missing port of the [passwordmaker.org](http://www.passwordmaker.org/) extension.
 There was one available in the [Chrome Web Store](https://chrome.google.com/webstore/detail/passwordmaker/doblembglfahhpiilfhajboogopikhcm) but sadly, that extension is only a simple port of the HTML page which is offered on [passwordmaker.org](http://www.passwordmaker.org/passwordmaker.html).
@@ -42,5 +42,4 @@ I'm out. It was a nice ride.
 
 # Copyright
 
-Copyright (c) 2014 Eric Aguiar, [PasswordMaker.org](http://www.passwordmaker.org/).
 See LICENSE for details. A list of all contributors can be found [here](http://github.com/passwordmaker/chrome-passwordmaker/contributors).
