@@ -24,10 +24,12 @@ var Profile = {
     l33tLevel: 0
 };
 
-Profile.getPassword = function(url, masterkey) {
+Profile.getPassword = function(url, masterkey, userName) {
     if (this.selectedCharset.length < 2) {
         return "Not enough chars!";
     }
+
+    this.username = userName || "";
 
     // Calls generatepassword() n times in order to support passwords
     // of arbitrary length regardless of character set length.

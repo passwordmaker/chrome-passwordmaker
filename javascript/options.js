@@ -416,7 +416,7 @@ function checkPassStrength() {
         $("#testText").val(selected.getUrl(selected.siteList));
     }
 
-    $("#genPass").val(selected.getPassword($("#testText").val(), $("#testPass").val()));
+    $("#genPass").val(selected.getPassword($("#testText").val(), $("#testPass").val(), selected.username));
     var values = Settings.getPasswordStrength($("#genPass").val());
     $("#genStrength, meter").val(values.strength);
     $("#hasUpper").prop("checked", values.hasUpper);

@@ -24,6 +24,12 @@
                 <label>Verification Code:</label>
                 <input id="verificationCode" readonly tabindex="-1">
             </div>
+            <div class="small_row" id="username_row" title="
+                NOTE: Changing the user name WILL result in a different password being generated.
+In order to automatically fill in this user name field, please set it in the options/settings for this profile.">
+                <label for="username">Username:</label>
+                <input id="username" placeholder="Set in Profile Options">
+            </div>
             <div class="small_row" id="store_location_row">
                 <label for="store_location">Save Password:</label>
                 <select id="store_location">
@@ -40,10 +46,6 @@
                 <label for="usedtext">Used text:</label>
                 <input id="usedtext">
             </div>
-            <div class="small_row"  id="username_row">
-                <label for="username">Username:</label>
-                <input id="username" placeholder="Set in Profile Options" readonly tabindex="-1">
-            </div>
             <div class="small_row">
                 <label for="generated">Generated Password:</label>
             </div>
@@ -57,7 +59,8 @@
             </div>
             <div class="big_row" id="button_row">
                 <button class="button black hidden" id="copypassword">Copy</button>
-                <button class="button black hidden" id="injectpassword" title="Populate all *empty* input fields, so please make sure the field you want filled is empty">Fill Fields</button>
+                <button class="button black hidden" id="injectpassword" title="Fill all *empty* input fields.
+So please make sure the target field you want filled is empty/blank.">Fill Fields</button>
                 <button class="button black" id="options">Options</button>
             </div>
         </main>

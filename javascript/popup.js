@@ -31,6 +31,7 @@ function updateFields() {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
     var usedUrl = $("#usedtext").val();
+    var userName = $("#username").val();
     var profile = Settings.getProfile($("#profile").val());
     var passStrength = 0;
 
@@ -50,7 +51,7 @@ function updateFields() {
         hideButtons();
         Settings.setBgPassword("");
     } else {
-        var result = profile.getPassword(usedUrl, password);
+        var result = profile.getPassword(usedUrl, password, userName);
         $("#generated").val(result);
         setPasswordColors("#008000", "#FFFFFF");
         $("#password, #confirmation").removeAttr("style");
