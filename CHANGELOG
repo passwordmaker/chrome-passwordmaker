@@ -1,3 +1,8 @@
+0.7.6 - 2014-08-28
+
+* Some optimization/simplification of a few key functions
+* Changed username field in UI to be dynamic, so a username can be altered within the popup
+
 0.7.5 - 2014-08-15
 
 * Fixed a username filling bug
