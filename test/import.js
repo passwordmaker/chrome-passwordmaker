@@ -140,8 +140,8 @@ QUnit.module("password generation", {
     setup: function() {
         Settings.loadProfiles();
         this.p = Settings.profiles[0];
-        this.url = "http://www.passwordmaker.org/";
-        this.pass = "i♥passwordMaker©";
+        this.url = "passwordmaker.org";
+        this.pass = "PasswordMaker©€𤭢";
     },
     teardown: function() {
         Settings.profiles = [];
@@ -151,37 +151,37 @@ QUnit.module("password generation", {
 
 QUnit.test("algorithms", function(assert) {
     this.p.hashAlgorithm = "md4";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "Qm4kQn10bSw=", "MD4 variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "SFAkbkwxL34=", "MD4 variant");
     this.p.hashAlgorithm = "hmac-md4";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "R2hwJUFmYFw=", "HMAC-MD4 variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "RCN8R3tmZjc=", "HMAC-MD4 variant");
     this.p.hashAlgorithm = "md5";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "SEUxMmc/b0c=", "MD5 variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "Sj5TJ3BdVFA=", "MD5 variant");
     this.p.hashAlgorithm = "md5_v6";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "NWFiNTlmMzk=", "MD5 Version 0.6 variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "ZTAwM2U1YzI=", "MD5 Version 0.6 variant");
     this.p.hashAlgorithm = "hmac-md5";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "dH5fd1hcJnQ=", "HMAC-MD5 variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "SnYnIlIqRjc=", "HMAC-MD5 variant");
     this.p.hashAlgorithm = "hmac-md5_v6";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "OGUzMGJhZTA=", "HMAC-MD5 Version 0.6 variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "ODY4M2M4Mjc=", "HMAC-MD5 Version 0.6 variant");
     this.p.hashAlgorithm = "sha1";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "Rn4vcGIuQGE=", "SHA-1 variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "NHEzImJNXkQ=", "SHA-1 variant");
     this.p.hashAlgorithm = "hmac-sha1";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "NTJxZklgPn0=", "HMAC-SHA-1 variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "Q1JtdmdsZ1E=", "HMAC-SHA-1 variant");
     this.p.hashAlgorithm = "sha256";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "TzA5Qlp9PT4=", "SHA-256 variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "NWVueCklb1o=", "SHA-256 variant");
     this.p.hashAlgorithm = "hmac-sha256_fix";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "OW9QUzdQPnU=", "HMAC-SHA-256 variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "fjVtT2F9NXQ=", "HMAC-SHA-256 variant");
     this.p.hashAlgorithm = "hmac-sha256";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "VlFDa0E/Qyg=", "HMAC-SHA-256 Version 1.5.1 variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "UHw4TDt8dFw=", "HMAC-SHA-256 Version 1.5.1 variant");
     this.p.hashAlgorithm = "rmd160";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "R21MWT17dCc=", "RIPEMD-160 variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "RGBCQm9nIyM=", "RIPEMD-160 variant");
     this.p.hashAlgorithm = "hmac-rmd160";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "KE0+Tk1WVyM=", "HMAC-RIPEMD-160 variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "QiMrbkMjcio=", "HMAC-RIPEMD-160 variant");
     this.p.l33tLevel = 9;
     this.p.hashAlgorithm = "md5";
     this.p.whereToUseL33t = "before-hashing";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "SzpLelh4I1c=", "Before L33t variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "RWs4TnZyLWg=", "Before L33t variant");
     this.p.whereToUseL33t = "after-hashing";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "fC18JjEyNj8=", "After L33t variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "X3w+JCd8Pl0=", "After L33t variant");
     this.p.whereToUseL33t = "both";
-    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "fHs6fHsiL18=", "Befor & After L33t variant");
+    assert.equal(btoa(this.p.getPassword(this.url, this.pass)), "Jnx7OHxcfFw=", "Befor & After L33t variant");
 });
