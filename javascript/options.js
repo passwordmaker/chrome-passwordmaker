@@ -202,7 +202,7 @@ function saveProfile() {
     selected.passwordSuffix = $("#passwordSuffix").val();
 
     // make sure default profile siteList and strUseText stays blank/generic
-    if (selected.title === "Default") {
+    if (Settings.profiles[0].id === selected.id) {
         selected.siteList = "";
         selected.strUseText = "";
     }

@@ -181,7 +181,7 @@ Settings.getPassword = function(bgPass) {
 };
 
 Settings.ifDataExists = function(entry) {
-    return localStorage.getItem(entry) !== null && localStorage.getItem(entry).length !== 0;
+    return (localStorage.getItem(entry) !== null) && (localStorage.getItem(entry).length !== 0);
 };
 
 Settings.shouldHidePassword = function() {
@@ -265,14 +265,14 @@ Settings.decrypt = function(password, data) {
 // strength calculation based on Firefox version to return an object
 Settings.getPasswordStrength = function(pw) {
     // char frequency
-    var uniques = {}; // use an object as a set
+    var uniques = [];
     for (var i = 0; i < pw.length; i++) {
-        var curr = pw.charCodeAt(i);
-        if (uniques[curr] === undefined) {
-            uniques[curr] = curr;
+        var current = pw.charCodeAt(i);
+        if (uniques.indexOf(current) === -1) {
+            uniques.push(current);
         }
     }
-    var r0 = (Object.keys(uniques).length === 1) ? 0 : Object.keys(uniques).length / pw.length;
+    var r0 = (uniques.length === 1) ? 0 : (uniques.length / pw.length);
 
     // length of the password - 1pt per char over 5, up to 15 for 10 pts total
     var r1 = pw.length;
