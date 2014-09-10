@@ -1,9 +1,9 @@
 {
   "name": "PasswordMaker Pro",
   "short_name": "PasswordMaker Pro",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "manifest_version": 2,
-  "description": "Generate unique passwords for every website using a cryptographic hash algorithm of your choice - Compatible with passwordmaker.org",
+  "description": "Flexible password generator using a cryptographic hash algorithm of your choice - Compatible with PasswordMaker.org",
   "homepage_url": "https://github.com/passwordmaker/chrome-passwordmaker",
   "icons": { 
     "16": "images/passwdmaker16.png",

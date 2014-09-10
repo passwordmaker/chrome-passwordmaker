@@ -1,3 +1,8 @@
+0.7.7 - 2014-09-10
+
+* Fixed a bug in password generation with 4-byte length characters
+* Some optimization and reorganization in the hash algorithm code
+
 0.7.6 - 2014-08-28
 
 * Some optimization/simplification of a few key functions
