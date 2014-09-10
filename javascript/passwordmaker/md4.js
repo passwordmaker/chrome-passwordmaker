@@ -1,6 +1,5 @@
 /*
- * A JavaScript implementation of the RSA Data Security, Inc. MD4 Message
- * Digest Algorithm, as defined in RFC 1320.
+ * A JavaScript implementation of the RSA Data Security, Inc. MD4 Message Digest Algorithm, as defined in RFC 1320.
  * Version 2.1 Copyright (C) Jerrad Pierce, Paul Johnston 1999 - 2002.
  * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
  * Distributed under the BSD License
@@ -12,17 +11,36 @@
 if (typeof PasswordMaker_MD4 !== "object") {
     var PasswordMaker_MD4 = {
         any_md4: function(s, e) {
-            return PasswordMaker_HashUtils.rstr2any(this.rstr_md4(PasswordMaker_HashUtils.str2rstr_utf8(s)), e);
+            return PasswordMaker_HashUtils.rstr2any(this.rstr_md4(s), e);
         },
         any_hmac_md4: function(k, d, e) {
-            return PasswordMaker_HashUtils.rstr2any(this.rstr_hmac_md4(PasswordMaker_HashUtils.str2rstr_utf8(k), PasswordMaker_HashUtils.str2rstr_utf8(d)), e);
+            return PasswordMaker_HashUtils.rstr2any(this.rstr_hmac_md4(k, d), e);
         },
 
         /*
          * Calculate the MD4 of a raw string
          */
         rstr_md4: function(s) {
-            return PasswordMaker_HashUtils.binl2rstr(this.binl_md4(PasswordMaker_HashUtils.rstr2binl(s), s.length * PasswordMaker_HashUtils.chrsz));
+            return PasswordMaker_HashUtils.binl2rstr(this.binl_md4(PasswordMaker_HashUtils.rstr2binl(s), s.length * 8));
+        },
+
+        /*
+         * Calculate the HMAC-MD4 of a key and some data
+         */
+        rstr_hmac_md4: function(key, data) {
+            var ipad = Array(16),
+                opad = Array(16),
+                bkey = PasswordMaker_HashUtils.rstr2binl(key);
+            if (bkey.length > 16) {
+                bkey = this.binl_md4(bkey, key.length * 8);
+            }
+            for (var i = 0; i < 16; i++) {
+                ipad[i] = bkey[i] ^ 0x36363636;
+                opad[i] = bkey[i] ^ 0x5C5C5C5C;
+            }
+
+            var hash = this.binl_md4(ipad.concat(PasswordMaker_HashUtils.rstr2binl(data)), 512 + data.length * 8);
+            return PasswordMaker_HashUtils.binl2rstr(this.binl_md4(opad.concat(hash), 512 + 128));
         },
 
         /*
@@ -95,10 +113,10 @@ if (typeof PasswordMaker_MD4 !== "object") {
                 c = this.md4_hh(c, d, a, b, x[i + 7], 11);
                 b = this.md4_hh(b, c, d, a, x[i + 15], 15);
 
-                a = PasswordMaker_HashUtils.safe_add(a, olda);
-                b = PasswordMaker_HashUtils.safe_add(b, oldb);
-                c = PasswordMaker_HashUtils.safe_add(c, oldc);
-                d = PasswordMaker_HashUtils.safe_add(d, oldd);
+                a += olda | 0;
+                b += oldb | 0;
+                c += oldc | 0;
+                d += oldd | 0;
             }
             return [a, b, c, d];
         },
@@ -108,7 +126,7 @@ if (typeof PasswordMaker_MD4 !== "object") {
          * algorithm.
          */
         md4_cmn: function(q, a, b, x, s, t) {
-            return PasswordMaker_HashUtils.safe_add(PasswordMaker_HashUtils.bit_rol(PasswordMaker_HashUtils.safe_add(PasswordMaker_HashUtils.safe_add(a, q), PasswordMaker_HashUtils.safe_add(x, t)), s), b);
+            return PasswordMaker_HashUtils.bit_rol(a + q + (x | 0) + t, s) + b;
         },
         md4_ff: function(a, b, c, d, x, s) {
             return this.md4_cmn((b & c) | ((~b) & d), a, 0, x, s, 0);
@@ -118,26 +136,6 @@ if (typeof PasswordMaker_MD4 !== "object") {
         },
         md4_hh: function(a, b, c, d, x, s) {
             return this.md4_cmn(b ^ c ^ d, a, 0, x, s, 1859775393);
-        },
-
-        /*
-         * Calculate the HMAC-MD4 of a key and some data
-         */
-        rstr_hmac_md4: function(key, data) {
-            var bkey = PasswordMaker_HashUtils.rstr2binl(key);
-            if (bkey.length > 16) {
-                bkey = this.binl_md4(bkey, key.length * PasswordMaker_HashUtils.chrsz);
-            }
-
-            var ipad = [],
-                opad = [];
-            for (var i = 0; i < 16; i++) {
-                ipad[i] = bkey[i] ^ 0x36363636;
-                opad[i] = bkey[i] ^ 0x5C5C5C5C;
-            }
-
-            var hash = this.binl_md4(ipad.concat(PasswordMaker_HashUtils.rstr2binl(data)), 512 + data.length * PasswordMaker_HashUtils.chrsz);
-            return PasswordMaker_HashUtils.binl2rstr(this.binl_md4(opad.concat(hash), 512 + 128));
         }
     };
 }

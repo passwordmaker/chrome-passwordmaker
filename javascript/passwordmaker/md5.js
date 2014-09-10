@@ -1,6 +1,5 @@
 /*
- * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
- * Digest Algorithm, as defined in RFC 1321.
+ * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message Digest Algorithm, as defined in RFC 1321.
  * Version 2.2 Copyright (C) Paul Johnston 1999 - 2009
  * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
  * Distributed under the BSD License
@@ -13,17 +12,36 @@
 if (typeof PasswordMaker_MD5 !== "object") {
     var PasswordMaker_MD5 = {
         any_md5: function(s, e) {
-            return PasswordMaker_HashUtils.rstr2any(this.rstr_md5(PasswordMaker_HashUtils.str2rstr_utf8(s)), e);
+            return PasswordMaker_HashUtils.rstr2any(this.rstr_md5(s), e);
         },
         any_hmac_md5: function(k, d, e) {
-            return PasswordMaker_HashUtils.rstr2any(this.rstr_hmac_md5(PasswordMaker_HashUtils.str2rstr_utf8(k), PasswordMaker_HashUtils.str2rstr_utf8(d)), e);
+            return PasswordMaker_HashUtils.rstr2any(this.rstr_hmac_md5(k, d), e);
         },
 
         /*
          * Calculate the MD5 of a raw string
          */
         rstr_md5: function(s) {
-            return PasswordMaker_HashUtils.binl2rstr(this.binl_md5(PasswordMaker_HashUtils.rstr2binl(s), s.length * PasswordMaker_HashUtils.chrsz));
+            return PasswordMaker_HashUtils.binl2rstr(this.binl_md5(PasswordMaker_HashUtils.rstr2binl(s), s.length * 8));
+        },
+
+        /*
+         * Calculate the HMAC-MD5 of a key and some data (raw strings)
+         */
+        rstr_hmac_md5: function(key, data) {
+            var ipad = Array(16),
+                opad = Array(16),
+                bkey = PasswordMaker_HashUtils.rstr2binl(key);
+            if (bkey.length > 16) {
+                bkey = this.binl_md5(bkey, key.length * 8);
+            }
+            for (var i = 0; i < 16; i++) {
+                ipad[i] = bkey[i] ^ 0x36363636;
+                opad[i] = bkey[i] ^ 0x5C5C5C5C;
+            }
+
+            var hash = this.binl_md5(ipad.concat(PasswordMaker_HashUtils.rstr2binl(data)), 512 + data.length * 8);
+            return PasswordMaker_HashUtils.binl2rstr(this.binl_md5(opad.concat(hash), 512 + 128));
         },
 
         /*
@@ -31,7 +49,7 @@ if (typeof PasswordMaker_MD5 !== "object") {
          */
         binl_md5: function(x, len) {
             /* append padding */
-            x[len >> 5] |= 0x80 << ((len) % 32);
+            x[len >> 5] |= 0x80 << (len % 32);
             x[(((len + 64) >>> 9) << 4) + 14] = len;
 
             var a = 1732584193,
@@ -113,10 +131,10 @@ if (typeof PasswordMaker_MD5 !== "object") {
                 c = this.md5_ii(c, d, a, b, x[i + 2], 15, 718787259);
                 b = this.md5_ii(b, c, d, a, x[i + 9], 21, -343485551);
 
-                a = PasswordMaker_HashUtils.safe_add(a, olda);
-                b = PasswordMaker_HashUtils.safe_add(b, oldb);
-                c = PasswordMaker_HashUtils.safe_add(c, oldc);
-                d = PasswordMaker_HashUtils.safe_add(d, oldd);
+                a += olda | 0;
+                b += oldb | 0;
+                c += oldc | 0;
+                d += oldd | 0;
             }
             return [a, b, c, d];
         },
@@ -125,7 +143,7 @@ if (typeof PasswordMaker_MD5 !== "object") {
          * These functions implement the four basic operations the algorithm uses.
          */
         md5_cmn: function(q, a, b, x, s, t) {
-            return PasswordMaker_HashUtils.safe_add(PasswordMaker_HashUtils.bit_rol(PasswordMaker_HashUtils.safe_add(PasswordMaker_HashUtils.safe_add(a, q), PasswordMaker_HashUtils.safe_add(x, t)), s), b);
+            return PasswordMaker_HashUtils.bit_rol(a + q + (x | 0) + t, s) + b;
         },
         md5_ff: function(a, b, c, d, x, s, t) {
             return this.md5_cmn((b & c) | ((~b) & d), a, b, x, s, t);
@@ -138,25 +156,6 @@ if (typeof PasswordMaker_MD5 !== "object") {
         },
         md5_ii: function(a, b, c, d, x, s, t) {
             return this.md5_cmn(c ^ (b | (~d)), a, b, x, s, t);
-        },
-
-        /*
-         * Calculate the HMAC-MD5 of a key and some data (raw strings)
-         */
-        rstr_hmac_md5: function(key, data) {
-            var bkey = PasswordMaker_HashUtils.rstr2binl(key);
-            if (bkey.length > 16) {
-                bkey = this.binl_md5(bkey, key.length * PasswordMaker_HashUtils.chrsz);
-            }
-            var ipad = [],
-                opad = [];
-            for (var i = 0; i < 16; i++) {
-                ipad[i] = bkey[i] ^ 0x36363636;
-                opad[i] = bkey[i] ^ 0x5C5C5C5C;
-            }
-
-            var hash = this.binl_md5(ipad.concat(PasswordMaker_HashUtils.rstr2binl(data)), 512 + data.length * PasswordMaker_HashUtils.chrsz);
-            return PasswordMaker_HashUtils.binl2rstr(this.binl_md5(opad.concat(hash), 512 + 128));
         }
     };
 }

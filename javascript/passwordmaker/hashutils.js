@@ -1,25 +1,9 @@
-/**
-  PasswordMaker - Creates and manages passwords
-  Copyright (C) 2005 Eric H. Jung and LeahScape, Inc.
-  http://passwordmaker.org/
-  grimholtz@yahoo.com
-
-  This library is free software; you can redistribute it and/or modify it
-  under the terms of the GNU Lesser General Public License as published by
-  the Free Software Foundation; either version 2.1 of the License, or (at
-  your option) any later version.
-
-  This library is distributed in the hope that it will be useful, but WITHOUT
-  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  FITNESSFOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
-  for more details.
-
-  You should have received a copy of the GNU Lesser General Public License
-  along with this library; if not, write to the Free Software Foundation,
-  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
-**/
-
 /*
+ * PasswordMaker - Creates and manages passwords
+ * Copyright (C) 2005 Eric H. Jung and LeahScape, Inc.
+ * http://passwordmaker.org/
+ * grimholtz@yahoo.com
+ *
  * Common functions used by md4, md5, ripemd5, sha1, and sha256.
  * Version 2.2 Copyright (C) Jerrad Pierce, Paul Johnston 1999 - 2009.
  * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
@@ -32,29 +16,6 @@
 
 if (typeof PasswordMaker_HashUtils !== "object") {
     var PasswordMaker_HashUtils = {
-        /* bits per input character. 8 - ASCII; 16 - Unicode */
-        chrsz: 8,
-
-        /*
-         * Encode a string as utf-8.
-         */
-        str2rstr_utf8: function(input) {
-            var output = "";
-            for (var i = 0; i < input.length; i++) {
-                var c = input.charCodeAt(i);
-                if (c < 128) {
-                    output += String.fromCharCode(c);
-                } else if ((c > 127) && (c < 2048)) {
-                    output += String.fromCharCode((c >> 6) | 192);
-                    output += String.fromCharCode((c & 63) | 128);
-                } else {
-                    output += String.fromCharCode((c >> 12) | 224);
-                    output += String.fromCharCode(((c >> 6) & 63) | 128);
-                    output += String.fromCharCode((c & 63) | 128);
-                }
-            }
-            return output;
-        },
 
         /*
          * Convert a raw string to an array of little-endian words
@@ -105,7 +66,7 @@ if (typeof PasswordMaker_HashUtils !== "object") {
                 dividend = quotient;
             }
             var output = "";
-            while (remainders.length) {
+            while (remainders.length > 0) {
                 output += encoding.charAt(remainders.pop());
             }
             return output;
@@ -140,13 +101,6 @@ if (typeof PasswordMaker_HashUtils !== "object") {
          */
         bit_rol: function(num, cnt) {
             return (num << cnt) | (num >>> (32 - cnt));
-        },
-
-        /*
-         * Add integers, takes care of being passed NaN and undefined.
-         */
-        safe_add: function(x, y) {
-            return (x | 0) + (y | 0);
         }
     };
 }

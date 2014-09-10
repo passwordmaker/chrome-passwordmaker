@@ -13,35 +13,35 @@
 if (typeof PasswordMaker_RIPEMD160 !== "object") {
     var PasswordMaker_RIPEMD160 = {
         any_rmd160: function(s, e) {
-            return PasswordMaker_HashUtils.rstr2any(this.rstr_rmd160(PasswordMaker_HashUtils.str2rstr_utf8(s)), e);
+            return PasswordMaker_HashUtils.rstr2any(this.rstr_rmd160(s), e);
         },
         any_hmac_rmd160: function(k, d, e) {
-            return PasswordMaker_HashUtils.rstr2any(this.rstr_hmac_rmd160(PasswordMaker_HashUtils.str2rstr_utf8(k), PasswordMaker_HashUtils.str2rstr_utf8(d)), e);
+            return PasswordMaker_HashUtils.rstr2any(this.rstr_hmac_rmd160(k, d), e);
         },
 
         /*
          * Calculate the rmd160 of a raw string
          */
         rstr_rmd160: function(s) {
-            return PasswordMaker_HashUtils.binl2rstr(this.binl_rmd160(PasswordMaker_HashUtils.rstr2binl(s), s.length * PasswordMaker_HashUtils.chrsz));
+            return PasswordMaker_HashUtils.binl2rstr(this.binl_rmd160(PasswordMaker_HashUtils.rstr2binl(s), s.length * 8));
         },
 
         /*
          * Calculate the HMAC-rmd160 of a key and some data (raw strings)
          */
         rstr_hmac_rmd160: function(key, data) {
-            var bkey = PasswordMaker_HashUtils.rstr2binl(key);
+            var ipad = Array(16),
+                opad = Array(16),
+                bkey = PasswordMaker_HashUtils.rstr2binl(key);
             if (bkey.length > 16) {
-                bkey = this.binl_rmd160(bkey, key.length * PasswordMaker_HashUtils.chrsz);
+                bkey = this.binl_rmd160(bkey, key.length * 8);
             }
-            var ipad = [],
-                opad = [];
             for (var i = 0; i < 16; i++) {
                 ipad[i] = bkey[i] ^ 0x36363636;
                 opad[i] = bkey[i] ^ 0x5C5C5C5C;
             }
 
-            var hash = this.binl_rmd160(ipad.concat(PasswordMaker_HashUtils.rstr2binl(data)), 512 + data.length * PasswordMaker_HashUtils.chrsz);
+            var hash = this.binl_rmd160(ipad.concat(PasswordMaker_HashUtils.rstr2binl(data)), 512 + data.length * 8);
             return PasswordMaker_HashUtils.binl2rstr(this.binl_rmd160(opad.concat(hash), 512 + 160));
         },
 
@@ -63,82 +63,58 @@ if (typeof PasswordMaker_RIPEMD160 !== "object") {
                 var T;
                 var A1 = h0, B1 = h1, C1 = h2, D1 = h3, E1 = h4;
                 var A2 = h0, B2 = h1, C2 = h2, D2 = h3, E2 = h4;
-                for (var j = 0; j <= 79; ++j) {
-                    T = PasswordMaker_HashUtils.safe_add(A1, this.rmd160_f(j, B1, C1, D1));
-                    T = PasswordMaker_HashUtils.safe_add(T, x[i + this.rmd160_r1[j]]);
-                    T = PasswordMaker_HashUtils.safe_add(T, this.rmd160_K1(j));
-                    T = PasswordMaker_HashUtils.safe_add(PasswordMaker_HashUtils.bit_rol(T, this.rmd160_s1[j]), E1);
+                for (var j = 0; j < 80; j++) {
+                    T = A1 + this.rmd160_f(j, B1, C1, D1) | 0;
+                    T += x[i + this.rmd160_r1[j]] | 0;
+                    T += this.rmd160_K1(j) | 0;
+                    T = PasswordMaker_HashUtils.bit_rol(T, this.rmd160_s1[j]) + E1 | 0;
                     A1 = E1;
                     E1 = D1;
                     D1 = PasswordMaker_HashUtils.bit_rol(C1, 10);
                     C1 = B1;
                     B1 = T;
-                    T = PasswordMaker_HashUtils.safe_add(A2, this.rmd160_f(79 - j, B2, C2, D2));
-                    T = PasswordMaker_HashUtils.safe_add(T, x[i + this.rmd160_r2[j]]);
-                    T = PasswordMaker_HashUtils.safe_add(T, this.rmd160_K2(j));
-                    T = PasswordMaker_HashUtils.safe_add(PasswordMaker_HashUtils.bit_rol(T, this.rmd160_s2[j]), E2);
+                    T = A2 + this.rmd160_f(79 - j, B2, C2, D2) | 0;
+                    T += x[i + this.rmd160_r2[j]] | 0;
+                    T += this.rmd160_K2(j) | 0;
+                    T = PasswordMaker_HashUtils.bit_rol(T, this.rmd160_s2[j]) + E2 | 0;
                     A2 = E2;
                     E2 = D2;
                     D2 = PasswordMaker_HashUtils.bit_rol(C2, 10);
                     C2 = B2;
                     B2 = T;
                 }
-                T = PasswordMaker_HashUtils.safe_add(h1, PasswordMaker_HashUtils.safe_add(C1, D2));
-                h1 = PasswordMaker_HashUtils.safe_add(h2, PasswordMaker_HashUtils.safe_add(D1, E2));
-                h2 = PasswordMaker_HashUtils.safe_add(h3, PasswordMaker_HashUtils.safe_add(E1, A2));
-                h3 = PasswordMaker_HashUtils.safe_add(h4, PasswordMaker_HashUtils.safe_add(A1, B2));
-                h4 = PasswordMaker_HashUtils.safe_add(h0, PasswordMaker_HashUtils.safe_add(B1, C2));
+                T = h1 + C1 + D2 | 0;
+                h1 = h2 + D1 + E2 | 0;
+                h2 = h3 + E1 + A2 | 0;
+                h3 = h4 + A1 + B2 | 0;
+                h4 = h0 + B1 + C2 | 0;
                 h0 = T;
             }
             return [h0, h1, h2, h3, h4];
         },
 
         rmd160_f: function(j, x, y, z) {
-            var f;
-            if (0 <= j && j <= 15) {
-                f = (x ^ y ^ z);
-            } else if (16 <= j && j <= 31) {
-                f = (x & y) | (~x & z);
-            } else if (32 <= j && j <= 47) {
-                f = (x | ~y) ^ z;
-            } else if (48 <= j && j <= 63) {
-                f = (x & z) | (y & ~z);
-            } else if (64 <= j && j <= 79) {
-                f = (x ^ (y | ~z));
-            }
-            return f;
+            if (j < 16) return (x ^ y ^ z);
+            else if (j < 32) return (x & y) | (~x & z);
+            else if (j < 48) return (x | ~y) ^ z;
+            else if (j < 64) return (x & z) | (y & ~z);
+            else if (j < 80) return (x ^ (y | ~z));
         },
 
         rmd160_K1: function(j) {
-            var K1;
-            if (0 <= j && j <= 15) {
-                K1 = 0x00000000;
-            } else if (16 <= j && j <= 31) {
-                K1 = 0x5a827999;
-            } else if (32 <= j && j <= 47) {
-                K1 = 0x6ed9eba1;
-            } else if (48 <= j && j <= 63) {
-                K1 = 0x8f1bbcdc;
-            } else if (64 <= j && j <= 79) {
-                K1 = 0xa953fd4e;
-            }
-            return K1;
+            if (j < 16) return 0x00000000;
+            else if (j < 32) return 0x5a827999;
+            else if (j < 48) return 0x6ed9eba1;
+            else if (j < 64) return 0x8f1bbcdc;
+            else if (j < 80) return 0xa953fd4e;
         },
 
         rmd160_K2: function(j) {
-            var K2;
-            if (0 <= j && j <= 15) {
-                K2 = 0x50a28be6;
-            } else if (16 <= j && j <= 31) {
-                K2 = 0x5c4dd124;
-            } else if (32 <= j && j <= 47) {
-                K2 = 0x6d703ef3;
-            } else if (48 <= j && j <= 63) {
-                K2 = 0x7a6d76e9;
-            } else if (64 <= j && j <= 79) {
-                K2 = 0x00000000;
-            }
-            return K2;
+            if (j < 16) return 0x50a28be6;
+            else if (j < 32) return 0x5c4dd124;
+            else if (j < 48) return 0x6d703ef3;
+            else if (j < 64) return 0x7a6d76e9;
+            else if (j < 80) return 0x00000000;
         },
 
         rmd160_r1: [

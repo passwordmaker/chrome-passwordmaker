@@ -75,6 +75,13 @@ Profile.generateCharacter = function(hashAlgorithm, key, data, whereToUseL33t, l
         }
     }
 
+    // convert to UTF-8 string before passing to algorithms
+    // the md5_v6 algorithm apparently never used UTF-8 encoded string data...
+    if (!(/md5_v6/i).test(hashAlgorithm)) {
+        key = unescape(encodeURI(key));
+        data = unescape(encodeURI(data));
+    }
+
     // apply the algorithm
     var password = "";
     switch (hashAlgorithm) {
