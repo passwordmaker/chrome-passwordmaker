@@ -1,3 +1,8 @@
+0.7.8 - 2014-09-21
+
+* Addresses issue #137 about filling in too many fields
+* Only convert multi-byte characters when required
+
 0.7.7 - 2014-09-10
 
 * Fixed a bug in password generation with 4-byte length characters
