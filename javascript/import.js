@@ -225,10 +225,10 @@ function dumpedProfiles() {
 
         // patterns
         if (prof.siteList) {
-            var pats = prof.siteList.trim().split(" ");
+            var pats = prof.siteList.trim().split(/\s+/);
             for (var k = 0; k < pats.length; k++) {
                 var pat = pats[k],
-                    ptype = (pat[0] == "/" && pat[pat.length - 1] == "/") ? "regex" : "wildcard";
+                    ptype = (pat[0] === "/" && pat[pat.length - 1] === "/") ? "regex" : "wildcard";
 
                 newProf["pattern" + k] = (ptype === "regex") ? pat.substring(1, pat.length - 1) : pat;
                 newProf["patternenabled" + k] = "true";

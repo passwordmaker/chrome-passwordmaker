@@ -23,8 +23,8 @@ if (typeof PasswordMaker_HashUtils !== "object") {
          */
         rstr2binl: function(input) {
             var output = [];
-            for (var j = 0; j < input.length * 8; j += 8) {
-                output[j >> 5] |= (input.charCodeAt(j / 8) & 0xFF) << (j % 32);
+            for (var i = 0; i < input.length * 8; i += 8) {
+                output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (i % 32);
             }
             return output;
         },
@@ -35,7 +35,7 @@ if (typeof PasswordMaker_HashUtils !== "object") {
         binl2rstr: function(input) {
             var output = "";
             for (var i = 0; i < input.length * 32; i += 8) {
-                output += String.fromCharCode((input[i >> 5] >>> (i % 32)) & 0xFF);
+                output += String.fromCharCode((input[i >> 5] >> (i % 32)) & 0xFF);
             }
             return output;
         },
@@ -44,18 +44,19 @@ if (typeof PasswordMaker_HashUtils !== "object") {
          * Convert a raw string to an arbitrary string encoding
          */
         rstr2any: function(input, encoding) {
-            var divisor = encoding.length;
-            var remainders = [];
+            var divisor = encoding.length,
+                remainders = [],
+                i = 0;
             /* Convert to an array of 16-bit big-endian values, forming the dividend */
             var dividend = [];
-            for (var i = 0; i < (input.length / 2); i++) {
+            for (i = 0; i < (input.length / 2); i++) {
                 dividend[i] = (input.charCodeAt(i * 2) << 8) | input.charCodeAt(i * 2 + 1);
             }
             while (dividend.length > 0) {
                 var quotient = [];
                 var x = 0;
-                for (var j = 0; j < dividend.length; j++) {
-                    x = (x << 16) + dividend[j];
+                for (i = 0; i < dividend.length; i++) {
+                    x = (x << 16) + dividend[i];
                     var q = Math.floor(x / divisor);
                     x -= q * divisor;
                     if (quotient.length > 0 || q > 0) {
@@ -79,8 +80,8 @@ if (typeof PasswordMaker_HashUtils !== "object") {
          */
         rstr2binb: function(input) {
             var output = [];
-            for (var j = 0; j < input.length * 8; j += 8) {
-                output[j >> 5] |= (input.charCodeAt(j / 8) & 0xFF) << (24 - j % 32);
+            for (var i = 0; i < input.length * 8; i += 8) {
+                output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (24 - i % 32);
             }
             return output;
         },
@@ -91,7 +92,7 @@ if (typeof PasswordMaker_HashUtils !== "object") {
         binb2rstr: function(input) {
             var output = "";
             for (var i = 0; i < input.length * 32; i += 8) {
-                output += String.fromCharCode((input[i >> 5] >>> (24 - i % 32)) & 0xFF);
+                output += String.fromCharCode((input[i >> 5] >> (24 - i % 32)) & 0xFF);
             }
             return output;
         },

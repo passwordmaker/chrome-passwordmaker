@@ -3,9 +3,9 @@
   "short_name": "PasswordMaker Pro",
   "version": "0.7.7",
   "manifest_version": 2,
-  "description": "Flexible password generator using a cryptographic hash algorithm of your choice - Compatible with PasswordMaker.org",
+  "description": "Flexible password generator using a cryptographic hash algorithm of your choice - Fully Compatible with PasswordMaker.org",
   "homepage_url": "https://github.com/passwordmaker/chrome-passwordmaker",
-  "icons": { 
+  "icons": {
     "16": "images/passwdmaker16.png",
     "48": "images/passwdmaker48.png",
     "128": "images/passwdmaker128.png"
@@ -14,12 +14,9 @@
     "default_icon": "images/passwdmaker48.png",
     "default_popup": "html/popup.html"
   },
-  "permissions": [
-    "activeTab",
-    "storage"
-  ],
+  "permissions": ["activeTab", "storage"],
   "background": {
-    "scripts": [ "javascript/background.js" ]
+    "scripts": ["javascript/background.js"]
   },
   "options_page": "html/options.html",
   "commands": {
