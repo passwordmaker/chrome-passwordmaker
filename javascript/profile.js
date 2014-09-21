@@ -75,10 +75,14 @@ Profile.generateCharacter = function(hashAlgorithm, key, data, whereToUseL33t, l
         }
     }
 
-    // convert to UTF-8 string before passing to algorithms
-    // the md5_v6 algorithm apparently never used UTF-8 encoded string data...
-    if (!(/md5_v6/i).test(hashAlgorithm)) {
+    // convert string only if it contains a non-ascii multi-byte character before passing to algorithms
+    // the md5_v6 algorithm apparently never used converted string data
+    var md5v6 = /md5_v6/i;
+    var notAscii = /[^\u0000-\u007F]/;
+    if (notAscii.test(key) && !md5v6.test(hashAlgorithm)) {
         key = unescape(encodeURI(key));
+    }
+    if (notAscii.test(data) && !md5v6.test(hashAlgorithm)) {
         data = unescape(encodeURI(data));
     }
 
