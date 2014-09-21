@@ -1,3 +1,7 @@
+0.7.9 - 2014-09-21
+
+* For issue #137, fill only one username and one password field at a time
+
 0.7.8 - 2014-09-21
 
 * Addresses issue #137 about filling in too many fields
