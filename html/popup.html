@@ -25,7 +25,7 @@
                 <input id="verificationCode" readonly tabindex="-1">
             </div>
             <div class="small_row" id="username_row" title="
-                NOTE: Changing the user name WILL result in a different password being generated.
+                Note: Changing the user name here WILL result in a different password being generated.
 In order to automatically fill in this user name field, please set it in the options/settings for this profile.">
                 <label for="username">Username:</label>
                 <input id="username" placeholder="Set in Profile Options">
@@ -59,8 +59,9 @@ In order to automatically fill in this user name field, please set it in the opt
             </div>
             <div class="big_row" id="button_row">
                 <button class="button black hidden" id="copypassword">Copy</button>
-                <button class="button black hidden" id="injectpassword" title="Fill all *empty* input fields.
-So please make sure the target field you want filled is empty/blank.">Fill Fields</button>
+                <button class="button black hidden" id="injectpassword" title="Fill the first blank username and password field.
+Please make sure the target field you want filled is empty!
+Note: This button only fills a single field at a time.">Fill Fields</button>
                 <button class="button black" id="options">Options</button>
             </div>
         </main>
