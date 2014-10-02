@@ -150,15 +150,16 @@ function fillFields() {
                     "var fields = document.getElementsByTagName('input');" +
                     "var nameFilled = false, passFilled = false;" +
                     "for (var i = 0; i < fields.length; i++) {" +
-                        "var isVisable = (fields[i].offsetWidth > 0 && fields[i].offsetHeight > 0);" +
+                        "var elStyle = getComputedStyle(fields[i]);" +
+                        "var isVisible = !(/none/i).test(elStyle.display) && !(/hidden/i).test(elStyle.visibility) && parseFloat(elStyle.width) > 0 && parseFloat(elStyle.height) > 0;" +
                         "var isPasswordField = (/password/i).test(fields[i].type + ' ' + fields[i].name);" +
                         "var isUsernameField = (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name);" +
-                        "if (isVisable && !passFilled && (fields[i].value.length === 0) && isPasswordField) {" +
+                        "if (isVisible && !passFilled && fields[i].value.length === 0 && isPasswordField) {" +
                             "fields[i].value = atob(b64pass);" +
                             "passFilled = true;" +
                         "}" +
                         "if (" + Settings.shouldFillUsername() + ") {" +
-                            "if (isVisable && !nameFilled && (fields[i].value.length === 0) && isUsernameField && !isPasswordField) {" +
+                            "if (isVisible && !nameFilled && fields[i].value.length === 0 && isUsernameField && !isPasswordField) {" +
                                 "fields[i].value = atob(b64name);" +
                                 "nameFilled = true;" +
                             "}" +
