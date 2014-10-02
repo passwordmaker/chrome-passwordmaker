@@ -1,3 +1,8 @@
+0.8.0 - 2014-10-01
+
+* Use getComputedStyle() to only ever fill visible input elements
+* Added offline capability to manifest.json
+
 0.7.9 - 2014-09-21
 
 * For issue #137, fill only one username and one password field at a time
