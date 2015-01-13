@@ -2,8 +2,7 @@ var Settings = {
     currentUrl: "",
     storeLocation: localStorage.getItem("store_location") || "memory",
     profiles: [],
-    syncDataAvailable: false,
-    syncPasswordOk: false
+    syncDataAvailable: false
 };
 
 var CHARSET_OPTIONS = [
@@ -79,7 +78,6 @@ Settings.loadProfiles = function() {
         if (Settings.ifDataExists("sync_profiles_password")) {
             var profiles = Settings.decrypt(JSON.parse(localStorage.getItem("sync_profiles_password")).hash, localStorage.getItem("synced_profiles"));
             if (profiles) {
-                Settings.syncPasswordOk = true;
                 if (Settings.shouldSyncProfiles()) {
                     Settings.loadProfilesFromString(profiles);
                 }
@@ -127,7 +125,7 @@ Settings.saveProfiles = function() {
     }
     var stringified = JSON.stringify(Settings.profiles);
     localStorage.setItem("profiles", stringified);
-    if (Settings.shouldSyncProfiles() && (!Settings.syncDataAvailable || Settings.syncPasswordOk)) {
+    if (Settings.shouldSyncProfiles() && (!Settings.syncDataAvailable || Settings.syncPasswordOk())) {
         Settings.saveSyncedProfiles(Settings.encrypt(JSON.parse(localStorage.getItem("sync_profiles_password")).hash, stringified));
     }
 };
@@ -214,7 +212,6 @@ Settings.shouldShowStrength = function() {
 
 Settings.stopSync = function() {
     localStorage.setItem("sync_profiles", false);
-    Settings.syncPasswordOk = false;
     Settings.loadLocalProfiles();
 };
 
@@ -240,6 +237,19 @@ Settings.getSyncSettings = function() {
         return JSON.parse(localStorage.getItem("sync_profiles_password"));
     } else {
         return {hash: "", salt: "", iter: ""};
+    }
+};
+
+Settings.syncPasswordOk = function() {
+    if (Settings.ifDataExists("sync_profiles_password")) {
+        var profiles = Settings.decrypt(JSON.parse(localStorage.getItem("sync_profiles_password")).hash, localStorage.getItem("synced_profiles"));
+        if (profiles) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
     }
 };
 

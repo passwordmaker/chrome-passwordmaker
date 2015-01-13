@@ -250,7 +250,6 @@ function setSyncPassword() {
     if (result) {
         localStorage.setItem("sync_profiles", true);
         Settings.syncDataAvailable = true;
-        Settings.syncPasswordOk = true;
         $("#syncProfilesPassword").val("");
         updateSyncProfiles();
         updateProfileList();
@@ -264,7 +263,6 @@ function clearSyncData() {
         if (chrome.runtime.lastError === undefined) {
             localStorage.setItem("sync_profiles", false);
             Settings.syncDataAvailable = false;
-            Settings.syncPasswordOk = false;
             localStorage.removeItem("synced_profiles");
             localStorage.removeItem("synced_profiles_keys");
             localStorage.removeItem("sync_profiles_password");
@@ -283,7 +281,7 @@ function updateSyncProfiles() {
 
     var should_sync = $("#syncProfiles").prop("checked");
     if (should_sync) {
-        if (Settings.syncPasswordOk) {
+        if (Settings.shouldSyncProfiles() && Settings.syncPasswordOk()) {
             $("#sync_password_set").show();
             $("#clear_sync_data").removeClass("hidden");
         } else if (Settings.syncDataAvailable) {
