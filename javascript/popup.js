@@ -145,9 +145,7 @@ function fillFields() {
         chrome.tabs.executeScript({
             "allFrames": true,
             // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
-            "code": "var b64pass = '" + btoa($("#generated").val()) + "';" +
-                    "var b64name = '" + btoa($("#username").val()) + "';" +
-                    "var fields = document.getElementsByTagName('input');" +
+            "code": "var fields = document.getElementsByTagName('input');" +
                     "var nameFilled = false, passFilled = false;" +
                     "for (var i = 0; i < fields.length; i++) {" +
                         "var elStyle = getComputedStyle(fields[i]);" +
@@ -155,12 +153,12 @@ function fillFields() {
                         "var isPasswordField = (/password/i).test(fields[i].type + ' ' + fields[i].name);" +
                         "var isUsernameField = (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name);" +
                         "if (isVisible && !passFilled && fields[i].value.length === 0 && isPasswordField) {" +
-                            "fields[i].value = atob(b64pass);" +
+                            "fields[i].value = atob('" + btoa($("#generated").val()) + "');" +
                             "passFilled = true;" +
                         "}" +
                         "if (" + Settings.shouldFillUsername() + ") {" +
                             "if (isVisible && !nameFilled && fields[i].value.length === 0 && isUsernameField && !isPasswordField) {" +
-                                "fields[i].value = atob(b64name);" +
+                                "fields[i].value = atob('" + btoa($("#username").val()) + "');" +
                                 "nameFilled = true;" +
                             "}" +
                         "}" +
