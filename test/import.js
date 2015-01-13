@@ -1,8 +1,8 @@
 QUnit.module("rdf import", {
-    setup: function() {
+    beforeEach: function() {
         this.rdf_doc1 = RdfImporter.loadDoc($("#rdf1").val());
     },
-    teardown: function() {
+    afterEach: function() {
         Settings.profiles = [];
         localStorage.clear();
     }
@@ -82,13 +82,13 @@ QUnit.test("save settings", function(assert) {
 });
 
 QUnit.module("rdf export", {
-    setup: function() {
+    beforeEach: function() {
         Settings.loadProfiles();
         this.rdf_doc1 = RdfImporter.loadDoc($("#rdf1").val());
         RdfImporter.saveProfiles(this.rdf_doc1.profiles);
         this.doc2 = RdfImporter.loadDoc(RdfImporter.dumpDoc());
     },
-    teardown: function() {
+    afterEach: function() {
         Settings.profiles = [];
         localStorage.clear();
     }
@@ -137,13 +137,13 @@ QUnit.test("dump default profile to rdf", function(assert) {
 });
 
 QUnit.module("password generation", {
-    setup: function() {
+    beforeEach: function() {
         Settings.loadProfiles();
         this.p = Settings.profiles[0];
         this.url = "passwordmaker.org";
         this.pass = "PasswordMaker©€𤭢";
     },
-    teardown: function() {
+    afterEach: function() {
         Settings.profiles = [];
         localStorage.clear();
     }

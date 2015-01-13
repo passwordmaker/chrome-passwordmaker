@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>QUnit Test Suite</title>
+    <title>PasswordMaker Pro Test Suite</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="qunit.css">
     <script src="qunit.js"></script>
@@ -22,15 +22,9 @@
     <!-- NOTE: tests included at bottom -->
 </head>
 <body>
-    <h1 id="qunit-header">QUnit Test Suite</h1>
-    <div id="qunit-banner"></div>
-    <div id="qunit-testrunner-toolbar"></div>
-    <div id="qunit-userAgent"></div>
-    <ol id="qunit-tests"><li></li></ol>
-
+    <div id="qunit"></div>
     <div id="qunit-fixture">
         <textarea id="rdf1">
-      <![CDATA[
 <?xml version="1.0"?>
 <RDF:RDF xmlns:NS1="http://passwordmaker.mozdev.org/rdf#"
          xmlns:NC="http://home.netscape.com/NC-rdf#"
@@ -109,7 +103,6 @@
                    NS1:autoClearClipboard="true"
                    NS2:masterPasswordStorage="store-in-memory" />
 </RDF:RDF>
-      ]]>
         </textarea>
     </div>
 </body>
