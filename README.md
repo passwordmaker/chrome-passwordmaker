@@ -23,7 +23,7 @@ If you have previously used the Firefox Extension, you can directly import your 
 
 I am the new and active maintainer of this project and I have uploaded this extension back to the Chrome Web Store which is located at https://chrome.google.com/webstore/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh
 
-**_PLEASE Export your profile data ASAP_** to be sure you have a back-up of your data which you can import into the new 0.7.x version. 
+**_PLEASE Export your profile data_** to be sure you have a back-up of your data which you can import into the most current version.
 I apologize for any problems the disappearance from the Chrome Web Store may have caused, but I will do my best to keep this extension alive and well.
 
 
