@@ -76,7 +76,7 @@ Settings.loadProfiles = function() {
     if (Settings.ifDataExists("synced_profiles")) {
         Settings.syncDataAvailable = true;
         if (Settings.ifDataExists("sync_profiles_password")) {
-            var profiles = Settings.decrypt(JSON.parse(localStorage.getItem("sync_profiles_password")).hash, localStorage.getItem("synced_profiles"));
+            var profiles = Settings.decrypt(localStorage.getItem("sync_profiles_password"), localStorage.getItem("synced_profiles"));
             if (profiles) {
                 if (Settings.shouldSyncProfiles()) {
                     Settings.loadProfilesFromString(profiles);
@@ -90,7 +90,6 @@ Settings.saveSyncedProfiles = function(data) {
     var oldKeys = localStorage.getItem("synced_profiles_keys");
     var threshold = Math.round(chrome.storage.sync.QUOTA_BYTES_PER_ITEM * 0.9);
     var output = {};
-    output.sync_profiles_password = localStorage.getItem("sync_profiles_password");
 
     if (data.length <= threshold) {
         output.synced_profiles = data;
@@ -126,7 +125,7 @@ Settings.saveProfiles = function() {
     var stringified = JSON.stringify(Settings.profiles);
     localStorage.setItem("profiles", stringified);
     if (Settings.shouldSyncProfiles() && (!Settings.syncDataAvailable || Settings.syncPasswordOk())) {
-        Settings.saveSyncedProfiles(Settings.encrypt(JSON.parse(localStorage.getItem("sync_profiles_password")).hash, stringified));
+        Settings.saveSyncedProfiles(Settings.encrypt(localStorage.getItem("sync_profiles_password"), stringified));
     }
 };
 
@@ -211,43 +210,32 @@ Settings.shouldShowStrength = function() {
 };
 
 Settings.stopSync = function() {
+    localStorage.removeItem("sync_profiles_password");
     localStorage.setItem("sync_profiles", false);
     Settings.loadLocalProfiles();
 };
 
 Settings.startSyncWith = function(password) {
-    var syncSettings = Settings.getSyncSettings();
-    var derived = Settings.make_pbkdf2(password, syncSettings.salt, syncSettings.iter);
+    var syncPassHash = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password));
     if (Settings.syncDataAvailable) {
-        var profiles = Settings.decrypt(derived.hash, localStorage.getItem("synced_profiles"));
+        var profiles = Settings.decrypt(syncPassHash, localStorage.getItem("synced_profiles"));
         if (profiles) {
             Settings.loadProfilesFromString(profiles);
-            return derived;
+            return syncPassHash;
         }
     } else {
-        localStorage.setItem("sync_profiles_password", JSON.stringify(derived));
-        Settings.saveSyncedProfiles(Settings.encrypt(derived.hash, JSON.stringify(Settings.profiles)));
-        return derived;
+        localStorage.setItem("sync_profiles_password", syncPassHash);
+        Settings.saveSyncedProfiles(Settings.encrypt(syncPassHash, JSON.stringify(Settings.profiles)));
+        return syncPassHash;
     }
     return false;
 };
 
-Settings.getSyncSettings = function() {
-    if (Settings.ifDataExists("sync_profiles_password")) {
-        return JSON.parse(localStorage.getItem("sync_profiles_password"));
-    } else {
-        return {hash: "", salt: "", iter: ""};
-    }
-};
-
 Settings.syncPasswordOk = function() {
-    if (Settings.ifDataExists("sync_profiles_password")) {
-        var profiles = Settings.decrypt(JSON.parse(localStorage.getItem("sync_profiles_password")).hash, localStorage.getItem("synced_profiles"));
-        if (profiles) {
-            return true;
-        } else {
-            return false;
-        }
+    var syncHash = localStorage.getItem("sync_profiles_password") || "";
+    var profiles = Settings.decrypt(syncHash, localStorage.getItem("synced_profiles"));
+    if (profiles) {
+        return true;
     } else {
         return false;
     }

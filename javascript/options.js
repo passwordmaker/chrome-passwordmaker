@@ -249,6 +249,7 @@ function setSyncPassword() {
     var result = Settings.startSyncWith($("#syncProfilesPassword").val());
     if (result) {
         localStorage.setItem("sync_profiles", true);
+        localStorage.setItem("sync_profiles_password", result);
         Settings.syncDataAvailable = true;
         $("#syncProfilesPassword").val("");
         updateSyncProfiles();
@@ -281,7 +282,7 @@ function updateSyncProfiles() {
 
     var should_sync = $("#syncProfiles").prop("checked");
     if (should_sync) {
-        if (Settings.shouldSyncProfiles() && Settings.syncPasswordOk()) {
+        if (Settings.syncPasswordOk()) {
             $("#sync_password_set").show();
             $("#clear_sync_data").removeClass("hidden");
         } else if (Settings.syncDataAvailable) {
