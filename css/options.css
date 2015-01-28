@@ -287,6 +287,18 @@ textarea {
     float: left;
 }
 
+#sync_data_exists {
+    color: #ff8c00;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+#sync_password_set {
+    color: #008000;
+    font-size: 1em;
+    font-weight: bold;
+}
+
 #clear_sync_data, #export_buttons, #importButton, #remove {
     float: right;
 }
