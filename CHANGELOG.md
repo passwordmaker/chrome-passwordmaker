@@ -1,3 +1,9 @@
+0.8.1 - 2015-01-28
+
+* Fixes issue #143
+* Updated jQuery and QUnit
+* Allow creation of 4 digit PIN's
+
 0.8.0 - 2014-10-01
 
 * Use getComputedStyle() to only ever fill visible input elements
