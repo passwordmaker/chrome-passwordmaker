@@ -47,8 +47,9 @@ if (typeof PasswordMaker_l33t !== "object") {
          * being returned.
          *
          */
-        convert: function(leetLevel, message) {
-            if (leetLevel > 0) {
+        convert: function(level, message) {
+            var leetLevel = parseInt(level, 10);
+            if (leetLevel >= 1 && leetLevel <= 9) {
                 var ret = message.toLowerCase();
                 for (var item = 0; item < this.alphabet.length; item++) {
                     ret = ret.replace(this.alphabet[item], this.levels[leetLevel - 1][item]);

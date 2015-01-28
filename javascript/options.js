@@ -280,8 +280,7 @@ function updateSyncProfiles() {
     $("#sync_profiles_row, #no_sync_password, #sync_data_exists, #sync_password_set").hide();
     $("#set_sync_password, #clear_sync_data").addClass("hidden");
 
-    var should_sync = $("#syncProfiles").prop("checked");
-    if (should_sync) {
+    if ($("#syncProfiles").prop("checked")) {
         if (Settings.syncPasswordOk()) {
             $("#sync_password_set").show();
             $("#clear_sync_data").removeClass("hidden");
@@ -299,8 +298,7 @@ function updateSyncProfiles() {
 }
 
 function updateMasterHash() {
-    var should_keep = $("#keepMasterPasswordHash").prop("checked");
-    if (should_keep) {
+    if ($("#keepMasterPasswordHash").prop("checked")) {
         $("#master_password_row").removeClass("hidden");
         var master_pass = $("#masterPassword").val();
         if (master_pass.length > 0) {

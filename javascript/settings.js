@@ -77,7 +77,7 @@ Settings.loadProfiles = function() {
         Settings.syncDataAvailable = true;
         if (Settings.ifDataExists("sync_profiles_password")) {
             var profiles = Settings.decrypt(localStorage.getItem("sync_profiles_password"), localStorage.getItem("synced_profiles"));
-            if (profiles) {
+            if (profiles.length !== 0) {
                 if (Settings.shouldSyncProfiles()) {
                     Settings.loadProfilesFromString(profiles);
                 }
@@ -169,7 +169,7 @@ Settings.setPassword = function() {
 
 Settings.getPassword = function(bgPass) {
     var pass = "";
-    if (bgPass.length > 0) {
+    if (bgPass.length !== 0) {
         pass = Settings.decrypt(localStorage.getItem("password_key"), bgPass);
     } else if (Settings.ifDataExists("password_crypt")) {
         pass = Settings.decrypt(localStorage.getItem("password_key"), localStorage.getItem("password_crypt"));
@@ -219,7 +219,7 @@ Settings.startSyncWith = function(password) {
     var syncPassHash = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password));
     if (Settings.syncDataAvailable) {
         var profiles = Settings.decrypt(syncPassHash, localStorage.getItem("synced_profiles"));
-        if (profiles) {
+        if (profiles.length !== 0) {
             Settings.loadProfilesFromString(profiles);
             return syncPassHash;
         }
@@ -234,7 +234,7 @@ Settings.startSyncWith = function(password) {
 Settings.syncPasswordOk = function() {
     var syncHash = localStorage.getItem("sync_profiles_password") || "";
     var profiles = Settings.decrypt(syncHash, localStorage.getItem("synced_profiles"));
-    if (profiles) {
+    if (profiles.length !== 0) {
         return true;
     } else {
         return false;
