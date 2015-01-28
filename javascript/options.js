@@ -346,7 +346,7 @@ function updateShowStrength() {
 
 function testPasswordLength() {
     var field = $("#passwdLength");
-    if (field.val() < 8) field.val(8);
+    if (field.val() < 4) field.val(4);
     if (field.val() > 512) field.val(512);
 }
 
