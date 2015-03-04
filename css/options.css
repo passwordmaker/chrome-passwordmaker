@@ -178,7 +178,7 @@ meter {
 }
 
 .hidden {
-    visibility: hidden;
+    display: none;
 }
 
 .subrow {
@@ -307,6 +307,13 @@ textarea {
     margin-left: 165px;
 }
 
+#general_settings input[type="checkbox"] {
+    margin-left: 0.5ex;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+}
+
 select.input {
     width: 304px;
 }
@@ -318,4 +325,8 @@ select.input {
 #resetToDefaultprofiles {
     font-weight: bold;
     margin: 50px 0 50px 165px;
+}
+
+#expirePasswordMinutes {
+    width: 6em;
 }
