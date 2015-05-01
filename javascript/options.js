@@ -103,10 +103,10 @@ function oldHashWarning(hash) {
     var bugged = { "md5_v6": 1, "hmac-md5_v6": 1, "hmac-sha256": 1 };
     if (bugged[hash]) {
         if (confirm("Are you sure you want to continue using a legacy algorithm which is incorrectly implemented?")) {
-           alert("Please change to using a correct & secure algorithm!\n\nThe old/bugged/legacy algorithms " +
-           "are harmful to your online security and should be avoided at ALL costs.\n\n" +
-           "Please change your passwords on the sites which you are using this algorithm if you are able to " +
-           "as soon as possible.\n\nThank you\n");
+            alert("Please change to using a correct & secure algorithm!\n\nThe old/bugged/legacy algorithms " +
+                "are harmful to your online security and should be avoided at ALL costs.\n\n" +
+                "Please change your passwords on the sites which you are using this algorithm if you are able to " +
+                "as soon as possible.\n\nThank you\n");
         } else {
             alert("Please select one of the correct and secure hash algorithms below :)");
         }
@@ -251,7 +251,7 @@ function setSyncPassword() {
 
     var result = Settings.startSyncWith($("#syncProfilesPassword").val());
     if (result) {
-        localStorage.setItem("sync_profiles", true);
+        localStorage.setItem("sync_profiles", "true");
         localStorage.setItem("sync_profiles_password", result);
         Settings.syncDataAvailable = true;
         $("#syncProfilesPassword").val("");
@@ -265,7 +265,7 @@ function setSyncPassword() {
 function clearSyncData() {
     chrome.storage.sync.clear(function() {
         if (chrome.runtime.lastError === undefined) {
-            localStorage.setItem("sync_profiles", false);
+            localStorage.setItem("sync_profiles", "false");
             Settings.syncDataAvailable = false;
             localStorage.removeItem("synced_profiles");
             localStorage.removeItem("synced_profiles_keys");
@@ -305,16 +305,16 @@ function updateMasterHash() {
         $("#master_password_row").removeClass("hidden");
         var master_pass = $("#masterPassword").val();
         if (master_pass.length > 0) {
-            localStorage.setItem("keep_master_password_hash", true);
+            localStorage.setItem("keep_master_password_hash", "true");
             localStorage.setItem("master_password_hash", JSON.stringify(Settings.make_pbkdf2(master_pass)));
         } else {
-            localStorage.setItem("keep_master_password_hash", false);
+            localStorage.setItem("keep_master_password_hash", "false");
             localStorage.removeItem("master_password_hash");
         }
     } else {
         $("#master_password_row").addClass("hidden");
         $("#masterPassword").val("");
-        localStorage.setItem("keep_master_password_hash", false);
+        localStorage.setItem("keep_master_password_hash", "false");
         localStorage.removeItem("master_password_hash");
     }
 }
@@ -327,8 +327,8 @@ function updateDisablePasswordSaving() {
         localStorage.removeItem("password_crypt");
         Settings.setBgPassword("");
     }
-
 }
+
 function updateHidePassword() {
     localStorage.setItem("show_generated_password", $("#hidePassword").prop("checked"));
 }
@@ -401,7 +401,9 @@ function fileImport() {
 }
 
 function fileExport() {
-    var textFileAsBlob = new Blob([$("#exportText").val()], {type: "application/rdf+xml"});
+    var textFileAsBlob = new Blob([$("#exportText").val()], {
+        type: "application/rdf+xml"
+    });
     var downloadLink = document.createElement("a");
     downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
     downloadLink.download = "PasswordMaker Pro Profile Data.rdf";

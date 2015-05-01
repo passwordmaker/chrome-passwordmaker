@@ -1,7 +1,7 @@
 var Settings = {
     currentUrl: "",
-    storeLocation: localStorage.getItem("store_location") || "memory",
     profiles: [],
+    storeLocation: localStorage.getItem("store_location") || "memory",
     syncDataAvailable: false
 };
 
@@ -225,7 +225,7 @@ Settings.shouldShowStrength = function() {
 
 Settings.stopSync = function() {
     localStorage.removeItem("sync_profiles_password");
-    localStorage.setItem("sync_profiles", false);
+    localStorage.setItem("sync_profiles", "false");
     Settings.loadLocalProfiles();
 };
 
