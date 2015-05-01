@@ -126,7 +126,7 @@
                 </div>
                 <div class="row">
                     <label for="passwdLength">Password length:</label>
-                    <input class="input testInput" id="passwdLength" min="4" max="512" type="number">
+                    <input class="input testInput" id="passwdLength" type="number" min="4" max="512" value="8">
                 </div>
                 <div class="row">
                     <label for="usernameTB">Username:</label>
@@ -250,9 +250,9 @@
                         </select>
                     </div>
                     <div class="subrow" id="password_expire_row">
-                        <label for="expirePasswordMinutes">Expire after</label>
-                        <input class="input" id="expirePasswordMinutes" type="text">
-                        <span>minutes</span>
+                        <label for="expirePasswordMinutes">Expire after:</label>
+                        <input class="input" id="expirePasswordMinutes" type="number" min="1" max="720" value="5">
+                        <span>Minutes</span>
                     </div>
                 </div>
                 <div class="row">
@@ -277,6 +277,12 @@
                     <div class="subrow">
                         <input id="fillUsername" type="checkbox">
                         <label class="checkbox" for="fillUsername">Fill Username if Configured in Profile</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="subrow">
+                        <input id="hideStorageLocation" type="checkbox">
+                        <label class="checkbox" for="hideStorageLocation">Hide "Save Password" selection from Popup</label>
                     </div>
                 </div>
                 <div class="row">

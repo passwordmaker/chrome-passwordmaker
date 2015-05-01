@@ -178,7 +178,7 @@ meter {
 }
 
 .hidden {
-    display: none;
+    visibility: hidden;
 }
 
 .subrow {
@@ -212,7 +212,7 @@ meter {
 }
 
 .row {
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 }
 
 label {
@@ -307,11 +307,8 @@ textarea {
     margin-left: 165px;
 }
 
-#general_settings input[type="checkbox"] {
-    margin-left: 0.5ex;
-    vertical-align: bottom;
-    position: relative;
-    top: -1px;
+#store_location_row {
+    margin-left: 7.5em;
 }
 
 select.input {

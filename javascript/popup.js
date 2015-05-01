@@ -218,6 +218,7 @@ function init() {
 
         $("#password").val(pass);
         $("#confirmation").val(pass);
+        $("#store_location").val(Settings.storeLocation);
 
         for (var i = 0; i < Settings.profiles.length; i++) {
             $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
@@ -239,13 +240,14 @@ document.addEventListener("DOMContentLoaded", function() {
     Settings.loadProfiles();
     $("#password, #confirmation").on("keyup", Settings.setPassword);
     $("input").on("keyup", delayedUpdate);
+    $("#store_location").on("change", updateStoreLocation);
     $("#profile").on("change", onProfileChanged);
     $("#activatePassword").on("click", showPasswordField);
     $("#copypassword").on("click", copyPassword);
     $("#injectpassword").on("click", fillFields);
     $("#options").on("click", openOptions);
 
-    if (Settings.shouldDisablePasswordSaving()) {
+    if (Settings.shouldDisablePasswordSaving() || Settings.hideStoreLocationInPopup()) {
         $("#store_location_row").hide();
     }
 

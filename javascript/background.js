@@ -40,11 +40,10 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
     }
 });
 
-chrome.alarms.onAlarm.addListener(handleAlarm);
-
-
 function handleAlarm(alarm) {
     if (alarm.name === "expire_password") {
         password = "";
-    };
+    }
 }
+
+chrome.alarms.onAlarm.addListener(handleAlarm);

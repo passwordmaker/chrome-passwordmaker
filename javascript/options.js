@@ -156,12 +156,9 @@ function showOptions() {
         }
     });
 
-    if (Settings.keepMasterPasswordHash()) {
-        $("#master_password_row").removeClass("hidden");
-    } else {
-        $("#master_password_row").addClass("hidden");
-    }
-
+    $("#store_location").val(Settings.storeLocation);
+    $("#expirePasswordMinutes").val(localStorage.getItem("expire_password_minutes") || 5);
+    updateStyle($("#master_password_row"), "hidden", !Settings.keepMasterPasswordHash());
     updateExpireRow();
     updateSyncProfiles();
     showSection("#general_settings");
@@ -185,19 +182,7 @@ function highlightProfile() {
 
 function updateStoreLocation() {
     Settings.setStoreLocation($("#store_location").val());
-    Settings.setExpirePasswordMinutes($("#expirePasswordMinutes").val());
     updateExpireRow();
-}
-
-function updateExpireRow() {
-    if (Settings.storeLocation == "memory_expire")
-    {
-        $("#password_expire_row").removeClass("hidden");
-    }
-    else
-    {
-        $("#password_expire_row").addClass("hidden");
-    }
 }
 
 function saveProfile() {
@@ -356,14 +341,50 @@ function updatefillUsername() {
     localStorage.setItem("fill_username", $("#fillUsername").prop("checked"));
 }
 
+function updateHideStoreLocation() {
+    localStorage.setItem("hide_storage_location", $("#hideStorageLocation").prop("checked"));
+}
+
 function updateShowStrength() {
     localStorage.setItem("show_password_strength", $("#showPasswordStrength").prop("checked"));
 }
 
-function testPasswordLength() {
+function sanitizePasswordLength() {
     var field = $("#passwdLength");
-    if (field.val() < 4) field.val(4);
-    if (field.val() > 512) field.val(512);
+    if (field.val() < 4) field.val("4");
+    if (field.val() > 512) field.val("512");
+}
+
+
+function sanitizeExpireTime(newExpireTime) {
+    var field = $("#expirePasswordMinutes");
+    if (newExpireTime < 1) {
+        newExpireTime = 1;
+        field.val("1");
+    }
+    if (newExpireTime > 720) {
+        newExpireTime = 720;
+        field.val("720");
+    }
+    newExpireTime = parseInt(newExpireTime, 10);
+    field.val(newExpireTime);
+    return newExpireTime;
+}
+
+function updateExpireRow() {
+    var shouldExpire = Settings.storeLocation === "memory_expire";
+    var oldExpireTime = localStorage.getItem("expire_password_minutes") || 5;
+    var newExpireTime = $("#expirePasswordMinutes").val();
+    if (shouldExpire) {
+        newExpireTime = sanitizeExpireTime(newExpireTime);
+        if (newExpireTime !== oldExpireTime) {
+        	localStorage.setItem("expire_password_minutes", newExpireTime);
+            Settings.createExpirePasswordAlarm(newExpireTime);
+        }
+    } else {
+        chrome.alarms.clear("expire_password");
+    }
+    updateStyle($("#password_expire_row"), "hidden", !shouldExpire);
 }
 
 function fileImport() {
@@ -445,11 +466,6 @@ document.addEventListener("DOMContentLoaded", function() {
     updateProfileList();
     setCurrentProfile(Settings.profiles[0]);
 
-    $("#store_location").val(Settings.storeLocation);
-    $("#expirePasswordMinutes").val(Settings.expirePasswordMinutes);
-
-    $("#store_location").on("change", updateStoreLocation);
-    $("#expirePasswordMinutes").on("change", updateStoreLocation);
     $("#hidePassword").prop("checked", Settings.shouldHidePassword());
     $("#disablePasswordSaving").prop("checked", Settings.shouldDisablePasswordSaving());
     $("#keepMasterPasswordHash").prop("checked", Settings.keepMasterPasswordHash());
@@ -471,7 +487,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#pathCB").on("click", updateExample);
     $("#whereLeetLB").on("change", updateLeet);
     $("#charset").on("change", updateCustomCharsetField);
-    $("#passwdLength").on("blur", testPasswordLength);
+    $("#passwdLength").on("blur", sanitizePasswordLength);
 
     $("#cloneProfileButton").on("click", cloneProfile);
     $("#checkStrength").on("change", showStrengthSection);
@@ -482,6 +498,8 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#copyButton").on("click", copyRdfExport);
     $("#exportFileButton").on("click", fileExport);
 
+    $("#store_location").on("change", updateStoreLocation);
+    $("#expirePasswordMinutes").on("change", updateExpireRow);
     $("#hidePassword").on("change", updateHidePassword);
     $("#disablePasswordSaving").on("change", updateDisablePasswordSaving);
     $("#keepMasterPasswordHash").on("change", updateMasterHash);
@@ -489,6 +507,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#masterPassword").on("keyup", updateMasterHash);
     $("#useVerificationCode").on("change", updateUseVerificationCode);
     $("#fillUsername").on("change", updatefillUsername);
+    $("#hideStorageLocation").on("change", updateHideStoreLocation);
     $("#showPasswordStrength").on("change", updateShowStrength);
     $("#set_sync_password").on("click", setSyncPassword);
     $("#clear_sync_data").on("click", clearSyncData);

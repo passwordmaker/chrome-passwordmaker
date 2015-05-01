@@ -1,7 +1,6 @@
 var Settings = {
     currentUrl: "",
     storeLocation: localStorage.getItem("store_location") || "memory",
-    expirePasswordMinutes: localStorage.getItem("expire_password_minutes") || "2",
     profiles: [],
     syncDataAvailable: false
 };
@@ -144,29 +143,20 @@ Settings.setStoreLocation = function(store) {
     }
 };
 
-Settings.setExpirePasswordMinutes = function(minutes) {
-    if (Settings.expirePasswordMinutes !== minutes) {
-        Settings.expirePasswordMinutes = minutes;
-        localStorage.setItem("expire_password_minutes", minutes);
-        Settings.createExpirePasswordAlarm();
-    }
-}
-
 Settings.setBgPassword = function(pw) {
     chrome.runtime.getBackgroundPage(function(bg) {
         bg.password = pw;
     });
 
-    if (pw !== "" && Settings.storeLocation === "memory_expire") {
+    if (pw.length !== 0 && Settings.storeLocation === "memory_expire") {
         Settings.createExpirePasswordAlarm();
-    };
+    }
 };
 
 Settings.createExpirePasswordAlarm = function() {
-    chrome.alarms.create(
-        "expire_password", 
-        { delayInMinutes:parseInt(Settings.expirePasswordMinutes) }
-    );
+    chrome.alarms.create("expire_password", {
+        delayInMinutes: parseInt(localStorage.getItem("expire_password_minutes"), 10)
+    });
 };
 
 Settings.setPassword = function() {
@@ -208,6 +198,10 @@ Settings.shouldHidePassword = function() {
 Settings.shouldDisablePasswordSaving = function() {
     return localStorage.getItem("disable_password_saving") === "true";
 };
+
+Settings.hideStoreLocationInPopup = function() {
+    return localStorage.getItem("hide_storage_location") === "true";
+}
 
 Settings.keepMasterPasswordHash = function() {
     return localStorage.getItem("keep_master_password_hash") === "true";
