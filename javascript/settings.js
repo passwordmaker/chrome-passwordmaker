@@ -1,6 +1,7 @@
 var Settings = {
     currentUrl: "",
     storeLocation: localStorage.getItem("store_location") || "memory",
+    expirePasswordMinutes: localStorage.getItem("expire_password_minutes") || "2",
     profiles: [],
     syncDataAvailable: false
 };
@@ -143,10 +144,29 @@ Settings.setStoreLocation = function(store) {
     }
 };
 
+Settings.setExpirePasswordMinutes = function(minutes) {
+    if (Settings.expirePasswordMinutes !== minutes) {
+        Settings.expirePasswordMinutes = minutes;
+        localStorage.setItem("expire_password_minutes", minutes);
+        Settings.createExpirePasswordAlarm();
+    }
+}
+
 Settings.setBgPassword = function(pw) {
     chrome.runtime.getBackgroundPage(function(bg) {
         bg.password = pw;
     });
+
+    if (pw !== "" && Settings.storeLocation === "memory_expire") {
+        Settings.createExpirePasswordAlarm();
+    };
+};
+
+Settings.createExpirePasswordAlarm = function() {
+    chrome.alarms.create(
+        "expire_password", 
+        { delayInMinutes:parseInt(Settings.expirePasswordMinutes) }
+    );
 };
 
 Settings.setPassword = function() {
@@ -158,7 +178,7 @@ Settings.setPassword = function() {
         var key = sjcl.codec.base64.fromBits(bits);
         localStorage.setItem("password_key", key);
 
-        if (Settings.storeLocation === "memory") {
+        if (Settings.storeLocation === "memory" || Settings.storeLocation === "memory_expire") {
             Settings.setBgPassword(Settings.encrypt(key, password));
         } else if (Settings.storeLocation === "disk") {
             Settings.setBgPassword(Settings.encrypt(key, password));

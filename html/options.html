@@ -239,6 +239,22 @@
             <section id="general_settings">
                 <h2>Settings</h2>
                 <div class="section_info">Here you find settings that affect all profiles.</div>
+                <div class="row" id="store_location_row">
+                    <div class="subrow">
+                        <label for="store_location">Save Password:</label>
+                        <select id="store_location">
+                            <option value="memory">In memory</option>
+                            <option value="memory_expire">In memory, expire</option>
+                            <option value="disk">On disk</option>
+                            <option value="never">Never store</option>
+                        </select>
+                    </div>
+                    <div class="subrow" id="password_expire_row">
+                        <label for="expirePasswordMinutes">Expire after</label>
+                        <input class="input" id="expirePasswordMinutes" type="text">
+                        <span>minutes</span>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="subrow">
                         <input id="hidePassword" type="checkbox">

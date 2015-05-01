@@ -1,6 +1,7 @@
 {
   "background": {
-    "scripts": ["javascript/background.js"]
+    "scripts": ["javascript/background.js"],
+    "persistent": false
   },
   "browser_action": {
     "default_icon": "images/passwdmaker48.png",
@@ -24,6 +25,6 @@
   "name": "PasswordMaker Pro",
   "offline_enabled": true,
   "options_page": "html/options.html",
-  "permissions": ["activeTab", "storage"],
+  "permissions": ["activeTab", "storage", "alarms"],
   "version": "0.8.1"
 }

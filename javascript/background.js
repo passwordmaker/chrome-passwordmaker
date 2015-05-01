@@ -39,3 +39,12 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
         localStorage.setItem("sync_profiles_password", changes.sync_profiles_password.newValue || "");
     }
 });
+
+chrome.alarms.onAlarm.addListener(handleAlarm);
+
+
+function handleAlarm(alarm) {
+    if (alarm.name === "expire_password") {
+        password = "";
+    };
+}

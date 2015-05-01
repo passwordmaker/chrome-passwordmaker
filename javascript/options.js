@@ -162,6 +162,7 @@ function showOptions() {
         $("#master_password_row").addClass("hidden");
     }
 
+    updateExpireRow();
     updateSyncProfiles();
     showSection("#general_settings");
 }
@@ -180,6 +181,23 @@ function showSection(showId) {
 function highlightProfile() {
     $(".highlight").removeClass("highlight");
     $("#profile_" + Settings.currentProfile).addClass("highlight");
+}
+
+function updateStoreLocation() {
+    Settings.setStoreLocation($("#store_location").val());
+    Settings.setExpirePasswordMinutes($("#expirePasswordMinutes").val());
+    updateExpireRow();
+}
+
+function updateExpireRow() {
+    if (Settings.storeLocation == "memory_expire")
+    {
+        $("#password_expire_row").removeClass("hidden");
+    }
+    else
+    {
+        $("#password_expire_row").addClass("hidden");
+    }
 }
 
 function saveProfile() {
@@ -427,6 +445,11 @@ document.addEventListener("DOMContentLoaded", function() {
     updateProfileList();
     setCurrentProfile(Settings.profiles[0]);
 
+    $("#store_location").val(Settings.storeLocation);
+    $("#expirePasswordMinutes").val(Settings.expirePasswordMinutes);
+
+    $("#store_location").on("change", updateStoreLocation);
+    $("#expirePasswordMinutes").on("change", updateStoreLocation);
     $("#hidePassword").prop("checked", Settings.shouldHidePassword());
     $("#disablePasswordSaving").prop("checked", Settings.shouldDisablePasswordSaving());
     $("#keepMasterPasswordHash").prop("checked", Settings.keepMasterPasswordHash());
