@@ -124,15 +124,15 @@ function showButtons() {
     if (!(/^chrome/i).test(Settings.currentUrl)) {
         chrome.tabs.executeScript({
             "allFrames": true,
-            "code": "var fields = document.getElementsByTagName('input'), fieldCount = 0;" +
+            "code": "var fields = document.getElementsByTagName('input'), hasFields = false;" +
                     "for (var i = 0; i < fields.length; i++) {" +
                         "if (/password/i.test(fields[i].type + ' ' + fields[i].name)) {" +
-                            "fieldCount += 1;" +
+                            "hasFields = true; break;" +
                         "}" +
                     "}"
         }, function(results) {
             for (var frame = 0; frame < results.length; frame++) {
-                if (results[frame] > 0) {
+                if (results[frame]) {
                     $("#injectpassword").removeClass("hidden");
                 }
             }
@@ -151,7 +151,7 @@ function fillFields() {
                         "var elStyle = getComputedStyle(fields[i]);" +
                         "var isVisible = !(/none/i).test(elStyle.display) && !(/hidden/i).test(elStyle.visibility) && parseFloat(elStyle.width) > 0 && parseFloat(elStyle.height) > 0;" +
                         "var isPasswordField = (/password/i).test(fields[i].type + ' ' + fields[i].name);" +
-                        "var isUsernameField = (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name);" +
+                        "var isUsernameField = (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name) && (/^(?!display)/i).test(fields[i].name);" +
                         "if (isVisible && !passFilled && fields[i].value.length === 0 && isPasswordField) {" +
                             "fields[i].value = atob('" + btoa($("#generated").val()) + "');" +
                             "passFilled = true;" +
