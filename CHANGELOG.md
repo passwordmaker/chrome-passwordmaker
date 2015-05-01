@@ -1,3 +1,9 @@
+0.8.2 - 2015-05-01
+
+* Added feature #147: time-based password expiration option
+* Added option to hide the "Save Password" option field from the popup
+* Updated jQuery, QUnit and sjcl.js
+
 0.8.1 - 2015-01-28
 
 * Fixes issue #143
