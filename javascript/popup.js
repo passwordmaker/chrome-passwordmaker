@@ -141,6 +141,7 @@ function showButtons() {
 }
 
 function fillFields() {
+    updateFields();
     if (!(/^chrome/i).test(Settings.currentUrl)) {
         chrome.tabs.executeScript({
             "allFrames": true,
@@ -170,6 +171,7 @@ function fillFields() {
 }
 
 function copyPassword() {
+    updateFields();
     chrome.tabs.query({ "windowType": "popup" }, function() {
         $("#activatePassword").hide();
         $("#generated").show().get(0).select();
@@ -206,9 +208,12 @@ function enterKeyPressed(event) {
         if ((/password/i).test($("#generated").val())) {
             $("#password").focus();
         } else {
-            updateFields();
             fillFields();
         }
+    }
+    // ctrl+C or option+C: copy password to clipboard
+    if ((event.ctrlKey || event.metaKey) && event.keyCode === 67) {
+	copyPassword();
     }
 }
 
