@@ -1,3 +1,9 @@
+0.8.3 - 2015-08-08
+
+* Added keyboard shortcut to Copy Password from popup
+* Fixes issue #149
+* Layout fixes for Opera on Linux machines
+
 0.8.2 - 2015-05-01
 
 * Added feature #147: time-based password expiration option
