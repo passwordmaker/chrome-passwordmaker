@@ -121,7 +121,7 @@ function hideButtons() {
 function showButtons() {
     $("#copypassword").removeClass("hidden");
     // Don't run executeScript() on built-in chrome:// pages since it isn't allowed anyway
-    if (!(/^chrome/i).test(Settings.currentUrl)) {
+    if (!(/^chrome|^opera/i).test(Settings.currentUrl)) {
         chrome.tabs.executeScript({
             "allFrames": true,
             "code": "var fields = document.getElementsByTagName('input'), hasFields = false;" +
@@ -142,7 +142,7 @@ function showButtons() {
 
 function fillFields() {
     updateFields();
-    if (!(/^chrome/i).test(Settings.currentUrl)) {
+    if (!(/^chrome|^opera/i).test(Settings.currentUrl)) {
         chrome.tabs.executeScript({
             "allFrames": true,
             // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
