@@ -473,6 +473,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#keepMasterPasswordHash").prop("checked", Settings.keepMasterPasswordHash());
     $("#useVerificationCode").prop("checked", Settings.useVerificationCode());
     $("#fillUsername").prop("checked", Settings.shouldFillUsername());
+    $("#hideStorageLocation").prop("checked", Settings.hideStoreLocationInPopup());
     $("#showPasswordStrength").prop("checked", Settings.shouldShowStrength());
     $("#syncProfiles").prop("checked", Settings.shouldSyncProfiles());
 
