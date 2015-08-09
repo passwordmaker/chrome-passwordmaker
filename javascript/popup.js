@@ -124,15 +124,15 @@ function showButtons() {
     if (!(/^chrome|^opera/i).test(Settings.currentUrl)) {
         chrome.tabs.executeScript({
             "allFrames": true,
-            "code": "var fields = document.getElementsByTagName('input'), hasFields = false;" +
+            "code": "var fields = document.getElementsByTagName('input'), fieldCount = 0;" +
                     "for (var i = 0; i < fields.length; i++) {" +
                         "if (/password/i.test(fields[i].type + ' ' + fields[i].name)) {" +
-                            "hasFields = true; break;" +
+                            "fieldCount += 1;" +
                         "}" +
                     "}"
-        }, function(results) {
-            for (var frame = 0; frame < results.length; frame++) {
-                if (results[frame]) {
+        }, function(fieldCounts) {
+            for (var frame = 0; frame < fieldCounts.length; frame++) {
+                if (fieldCounts[frame] > 0) {
                     $("#injectpassword").removeClass("hidden");
                 }
             }
@@ -202,7 +202,7 @@ function showPasswordField() {
     }
 }
 
-function enterKeyPressed(event) {
+function handleKeyPress(event) {
     // 13 is the key code of the enter key
     if (event.keyCode === 13 && !(/select/i).test(event.target.tagName)) {
         if ((/password/i).test($("#generated").val())) {
@@ -211,9 +211,11 @@ function enterKeyPressed(event) {
             fillFields();
         }
     }
-    // ctrl+C or option+C: copy password to clipboard
+
+    // ctrl/option + c to copy the password to clipboard and close the popup
+    // 67 is the key code of the c character
     if ((event.ctrlKey || event.metaKey) && event.keyCode === 67) {
-	copyPassword();
+        copyPassword();
     }
 }
 
@@ -283,5 +285,5 @@ document.addEventListener("DOMContentLoaded", function() {
         init();
     });
 
-    $(document.body).on("keydown", enterKeyPressed);
+    $(document.body).on("keydown", handleKeyPress);
 });

@@ -208,8 +208,8 @@
                         &rarr; File &rarr; Export Settings &rarr; RDF.<br>
                         Open the .rdf file in a plain text editor (e.g. notepad) then select all, copy and paste into the box below.
                     </div>
-                    <input id="fileInput" type="file">
-                    <textarea id="importText"></textarea>
+                    <input class="input" id="fileInput" type="file">
+                    <textarea class="input" id="importText"></textarea>
                 </div>
                 <div>
                     <input id="importOverwrite" type="checkbox">
@@ -228,7 +228,7 @@
                         &rarr; File &rarr; Import Settings.
                         <b>Back up any existing settings first by going to Firefox PasswordMaker &rarr; File &rarr; Export Setting &rarr; RDF.</b>
                     </div>
-                    <textarea id="exportText"></textarea>
+                    <textarea class="input" id="exportText"></textarea>
                 </div>
                 <div id="export_buttons">
                     <button class="button black" id="copyButton">Copy</button>
@@ -242,11 +242,11 @@
                 <div class="row" id="store_location_row">
                     <div class="subrow">
                         <label for="store_location">Save Password:</label>
-                        <select id="store_location">
-                            <option value="memory">In memory</option>
-                            <option value="memory_expire">In memory, expire</option>
-                            <option value="disk">On disk</option>
-                            <option value="never">Never store</option>
+                        <select class="input" id="store_location">
+                            <option value="memory">Per Session</option>
+                            <option value="memory_expire">Per Session, Expire</option>
+                            <option value="disk">On Disk</option>
+                            <option value="never">Never Store</option>
                         </select>
                     </div>
                     <div class="subrow" id="password_expire_row">

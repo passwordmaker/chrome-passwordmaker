@@ -171,8 +171,8 @@ function showInformation() {
 function showSection(showId) {
     $("#checkStrength").prop("checked", false);
     showStrengthSection();
-    $("section").add("aside").not(showId).hide();
-    $(showId).show();
+    $("section").add("aside").not(showId).css("display", "none");
+    $(showId).css("display", "block");
 }
 
 function highlightProfile() {

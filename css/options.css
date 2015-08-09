@@ -215,6 +215,10 @@ meter {
     margin-bottom: 6px;
 }
 
+#general_settings label {
+    white-space: nowrap;
+}
+
 label {
     margin-top: 3px;
     position: absolute;
@@ -232,6 +236,7 @@ label {
 
 .input {
     width: 300px;
+    font-size: 0.84em;
 }
 
 .selected {
@@ -313,6 +318,10 @@ textarea {
 
 select.input {
     width: 304px;
+}
+
+#store_location {
+    width: 150px;
 }
 
 #master_password_row {
