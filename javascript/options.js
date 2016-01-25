@@ -180,7 +180,7 @@ function highlightProfile() {
     $("#profile_" + Settings.currentProfile).addClass("highlight");
 }
 
-function updateStoreLocation() {
+function updateStorageLocation() {
     Settings.setStoreLocation($("#store_location").val());
     updateExpireRow();
 }
@@ -501,7 +501,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#copyButton").on("click", copyRdfExport);
     $("#exportFileButton").on("click", fileExport);
 
-    $("#store_location").on("change", updateStoreLocation);
+    $("#store_location").on("change", updateStorageLocation);
     $("#expirePasswordMinutes").on("change", updateExpireRow);
     $("#hidePassword").on("change", updateHidePassword);
     $("#disablePasswordSaving").on("change", updateDisablePasswordSaving);

@@ -236,7 +236,7 @@ label {
 
 .input {
     width: 300px;
-    font-size: 0.84em;
+    font-size: 84%;
 }
 
 .selected {
@@ -283,8 +283,13 @@ section {
 }
 
 textarea {
-    height: 200px;
     margin-top: 20px;
+    width: 100%;
+}
+
+#importText, #exportText {
+    font-size: 100%;
+    height: 20em;
     width: 100%;
 }
 
