@@ -129,7 +129,8 @@ function showButtons() {
                         "if (/password/i.test(fields[i].type + ' ' + fields[i].name)) {" +
                             "fieldCount += 1;" +
                         "}" +
-                    "}"
+                    "}" +
+                    "fieldCount;"
         }, function(fieldCounts) {
             for (var frame = 0; frame < fieldCounts.length; frame++) {
                 if (fieldCounts[frame] > 0) {
