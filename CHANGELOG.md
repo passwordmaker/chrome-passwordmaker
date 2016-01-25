@@ -1,3 +1,9 @@
+0.8.4 - 2016-01-25
+
+* Fixes issue #152
+* Fix layout issue on import/export option pages
+* Updated jQuery, QUnit and sjcl.js
+
 0.8.3 - 2015-08-08
 
 * Added keyboard shortcut to Copy Password from popup
