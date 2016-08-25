@@ -25,5 +25,5 @@
   "offline_enabled": true,
   "options_page": "html/options.html",
   "permissions": ["activeTab", "storage", "alarms"],
-  "version": "0.8.4"
+  "version": "0.8.5"
 }

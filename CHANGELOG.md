@@ -1,3 +1,8 @@
+0.8.5 - 2016-08-25
+
+* Addresses issue #156 and #153
+* Updated jQuery and QUnit
+
 0.8.4 - 2016-01-25
 
 * Fixes issue #152
