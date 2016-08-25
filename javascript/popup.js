@@ -155,9 +155,11 @@ function fillFields() {
                         "var isPasswordField = (/password/i).test(fields[i].type + ' ' + fields[i].name);" +
                         "var isUsernameField = (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name) && (/^(?!display)/i).test(fields[i].name);" +
                         "var isEmptyUsernameField = isVisible && !nameFilled && fields[i].value.length === 0 && isUsernameField && !isPasswordField;" +
+                        "var changeEvent = new Event('change', {'bubbles': true, 'cancelable': true});" + // MVC friendly way to force a view-model update
                         "if (isVisible && !passFilled && fields[i].value.length === 0 && isPasswordField) {" +
                             "fields[i].value = atob('" + btoa($("#generated").val()) + "');" +
                             "passFilled = true;" +
+                            "fields[i].dispatchEvent(changeEvent);" +
                         "}" +
                         "if (" + Settings.shouldFillUsername() + ") {" +
                             "if (isEmptyUsernameField) {" +
@@ -166,6 +168,7 @@ function fillFields() {
                                     "fields[i].focus();" +
                                 "}" +
                                 "nameFilled = true;" +
+                                "fields[i].dispatchEvent(changeEvent);" +
                             "}" +
                         "} else {" +
                             "if (isEmptyUsernameField) {" +
