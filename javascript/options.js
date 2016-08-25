@@ -86,8 +86,8 @@ function setCurrentProfile(profile) {
 
     showSection("#profile_settings");
     setTimeout(function() {
-        oldHashWarning(profile.hashAlgorithm);
-    }, 250);
+        hashWarning(profile.hashAlgorithm);
+    }, 0);
 }
 
 function updateCustomCharsetField() {
@@ -98,7 +98,7 @@ function updateCustomCharsetField() {
     }
 }
 
-function oldHashWarning(hash) {
+function hashWarning(hash) {
     // Be as annoying as possible to try and stop people from using the bugged algorithms
     var bugged = { "md5_v6": 1, "hmac-md5_v6": 1, "hmac-sha256": 1 };
     if (bugged[hash]) {
@@ -221,7 +221,7 @@ function saveProfile() {
     highlightProfile();
     setTimeout(function() {
         oldHashWarning(selected.hashAlgorithm);
-    }, 250);
+    }, 0);
 }
 
 function cloneProfile() {

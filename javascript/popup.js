@@ -154,14 +154,22 @@ function fillFields() {
                         "var isVisible = !(/none/i).test(elStyle.display) && !(/hidden/i).test(elStyle.visibility) && parseFloat(elStyle.width) > 0 && parseFloat(elStyle.height) > 0;" +
                         "var isPasswordField = (/password/i).test(fields[i].type + ' ' + fields[i].name);" +
                         "var isUsernameField = (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name) && (/^(?!display)/i).test(fields[i].name);" +
+                        "var isEmptyUsernameField = isVisible && !nameFilled && fields[i].value.length === 0 && isUsernameField && !isPasswordField;" +
                         "if (isVisible && !passFilled && fields[i].value.length === 0 && isPasswordField) {" +
                             "fields[i].value = atob('" + btoa($("#generated").val()) + "');" +
                             "passFilled = true;" +
                         "}" +
                         "if (" + Settings.shouldFillUsername() + ") {" +
-                            "if (isVisible && !nameFilled && fields[i].value.length === 0 && isUsernameField && !isPasswordField) {" +
+                            "if (isEmptyUsernameField) {" +
                                 "fields[i].value = atob('" + btoa($("#username").val()) + "');" +
+                                "if (fields[i].value.length === 0) {" +
+                                    "fields[i].focus();" +
+                                "}" +
                                 "nameFilled = true;" +
+                            "}" +
+                        "} else {" +
+                            "if (isEmptyUsernameField) {" +
+                                "fields[i].focus();" +
                             "}" +
                         "}" +
                     "}"
@@ -247,7 +255,7 @@ function init() {
 document.addEventListener("DOMContentLoaded", function() {
     Settings.loadProfiles();
     $("#password, #confirmation").on("keyup", Settings.setPassword);
-    $("input").on("keyup", delayedUpdate);
+    $("input").on("input", delayedUpdate);
     $("#store_location").on("change", updateStoreLocation);
     $("#profile").on("change", onProfileChanged);
     $("#activatePassword").on("click", showPasswordField);

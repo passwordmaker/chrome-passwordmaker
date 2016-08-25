@@ -215,7 +215,7 @@ meter {
     margin-bottom: 6px;
 }
 
-#general_settings label {
+#general_settings .subrow {
     white-space: nowrap;
 }
 
@@ -293,7 +293,7 @@ textarea {
     width: 100%;
 }
 
-#save, #set_sync_password {
+#save {
     float: left;
 }
 

@@ -160,7 +160,7 @@ if (typeof PasswordMaker_MD5 !== "object") {
     };
 }
 
-/* 
+/*
  * Refactored to share as much as possible from the primary PasswordMaker_MD5 algorithm while keeping 0.6 api compatilbility.
  * Bug: if the charCodeAt value is less than 15 on the first iteration of the loop, the value is still appended as a 0 as
  * the first character in the resulting string.

@@ -197,9 +197,9 @@ RdfImporter.saveProfiles = function(profiles) {
 };
 
 RdfImporter.dumpDoc = function() {
-    var rv = "<?xml version=\"1.0\"?>\n" + 
-             "<RDF:RDF xmlns:NS1=\"http://passwordmaker.mozdev.org/rdf#\"\n" + 
-             "         xmlns:NC=\"http://home.netscape.com/NC-rdf#\"\n" + 
+    var rv = "<?xml version=\"1.0\"?>\n" +
+             "<RDF:RDF xmlns:NS1=\"http://passwordmaker.mozdev.org/rdf#\"\n" +
+             "         xmlns:NC=\"http://home.netscape.com/NC-rdf#\"\n" +
              "         xmlns:RDF=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n";
     rv += dumpedProfilesToRdf(dumpedProfiles());
     rv +=    "</RDF:RDF>\n";

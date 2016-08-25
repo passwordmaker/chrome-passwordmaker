@@ -33,7 +33,8 @@ Profile.getPassword = function(url, masterkey, userName) {
 
     // Calls generatepassword() n times in order to support passwords
     // of arbitrary length regardless of character set length.
-    for (var count = 0, password = ""; password.length < this.passwordLength; count++) {
+    var password = "";
+    for (var count = 0; password.length < this.passwordLength; count++) {
         // To maintain backwards compatibility with all previous versions of passwordmaker,
         // the first call to _generatepassword() must use the plain "key".
         // Subsequent calls add a number to the end of the key so each iteration
