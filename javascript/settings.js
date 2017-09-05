@@ -88,7 +88,7 @@ Settings.loadProfiles = function() {
 
 Settings.saveSyncedProfiles = function(data) {
     var oldKeys = localStorage.getItem("synced_profiles_keys");
-    var threshold = Math.round(chrome.storage.sync.QUOTA_BYTES_PER_ITEM * 0.9);
+    var threshold = Math.round(chrome.storage.sync.QUOTA_BYTES_PER_ITEM || 8192 * 0.9);
     var output = {};
 
     if (data.length <= threshold) {
