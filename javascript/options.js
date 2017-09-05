@@ -219,9 +219,6 @@ function saveProfile() {
     Settings.saveProfiles();
     updateProfileList();
     highlightProfile();
-    setTimeout(function() {
-        oldHashWarning(selected.hashAlgorithm);
-    }, 0);
 }
 
 function cloneProfile() {
