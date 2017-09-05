@@ -1,4 +1,9 @@
 {
+  "applications": {
+    "gecko": {
+      "id": "chrome-passwordmaker@passwordmaker"
+    }
+  },
   "background": {
     "scripts": ["javascript/background.js"]
   },
