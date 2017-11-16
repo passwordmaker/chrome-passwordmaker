@@ -94,7 +94,7 @@ Settings.saveSyncedProfiles = function(data) {
     if (data.length <= threshold) {
         output.synced_profiles = data;
         chrome.storage.sync.set(output, function() {
-            if (chrome.runtime.lastError !== undefined) {
+            if (chrome.runtime.lastError) {
                 alert("Could not sync data : " + chrome.runtime.lastError);
             }
         });
@@ -109,7 +109,7 @@ Settings.saveSyncedProfiles = function(data) {
         }
         output.synced_profiles = keys;
         chrome.storage.sync.set(output, function() {
-            if (chrome.runtime.lastError === undefined) {
+            if (!chrome.runtime.lastError) {
                 chrome.storage.sync.remove(oldKeys.split(","));
             } else {
                 alert("Could not sync large profile data : " + chrome.runtime.lastError);

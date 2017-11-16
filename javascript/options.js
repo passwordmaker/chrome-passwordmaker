@@ -264,7 +264,7 @@ function setSyncPassword() {
 
 function clearSyncData() {
     chrome.storage.sync.clear(function() {
-        if (chrome.runtime.lastError === undefined) {
+        if (!chrome.runtime.lastError) {
             localStorage.setItem("sync_profiles", "false");
             Settings.syncDataAvailable = false;
             localStorage.removeItem("synced_profiles");

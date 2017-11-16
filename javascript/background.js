@@ -16,7 +16,7 @@ function updateSyncedProfiles(data) {
 }
 
 chrome.storage.sync.get(null, function(data) {
-    if (chrome.runtime.lastError === undefined) {
+    if (!chrome.runtime.lastError) {
         updateSyncedProfiles(data);
         if (data.sync_profiles_password !== undefined) {
             localStorage.setItem("sync_profiles_password", data.sync_profiles_password);
