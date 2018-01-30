@@ -46,6 +46,7 @@ function setCurrentProfile(profile) {
     Settings.currentProfile = profile.id;
     $("#profileNameTB").val(profile.title);
     $("#siteList").val(profile.siteList);
+    $("#siteListType").val(profile.siteListType || "wildcard");
     $("#protocolCB").prop("checked", profile.url_protocol);
     $("#subdomainCB").prop("checked", profile.url_subdomain);
     $("#domainCB").prop("checked", profile.url_domain);
@@ -190,6 +191,7 @@ function saveProfile() {
 
     selected.title          = $("#profileNameTB").val().trim();
     selected.siteList       = $("#siteList").val().trim().split(/\s+/).join(" ");
+    selected.siteListType   = $("#siteListType").val();
     selected.url_protocol   = $("#protocolCB").prop("checked");
     selected.url_subdomain  = $("#subdomainCB").prop("checked");
     selected.url_domain     = $("#domainCB").prop("checked");

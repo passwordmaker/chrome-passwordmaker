@@ -8,18 +8,22 @@ function getAutoProfileIdForUrl() {
         if (profile.siteList.trim().length !== 0) {
             var sites = profile.siteList.trim().split(/\s+/);
             for (var j = 0; j < sites.length; j++) {
-                var regexString = /\s/;
-                try {
-                    regexString = new RegExp(sites[j], "i");
-                } catch (e) {}
+                var pat = sites[j],
+                    regex = /\s/;
 
-                var plain2regex = sites[j];
-                plain2regex = plain2regex.replace(/[$+()^\[\]\\|{},]/g, "");
-                plain2regex = plain2regex.replace(/\?/g, ".");
-                plain2regex = plain2regex.replace(/\*/g, ".*");
-                var wildcardString = new RegExp(plain2regex, "i");
+                if (pat[0] === "/" && pat[pat.length - 1] === "/") {
+                    regex = new RegExp(pat.substring(1, pat.length - 1), "i");
+                } else if (profile.siteListType && "regex" === profile.siteListType) {
+                    regex = new RegExp(pat, "i");
+                } else {
+                    var plain2regex = pat;
+                    plain2regex = plain2regex.replace(/[$+()^\[\]\\|{},]/g, "");
+                    plain2regex = plain2regex.replace(/\?/g, ".");
+                    plain2regex = plain2regex.replace(/\*/g, ".*");
+                    regex = new RegExp(plain2regex, "i");
+                }
 
-                if (regexString.test(Settings.currentUrl) || wildcardString.test(Settings.currentUrl)) {
+                if (regex.test(Settings.currentUrl)) {
                     return profile.id;
                 }
             }

@@ -129,7 +129,9 @@ RdfImporter.loadDoc = function(rdf) {
         var patterns = [],
             patternType = [],
             patternEnabled = [],
-            siteList = "";
+            siteList = "",
+            siteListType = "wildcard";
+
         for (var j = 0; j < this.attributes.length; j++) {
             attrName = this.attributes[j].name.replace(/\w+:/, "");
             var m = attrName.match(/pattern(|type|enabled)(\d+)/);
@@ -145,14 +147,12 @@ RdfImporter.loadDoc = function(rdf) {
         }
         for (var k = 0; k < patterns.length; k++) {
             if (patternEnabled[k] === "true") {
-                if (patternType[k] === "regex") {
-                    siteList += "/" + patterns[k] + "/ ";
-                } else {
-                    siteList += patterns[k] + " ";
-                }
+                siteList += patterns[k] + " ";
+                siteListType = patternType[k];
             }
         }
         prof.siteList = siteList.trim();
+        prof.siteListType = siteListType;
 
         if (prof.rdf_about === "http://passwordmaker.mozdev.org/globalSettings") {
             settings = prof;
@@ -228,9 +228,9 @@ function dumpedProfiles() {
             var pats = prof.siteList.trim().split(/\s+/);
             for (var k = 0; k < pats.length; k++) {
                 var pat = pats[k],
-                    ptype = (pat[0] === "/" && pat[pat.length - 1] === "/") ? "regex" : "wildcard";
+                    ptype = prof.siteListType || ((pat[0] === "/" && pat[pat.length - 1] === "/") ? "regex" : "wildcard");
 
-                newProf["pattern" + k] = (ptype === "regex") ? pat.substring(1, pat.length - 1) : pat;
+                newProf["pattern" + k] = pat.replace(/^\/|\/$/g, '');
                 newProf["patternenabled" + k] = "true";
                 newProf["patterndesc" + k] = "";
                 newProf["patterntype" + k] = ptype;
