@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -52,6 +52,15 @@
                 <div class="row">
                     <div class="url_example">
                         <span id="exprotocol">http://</span><span id="exsubdomain">my.</span><span id="exdomain">example.com</span><span id="expath">/my/path?q=search</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="subrow">
+                        <label for="siteListType">Match sites using:</label>
+                        <select class="input testInput" id="siteListType">
+                            <option value="wildcard">wildcard patterns</option>
+                            <option value="regex">regular expressions</option>
+                        </select>
                     </div>
                 </div>
                 <div class="row">
