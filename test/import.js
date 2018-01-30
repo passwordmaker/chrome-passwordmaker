@@ -38,7 +38,8 @@ QUnit.test("load profile", function(assert) {
     assert.equal(p.passwordSuffix, "suffix1");
     assert.equal(p.whereToUseL33t, "before-hashing");
     assert.equal(p.l33tLevel, 1);
-    assert.equal(p.siteList, "/https?://mail\\.yahoo\\.com/.*/ http?://github.com/*");
+    assert.equal(p.siteList, "https?://mail\\.yahoo\\.com/.* http?://github.com/*");
+    assert.equal(p.siteListType, "wildcard");
 });
 
 QUnit.test("load default profile", function(assert) {
@@ -60,6 +61,7 @@ QUnit.test("load default profile", function(assert) {
     assert.equal(p.whereToUseL33t, "off");
     assert.equal(p.l33tLevel, 1);
     assert.equal(p.siteList, "");
+    assert.equal(p.siteListType, "wildcard");
 });
 
 QUnit.test("save profiles", function(assert) {
@@ -112,7 +114,8 @@ QUnit.test("dump profile to rdf", function(assert) {
     assert.equal(p.passwordSuffix, "suffix1");
     assert.equal(p.whereToUseL33t, "before-hashing");
     assert.equal(p.l33tLevel, 1);
-    assert.equal(p.siteList, "/https?://mail\\.yahoo\\.com/.*/ http?://github.com/*");
+    assert.equal(p.siteList, "https?://mail\\.yahoo\\.com/.* http?://github.com/*");
+    assert.equal(p.siteListType, "wildcard");
 });
 
 QUnit.test("dump default profile to rdf", function(assert) {
@@ -134,6 +137,7 @@ QUnit.test("dump default profile to rdf", function(assert) {
     assert.equal(p.whereToUseL33t, "off");
     assert.equal(p.l33tLevel, 1);
     assert.equal(p.siteList, "");
+    assert.equal(p.siteListType, "wildcard");
 });
 
 QUnit.module("password generation", {
