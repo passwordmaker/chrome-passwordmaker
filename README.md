@@ -32,4 +32,4 @@ If you have previously used the Firefox Original Extension, you can directly imp
 
 ## Copyright
 
-See LICENSE for details. A list of all contributors can be found [here](http://github.com/passwordmaker/chrome-passwordmaker/contributors).
+See LICENSE for details. A list of all contributors can be found [here](http://github.com/dolohow/chrome-passwordmaker/contributors).
