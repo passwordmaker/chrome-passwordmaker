@@ -519,7 +519,11 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#useVerificationCode").on("change", updateUseVerificationCode);
     $("#hideStorageLocation").on("change", updateHideStoreLocation);
     $("#showPasswordStrength").on("change", updateShowStrength);
-    $("#sortProfiles").on("change", updateSortProfiles);
+    $("#sortProfiles").on("change", function () {
+        updateSortProfiles();
+        Settings.loadProfiles();
+        updateProfileList();
+    });
     $("#set_sync_password").on("click", setSyncPassword);
     $("#clear_sync_data").on("click", clearSyncData);
     $("#resetToDefaultprofiles").on("click", removeAllProfiles);
