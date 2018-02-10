@@ -201,7 +201,7 @@ Settings.shouldDisablePasswordSaving = () => {
 
 Settings.hideStoreLocationInPopup = () => {
     return localStorage.getItem("hide_storage_location") === "true";
-}
+};
 
 Settings.keepMasterPasswordHash = () => {
     return localStorage.getItem("keep_master_password_hash") === "true";
@@ -259,11 +259,11 @@ Settings.make_pbkdf2 = (password, previousSalt, iter) => {
     var usedSalt = previousSalt || sjcl.codec.base64.fromBits(crypto.getRandomValues(new Uint32Array(8)));
     var iterations = iter || 1000;
     var derived = sjcl.codec.hex.fromBits(sjcl.misc.pbkdf2(password, usedSalt, iterations));
-    return {hash: derived, salt: usedSalt, iter: iterations};
+    return { hash: derived, salt: usedSalt, iter: iterations };
 };
 
 Settings.encrypt = (password, data) => {
-    return sjcl.encrypt(password, data, {ks: 256, ts: 128});
+    return sjcl.encrypt(password, data, { ks: 256, ts: 128 });
 };
 
 Settings.decrypt = (password, data) => {

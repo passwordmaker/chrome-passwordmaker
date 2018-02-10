@@ -202,7 +202,7 @@ RdfImporter.dumpDoc = () => {
              "         xmlns:NC=\"http://home.netscape.com/NC-rdf#\"\n" +
              "         xmlns:RDF=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n";
     rv += dumpedProfilesToRdf(dumpedProfiles());
-    rv +=    "</RDF:RDF>\n";
+    rv +=    '</RDF:RDF>';
     return rv;
 };
 
@@ -251,22 +251,22 @@ function dumpedProfilesToRdf(profiles) {
     for (var i = 0; i < profiles.length; i++) {
         var about = (i === 0) ? "http://passwordmaker.mozdev.org/defaults" : "rdf:#$CHROME" + i;
         abouts.push(about);
-        rv += "<RDF:Description RDF:about=\"" + attrEscape(about) + "\"\n";
+        rv += '<RDF:Description RDF:about="' + attrEscape(about) + '"\n';
         var keys = Object.keys(profiles[i]);
         for (var j = 0; j < keys.length; j++) {
-            rv += " NS1:" + keys[j] + "=\"" + attrEscape(profiles[i][keys[j]]) + "\"\n ";
+            rv += " NS1:" + keys[j] + '="' + attrEscape(profiles[i][keys[j]]) + '"\n';
         }
         rv += " />\n";
     }
-    rv += "<RDF:Seq RDF:about=\"http://passwordmaker.mozdev.org/accounts\">\n";
+    rv += '<RDF:Seq RDF:about="http://passwordmaker.mozdev.org/accounts">\n';
     for (var k = 0; k < abouts.length; k++) {
-        rv += "<RDF:li RDF:resource=\"" + attrEscape(abouts[k]) + "\"/>\n";
+        rv += '<RDF:li RDF:resource=' + attrEscape(abouts[k]) + '/>\n';
     }
-    rv += "</RDF:Seq>\n";
+    rv += "</RDF:Seq>";
 
     return rv;
 }
 
 function attrEscape(txt) {
-    return String(txt).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/\'/g, "&#39;");
+    return String(txt).replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/`/g, '&#96;');
 }

@@ -120,8 +120,8 @@ function hideButtons() {
 
 function showButtons() {
     $("#copypassword").removeClass("hidden");
-    // Don't run executeScript() on built-in chrome:// pages since it isn't allowed anyway
-    if (!(/^chrome|^opera/i).test(Settings.currentUrl)) {
+    // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
+    if (!(/^chrome|^opera|^about/i).test(Settings.currentUrl)) {
         chrome.tabs.executeScript({
             "allFrames": true,
             "code": "var fields = document.getElementsByTagName('input'), fieldCount = 0;" +
@@ -143,7 +143,7 @@ function showButtons() {
 
 function fillFields() {
     updateFields();
-    if (!(/^chrome|^opera/i).test(Settings.currentUrl)) {
+    if (!(/^chrome|^opera|^about/i).test(Settings.currentUrl)) {
         chrome.tabs.executeScript({
             "allFrames": true,
             // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
@@ -292,7 +292,9 @@ document.addEventListener("DOMContentLoaded", () => {
         $("#strength_row").hide();
     }
 
-    chrome.tabs.query({ "active": true, "currentWindow": true, "windowType": "normal" }, function(tabs) {
+    chrome.tabs.query({
+        "active": true, "currentWindow": true, "windowType": "normal"
+    }, tabs => {
         Settings.currentUrl = tabs[0].url || "";
         init();
     });
