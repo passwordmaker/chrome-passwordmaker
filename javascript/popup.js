@@ -9,10 +9,11 @@ function getAutoProfileIdForUrl() {
             var sites = profile.siteList.trim().split(/\s+/);
             for (var j = 0; j < sites.length; j++) {
                 var regexString = /\s/;
-                try {
-                    regexString = new RegExp(sites[j], "i");
-                } catch (e) {}
-
+                if ((/^\/.*\/$/).test(sites[j])) {
+                    try {
+                        regexString = new RegExp(sites[j].replace(/^\/|\/$/g, ''));
+                    } catch (e) {}
+                }
                 var plain2regex = sites[j];
                 plain2regex = plain2regex.replace(/[$+()^\[\]\\|{},]/g, "");
                 plain2regex = plain2regex.replace(/\?/g, ".");
