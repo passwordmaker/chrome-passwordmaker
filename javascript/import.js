@@ -104,7 +104,7 @@ var RdfImporter = {
     }
 };
 
-RdfImporter.loadDoc = function(rdf) {
+RdfImporter.loadDoc = rdf => {
     var profiles = [],
         defaultProfile = {},
         settings = {};
@@ -185,7 +185,7 @@ RdfImporter.loadDoc = function(rdf) {
 };
 
 // returns number of profiles imported
-RdfImporter.saveProfiles = function(profiles) {
+RdfImporter.saveProfiles = profiles => {
     if (!profiles || !profiles.length) {
         return 0;
     }
@@ -196,7 +196,7 @@ RdfImporter.saveProfiles = function(profiles) {
     return profiles.length;
 };
 
-RdfImporter.dumpDoc = function() {
+RdfImporter.dumpDoc = () => {
     var rv = "<?xml version=\"1.0\"?>\n" +
              "<RDF:RDF xmlns:NS1=\"http://passwordmaker.mozdev.org/rdf#\"\n" +
              "         xmlns:NC=\"http://home.netscape.com/NC-rdf#\"\n" +

@@ -150,7 +150,7 @@ function copyRdfExport() {
 }
 
 function showOptions() {
-    chrome.storage.sync.getBytesInUse(null, function(bytes) {
+    chrome.storage.sync.getBytesInUse(null, (bytes) => {
         if (bytes > 0) {
             Settings.syncDataAvailable = true;
         }
@@ -263,7 +263,7 @@ function setSyncPassword() {
 }
 
 function clearSyncData() {
-    chrome.storage.sync.clear(function() {
+    chrome.storage.sync.clear(() => {
         if (chrome.runtime.lastError === undefined) {
             localStorage.setItem("sync_profiles", "false");
             Settings.syncDataAvailable = false;
@@ -355,7 +355,6 @@ function sanitizePasswordLength() {
     if (field.val() > 512) field.val("512");
 }
 
-
 function sanitizeExpireTime(newExpireTime) {
     var field = $("#expirePasswordMinutes");
     if (newExpireTime < 1) {
@@ -391,7 +390,7 @@ function fileImport() {
     var file = $("#fileInput")[0].files[0];
     if ((/rdf|xml/i).test(file.type)) {
         var reader = new FileReader();
-        reader.onload = function() {
+        reader.onload = () => {
             $("#importText").val(reader.result);
         };
         reader.readAsBinaryString(file);
@@ -463,7 +462,7 @@ function checkPassStrength() {
     $("#hasSymbol").prop("checked", values.hasSymbol);
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
     Settings.loadProfiles();
     updateProfileList();
     setCurrentProfile(Settings.profiles[0]);

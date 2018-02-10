@@ -131,7 +131,7 @@ function showButtons() {
                         "}" +
                     "}" +
                     "fieldCount;"
-        }, function(fieldCounts) {
+        }, fieldCounts => {
             for (var frame = 0; frame < fieldCounts.length; frame++) {
                 if (fieldCounts[frame] > 0) {
                     $("#injectpassword").removeClass("hidden");
@@ -176,7 +176,7 @@ function fillFields() {
                             "}" +
                         "}" +
                     "}"
-        }, function() {
+        }, () => {
             window.close();
         });
     }
@@ -184,7 +184,7 @@ function fillFields() {
 
 function copyPassword() {
     updateFields();
-    chrome.tabs.query({ "windowType": "popup" }, function() {
+    chrome.tabs.query({ "windowType": "popup" }, () => {
         $("#activatePassword").hide();
         $("#generated").show().get(0).select();
         document.execCommand("copy");
@@ -193,7 +193,7 @@ function copyPassword() {
 }
 
 function openOptions() {
-    chrome.tabs.create({ "url": chrome.runtime.getURL("html/options.html") }, function() {
+    chrome.tabs.create({ "url": chrome.runtime.getURL("html/options.html") }, () => {
         window.close();
     });
 }
@@ -232,7 +232,7 @@ function handleKeyPress(event) {
 }
 
 function init() {
-    chrome.runtime.getBackgroundPage(function(bg) {
+    chrome.runtime.getBackgroundPage(bg => {
         var pass = Settings.getPassword(bg.password);
 
         $("#password").val(pass);
@@ -255,7 +255,7 @@ function init() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
     Settings.loadProfiles();
     $("#password, #confirmation").on("keyup", Settings.setPassword);
     $("input").on("input", delayedUpdate);
