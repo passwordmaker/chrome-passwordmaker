@@ -150,9 +150,15 @@ function fillFields() {
             // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
             "code": "var fields = document.getElementsByTagName('input');" +
                     "var nameFilled = false, passFilled = false;" +
+                    "function isRendered(domObj) {" +
+                        "var cs = document.defaultView.getComputedStyle(domObj);" +
+                        "if ((domObj.nodeType !== 1) || (domObj == document.body)) return true;" +
+                        "if (cs.display !== 'none' && cs.visibility !== 'hidden') return isRendered(domObj.parentNode);" +
+                        "return false;" +
+                    "}" +
                     "for (var i = 0; i < fields.length; i++) {" +
                         "var elStyle = getComputedStyle(fields[i]);" +
-                        "var isVisible = !(/none/i).test(elStyle.display) && !(/hidden/i).test(elStyle.visibility) && parseFloat(elStyle.width) > 0 && parseFloat(elStyle.height) > 0;" +
+                        "var isVisible = isRendered(fields[i]) && (parseFloat(elStyle.width) > 0) && (parseFloat(elStyle.height) > 0);" +
                         "var isPasswordField = (/password/i).test(fields[i].type + ' ' + fields[i].name);" +
                         "var isUsernameField = (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name) && (/^(?!display)/i).test(fields[i].name);" +
                         "var isEmptyUsernameField = isVisible && !nameFilled && fields[i].value.length === 0 && isUsernameField && !isPasswordField;" +
