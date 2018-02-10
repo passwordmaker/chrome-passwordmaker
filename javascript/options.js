@@ -225,7 +225,7 @@ function saveProfile() {
 }
 
 function cloneProfile() {
-    var p = $.extend(Object.create(Profile), Settings.getProfile(Settings.currentProfile));
+    var p = Object.assign(Object.create(Profile), Settings.getProfile(Settings.currentProfile));
     p.title = p.title + " Copy";
     Settings.addProfile(p);
     updateProfileList();

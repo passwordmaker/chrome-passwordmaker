@@ -174,7 +174,7 @@ RdfImporter.loadDoc = rdf => {
         // FF version uses a "default" profile that has attributes we need for each
         // profile (such as url_{protocol,subdomain,domain,path})
         for (var i = 0; i < profiles.length; i++) {
-            profiles[i] = $.extend(Object.create(Profile), defaultProfile, profiles[i]);
+            profiles[i] = Object.assign(Object.create(Profile), defaultProfile, profiles[i]);
         }
     }
 
@@ -190,7 +190,7 @@ RdfImporter.saveProfiles = profiles => {
         return 0;
     }
     for (var i = 0; i < profiles.length; i++) {
-        Settings.addProfile($.extend(Object.create(Profile), profiles[i]));
+        Settings.addProfile(Object.assign(Object.create(Profile), profiles[i]));
     }
     Settings.saveProfiles();
     return profiles.length;
@@ -245,7 +245,7 @@ function dumpedProfilesToRdf(profiles) {
     var rv = "",
         abouts = [];
     // use first as defaults profile, necessary for FF
-    profiles.unshift($.extend({}, profiles[0], {
+    profiles.unshift(Object.assign({}, profiles[0], {
         name: "Defaults"
     }));
     for (var i = 0; i < profiles.length; i++) {

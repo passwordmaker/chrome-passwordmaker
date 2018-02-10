@@ -53,7 +53,7 @@ Settings.deleteProfile = id => {
 Settings.loadProfilesFromString = profiles => {
     Settings.profiles = [];
     JSON.parse(profiles).forEach((item) => {
-        Settings.profiles.push($.extend(Object.create(Profile), item));
+        Settings.profiles.push(Object.assign(Object.create(Profile), item));
     });
 };
 
