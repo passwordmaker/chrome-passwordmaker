@@ -71,7 +71,7 @@ function updateFields() {
 
 function delayedUpdate() {
     clearTimeout(window.delayedUpdateID);
-    window.delayedUpdateID = setTimeout(updateFields, 500);
+    window.delayedUpdateID = setTimeout(updateFields, 800);
 }
 
 function matchesMasterHash(password) {
