@@ -239,7 +239,7 @@ function editProfile(event) {
 function updateProfileList() {
     $("#profile_list").empty();
     for (var i = 0; i < Settings.profiles.length; i++) {
-        $("#profile_list").append("<li><span id='profile_" + Settings.profiles[i].id + "' class='link'>" + Settings.profiles[i].title + "</span></li>");
+        $("#profile_list").append(`<li><span id='profile_${Settings.profiles[i].id}' class='link'>${Settings.profiles[i].title}</span></li>`);
     }
 }
 
