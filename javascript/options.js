@@ -45,7 +45,7 @@ function removeAllProfiles() {
 function setCurrentProfile(profile) {
     Settings.currentProfile = profile.id;
     $("#profileNameTB").val(profile.title);
-    $("#siteList").val(profile.siteList);
+    $("#siteList").val((profile.siteList).replace(/\s/g, "\n"));
     $("#protocolCB").prop("checked", profile.url_protocol);
     $("#subdomainCB").prop("checked", profile.url_subdomain);
     $("#domainCB").prop("checked", profile.url_domain);
