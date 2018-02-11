@@ -1,6 +1,13 @@
+0.8.6 - 2018-02-10
+
+* Fixes issue #158, #160 and #165
+* More robust and secure filling of password fields
+* Uses some new ES6 JavaScript features
+* Updated jQuery, QUnit and sjcl.js
+
 0.8.5 - 2016-08-25
 
-* Addresses issue #156 and #153
+* Fixes issue #156 and #153
 * Updated jQuery and QUnit
 
 0.8.4 - 2016-01-25
