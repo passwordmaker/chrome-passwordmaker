@@ -24,6 +24,6 @@
   "name": "PasswordMaker Pro",
   "offline_enabled": true,
   "options_page": "html/options.html",
-  "permissions": ["activeTab", "storage", "alarms"],
+  "permissions": ["activeTab", "clipboardWrite", "storage", "alarms"],
   "version": "0.8.5"
 }
