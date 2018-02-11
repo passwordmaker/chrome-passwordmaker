@@ -139,7 +139,6 @@ meter {
 
 .testCheck + .testLabel {
     background-repeat: no-repeat;
-    display: inline-block;
     float: right;
     line-height: 24px;
     margin-right: 25px;
@@ -162,10 +161,10 @@ meter {
 }
 
 .highlight {
-    -webkit-animation: highlight1 1s;
+    animation: highlight1 1s;
 }
 
-@-webkit-keyframes highlight1 {
+@keyframes highlight1 {
     0% {
         background: white;
     }

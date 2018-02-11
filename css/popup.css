@@ -119,5 +119,5 @@ meter::-webkit-meter-optimum-value {
 }
 
 *:not(input) {
-    -webkit-user-select: none;
+    user-select: none;
 }
