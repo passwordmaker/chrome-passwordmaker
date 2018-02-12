@@ -1,3 +1,7 @@
+0.8.7 - 2018-02-12
+
+* Changes the "clipboardWrite" permission from required to optional
+
 0.8.6 - 2018-02-10
 
 * Fixes issue #158, #160 and #165

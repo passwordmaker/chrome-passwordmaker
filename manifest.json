@@ -26,5 +26,5 @@
   "options_page": "html/options.html",
   "optional_permissions": [ "clipboardRead", "clipboardWrite" ],
   "permissions": ["activeTab", "storage", "alarms"],
-  "version": "0.8.6"
+  "version": "0.8.7"
 }
