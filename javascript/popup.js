@@ -191,11 +191,23 @@ function fillFields() {
 
 function copyPassword() {
     updateFields();
-    chrome.tabs.query({ "windowType": "popup" }, () => {
-        $("#activatePassword").hide();
-        $("#generated").show().get(0).select();
-        document.execCommand("copy");
-        window.close();
+    chrome.permissions.contains({permissions: ["clipboardWrite"]}, contains => {
+        if (contains) {
+            chrome.tabs.query({ "windowType": "popup" }, () => {
+                $("#activatePassword").hide();
+                $("#generated").show().get(0).select();
+                document.execCommand("copy");
+                window.close();
+            });
+        } else {
+            chrome.permissions.request({ permissions: ["clipboardWrite"] }, granted => {
+                if (granted) {
+                    copyPassword();
+                } else {
+                    alert("Sorry, the permission was not granted.");
+                }
+            });
+        }
     });
 }
 

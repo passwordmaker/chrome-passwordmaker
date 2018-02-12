@@ -143,8 +143,20 @@ function importRdf() {
 }
 
 function copyRdfExport() {
-    $("#exportText").get(0).select();
-    document.execCommand("copy");
+    chrome.permissions.contains({ permissions: ["clipboardWrite"] }, contains => {
+        if (contains) {
+            $("#exportText").get(0).select();
+            document.execCommand("copy");
+        } else {
+            chrome.permissions.request({ permissions: ["clipboardWrite"] }, granted => {
+                if (granted) {
+                    copyRdfExport();
+                } else {
+                    alert("Sorry, the permission was not granted.");
+                }
+            });
+        }
+    });
 }
 
 function showOptions() {
