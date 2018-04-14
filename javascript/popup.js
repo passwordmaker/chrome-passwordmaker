@@ -168,19 +168,13 @@ function fillFields() {
                             "passFilled = true;" +
                             "fields[i].dispatchEvent(changeEvent);" +
                         "}" +
-                        "if (" + Settings.shouldFillUsername() + ") {" +
-                            "if (isEmptyUsernameField) {" +
-                                "fields[i].value = atob('" + btoa($("#username").val()) + "');" +
-                                "if (fields[i].value.length === 0) {" +
-                                    "fields[i].focus();" +
-                                "}" +
-                                "nameFilled = true;" +
-                                "fields[i].dispatchEvent(changeEvent);" +
-                            "}" +
-                        "} else {" +
-                            "if (isEmptyUsernameField) {" +
+                        "if (isEmptyUsernameField) {" +
+                            "fields[i].value = atob('" + btoa($("#username").val()) + "');" +
+                            "if (fields[i].value.length === 0) {" +
                                 "fields[i].focus();" +
                             "}" +
+                            "nameFilled = true;" +
+                            "fields[i].dispatchEvent(changeEvent);" +
                         "}" +
                     "}"
         }, () => {
@@ -301,10 +295,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!Settings.useVerificationCode()) {
         $("#verification_row").hide();
-    }
-
-    if (!Settings.shouldFillUsername()) {
-        $("#username_row").hide();
     }
 
     if (!Settings.shouldShowStrength()) {

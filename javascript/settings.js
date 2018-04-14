@@ -215,10 +215,6 @@ Settings.useVerificationCode = () => {
     return localStorage.getItem("use_verification_code") === "true";
 };
 
-Settings.shouldFillUsername = () => {
-    return localStorage.getItem("fill_username") === "true";
-};
-
 Settings.shouldShowStrength = () => {
     return localStorage.getItem("show_password_strength") === "true";
 };
