@@ -9,10 +9,10 @@ This extension fixes that.  This is a native Chrome port with all the bells and 
 
 # Installation
 
-###Chrome
+### Chrome
   - You can install this extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh) from it's new home.
 
-###Opera
+### Opera
   - You can install this extension from the [Opera Extension Gallery](https://addons.opera.com/en/extensions/details/passwordmaker-pro/)
 
 If you have previously used the Firefox Extension, you can directly import your .rdf file.
@@ -32,7 +32,7 @@ I apologize for any problems the disappearance from the Chrome Web Store may hav
 I don't use this plug-in anymore and do not have the time or energy to continue maintainership.
 I'm out. It was a nice ride.
 
-# Note on Patches/Pull Requests:
+## Note on Patches/Pull Requests:
 
 * Fork the project.
 * Make your feature addition or bug fix.
@@ -40,6 +40,6 @@ I'm out. It was a nice ride.
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-# Copyright
+## Copyright
 
 See LICENSE for details. A list of all contributors can be found [here](http://github.com/passwordmaker/chrome-passwordmaker/contributors).
