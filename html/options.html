@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -287,6 +287,12 @@
                 </div>
                 <div class="row">
                     <div class="subrow">
+                        <input id="sortProfiles" type="checkbox">
+                        <label class="checkbox" for="sortProfiles">Sort Profiles</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="subrow">
                         <input id="keepMasterPasswordHash" type="checkbox">
                         <label class="checkbox" for="keepMasterPasswordHash">Keep Master Password Hash</label>
                     </div>
@@ -320,7 +326,7 @@
                         <label for="syncProfilesPassword">Master Password</label>
                         <input class="input" id="syncProfilesPassword" type="password">
                     </div>
-                    <div class ="subrow" id="sync_buttons">
+                    <div class="subrow" id="sync_buttons">
                         <button class="button black" id="set_sync_password">Set password</button>
                         <button class="button black" id="clear_sync_data">Delete Sync Data</button>
                     </div>

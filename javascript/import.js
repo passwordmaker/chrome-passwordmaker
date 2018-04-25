@@ -211,6 +211,8 @@ function dumpedProfiles() {
     var dumpProfiles = [],
         expOpts = RdfImporter.getExportOpts();
 
+    Settings.loadLocalProfiles();
+
     for (var i = 0; i < Settings.profiles.length; i++) {
         var prof = Settings.profiles[i],
             newProf = {},
@@ -238,6 +240,9 @@ function dumpedProfiles() {
         }
         dumpProfiles.push(newProf);
     }
+
+    Settings.sortProfiles();
+
     return dumpProfiles;
 }
 

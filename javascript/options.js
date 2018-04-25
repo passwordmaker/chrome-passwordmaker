@@ -246,6 +246,7 @@ function editProfile(event) {
 
 function updateProfileList() {
     $("#profile_list").empty();
+    Settings.sortProfiles();
     for (var i = 0; i < Settings.profiles.length; i++) {
         $("#profile_list").append(`<li><span id='profile_${Settings.profiles[i].id}' class='link'>${Settings.profiles[i].title}</span></li>`);
     }
@@ -351,6 +352,10 @@ function updateHideStoreLocation() {
 
 function updateShowStrength() {
     localStorage.setItem("show_password_strength", $("#showPasswordStrength").prop("checked"));
+}
+
+function updateSortProfiles() {
+    localStorage.setItem("sort_profiles", $("#sortProfiles").prop("checked"));
 }
 
 function sanitizePasswordLength() {
@@ -478,6 +483,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#hideStorageLocation").prop("checked", Settings.hideStoreLocationInPopup());
     $("#showPasswordStrength").prop("checked", Settings.shouldShowStrength());
     $("#syncProfiles").prop("checked", Settings.shouldSyncProfiles());
+    $("#sortProfiles").prop("checked", Settings.shouldSortProfiles());
 
     $("#profile_list").on("click", ".link", editProfile);
     $("#add").on("click", addProfile);
@@ -513,6 +519,11 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#useVerificationCode").on("change", updateUseVerificationCode);
     $("#hideStorageLocation").on("change", updateHideStoreLocation);
     $("#showPasswordStrength").on("change", updateShowStrength);
+    $("#sortProfiles").on("change", function () {
+        updateSortProfiles();
+        Settings.loadProfiles();
+        updateProfileList();
+    });
     $("#set_sync_password").on("click", setSyncPassword);
     $("#clear_sync_data").on("click", clearSyncData);
     $("#resetToDefaultprofiles").on("click", removeAllProfiles);
