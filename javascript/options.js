@@ -285,7 +285,7 @@ function clearSyncData() {
             updateSyncProfiles();
             updateProfileList();
         } else {
-            alert("Could not delete synced data: " + chrome.runtime.lastError);
+            alert("Could not delete synced data: " + chrome.runtime.lastError.message);
         }
     });
 }
