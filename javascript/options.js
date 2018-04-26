@@ -359,6 +359,7 @@ function updateAlphaSortProfiles() {
     localStorage.setItem("alpha_sort_profiles", $("#alphaSortProfiles").prop("checked"));
     Settings.loadProfiles();
     updateProfileList();
+    filterProfiles()
 }
 
 function sanitizePasswordLength() {
@@ -432,6 +433,21 @@ function showStrengthSection() {
         $("#strength_section").hide();
         $(".testInput").off("change keyup", checkPassStrength);
         $(".strengthInput").val("");
+    }
+}
+
+function filterProfiles() {
+    var filter = document.getElementById("searchProfiles").value.toUpperCase();
+    var list = document.getElementById("profile_list").getElementsByTagName("li");
+
+    // Loop through all list items, and hide those which don't match the search query
+    for (var i = 0; i < list.length; i++) {
+        var items = list[i].getElementsByTagName("span")[0];
+        if (items.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            list[i].style.display = "";
+        } else {
+            list[i].style.display = "none";
+        }
     }
 }
 
@@ -526,4 +542,5 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#set_sync_password").on("click", setSyncPassword);
     $("#clear_sync_data").on("click", clearSyncData);
     $("#resetToDefaultprofiles").on("click", removeAllProfiles);
+    $("#searchProfiles").on("input", filterProfiles);
 });

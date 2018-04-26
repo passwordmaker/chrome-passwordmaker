@@ -43,6 +43,13 @@ h1 {
     width: 220px;
 }
 
+#searchProfiles {
+    font-size: 1.1em;
+    margin-left: 1em;
+    margin-bottom: 0.8em;
+    width: 90%;
+}
+
 nav {
     display: flex;
     justify-content: center;
@@ -62,7 +69,7 @@ nav {
     font-size: 1.1em;
     line-height: 1.5;
     margin: 0;
-    overflow: auto;
+    overflow: hidden;
     text-align: left;
 }
 
