@@ -102,34 +102,38 @@ Settings.alphaSortProfiles = () => {
 
 Settings.saveSyncedProfiles = data => {
     var oldKeys = localStorage.getItem("synced_profiles_keys");
-    var threshold = Math.round(chrome.storage.sync.QUOTA_BYTES_PER_ITEM * 0.9);
+    var threshold = Math.round(chrome.storage.sync.QUOTA_BYTES_PER_ITEM * 0.95);
     var output = {};
 
-    if (data.length <= threshold) {
-        output.synced_profiles = data;
-        chrome.storage.sync.set(output, () => {
-            if (chrome.runtime.lastError) {
-                alert("Could not sync data : " + chrome.runtime.lastError.message);
-            }
-        });
-    } else {
-        var splitter = new RegExp("[\\s\\S]{1," + threshold + "}", "g");
-        var parts = data.match(splitter);
-        var date = Date.now();
-        var keys = [];
-        for (var i = 0; i < parts.length; ++i) {
-            output[date + i] = parts[i];
-            keys[i] = date + i;
-        }
-        output.synced_profiles = keys;
-        chrome.storage.sync.set(output, () => {
-            if (!chrome.runtime.lastError) {
-                chrome.storage.sync.remove(oldKeys.split(","));
+    chrome.storage.sync.clear(() => {
+        if (!chrome.runtime.lastError) {
+            if (data.length <= threshold) {
+                output.synced_profiles = data;
+                chrome.storage.sync.set(output, () => {
+                    if (chrome.runtime.lastError) {
+                        alert("Could not sync data : " + chrome.runtime.lastError.message);
+                    }
+                });
             } else {
-                alert("Could not sync large profile data : " + chrome.runtime.lastError.message);
+                var splitter = new RegExp("[\\s\\S]{1," + threshold + "}", "g");
+                var parts = data.match(splitter);
+                var date = Date.now();
+                var keys = [];
+                for (var i = 0; i < parts.length; ++i) {
+                    output[date + i] = parts[i];
+                    keys[i] = date + i;
+                }
+                output.synced_profiles = keys;
+                chrome.storage.sync.set(output, () => {
+                    if (!chrome.runtime.lastError) {
+                        chrome.storage.sync.remove(oldKeys.split(","));
+                    } else {
+                        alert("Could not sync large profile data : " + chrome.runtime.lastError.message);
+                    }
+                });
             }
-        });
-    }
+        }
+    });
 };
 
 Settings.saveProfiles = () => {

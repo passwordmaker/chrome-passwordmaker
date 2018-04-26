@@ -245,7 +245,6 @@ function editProfile(event) {
 }
 
 function updateProfileList() {
-    Settings.loadProfiles();
     if (Settings.shouldAlphaSortProfiles()) Settings.alphaSortProfiles();
 
     $("#profile_list").empty();
@@ -255,7 +254,7 @@ function updateProfileList() {
 }
 
 function setSyncPassword() {
-    if ($("#syncProfilesPassword").val() === "") {
+    if ($("#syncProfilesPassword").val().trim().length === 0) {
         alert("Please enter a password to enable sync");
         return;
     }
@@ -358,6 +357,7 @@ function updateShowStrength() {
 
 function updateAlphaSortProfiles() {
     localStorage.setItem("alpha_sort_profiles", $("#alphaSortProfiles").prop("checked"));
+    Settings.loadProfiles();
     updateProfileList();
 }
 
