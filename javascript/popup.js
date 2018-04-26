@@ -100,11 +100,6 @@ function updateProfileText() {
     }
 }
 
-function updateStoreLocation() {
-    Settings.setStoreLocation($("#store_location").val());
-    Settings.setPassword();
-}
-
 function onProfileChanged() {
     updateProfileText();
     updateFields();
@@ -249,7 +244,6 @@ function init() {
 
         $("#password").val(pass);
         $("#confirmation").val(pass);
-        $("#store_location").val(Settings.storeLocation);
 
         if (Settings.shouldAlphaSortProfiles()) Settings.alphaSortProfiles();
         for (var i = 0; i < Settings.profiles.length; i++) {
@@ -272,16 +266,11 @@ document.addEventListener("DOMContentLoaded", () => {
     Settings.loadProfiles();
     $("#password, #confirmation").on("keyup", Settings.setPassword);
     $("input").on("input", delayedUpdate);
-    $("#store_location").on("change", updateStoreLocation);
     $("#profile").on("change", onProfileChanged);
     $("#activatePassword").on("click", showPasswordField);
     $("#copypassword").on("click", copyPassword);
     $("#injectpassword").on("click", fillFields);
     $("#options").on("click", openOptions);
-
-    if (Settings.shouldDisablePasswordSaving() || Settings.hideStoreLocationInPopup()) {
-        $("#store_location_row").hide();
-    }
 
     if (Settings.shouldHidePassword()) {
         $("#generated, #strength_row").hide();

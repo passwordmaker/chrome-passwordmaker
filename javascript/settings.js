@@ -1,7 +1,7 @@
 var Settings = {
     currentUrl: "",
     profiles: [],
-    storeLocation: "memory",
+    storeLocation: localStorage.getItem("store_location") || "memory",
     syncDataAvailable: false
 };
 
@@ -155,7 +155,8 @@ Settings.setStoreLocation = store => {
         if (Settings.storeLocation !== "disk") {
             localStorage.removeItem("password_crypt");
         }
-        if (Settings.storeLocation !== "memory") {
+        if (Settings.storeLocation === "never") {
+            localStorage.removeItem("password_crypt");
             Settings.setBgPassword("");
         }
     }
@@ -178,7 +179,7 @@ Settings.createExpirePasswordAlarm = () => {
 };
 
 Settings.setPassword = () => {
-    if (Settings.storeLocation === "never" || Settings.shouldDisablePasswordSaving()) {
+    if (Settings.storeLocation === "never") {
         Settings.setBgPassword("");
     } else {
         var password = $("#password").val();
@@ -211,14 +212,6 @@ Settings.ifDataExists = entry => {
 
 Settings.shouldHidePassword = () => {
     return localStorage.getItem("show_generated_password") === "true";
-};
-
-Settings.shouldDisablePasswordSaving = () => {
-    return localStorage.getItem("disable_password_saving") === "true";
-};
-
-Settings.hideStoreLocationInPopup = () => {
-    return localStorage.getItem("hide_storage_location") === "true";
 };
 
 Settings.keepMasterPasswordHash = () => {

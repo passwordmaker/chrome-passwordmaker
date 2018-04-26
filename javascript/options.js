@@ -168,8 +168,8 @@ function showOptions() {
 
     $("#store_location").val(Settings.storeLocation);
     $("#expirePasswordMinutes").val(localStorage.getItem("expire_password_minutes") || 5);
+    updateExpireTime();
     updateStyle($("#master_password_row"), "hidden", !Settings.keepMasterPasswordHash());
-    updateExpireRow();
     updateSyncProfiles();
     showSection("#general_settings");
 }
@@ -192,7 +192,7 @@ function highlightProfile() {
 
 function updateStorageLocation() {
     Settings.setStoreLocation($("#store_location").val());
-    updateExpireRow();
+    updateExpireTime();
 }
 
 function saveProfile() {
@@ -329,26 +329,12 @@ function updateMasterHash() {
     }
 }
 
-function updateDisablePasswordSaving() {
-    var should_disable = $("#disablePasswordSaving").prop("checked");
-    localStorage.setItem("disable_password_saving", should_disable);
-    if (should_disable) {
-        localStorage.setItem("store_location", "never");
-        localStorage.removeItem("password_crypt");
-        Settings.setBgPassword("");
-    }
-}
-
 function updateHidePassword() {
     localStorage.setItem("show_generated_password", $("#hidePassword").prop("checked"));
 }
 
 function updateUseVerificationCode() {
     localStorage.setItem("use_verification_code", $("#useVerificationCode").prop("checked"));
-}
-
-function updateHideStoreLocation() {
-    localStorage.setItem("hide_storage_location", $("#hideStorageLocation").prop("checked"));
 }
 
 function updateShowStrength() {
@@ -383,7 +369,7 @@ function sanitizeExpireTime(newExpireTime) {
     return newExpireTime;
 }
 
-function updateExpireRow() {
+function updateExpireTime() {
     var shouldExpire = Settings.storeLocation === "memory_expire";
     var oldExpireTime = localStorage.getItem("expire_password_minutes") || 5;
     var newExpireTime = $("#expirePasswordMinutes").val();
@@ -496,10 +482,8 @@ document.addEventListener("DOMContentLoaded", () => {
     setCurrentProfile(Settings.profiles[0]);
 
     $("#hidePassword").prop("checked", Settings.shouldHidePassword());
-    $("#disablePasswordSaving").prop("checked", Settings.shouldDisablePasswordSaving());
     $("#keepMasterPasswordHash").prop("checked", Settings.keepMasterPasswordHash());
     $("#useVerificationCode").prop("checked", Settings.useVerificationCode());
-    $("#hideStorageLocation").prop("checked", Settings.hideStoreLocationInPopup());
     $("#showPasswordStrength").prop("checked", Settings.shouldShowStrength());
     $("#syncProfiles").prop("checked", Settings.shouldSyncProfiles());
     $("#alphaSortProfiles").prop("checked", Settings.shouldAlphaSortProfiles());
@@ -529,14 +513,12 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#exportFileButton").on("click", fileExport);
 
     $("#store_location").on("change", updateStorageLocation);
-    $("#expirePasswordMinutes").on("change", updateExpireRow);
+    $("#expirePasswordMinutes").on("change", updateExpireTime);
     $("#hidePassword").on("change", updateHidePassword);
-    $("#disablePasswordSaving").on("change", updateDisablePasswordSaving);
     $("#keepMasterPasswordHash").on("change", updateMasterHash);
     $("#syncProfiles").on("change", updateSyncProfiles);
     $("#masterPassword").on("keyup", updateMasterHash);
     $("#useVerificationCode").on("change", updateUseVerificationCode);
-    $("#hideStorageLocation").on("change", updateHideStoreLocation);
     $("#showPasswordStrength").on("change", updateShowStrength);
     $("#alphaSortProfiles").on("change", updateAlphaSortProfiles);
     $("#set_sync_password").on("click", setSyncPassword);
