@@ -251,7 +251,7 @@ function init() {
         $("#confirmation").val(pass);
         $("#store_location").val(Settings.storeLocation);
 
-        Settings.sortProfiles();
+        if (Settings.shouldAlphaSortProfiles()) Settings.alphaSortProfiles();
         for (var i = 0; i < Settings.profiles.length; i++) {
             $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
         }

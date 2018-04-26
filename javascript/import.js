@@ -241,7 +241,7 @@ function dumpedProfiles() {
         dumpProfiles.push(newProf);
     }
 
-    Settings.sortProfiles();
+    if (Settings.shouldAlphaSortProfiles()) Settings.alphaSortProfiles();
 
     return dumpProfiles;
 }
