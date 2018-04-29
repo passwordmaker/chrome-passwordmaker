@@ -4,7 +4,7 @@ function updateSyncedProfiles(data) {
     localStorage.setItem("synced_profiles_keys", "");
     if (data.synced_profiles === undefined) {
         data.synced_profiles = "";
-    } else if (typeof (data.synced_profiles) !== "string") {
+    } else if (typeof(data.synced_profiles) !== "string") {
         var profiles = "";
         data.synced_profiles.forEach(function(key) {
             profiles += data[key];

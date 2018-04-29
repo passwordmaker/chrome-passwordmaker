@@ -1,5 +1,8 @@
 function setPasswordColors(foreground, background) {
-    $("#generated, #password, #confirmation").css({ "background-color": background, "color": foreground });
+    $("#generated, #password, #confirmation").css({
+        "background-color": background,
+        "color": foreground
+    });
 }
 
 function getAutoProfileIdForUrl() {
@@ -179,16 +182,22 @@ function fillFields() {
 
 function copyPassword() {
     updateFields();
-    chrome.permissions.contains({permissions: ["clipboardWrite"]}, contains => {
+    chrome.permissions.contains({
+        permissions: ["clipboardWrite"]
+    }, contains => {
         if (contains) {
-            chrome.tabs.query({ "windowType": "popup" }, () => {
+            chrome.tabs.query({
+                "windowType": "popup"
+            }, () => {
                 $("#activatePassword").hide();
                 $("#generated").show().get(0).select();
                 document.execCommand("copy");
                 window.close();
             });
         } else {
-            chrome.permissions.request({ permissions: ["clipboardWrite"] }, granted => {
+            chrome.permissions.request({
+                permissions: ["clipboardWrite"]
+            }, granted => {
                 if (granted) {
                     copyPassword();
                 } else {
@@ -200,7 +209,9 @@ function copyPassword() {
 }
 
 function openOptions() {
-    chrome.tabs.create({ "url": chrome.runtime.getURL("html/options.html") }, () => {
+    chrome.tabs.create({
+        "url": chrome.runtime.getURL("html/options.html")
+    }, () => {
         window.close();
     });
 }
@@ -291,7 +302,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     chrome.tabs.query({
-        "active": true, "currentWindow": true, "windowType": "normal"
+        "active": true,
+        "currentWindow": true,
+        "windowType": "normal"
     }, tabs => {
         Settings.currentUrl = tabs[0].url || "";
         init();

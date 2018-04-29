@@ -98,7 +98,11 @@ function updateCustomCharsetField() {
 
 function oldHashWarning(hash) {
     // Be as annoying as possible to try and stop people from using the bugged algorithms
-    var bugged = { "md5_v6": 1, "hmac-md5_v6": 1, "hmac-sha256": 1 };
+    var bugged = {
+        "md5_v6": 1,
+        "hmac-md5_v6": 1,
+        "hmac-sha256": 1
+    };
     if (bugged[hash]) {
         if (confirm("Are you sure you want to continue using a legacy algorithm which is incorrectly implemented?")) {
             alert("Please change to using a correct & secure algorithm!\n\nThe old/bugged/legacy algorithms " +
@@ -143,12 +147,16 @@ function importRdf() {
 }
 
 function copyRdfExport() {
-    chrome.permissions.contains({ permissions: ["clipboardWrite"] }, contains => {
+    chrome.permissions.contains({
+        permissions: ["clipboardWrite"]
+    }, contains => {
         if (contains) {
             $("#exportText").get(0).select();
             document.execCommand("copy");
         } else {
-            chrome.permissions.request({ permissions: ["clipboardWrite"] }, granted => {
+            chrome.permissions.request({
+                permissions: ["clipboardWrite"]
+            }, granted => {
                 if (granted) {
                     copyRdfExport();
                 } else {
@@ -376,7 +384,7 @@ function updateExpireTime() {
     if (shouldExpire) {
         newExpireTime = sanitizeExpireTime(newExpireTime);
         if (newExpireTime !== oldExpireTime) {
-        	localStorage.setItem("expire_password_minutes", newExpireTime);
+            localStorage.setItem("expire_password_minutes", newExpireTime);
             Settings.createExpirePasswordAlarm(newExpireTime);
         }
     } else {
