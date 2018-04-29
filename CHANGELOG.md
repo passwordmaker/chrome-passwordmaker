@@ -1,3 +1,12 @@
+0.8.8 - 2018-04-28
+
+* Can now alphanumerically sort profiles in extension settings for usability
+* Added profile search feature in extension settings for usability
+* Removed the "Save Password" option in the popup and put the setting in the drop-down in extension configuration
+* Updated the icon style to be more detailed at different resolutions
+* Filling in a set & configured username in a profile is now the default and doesn't require the option to be set
+* Updated QUnit
+
 0.8.7 - 2018-02-12
 
 * Changes the "clipboardWrite" permission from required to optional
