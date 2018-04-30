@@ -1,3 +1,8 @@
+0.8.9 - 2018-04-30
+
+* First try to fix issue #172
+* Cleaned up and refactored expire time code
+
 0.8.8 - 2018-04-28
 
 * Can now alphanumerically sort profiles in extension settings for usability
