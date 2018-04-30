@@ -160,8 +160,10 @@ Settings.setStoreLocation = store => {
 };
 
 Settings.createExpirePasswordAlarm = () => {
-    chrome.alarms.create("expire_password", {
-        delayInMinutes: parseInt(localStorage.getItem("expire_password_minutes"), 10)
+    chrome.alarms.clear("expire_password", () => {
+        chrome.alarms.create("expire_password", {
+            delayInMinutes: parseInt(localStorage.getItem("expire_password_minutes"), 10)
+        });
     });
 };
 
@@ -201,6 +203,10 @@ Settings.ifDataExists = entry => {
 
 Settings.shouldHidePassword = () => {
     return localStorage.getItem("show_generated_password") === "true";
+};
+
+Settings.shouldExpire = () => {
+    return localStorage.getItem("store_location") === "memory_expire";
 };
 
 Settings.keepMasterPasswordHash = () => {

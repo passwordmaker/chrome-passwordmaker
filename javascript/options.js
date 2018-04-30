@@ -176,7 +176,7 @@ function showOptions() {
 
     $("#store_location").val(Settings.storeLocation);
     $("#expirePasswordMinutes").val(localStorage.getItem("expire_password_minutes") || 5);
-    updateExpireTime();
+    updateStyle($("#password_expire_row"), "hidden", !Settings.shouldExpire());
     updateStyle($("#master_password_row"), "hidden", !Settings.keepMasterPasswordHash());
     updateSyncProfiles();
     showSection("#general_settings");
@@ -200,7 +200,7 @@ function highlightProfile() {
 
 function updateStorageLocation() {
     Settings.setStoreLocation($("#store_location").val());
-    updateExpireTime();
+    updateStyle($("#password_expire_row"), "hidden", !Settings.shouldExpire());
 }
 
 function saveProfile() {
@@ -378,10 +378,9 @@ function sanitizeExpireTime(newExpireTime) {
 }
 
 function updateExpireTime() {
-    var shouldExpire = Settings.storeLocation === "memory_expire";
     var oldExpireTime = localStorage.getItem("expire_password_minutes") || 5;
     var newExpireTime = $("#expirePasswordMinutes").val();
-    if (shouldExpire) {
+    if (Settings.shouldExpire()) {
         newExpireTime = sanitizeExpireTime(newExpireTime);
         if (newExpireTime !== oldExpireTime) {
             localStorage.setItem("expire_password_minutes", newExpireTime);
@@ -390,7 +389,6 @@ function updateExpireTime() {
     } else {
         chrome.alarms.clear("expire_password");
     }
-    updateStyle($("#password_expire_row"), "hidden", !shouldExpire);
 }
 
 function fileImport() {
