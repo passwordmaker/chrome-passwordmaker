@@ -313,7 +313,9 @@ function updateSyncProfiles() {
             $("#set_sync_password").removeClass("hidden");
         }
     } else {
-        Settings.stopSync();
+        localStorage.removeItem("sync_profiles_password");
+        localStorage.setItem("sync_profiles", "false");
+        Settings.loadLocalProfiles();
         updateProfileList();
     }
 }

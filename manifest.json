@@ -36,5 +36,6 @@
     },
     "optional_permissions": ["clipboardRead", "clipboardWrite"],
     "permissions": ["activeTab", "storage", "alarms"],
+    "short_name": "PasswordMaker Pro",
     "version": "0.8.8"
 }

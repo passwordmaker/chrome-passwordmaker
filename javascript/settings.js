@@ -229,12 +229,6 @@ Settings.shouldAlphaSortProfiles = () => {
     return localStorage.getItem("alpha_sort_profiles") === "true";
 };
 
-Settings.stopSync = () => {
-    localStorage.removeItem("sync_profiles_password");
-    localStorage.setItem("sync_profiles", "false");
-    Settings.loadLocalProfiles();
-};
-
 Settings.startSyncWith = password => {
     var syncPassHash = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password));
     if (Settings.syncDataAvailable) {
