@@ -43,17 +43,14 @@ function updateFields() {
         $("#generated").val("Please Enter Password");
         setPasswordColors("#000000", "#85FFAB");
         hideButtons();
-        Settings.setBgPassword("");
     } else if (!matchesMasterHash(password)) {
         $("#generated").val("Master Password Mismatch");
         setPasswordColors("#FFFFFF", "#FF7272");
         hideButtons();
-        Settings.setBgPassword("");
     } else if (!Settings.useVerificationCode() && !Settings.keepMasterPasswordHash() && password !== confirmation) {
         $("#generated").val("Passwords Don't Match");
         setPasswordColors("#FFFFFF", "#FF7272");
         hideButtons();
-        Settings.setBgPassword("");
     } else {
         var result = profile.getPassword(usedUrl, password, userName);
         $("#generated").val(result);
@@ -71,6 +68,8 @@ function updateFields() {
     if (Settings.useVerificationCode()) {
         $("#verificationCode").val(getVerificationCode(password));
     }
+
+    Settings.setPassword(password);
 }
 
 function delayedUpdate() {
@@ -248,27 +247,33 @@ function handleKeyPress(event) {
         copyPassword();
     }
 }
-
 function init() {
-    chrome.runtime.getBackgroundPage(bg => {
-        var pass = Settings.getPassword(bg.password);
-
-        $("#password").val(pass);
-        $("#confirmation").val(pass);
-
-        if (Settings.shouldAlphaSortProfiles()) Settings.alphaSortProfiles();
-        for (var i = 0; i < Settings.profiles.length; i++) {
-            $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
-        }
-        $("#profile").val(getAutoProfileIdForUrl() || Settings.profiles[0].id);
-
-        updateProfileText();
-        updateFields();
-
-        if ((/password/i).test($("#generated").val())) {
-            $("#password").focus();
+    chrome.storage.local.get(["password"], function(result) {
+        if (result.password === undefined) {
+            chrome.storage.local.set({
+                password: ""
+            });
+            init();
         } else {
-            $("#password").focus().blur();
+            var pass = Settings.getPassword(result.password);
+
+            $("#password").val(pass);
+            $("#confirmation").val(pass);
+
+            if (Settings.shouldAlphaSortProfiles()) Settings.alphaSortProfiles();
+            for (var i = 0; i < Settings.profiles.length; i++) {
+                $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
+            }
+            $("#profile").val(getAutoProfileIdForUrl() || Settings.profiles[0].id);
+
+            updateProfileText();
+            updateFields();
+
+            if ((/password/i).test($("#generated").val())) {
+                $("#password").focus();
+            } else {
+                $("#password").focus().blur();
+            }
         }
     });
 }

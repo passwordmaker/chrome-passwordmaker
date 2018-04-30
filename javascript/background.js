@@ -1,5 +1,3 @@
-var password = "";
-
 function updateSyncedProfiles(data) {
     localStorage.setItem("synced_profiles_keys", "");
     if (data.synced_profiles === undefined) {
@@ -40,10 +38,14 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
     }
 });
 
-function handleAlarm(alarm) {
+chrome.alarms.onAlarm.addListener(function (alarm) {
     if (alarm.name === "expire_password") {
-        password = "";
+        chrome.storage.local.set({ password: "" });
     }
-}
+});
 
-chrome.alarms.onAlarm.addListener(handleAlarm);
+chrome.runtime.onStartup.addListener(function() {
+    if (/memory/.test(localStorage.getItem("store_location"))) {
+        chrome.storage.local.set({ password: "" });
+    }
+});

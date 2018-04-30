@@ -148,27 +148,14 @@ Settings.saveProfiles = () => {
 };
 
 Settings.setStoreLocation = store => {
-    if (Settings.storeLocation !== store) {
-        Settings.storeLocation = store;
-        localStorage.setItem("store_location", store);
+    localStorage.setItem("store_location", store);
+    Settings.storeLocation = store;
 
-        if (Settings.storeLocation !== "disk") {
-            localStorage.removeItem("password_crypt");
-        }
-        if (Settings.storeLocation === "never") {
-            localStorage.removeItem("password_crypt");
-            Settings.setBgPassword("");
-        }
+    if (store !== "disk") {
+        localStorage.removeItem("password_crypt");
     }
-};
-
-Settings.setBgPassword = pw => {
-    chrome.runtime.getBackgroundPage(bg => {
-        bg.password = pw;
-    });
-
-    if (pw.length !== 0 && Settings.storeLocation === "memory_expire") {
-        Settings.createExpirePasswordAlarm();
+    if (store === "never") {
+        localStorage.removeItem("password_key");
     }
 };
 
@@ -180,19 +167,21 @@ Settings.createExpirePasswordAlarm = () => {
 
 Settings.setPassword = () => {
     if (Settings.storeLocation === "never") {
-        Settings.setBgPassword("");
+        chrome.storage.local.set({ password: "" });
     } else {
         var password = $("#password").val();
         var bits = crypto.getRandomValues(new Uint32Array(8));
         var key = sjcl.codec.base64.fromBits(bits);
+        var encrypted = Settings.encrypt(key, password);
         localStorage.setItem("password_key", key);
 
-        if (Settings.storeLocation === "memory" || Settings.storeLocation === "memory_expire") {
-            Settings.setBgPassword(Settings.encrypt(key, password));
-        } else if (Settings.storeLocation === "disk") {
-            Settings.setBgPassword(Settings.encrypt(key, password));
-            localStorage.setItem("password_crypt", Settings.encrypt(key, password));
+        if (Settings.storeLocation === "memory_expire") {
+            Settings.createExpirePasswordAlarm();
         }
+        if (Settings.storeLocation === "disk") {
+            localStorage.setItem("password_crypt", encrypted);
+        }
+        chrome.storage.local.set({ password: encrypted });
     }
 };
 
