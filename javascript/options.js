@@ -236,6 +236,7 @@ function saveProfile() {
 
     Settings.saveProfiles();
     updateProfileList();
+    setCurrentProfile(selected);
     highlightProfile();
     oldHashWarning(selected.hashAlgorithm);
 }
