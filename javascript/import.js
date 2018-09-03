@@ -265,7 +265,7 @@ function dumpedProfilesToRdf(profiles) {
     }
     rv += '<RDF:Seq RDF:about="http://passwordmaker.mozdev.org/accounts">\n';
     for (var k = 0; k < abouts.length; k++) {
-        rv += '<RDF:li RDF:resource=' + attrEscape(abouts[k]) + '/>\n';
+        rv += '<RDF:li RDF:resource="' + attrEscape(abouts[k]) + '"/>\n';
     }
     rv += "</RDF:Seq>";
 
