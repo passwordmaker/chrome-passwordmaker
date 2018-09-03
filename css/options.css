@@ -136,7 +136,7 @@ h2 {
 
 meter {
     float: right;
-    margin: 5px 10px;
+    margin-top: 5px;
     width: 173px;
 }
 
@@ -175,9 +175,11 @@ meter {
     0% {
         background: white;
     }
+
     50% {
         background: yellow;
     }
+
     100% {
         background: white;
     }

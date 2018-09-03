@@ -36,9 +36,9 @@ Settings.getMaxId = () => {
     return maxId;
 };
 
-Settings.addProfile = profile => {
-    profile.id = Settings.getMaxId() + 1;
-    Settings.profiles.push(profile);
+Settings.addProfile = inputProfile => {
+    inputProfile.id = Settings.getMaxId() + 1;
+    Settings.profiles.push(inputProfile);
 };
 
 Settings.deleteProfile = id => {

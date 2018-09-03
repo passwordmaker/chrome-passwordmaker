@@ -419,12 +419,10 @@ function fileExport() {
 
 function showStrengthSection() {
     if ($("#checkStrength").prop("checked")) {
-        $("main").width("1150px");
         $("#strength_section").css("display", "inline-block");
         $(".testInput").on("change keyup", checkPassStrength);
         checkPassStrength();
     } else {
-        $("main").width("900px");
         $("#strength_section").hide();
         $(".testInput").off("change keyup", checkPassStrength);
         $(".strengthInput").val("");
