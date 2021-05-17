@@ -1,3 +1,9 @@
+0.9.0 - 2021-05-16
+
+* Includes some changes that @heavensrevenge made back in 2018 after 0.8.9.
+* Changed name from "PM Pro" to "PM Org" to associate with PasswordMaker.org.
+* Resubmit to Chrome Web Store because old listing (and maintainer) are gone.
+
 0.8.9 - 2018-04-30
 
 * First try to fix issue #172

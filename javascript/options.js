@@ -413,7 +413,7 @@ function fileExport() {
     });
     var downloadLink = document.createElement("a");
     downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-    downloadLink.download = "PasswordMaker Pro Profile Data.rdf";
+    downloadLink.download = "PasswordMaker.org Profile Data.rdf";
     downloadLink.click();
 }
 
