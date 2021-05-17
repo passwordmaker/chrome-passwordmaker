@@ -1,25 +1,24 @@
-# PasswordMaker Pro
+# PasswordMaker (.org) Chrome Extension
 
-![Example Screenshot](https://i.imgur.com/OxCD9TN.png)
+This is a Chrome Extension that implements the PasswordMaker.org method for generating a unique, secure password for any site, from a single master password.
 
-The only thing which kept me from completely switching to Chrome was a missing port of the [passwordmaker.org](http://www.passwordmaker.org/) extension.
-There was one available in the [Chrome Web Store](https://chrome.google.com/webstore/detail/passwordmaker/doblembglfahhpiilfhajboogopikhcm) but sadly, that extension is only a simple port of the HTML page which is offered on [passwordmaker.org](http://www.passwordmaker.org/passwordmaker.html).
+This technique has been widely used since 2003, though it has been eclipsed by generators that create a random password for each site.  The problem with that method is that every generated password must be stored - with the PasswordMaker.org technique you just memorize or record the master password (this master password can not be determined from the generated passwords).
 
-This extension fixes that.  This is a native Chrome port with all the bells and whistles you'd expect!
+Later, if you switch to a different platform or lose all record of your passwords, you can still easily unlock all your passwords, for all your sites (and on any platform since this same technique is implemented on other platforms) as long as you can remember your master password.
+
+### For more, see the [passwordmaker.org](https://www.passwordmaker.org/) site.
 
 # Installation
 
-### Chrome
-  - You can install this extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh) from it's new home.
-
-### Opera
-  - You can install this extension from the [Opera Extension Gallery](https://addons.opera.com/en/extensions/details/passwordmaker-pro/)
-
-If you have previously used the Firefox Extension, you can directly import your .rdf file.
+Install this extension from the [Chrome Web Store](https://chrome.google.com/webstore/search/password%20maker%20(.org)).
 
 # Status of this project
 
-## Update 2014-07-13 by [@heavensrevenge](https://github.com/heavensrevenge)
+## Update 2021-05-16 by [@GitTom](https://github.com/GitTom)
+
+The old "Password Maker Pro" published by @heavensrevenge was taken down by Google due to policy violations (probably just that the listing was not maintained with updated privacy declarations).  I applied some minor updates, incremented the version to 0.9.0, and created a new Chrome Web Store listing under the name "Password Maker (.org)".
+
+### Update 2014-07-13 by [@heavensrevenge](https://github.com/heavensrevenge)
 
 I am the new and active maintainer of this project and I have uploaded this extension back to the Chrome Web Store which is located at https://chrome.google.com/webstore/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh
 
@@ -27,7 +26,7 @@ I am the new and active maintainer of this project and I have uploaded this exte
 I apologize for any problems the disappearance from the Chrome Web Store may have caused, but I will do my best to keep this extension alive and well.
 
 
-### Update 2014-07-12 by [@bitboxer](http://github.com/bitboxer)
+### Update 2014-07-12 by [@bitboxer](https://github.com/bitboxer)
 
 I don't use this plug-in anymore and do not have the time or energy to continue maintainership.
 I'm out. It was a nice ride.
@@ -42,4 +41,4 @@ I'm out. It was a nice ride.
 
 ## Copyright
 
-See LICENSE for details. A list of all contributors can be found [here](http://github.com/passwordmaker/chrome-passwordmaker/contributors).
+See LICENSE for details. A list of all contributors can be found [here](https://github.com/passwordmaker/chrome-passwordmaker/contributors).
