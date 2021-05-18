@@ -10,13 +10,13 @@ Later, if you switch to a different platform or lose all record of your password
 
 # Installation
 
-Install this extension from the [Chrome Web Store](https://chrome.google.com/webstore/search/password%20maker%20(.org)).
+Install this extension from the [Chrome Web Store](https://chrome.google.com/webstore/search/PasswordMaker%20(.org)).
 
 # Status of this project
 
 ## Update 2021-05-16 by [@GitTom](https://github.com/GitTom)
 
-The old "Password Maker Pro" published by @heavensrevenge was taken down by Google due to policy violations (probably just that the listing was not maintained with updated privacy declarations).  I applied some minor updates, incremented the version to 0.9.0, and created a new Chrome Web Store listing under the name "Password Maker (.org)".
+The old "PasswordMaker Pro" published by @heavensrevenge was taken down by Google due to policy violations (probably just that the listing was not maintained with updated privacy declarations).  I applied some minor updates, incremented the version to 0.9.1, and created a new Chrome Web Store listing under the name "PasswordMaker (.org)".
 
 ### Update 2014-07-13 by [@heavensrevenge](https://github.com/heavensrevenge)
 

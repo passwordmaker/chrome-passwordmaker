@@ -1,3 +1,6 @@
+0.9.1 - 2021-05-18
+ * Removed 'clipboardRead' from manifest - not used and shouldn't have been requested.
+
 0.9.0 - 2021-05-16
 
 * Includes some changes that @heavensrevenge made back in 2018 after 0.8.9.
