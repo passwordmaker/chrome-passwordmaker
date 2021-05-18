@@ -1,5 +1,5 @@
 {
-    "author": "Heavensrevenge",
+    "author": "GitTom",
     "background": {
         "persistent": false,
         "scripts": ["javascript/background.js"]
@@ -20,22 +20,22 @@
         }
     },
     "description": "Flexible password generator using a cryptographic hash algorithm of your choice - Fully Compatible with PasswordMaker.org",
-    "homepage_url": "https://github.com/GitTom/chrome-passwordmaker",
+    "homepage_url": "https://github.com/passwordmaker/chrome-passwordmaker",
     "icons": {
         "16": "images/passwdmaker16.png",
         "48": "images/passwdmaker48.png",
         "128": "images/passwdmaker128.png"
     },
     "manifest_version": 2,
-    "name": "Password Maker (.org)",
+    "name": "PasswordMaker (.org)",
     "offline_enabled": true,
     "options_page": "html/options.html",
     "options_ui": {
         "page": "html/options.html",
         "open_in_tab": true
     },
-    "optional_permissions": ["clipboardRead", "clipboardWrite"],
+    "optional_permissions": ["clipboardWrite"],
     "permissions": ["activeTab", "storage", "alarms"],
     "short_name": "PasswordMaker.org",
-    "version": "0.9.0"
+    "version": "0.9.1"
 }
