@@ -1,3 +1,12 @@
+0.9.5 - 2023-05-06
+
+* put in all improvements made for a firefox port (https://gitlab.com/spartanroc/passwordmaker-firefoxquantum).
+* working search function for query fields of title/name,siteList,strUseText,username, and description
+* import rdf with correct encodings
+* implement the description field that was used in the original PasswordMaker. work with import/export.
+* better siteList
+* scroll bar for profile list
+
 0.9.1 - 2021-05-18
  * Removed 'clipboardRead' from manifest - not used and shouldn't have been requested.
 

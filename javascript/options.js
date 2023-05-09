@@ -59,6 +59,7 @@ function setCurrentProfile(profile) {
     $("#modifier").val(profile.modifier);
     $("#passwordPrefix").val(profile.passwordPrefix);
     $("#passwordSuffix").val(profile.passwordSuffix);
+    $("#description").val(profile.description);
 
     $("#charset").empty();
     for (var i = 0; i < CHARSET_OPTIONS.length; i++) {
@@ -221,6 +222,7 @@ function saveProfile() {
     selected.modifier       = $("#modifier").val().trim();
     selected.passwordPrefix = $("#passwordPrefix").val();
     selected.passwordSuffix = $("#passwordSuffix").val();
+    selected.description = $("#description").val();
 
     // make sure default profile siteList and strUseText stays blank/generic
     if (Settings.profiles[0].id === selected.id) {
@@ -401,7 +403,8 @@ function fileImport() {
         reader.onload = () => {
             $("#importText").val(reader.result);
         };
-        reader.readAsBinaryString(file);
+        reader.readAsText(file);
+//        reader.readAsBinaryString(file);
     } else {
         $("#importText").val("Please select an RDF or XML file containing PasswordMaker profile data.");
     }
@@ -435,8 +438,12 @@ function filterProfiles() {
 
     // Loop through all list items, and hide those which don't match the search query
     for (var i = 0; i < list.length; i++) {
-        var items = list[i].getElementsByTagName("span")[0];
-        if (items.innerHTML.toUpperCase().indexOf(filter) > -1) {
+//      var items = list[i].getElementsByTagName("span")[0];
+        var itemid = list[i].getElementsByTagName("span")[0].id.substr(8);
+//        if (items.innerHTML.toUpperCase().indexOf(filter) > -1) {
+//        var prof = Settings.profiles[parseInt(itemid)-1];
+        var prof = Settings.profiles[i];
+        if ( prof.title.toUpperCase().indexOf(filter) > -1 || prof.strUseText.toUpperCase().indexOf(filter) > -1 || prof.username.toUpperCase().indexOf(filter) > -1 || prof.description.toUpperCase().indexOf(filter) > -1 || prof.siteList.toUpperCase().indexOf(filter) > -1 ) {
             list[i].style.display = "";
         } else {
             list[i].style.display = "none";
@@ -461,6 +468,7 @@ function checkPassStrength() {
     selected.modifier       = $("#modifier").val().trim();
     selected.passwordPrefix = $("#passwordPrefix").val();
     selected.passwordSuffix = $("#passwordSuffix").val();
+    selected.description = $("#description").val();
 
     if ($("#charset").val() === "Custom charset") {
         selected.selectedCharset = $("#customCharset").val();

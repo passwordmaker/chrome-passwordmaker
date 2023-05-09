@@ -39,7 +39,7 @@ h1 {
 #list {
     border-right: 1px solid #aaa;
     min-width: 220px;
-    padding: 40px;
+    padding: 20px;
     width: 220px;
 }
 
@@ -68,8 +68,11 @@ nav {
 #list ol {
     font-size: 1.1em;
     line-height: 1.5;
+    max-height: 800px;
+    min-height: 150px;
     margin: 0;
     overflow: hidden;
+    overflow-y: auto;
     text-align: left;
 }
 
@@ -259,7 +262,7 @@ label {
     font-style: italic;
     margin: 0 0 10px 165px;
     padding: 10px 0 10px 0;
-    text-align: center;
+    text-align: left;
     width: 310px;
 }
 
@@ -321,13 +324,13 @@ textarea {
     float: right;
 }
 
-#siteList {
+#siteList, #description {
     font-size: 1.1em;
     font-weight: bold;
     margin-left: 165px;
 }
 
-#cloneProfileButton, select, input {
+#cloneProfileButton, #makeDefaultButton, select, input {
     margin-left: 165px;
 }
 

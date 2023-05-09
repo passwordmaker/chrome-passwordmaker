@@ -1,5 +1,15 @@
 # PasswordMaker (.org) Chrome Extension
 
+# Updated with many improvements based on v0.9.1 of https://github.com/passwordmaker/chrome-passwordmaker
+
+- put in all improvements made for a firefox port (https://gitlab.com/spartanroc/passwordmaker-firefoxquantum).
+- working search function for query fields of title/name,siteList,strUseText,username, and description
+- import rdf with correct encodings
+- implement the description field that was used in the original PasswordMaker. work with import/export.
+- better siteList
+- scroll bar for profile list
+
+
 This is a Chrome Extension that implements the PasswordMaker.org method for generating a unique, secure password for any site, from a single master password.
 
 This technique has been widely used since 2003, though it has been eclipsed by generators that create a random password for each site.  The problem with that method is that every generated password must be stored - with the PasswordMaker.org technique you just memorize or record the master password (this master password can not be determined from the generated passwords).

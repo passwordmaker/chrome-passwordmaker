@@ -68,6 +68,7 @@ var RdfImporter = {
         ["profile", "charset",               "selectedCharset"],
         ["profile", "prefix",                "passwordPrefix"],
         ["profile", "suffix",                "passwordSuffix"],
+        ["profile", "description", "description"],
         ["default", "protocolCB",            "url_protocol",       strToBool],
         ["default", "subdomainCB",           "url_subdomain",      strToBool],
         ["default", "domainCB",              "url_domain",         strToBool],
@@ -115,6 +116,8 @@ RdfImporter.loadDoc = rdf => {
         var prof = {},
             attrMap = RdfImporter.getImportOpts(),
             attrName = "";
+            var descr = this.getElementsByTagName("NS1:description")[0];
+            prof.description = descr ? descr.innerText : "";
         for (var i = 0; i < this.attributes.length; i++) {
             // remove namespace
             attrName = this.attributes[i].name.replace(/\w+:/, "");
@@ -256,12 +259,27 @@ function dumpedProfilesToRdf(profiles) {
     for (var i = 0; i < profiles.length; i++) {
         var about = (i === 0) ? "http://passwordmaker.mozdev.org/defaults" : "rdf:#$CHROME" + i;
         abouts.push(about);
+        var rvbool = false;
         rv += '<RDF:Description RDF:about="' + attrEscape(about) + '"\n';
         var keys = Object.keys(profiles[i]);
         for (var j = 0; j < keys.length; j++) {
-            rv += " NS1:" + keys[j] + '="' + attrEscape(profiles[i][keys[j]]) + '"\n';
+            if ( /\n/.exec(profiles[i][keys[j]]) ) {
+                rvbool = true;
+            } else {
+                rv += " NS1:" + keys[j] + '="' + attrEscape(profiles[i][keys[j]]) + '"\n';
+            }
         }
-        rv += " />\n";
+        if (rvbool) {
+            rv += " >\n";
+            for (var j = 0; j < keys.length; j++) {
+            if ( /\n/.exec(profiles[i][keys[j]]) ) {
+              rv += " <NS1:" + keys[j] + ">" + attrEscape(profiles[i][keys[j]]) + "</NS1:" + keys[j] + ">\n";
+            }
+            }
+            rv += " </RDF:Description>\n";
+        } else {
+            rv += " />\n";
+        }
     }
     rv += '<RDF:Seq RDF:about="http://passwordmaker.mozdev.org/accounts">\n';
     for (var k = 0; k < abouts.length; k++) {
