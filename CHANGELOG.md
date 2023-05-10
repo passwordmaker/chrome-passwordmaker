@@ -1,4 +1,8 @@
-0.9.5 - 2023-05-06
+0.9.2.1 - 2023-05-10
+
+* cleanup and better margin for options page
+
+0.9.2 - 2023-05-06
 
 * put in all improvements made for a firefox port (https://gitlab.com/spartanroc/passwordmaker-firefoxquantum).
 * working search function for query fields of title/name,siteList,strUseText,username, and description

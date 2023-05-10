@@ -41,6 +41,7 @@ h1 {
     min-width: 220px;
     padding: 20px;
     width: 220px;
+    margin-bottom: 20px;
 }
 
 #searchProfiles {
@@ -272,7 +273,7 @@ footer {
     bottom: 0;
     font-size: .8em;
     font-style: italic;
-    padding: 10px;
+    padding: 3px;
     position: fixed;
     text-align: center;
     white-space: nowrap;
@@ -281,10 +282,10 @@ footer {
 
 footer a {
     background-color: #ddd;
-    border-radius: 5px;
+    border-radius: 3px;
     color: #000;
     font-style: normal;
-    padding: 4px;
+    padding: 2px;
 }
 
 section {

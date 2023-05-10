@@ -1,6 +1,10 @@
 # PasswordMaker (.org) Chrome Extension
 
-# Updated with many improvements based on v0.9.1 of https://github.com/passwordmaker/chrome-passwordmaker
+## Maintenance on May, 2023:
+- code cleanups and minor changes
+- will continue to do limited updates in sync with https://gitlab.com/spartanroc/passwordmaker-firefoxquantum
+
+## Updated with many improvements based on v0.9.1 of https://github.com/passwordmaker/chrome-passwordmaker
 
 - put in all improvements made for a firefox port (https://gitlab.com/spartanroc/passwordmaker-firefoxquantum).
 - working search function for query fields of title/name,siteList,strUseText,username, and description
