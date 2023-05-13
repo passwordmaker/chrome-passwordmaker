@@ -1,3 +1,13 @@
+function formatLastModTime(lastmod0) {
+    var lastmod = parseInt(lastmod0,10);
+    if (lastmod > 0) {
+        var t = new Date(lastmod);
+        return t.toLocaleString();
+    } else {
+        return "unknown";
+    }
+}
+
 function updateStyle(element, selected, isSelected) {
     if (isSelected) {
         element.addClass(selected);
@@ -21,6 +31,7 @@ function updateLeet() {
 function addProfile() {
     var p = Object.create(Profile);
     p.title = "No name";
+    p.timestamp = Date.now();
     Settings.addProfile(p);
     updateProfileList();
     setCurrentProfile(p);
@@ -60,6 +71,7 @@ function setCurrentProfile(profile) {
     $("#passwordPrefix").val(profile.passwordPrefix);
     $("#passwordSuffix").val(profile.passwordSuffix);
     $("#description").val(profile.description);
+    document.getElementById("timestamp").textContent = formatLastModTime(profile.timestamp);
 
     $("#charset").empty();
     for (var i = 0; i < CHARSET_OPTIONS.length; i++) {
@@ -223,6 +235,8 @@ function saveProfile() {
     selected.passwordPrefix = $("#passwordPrefix").val();
     selected.passwordSuffix = $("#passwordSuffix").val();
     selected.description = $("#description").val();
+    selected.timestamp = Date.now();
+    document.getElementById("timestamp").textContent = formatLastModTime(selected.timestamp);
 
     // make sure default profile siteList and strUseText stays blank/generic
     if (Settings.profiles[0].id === selected.id) {
@@ -246,6 +260,7 @@ function saveProfile() {
 function cloneProfile() {
     var p = Object.assign(Object.create(Profile), Settings.getProfile(Settings.currentProfile));
     p.title = p.title + " Copy";
+    p.timestamp = Date.now();
     Settings.addProfile(p);
     updateProfileList();
     setCurrentProfile(p);
@@ -256,12 +271,18 @@ function editProfile(event) {
 }
 
 function updateProfileList() {
-    if (Settings.shouldAlphaSortProfiles()) Settings.alphaSortProfiles();
+    Settings.alphaSortProfiles(Settings.shouldAlphaSortProfiles());
 
+	document.getElementById("profile_num").textContent = Settings.profiles.length.toString();
     $("#profile_list").empty();
+    var lastmod = 0;
     for (var i = 0; i < Settings.profiles.length; i++) {
         $("#profile_list").append(`<li><span id='profile_${Settings.profiles[i].id}' class='link'>${Settings.profiles[i].title}</span></li>`);
+        if (Settings.profiles[i].timestamp > lastmod) {
+            lastmod = Settings.profiles[i].timestamp;
+        }
     }
+    document.getElementById("profilelist_lastmod").textContent = formatLastModTime(lastmod);
 }
 
 function setSyncPassword() {
@@ -355,7 +376,8 @@ function updateShowStrength() {
 }
 
 function updateAlphaSortProfiles() {
-    localStorage.setItem("alpha_sort_profiles", $("#alphaSortProfiles").prop("checked"));
+    do_sort = $("#alphaSortProfiles").val();
+    localStorage.setItem("alpha_sort_profiles", do_sort);
     Settings.loadProfiles();
     updateProfileList();
     filterProfiles()
@@ -501,7 +523,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#useVerificationCode").prop("checked", Settings.useVerificationCode());
     $("#showPasswordStrength").prop("checked", Settings.shouldShowStrength());
     $("#syncProfiles").prop("checked", Settings.shouldSyncProfiles());
-    $("#alphaSortProfiles").prop("checked", Settings.shouldAlphaSortProfiles());
+    $("#alphaSortProfiles").val(Settings.shouldAlphaSortProfiles());
 
     $("#profile_list").on("click", ".link", editProfile);
     $("#add").on("click", addProfile);

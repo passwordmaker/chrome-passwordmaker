@@ -1,3 +1,9 @@
+0.9.3 - 2023-05-12
+
+* implement the timestamp field to store last modified time
+* sort profiles by timestamp order (newest first or oldest first) in addition to existing user-defined and alphabetical orders
+* display total# of profiles and last modified time
+
 0.9.2.1 - 2023-05-10
 
 * cleanup and better margin for options page

@@ -22,7 +22,8 @@
         </nav>
         <main>
             <div id="list">
-                <h2>Profile List</h2>
+                <h3>Profile List (<span id="profile_num"></span>)</h3>
+                <h4> Last modified on <span id="profilelist_lastmod"></span> </h4>
                 <input id="searchProfiles" placeholder="Search for Profile" type="text">
                 <ol id="profile_list"></ol>
             </div>
@@ -38,6 +39,10 @@
                 <div class="row">
                     <label for="profileNameTB">Name:</label>
                     <input class="input" id="profileNameTB">
+                </div>
+                <div class="row">
+                    <label for="timestamp">Last Modified:</label>
+                    <span id="timestamp"></span>
                 </div>
                 <div class="row">
                     <div class="subrow">
@@ -264,6 +269,17 @@
                         <span>Minutes</span>
                     </div>
                 </div>
+                <div class="row" id="sort_order_row">
+                    <div class="subrow">
+                        <label for="alphaSortProfiles">Sort Profiles By:</label>
+                        <select class="input" id="alphaSortProfiles">
+                            <option value="0">User-defined Order</option>
+                            <option value="1">Alphabetical Order</option>
+                            <option value="2">Newest First</option>
+                            <option value="3">Oldest First</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="subrow">
                         <input id="hidePassword" type="checkbox">
@@ -280,12 +296,6 @@
                     <div class="subrow">
                         <input id="showPasswordStrength" type="checkbox">
                         <label class="checkbox" for="showPasswordStrength">Show Password Strength Meter in Popup</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="subrow">
-                        <input id="alphaSortProfiles" type="checkbox">
-                        <label class="checkbox" for="alphaSortProfiles">Alphanumerically Sort Profiles</label>
                     </div>
                 </div>
                 <div class="row">

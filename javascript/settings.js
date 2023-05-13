@@ -86,18 +86,32 @@ Settings.loadProfiles = () => {
     }
 };
 
-Settings.alphaSortProfiles = () => {
-    var profiles = Settings.profiles,
+Settings.alphaSortProfiles = nopt => {
+    if (nopt == 0) {
+        return;
+    } else {
+        var profiles = Settings.profiles,
         defaultProfile = profiles.shift();
 
-    profiles.sort(function(a, b) {
-        if (a.title.toLowerCase() < b.title.toLowerCase()) return -1;
-        if (a.title.toLowerCase() > b.title.toLowerCase()) return 1;
-        return 0;
-    });
+        if (nopt == 1) {
+            profiles.sort(function(a, b) {
+                if (a.title.toLowerCase() < b.title.toLowerCase()) return -1;
+                if (a.title.toLowerCase() > b.title.toLowerCase()) return 1;
+                return 0;
+            });
+        } else if (nopt == 2) {
+            profiles.sort(function (a, b) {
+                return b.timestamp - a.timestamp;
+            });
+        } else if (nopt == 3) {
+            profiles.sort(function (a, b) {
+                return a.timestamp - b.timestamp;
+            });
+        }
 
-    profiles.unshift(defaultProfile);
-    Settings.profiles = profiles;
+        profiles.unshift(defaultProfile);
+        Settings.profiles = profiles;
+    }
 };
 
 Settings.saveSyncedProfiles = data => {
@@ -226,7 +240,7 @@ Settings.shouldShowStrength = () => {
 };
 
 Settings.shouldAlphaSortProfiles = () => {
-    return localStorage.getItem("alpha_sort_profiles") === "true";
+    return localStorage.getItem("alpha_sort_profiles");
 };
 
 Settings.startSyncWith = password => {

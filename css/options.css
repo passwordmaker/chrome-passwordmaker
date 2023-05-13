@@ -103,7 +103,7 @@ nav {
     position: static;
 }
 
-h2 {
+h2, h3, h4 {
     display: inline-block;
     margin: 0 0 20px 20px;
 }
@@ -331,11 +331,11 @@ textarea {
     margin-left: 165px;
 }
 
-#cloneProfileButton, #makeDefaultButton, select, input {
+#cloneProfileButton, #makeDefaultButton, #timestamp, select, input {
     margin-left: 165px;
 }
 
-#store_location_row {
+#store_location_row, #sort_order_row {
     margin-left: 7.5em;
 }
 
@@ -343,7 +343,7 @@ select.input {
     width: 304px;
 }
 
-#store_location {
+#store_location, #alphaSortProfiles {
     width: 150px;
 }
 

@@ -1,7 +1,7 @@
 # PasswordMaker (.org) Chrome Extension
 
 ## Maintenance on May, 2023:
-- code cleanups and minor changes
+- code cleanups and minor changes (e.g., timestamp)
 - will continue to do limited updates in sync with https://gitlab.com/spartanroc/passwordmaker-firefoxquantum
 
 ## Updated with many improvements based on v0.9.1 of https://github.com/passwordmaker/chrome-passwordmaker
