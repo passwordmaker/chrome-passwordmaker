@@ -11,7 +11,7 @@ var CHARSET_OPTIONS = [
     "0123456789abcdef",
     "0123456789",
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-    "`~!@#$%^&*()_-+={}|[]:\";'<>?,./"
+    "`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./"
 ];
 
 // List of top-level domains, parsed from domains.rdf from the PasswordMaker
