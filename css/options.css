@@ -39,8 +39,9 @@ h1 {
 #list {
     border-right: 1px solid #aaa;
     min-width: 220px;
-    padding: 40px;
+    padding: 20px;
     width: 220px;
+    margin-bottom: 20px;
 }
 
 #searchProfiles {
@@ -68,8 +69,11 @@ nav {
 #list ol {
     font-size: 1.1em;
     line-height: 1.5;
+    max-height: 800px;
+    min-height: 150px;
     margin: 0;
     overflow: hidden;
+    overflow-y: auto;
     text-align: left;
 }
 
@@ -137,7 +141,7 @@ h2 {
 meter {
     float: right;
     margin-top: 5px;
-    width: 173px;
+    width: 170px;
 }
 
 .testCheck {
@@ -148,10 +152,9 @@ meter {
     background-repeat: no-repeat;
     float: right;
     line-height: 24px;
-    margin-right: 25px;
+    margin-right: 30px;
     position: relative;
     text-align: center;
-    width: 150px;
 }
 
 .testCheck:checked + .testLabel {
@@ -269,7 +272,7 @@ footer {
     bottom: 0;
     font-size: .8em;
     font-style: italic;
-    padding: 10px;
+    padding: 3px;
     position: fixed;
     text-align: center;
     white-space: nowrap;
@@ -278,10 +281,10 @@ footer {
 
 footer a {
     background-color: #ddd;
-    border-radius: 5px;
+    border-radius: 3px;
     color: #000;
     font-style: normal;
-    padding: 4px;
+    padding: 2px;
 }
 
 section {

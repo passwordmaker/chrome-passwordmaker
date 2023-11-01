@@ -401,7 +401,7 @@ function fileImport() {
         reader.onload = () => {
             $("#importText").val(reader.result);
         };
-        reader.readAsBinaryString(file);
+        reader.readAsText(file);
     } else {
         $("#importText").val("Please select an RDF or XML file containing PasswordMaker profile data.");
     }
