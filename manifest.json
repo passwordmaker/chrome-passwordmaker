@@ -1,41 +1,33 @@
 {
     "author": "GitTom",
-    "background": {
-        "persistent": false,
-        "scripts": ["javascript/background.js"]
-    },
-    "browser_action": {
+    "action": {
         "default_icon": {
             "16": "images/passwdmaker16.png",
             "48": "images/passwdmaker48.png",
+            "96": "images/passwdmaker96.png",
             "128": "images/passwdmaker128.png"
         },
         "default_popup": "html/popup.html"
     },
-    "commands": {
-        "_execute_browser_action": {
-            "suggested_key": {
-                "default": "Alt+Z"
-            }
-        }
+    "background": {
+        "service_worker": "javascript/background.js"
     },
     "description": "Flexible password generator using a cryptographic hash algorithm of your choice - Fully Compatible with PasswordMaker.org",
     "homepage_url": "https://github.com/passwordmaker/chrome-passwordmaker",
     "icons": {
         "16": "images/passwdmaker16.png",
         "48": "images/passwdmaker48.png",
+        "96": "images/passwdmaker96.png",
         "128": "images/passwdmaker128.png"
     },
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "PasswordMaker (.org)",
-    "offline_enabled": true,
     "options_page": "html/options.html",
     "options_ui": {
         "page": "html/options.html",
         "open_in_tab": true
     },
-    "optional_permissions": ["clipboardWrite"],
-    "permissions": ["activeTab", "storage", "alarms"],
+    "permissions": ["activeTab", "scripting", "storage", "alarms"],
     "short_name": "PasswordMaker.org",
     "version": "0.9.1"
 }

@@ -345,3 +345,11 @@ Settings.getPasswordStrength = pw => {
         hasSymbol: Boolean(syms)
     };
 };
+
+Settings.fromChromeStorageLocalToLocalStorage = () => {
+    chrome.storage.local.get(null).then((result) => {
+        Object.keys(result).forEach(function(key) {
+            localStorage[key] = result[key];
+        });
+    });
+};

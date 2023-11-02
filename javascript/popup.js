@@ -116,94 +116,93 @@ function hideButtons() {
     }
 }
 
+function showButtonsScript (){
+    var fields = document.getElementsByTagName('input'), fieldCount = 0;
+    for (var i = 0; i < fields.length; i++) {
+        if (/password/i.test(fields[i].type + ' ' + fields[i].name)) {
+            fieldCount += 1;
+        }
+    }
+    return fieldCount;
+}
+
 function showButtons() {
     $("#copypassword").removeClass("hidden");
     // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
     if (!(/^chrome|^opera|^about/i).test(Settings.currentUrl)) {
-        chrome.tabs.executeScript({
-            "allFrames": true,
-            "code": "var fields = document.getElementsByTagName('input'), fieldCount = 0;" +
-                    "for (var i = 0; i < fields.length; i++) {" +
-                        "if (/password/i.test(fields[i].type + ' ' + fields[i].name)) {" +
-                            "fieldCount += 1;" +
-                        "}" +
-                    "}" +
-                    "fieldCount;"
-        }, fieldCounts => {
-            for (var frame = 0; frame < fieldCounts.length; frame++) {
-                if (fieldCounts[frame] > 0) {
-                    $("#injectpassword").removeClass("hidden");
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+            chrome.scripting.executeScript({
+                target: {tabId: tabs[0].id, allFrames: true},
+                func: showButtonsScript,
+            }).then(fieldCounts => {
+                for (var frame = 0; frame < fieldCounts.length; frame++) {
+                    if (fieldCounts[frame].result > 0) {
+                        $("#injectpassword").removeClass("hidden");
+                    }
                 }
-            }
+            }).catch((err) => {
+                console.error("Show button error" + err.message);
+            });
         });
     }
 }
 
-function fillFields() {
+function fillFieldsScript(args) {
+    // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
+    var fields = document.getElementsByTagName('input');
+    var nameFilled = false, passFilled = false;
+    function isRendered(domObj) {
+        var cs = document.defaultView.getComputedStyle(domObj);
+        if ((domObj.nodeType !== 1) || (domObj == document.body)) return true;
+        if (cs.display !== 'none' && cs.visibility !== 'hidden') return isRendered(domObj.parentNode);
+        return false;
+    }
+    for (var i = 0; i < fields.length; i++) {
+        var elStyle = getComputedStyle(fields[i]);
+        var isVisible = isRendered(fields[i]) && (parseFloat(elStyle.width) > 0) && (parseFloat(elStyle.height) > 0);
+        var isPasswordField = (/password/i).test(fields[i].type + ' ' + fields[i].name);
+        var isUsernameField = (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name) && (/^(?!display)/i).test(fields[i].name);
+        var changeEvent = new Event('change'); // MVC friendly way to force a view-model update
+        if (isVisible && !passFilled && fields[i].value.length === 0 && isPasswordField) {
+            fields[i].value = args[0];
+            passFilled = true;
+            fields[i].dispatchEvent(changeEvent);
+        }
+        if (isVisible && !nameFilled && fields[i].value.length === 0 && isUsernameField) {
+            fields[i].value = args[1];
+            if (fields[i].value.length === 0) {
+                fields[i].focus();
+            }
+            nameFilled = true;
+            fields[i].dispatchEvent(changeEvent);
+        }
+    }
+}
+
+function fillFields(generatedPass) {
     updateFields();
     if (!(/^chrome|^opera|^about/i).test(Settings.currentUrl)) {
-        chrome.tabs.executeScript({
-            "allFrames": true,
-            // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
-            "code": "var fields = document.getElementsByTagName('input');" +
-                    "var nameFilled = false, passFilled = false;" +
-                    "function isRendered(domObj) {" +
-                        "var cs = document.defaultView.getComputedStyle(domObj);" +
-                        "if ((domObj.nodeType !== 1) || (domObj == document.body)) return true;" +
-                        "if (cs.display !== 'none' && cs.visibility !== 'hidden') return isRendered(domObj.parentNode);" +
-                        "return false;" +
-                    "}" +
-                    "for (var i = 0; i < fields.length; i++) {" +
-                        "var elStyle = getComputedStyle(fields[i]);" +
-                        "var isVisible = isRendered(fields[i]) && (parseFloat(elStyle.width) > 0) && (parseFloat(elStyle.height) > 0);" +
-                        "var isPasswordField = (/password/i).test(fields[i].type + ' ' + fields[i].name);" +
-                        "var isUsernameField = (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name) && (/^(?!display)/i).test(fields[i].name);" +
-                        "var changeEvent = new Event('change', {'bubbles': true, 'cancelable': true});" + // MVC friendly way to force a view-model update
-                        "if (isVisible && !passFilled && fields[i].value.length === 0 && isPasswordField) {" +
-                            "fields[i].value = atob('" + btoa($("#generated").val()) + "');" +
-                            "passFilled = true;" +
-                            "fields[i].dispatchEvent(changeEvent);" +
-                        "}" +
-                        "if (isVisible && !nameFilled && fields[i].value.length === 0 && isUsernameField) {" +
-                            "fields[i].value = atob('" + btoa($("#username").val()) + "');" +
-                            "if (fields[i].value.length === 0) {" +
-                                "fields[i].focus();" +
-                            "}" +
-                            "nameFilled = true;" +
-                            "fields[i].dispatchEvent(changeEvent);" +
-                        "}" +
-                    "}"
-        }, () => {
-            window.close();
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+            chrome.scripting.executeScript({
+                target: {tabId: tabs[0].id, allFrames: true},
+                args : [ generatedPass ],
+                func: fillFieldsScript,
+            }).then(() => {
+                window.close();
+            }).catch((err) => {
+                console.error("Fill field error" + err.message);
+            });
         });
     }
 }
 
 function copyPassword() {
     updateFields();
-    chrome.permissions.contains({
-        permissions: ["clipboardWrite"]
-    }, contains => {
-        if (contains) {
-            chrome.tabs.query({
-                "windowType": "popup"
-            }, () => {
-                $("#activatePassword").hide();
-                $("#generated").show().get(0).select();
-                document.execCommand("copy");
-                window.close();
-            });
-        } else {
-            chrome.permissions.request({
-                permissions: ["clipboardWrite"]
-            }, granted => {
-                if (granted) {
-                    copyPassword();
-                } else {
-                    alert("Sorry, the permission was not granted.");
-                }
-            });
-        }
+    chrome.tabs.query({
+        "windowType": "popup"
+    }, () => {
+        navigator.clipboard.writeText($("#generated").val());
+        window.close();
     });
 }
 
@@ -247,13 +246,14 @@ function handleKeyPress(event) {
         copyPassword();
     }
 }
-function init() {
+function initPopup() {
     chrome.storage.local.get(["password"], function(result) {
-        if (result.password === undefined) {
+        if (!result.password) {
             chrome.storage.local.set({
                 password: ""
             });
-            init();
+            updateFields();
+            initPopup();
         } else {
             var pass = Settings.getPassword(result.password);
 
@@ -280,12 +280,12 @@ function init() {
 
 document.addEventListener("DOMContentLoaded", () => {
     Settings.loadProfiles();
+    Settings.fromChromeStorageLocalToLocalStorage();
     $("#password, #confirmation").on("keyup", Settings.setPassword);
     $("input").on("input", delayedUpdate);
     $("#profile").on("change", onProfileChanged);
     $("#activatePassword").on("click", showPasswordField);
     $("#copypassword").on("click", copyPassword);
-    $("#injectpassword").on("click", fillFields);
     $("#options").on("click", openOptions);
 
     if (Settings.shouldHidePassword()) {
@@ -312,7 +312,11 @@ document.addEventListener("DOMContentLoaded", () => {
         "windowType": "normal"
     }, tabs => {
         Settings.currentUrl = tabs[0].url || "";
-        init();
+        initPopup();
+    });
+
+    $("#injectpassword").on("click", function(e) {
+        fillFields([$("#generated").val(), $("#username").val()]);
     });
 
     $(document.body).on("keydown", handleKeyPress);
