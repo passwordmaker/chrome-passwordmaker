@@ -1,5 +1,12 @@
+0.9.2 - 2023-11-01
+
+* Migration to manifest v3 and use Clipboard API
+* Fixes issue #179 for original PasswordMaker compatibility with symbol character set, may break some user passwords!
+* Update jQuery to 3.7.1 and QUnit to 2.19.4
+
 0.9.1 - 2021-05-18
- * Removed 'clipboardRead' from manifest - not used and shouldn't have been requested.
+
+* Removed 'clipboardRead' from manifest - not used and shouldn't have been requested.
 
 0.9.0 - 2021-05-16
 
