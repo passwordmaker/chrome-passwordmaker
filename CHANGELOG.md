@@ -1,3 +1,7 @@
+0.9.3 - 2023-11-06
+
+* Fixes issue #192 where a profile isn't selected when the "Save Password" option is set to "Never Store"
+
 0.9.2 - 2023-11-01
 
 * Migration to manifest v3 and use Clipboard API
