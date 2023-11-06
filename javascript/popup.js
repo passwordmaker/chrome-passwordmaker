@@ -248,7 +248,7 @@ function handleKeyPress(event) {
 }
 function initPopup() {
     chrome.storage.local.get(["password"], function(result) {
-        if (!result.password) {
+        if (typeof result.password === "undefined") {
             chrome.storage.local.set({
                 password: ""
             });
