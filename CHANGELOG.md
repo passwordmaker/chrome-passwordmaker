@@ -1,3 +1,7 @@
+0.9.4 - 2023-11-07
+
+* Scripting can't run on the Chrome Web Store/Extension Gallery; Manifest v3 maintenance
+
 0.9.3 - 2023-11-06
 
 * Fixes issue #192 where a profile isn't selected when the "Save Password" option is set to "Never Store"
