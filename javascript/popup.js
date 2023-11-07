@@ -129,7 +129,8 @@ function showButtonsScript (){
 function showButtons() {
     $("#copypassword").removeClass("hidden");
     // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
-    if (!(/^chrome|^opera|^about/i).test(Settings.currentUrl)) {
+    // Also cant run on the Chrome Web Store/Extension Gallery
+    if (!(/^chrome|^opera|^about/i).test(Settings.currentUrl) && (!Settings.currentUrl.includes("chrome.google.com"))) {
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
@@ -181,7 +182,9 @@ function fillFieldsScript(args) {
 
 function fillFields(generatedPass) {
     updateFields();
-    if (!(/^chrome|^opera|^about/i).test(Settings.currentUrl)) {
+    // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
+    // Also cant run on the Chrome Web Store/Extension Gallery
+    if (!(/^chrome|^opera|^about/i).test(Settings.currentUrl) && (!Settings.currentUrl.includes("chrome.google.com"))) {
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
