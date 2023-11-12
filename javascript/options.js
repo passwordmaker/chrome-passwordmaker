@@ -258,8 +258,10 @@ function setSyncPassword() {
         localStorage.setItem("sync_profiles_password", result);
         Settings.syncDataAvailable = true;
         $("#syncProfilesPassword").val("");
-        updateSyncProfiles();
-        updateProfileList();
+        setTimeout(() => {
+            updateSyncProfiles();
+            updateProfileList();
+        }, 200);
     } else {
         alert("Wrong password. Please specify the password you used when initially syncing your data");
     }

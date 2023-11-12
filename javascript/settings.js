@@ -132,6 +132,10 @@ Settings.saveSyncedProfiles = data => {
                     }
                 });
             }
+            chrome.storage.sync.get(["synced_profiles"]).then((result) => {
+                localStorage.setItem("synced_profiles", result.synced_profiles);
+                chrome.storage.local.set({ "synced_profiles": result.synced_profiles });
+            });
         }
     });
 };
