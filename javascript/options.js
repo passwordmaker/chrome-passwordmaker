@@ -147,28 +147,12 @@ function importRdf() {
 }
 
 function copyRdfExport() {
-    chrome.permissions.contains({
-        permissions: ["clipboardWrite"]
-    }, contains => {
-        if (contains) {
-            $("#exportText").get(0).select();
-            document.execCommand("copy");
-        } else {
-            chrome.permissions.request({
-                permissions: ["clipboardWrite"]
-            }, granted => {
-                if (granted) {
-                    copyRdfExport();
-                } else {
-                    alert("Sorry, the permission was not granted.");
-                }
-            });
-        }
-    });
+    $("#exportText").get(0).select();
+    navigator.clipboard.writeText($("#exportText").val());
 }
 
 function showOptions() {
-    chrome.storage.sync.getBytesInUse(null, (bytes) => {
+    chrome.storage.sync.getBytesInUse().then((bytes) => {
         if (bytes > 0) {
             Settings.syncDataAvailable = true;
         }
@@ -529,6 +513,9 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#showPasswordStrength").on("change", updateShowStrength);
     $("#alphaSortProfiles").on("change", updateAlphaSortProfiles);
     $("#set_sync_password").on("click", setSyncPassword);
+    $("#syncProfilesPassword").on("keydown", (event) => {
+        if (event.key === "Enter") setSyncPassword();
+    })
     $("#clear_sync_data").on("click", clearSyncData);
     $("#resetToDefaultprofiles").on("click", removeAllProfiles);
     $("#searchProfiles").on("input", filterProfiles);

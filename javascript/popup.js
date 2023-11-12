@@ -14,7 +14,7 @@ function getAutoProfileIdForUrl() {
                 var regexString = /\s/;
                 if ((/^\/.*\/$/).test(sites[j])) {
                     try {
-                        regexString = new RegExp(sites[j].replace(/^\/|\/$/g, ''));
+                        regexString = new RegExp(sites[j].replace(/^\/|\/$/g, ""));
                     } catch (e) {}
                 }
                 var plain2regex = sites[j];
@@ -117,7 +117,7 @@ function hideButtons() {
 }
 
 function showButtonsScript (){
-    var fields = document.getElementsByTagName('input'), fieldCount = 0;
+    var fields = document.getElementsByTagName("input"), fieldCount = 0;
     for (var i = 0; i < fields.length; i++) {
         if (/password/i.test(fields[i].type + ' ' + fields[i].name)) {
             fieldCount += 1;
@@ -130,7 +130,7 @@ function showButtons() {
     $("#copypassword").removeClass("hidden");
     // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
     // Also cant run on the Chrome Web Store/Extension Gallery
-    if (!(/^chrome|^opera|^about/i).test(Settings.currentUrl) && (!Settings.currentUrl.includes("chrome.google.com"))) {
+    if (!(/^about|^chrome|chrome\.google\.com|^opera/i).test(Settings.currentUrl)) {
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
@@ -142,7 +142,7 @@ function showButtons() {
                     }
                 }
             }).catch((err) => {
-                console.error("Show button error" + err.message);
+                console.error("Show button error: " + err.message);
             });
         });
     }
@@ -150,12 +150,12 @@ function showButtons() {
 
 function fillFieldsScript(args) {
     // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
-    var fields = document.getElementsByTagName('input');
+    var fields = document.getElementsByTagName("input");
     var nameFilled = false, passFilled = false;
     function isRendered(domObj) {
         var cs = document.defaultView.getComputedStyle(domObj);
         if ((domObj.nodeType !== 1) || (domObj == document.body)) return true;
-        if (cs.display !== 'none' && cs.visibility !== 'hidden') return isRendered(domObj.parentNode);
+        if (cs.display !== "none" && cs.visibility !== "hidden") return isRendered(domObj.parentNode);
         return false;
     }
     for (var i = 0; i < fields.length; i++) {
@@ -163,7 +163,7 @@ function fillFieldsScript(args) {
         var isVisible = isRendered(fields[i]) && (parseFloat(elStyle.width) > 0) && (parseFloat(elStyle.height) > 0);
         var isPasswordField = (/password/i).test(fields[i].type + ' ' + fields[i].name);
         var isUsernameField = (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name) && (/^(?!display)/i).test(fields[i].name);
-        var changeEvent = new Event('change'); // MVC friendly way to force a view-model update
+        var changeEvent = new Event("change"); // MVC friendly way to force a view-model update
         if (isVisible && !passFilled && fields[i].value.length === 0 && isPasswordField) {
             fields[i].value = args[0];
             passFilled = true;
@@ -184,7 +184,7 @@ function fillFields(generatedPass) {
     updateFields();
     // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
     // Also cant run on the Chrome Web Store/Extension Gallery
-    if (!(/^chrome|^opera|^about/i).test(Settings.currentUrl) && (!Settings.currentUrl.includes("chrome.google.com"))) {
+    if (!(/^about|^chrome|chrome\.google\.com|^opera/i).test(Settings.currentUrl)) {
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
@@ -193,7 +193,7 @@ function fillFields(generatedPass) {
             }).then(() => {
                 window.close();
             }).catch((err) => {
-                console.error("Fill field error" + err.message);
+                console.error("Fill field error: " + err.message);
             });
         });
     }
@@ -250,7 +250,7 @@ function handleKeyPress(event) {
     }
 }
 function initPopup() {
-    chrome.storage.local.get(["password"], function(result) {
+    chrome.storage.local.get(["password"]).then((result) => {
         if (typeof result.password === "undefined") {
             chrome.storage.local.set({
                 password: ""

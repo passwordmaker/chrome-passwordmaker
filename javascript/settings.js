@@ -109,7 +109,7 @@ Settings.saveSyncedProfiles = data => {
         if (!chrome.runtime.lastError) {
             if (data.length <= threshold) {
                 output.synced_profiles = data;
-                chrome.storage.sync.set(output, () => {
+                chrome.storage.sync.set(output).then(() => {
                     if (chrome.runtime.lastError) {
                         alert("Could not sync data : " + chrome.runtime.lastError.message);
                     }
@@ -124,7 +124,7 @@ Settings.saveSyncedProfiles = data => {
                     keys[i] = date + i;
                 }
                 output.synced_profiles = keys;
-                chrome.storage.sync.set(output, () => {
+                chrome.storage.sync.set(output).then(() => {
                     if (!chrome.runtime.lastError) {
                         chrome.storage.sync.remove(oldKeys.split(","));
                     } else {
@@ -198,7 +198,8 @@ Settings.getPassword = bgPass => {
 };
 
 Settings.ifDataExists = entry => {
-    return (localStorage.getItem(entry) !== null) && (localStorage.getItem(entry).length !== 0);
+    var item = localStorage.getItem(entry);
+    return (item !== null) && (item.length !== 0);
 };
 
 Settings.shouldHidePassword = () => {
@@ -347,7 +348,7 @@ Settings.getPasswordStrength = pw => {
 };
 
 Settings.fromChromeStorageLocalToLocalStorage = () => {
-    chrome.storage.local.get(null).then((result) => {
+    chrome.storage.local.get().then((result) => {
         Object.keys(result).forEach(function(key) {
             localStorage[key] = result[key];
         });
