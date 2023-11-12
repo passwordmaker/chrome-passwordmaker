@@ -94,11 +94,11 @@ nav {
 }
 
 .nav_button:hover {
-    background: -webkit-linear-gradient(top, #0095cc, #00678e);
+    background: linear-gradient(#0095cc, #00678e);
 }
 
 .nav_button:active {
-    background: -webkit-linear-gradient(top, #0078a5, #00adee);
+    background: linear-gradient(#0078a5, #00adee);
     padding: 11px 10px 8px 10px;
     position: static;
 }

@@ -66,7 +66,7 @@ function setCurrentProfile(profile) {
     }
     $("#charset").append(new Option("Custom charset"));
 
-    if (CHARSET_OPTIONS.indexOf(profile.selectedCharset) >= 0) {
+    if (CHARSET_OPTIONS.includes(profile.selectedCharset)) {
         $("#charset").val(profile.selectedCharset);
     } else {
         $("#charset").val("Custom charset");
@@ -283,7 +283,7 @@ function setSyncPassword() {
 
 function clearSyncData() {
     chrome.storage.sync.clear(() => {
-        if (!chrome.runtime.lastError) {
+        if (typeof chrome.runtime.lastError === "undefined") {
             localStorage.setItem("sync_profiles", "false");
             Settings.syncDataAvailable = false;
             localStorage.removeItem("synced_profiles");
@@ -436,7 +436,7 @@ function filterProfiles() {
     // Loop through all list items, and hide those which don't match the search query
     for (var i = 0; i < list.length; i++) {
         var items = list[i].getElementsByTagName("span")[0];
-        if (items.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        if (items.innerHTML.toUpperCase().includes(filter)) {
             list[i].style.display = "";
         } else {
             list[i].style.display = "none";

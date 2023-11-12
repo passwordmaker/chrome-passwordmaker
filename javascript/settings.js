@@ -91,8 +91,8 @@ Settings.alphaSortProfiles = () => {
         defaultProfile = profiles.shift();
 
     profiles.sort(function(a, b) {
-        if (a.title.toLowerCase() < b.title.toLowerCase()) return -1;
-        if (a.title.toLowerCase() > b.title.toLowerCase()) return 1;
+        if (a.title.toUpperCase() < b.title.toUpperCase()) return -1;
+        if (a.title.toUpperCase() > b.title.toUpperCase()) return 1;
         return 0;
     });
 
@@ -287,7 +287,7 @@ Settings.getPasswordStrength = pw => {
     var uniques = [];
     for (var i = 0; i < pw.length; i++) {
         var current = pw.charCodeAt(i);
-        if (uniques.indexOf(current) === -1) {
+        if (!uniques.includes(current)) {
             uniques.push(current);
         }
     }
@@ -338,7 +338,7 @@ Settings.getPasswordStrength = pw => {
 
     // return strength as an integer + boolean usage of character type
     return {
-        strength: Math.floor(pwStrength),
+        strength: parseInt(pwStrength, 10),
         hasUpper: Boolean(upper),
         hasLower: Boolean(lower),
         hasDigit: Boolean(nums),
