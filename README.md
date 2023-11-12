@@ -8,23 +8,21 @@ Later, if you switch to a different platform or lose all record of your password
 
 ### For more, see the [passwordmaker.org](https://www.passwordmaker.org/) site.
 
+**_PLEASE Export your profile data_** it is advisable to always keep a back-up of your current profile data.
+
 # Installation
 
-Install this extension from the [Chrome Web Store](https://chrome.google.com/webstore/search/PasswordMaker%20(.org)).
+Install this extension from the [Chrome Web Store](https://chrome.google.com/webstore/search/PasswordMaker.org).
 
 # Status of this project
 
 ## Update 2021-05-16 by [@GitTom](https://github.com/GitTom)
 
-The old "PasswordMaker Pro" published by @heavensrevenge was taken down by Google due to policy violations (probably just that the listing was not maintained with updated privacy declarations).  I applied some minor updates, incremented the version to 0.9.1, and created a new Chrome Web Store listing under the name "PasswordMaker (.org)".
+I applied some minor updates and created a new Chrome Web Store listing under the name "PasswordMaker (.org)".
 
 ### Update 2014-07-13 by [@heavensrevenge](https://github.com/heavensrevenge)
 
-I am the new and active maintainer of this project and I have uploaded this extension back to the Chrome Web Store which is located at https://chrome.google.com/webstore/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh
-
-**_PLEASE Export your profile data_** to be sure you have a back-up of your data which you can import into the most current version.
-I apologize for any problems the disappearance from the Chrome Web Store may have caused, but I will do my best to keep this extension alive and well.
-
+I have updated this extension back to the Chrome Web Store which is located at https://chrome.google.com/webstore/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh to upgrade users still on old versions.
 
 ### Update 2014-07-12 by [@bitboxer](https://github.com/bitboxer)
 
