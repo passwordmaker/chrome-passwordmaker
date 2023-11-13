@@ -203,9 +203,10 @@ function copyPassword() {
     updateFields();
     chrome.tabs.query({
         "windowType": "popup"
-    }, () => {
-        navigator.clipboard.writeText($("#generated").val());
-        window.close();
+    }).then(() => {
+        navigator.clipboard.writeText($("#generated").val()).then(() => {
+            window.close();
+        });
     });
 }
 

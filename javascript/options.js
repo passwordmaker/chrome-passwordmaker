@@ -147,8 +147,9 @@ function importRdf() {
 }
 
 function copyRdfExport() {
-    $("#exportText").get(0).select();
-    navigator.clipboard.writeText($("#exportText").val());
+    navigator.clipboard.writeText($("#exportText").val()).then(() => {
+        $("#exportText").get(0).select();
+    });
 }
 
 function showOptions() {
