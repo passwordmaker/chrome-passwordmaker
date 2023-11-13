@@ -165,7 +165,7 @@ Settings.setStoreLocation = store => {
 
 Settings.createExpirePasswordAlarm = () => {
     chrome.alarms.clear("expire_password").then(() => {
-        chrome.alarms.create("expire_password").then(() => {
+        chrome.alarms.create("expire_password", {
             delayInMinutes: parseInt(localStorage.getItem("expire_password_minutes"), 10)
         });
     });
