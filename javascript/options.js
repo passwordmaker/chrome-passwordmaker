@@ -268,7 +268,7 @@ function setSyncPassword() {
 }
 
 function clearSyncData() {
-    chrome.storage.sync.clear(() => {
+    chrome.storage.sync.clear().then(() => {
         if (typeof chrome.runtime.lastError === "undefined") {
             localStorage.setItem("sync_profiles", "false");
             Settings.syncDataAvailable = false;
@@ -279,7 +279,7 @@ function clearSyncData() {
             updateSyncProfiles();
             updateProfileList();
         } else {
-            alert("Could not delete synced data: " + chrome.runtime.lastError.message);
+            alert("Could not delete synced data: " + chrome.runtime.lastError);
         }
     });
 }

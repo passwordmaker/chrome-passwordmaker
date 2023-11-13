@@ -105,13 +105,13 @@ Settings.saveSyncedProfiles = data => {
     var threshold = Math.round(chrome.storage.sync.QUOTA_BYTES_PER_ITEM * 0.95);
     var output = {};
 
-    chrome.storage.sync.clear(() => {
-        if (!chrome.runtime.lastError) {
+    chrome.storage.sync.clear().then(() => {
+        if (typeof chrome.runtime.lastError === "undefined") {
             if (data.length <= threshold) {
                 output.synced_profiles = data;
                 chrome.storage.sync.set(output).then(() => {
-                    if (chrome.runtime.lastError) {
-                        alert("Could not sync data : " + chrome.runtime.lastError.message);
+                    if (typeof chrome.runtime.lastError !== "undefined") {
+                        alert("Could not sync data : " + chrome.runtime.lastError);
                     }
                 });
             } else {
@@ -123,13 +123,13 @@ Settings.saveSyncedProfiles = data => {
                     output[date + i] = parts[i];
                     keys[i] = date + i;
                 }
-                output.synced_profiles = keys;
+                output.synced_profiles_keys = keys;
                 chrome.storage.sync.set(output).then(() => {
-                    if (!chrome.runtime.lastError) {
+                    if (oldKeys !== null) {
                         chrome.storage.sync.remove(oldKeys.split(","));
-                    } else {
-                        alert("Could not sync large profile data : " + chrome.runtime.lastError.message);
                     }
+                }).catch((error) => {
+                    console.error(error);
                 });
             }
             chrome.storage.sync.get(["synced_profiles"]).then((result) => {
@@ -164,8 +164,8 @@ Settings.setStoreLocation = store => {
 };
 
 Settings.createExpirePasswordAlarm = () => {
-    chrome.alarms.clear("expire_password", () => {
-        chrome.alarms.create("expire_password", {
+    chrome.alarms.clear("expire_password").then(() => {
+        chrome.alarms.create("expire_password").then(() => {
             delayInMinutes: parseInt(localStorage.getItem("expire_password_minutes"), 10)
         });
     });

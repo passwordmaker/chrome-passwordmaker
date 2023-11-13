@@ -2,18 +2,18 @@ function updateSyncedProfiles(data) {
     chrome.storage.local.set({"synced_profiles_keys": ""});
     if (typeof data.synced_profiles !== "undefined") {
         data.synced_profiles = "";
-    } else if (typeof(data.synced_profiles) !== "string") {
+    } else if (typeof data.synced_profiles !== "string") {
         var profiles = "";
         data.synced_profiles.forEach(function(key) {
             profiles += data[key];
         });
-        chrome.storage.local.set({"synced_profiles_keys": data.synced_profiles.join()});
+        chrome.storage.local.set({"synced_profiles_keys": data.synced_profiles_keys.join()});
         data.synced_profiles = profiles;
     }
     chrome.storage.local.set({"synced_profiles": data.synced_profiles});
 }
 
-chrome.storage.sync.get(null).then((data) => {
+chrome.storage.sync.get().then(data => {
     if (typeof chrome.runtime.lastError !== "undefined") {
         updateSyncedProfiles(data);
         if (data.sync_profiles_password) {
@@ -22,7 +22,7 @@ chrome.storage.sync.get(null).then((data) => {
     }
 });
 
-chrome.storage.onChanged.addListener(function(changes, namespace) {
+chrome.storage.onChanged.addListener((changes, namespace) => {
     if (namespace !== "sync") {
         return;
     }
@@ -38,13 +38,13 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
     }
 });
 
-chrome.alarms.onAlarm.addListener(function (alarm) {
+chrome.alarms.onAlarm.addListener(alarm => {
     if (alarm.name === "expire_password") {
         chrome.storage.local.set({ "password": "" });
     }
 });
 
-chrome.runtime.onStartup.addListener(function() {
+chrome.runtime.onStartup.addListener(() => {
     chrome.storage.local.get(["store_location"]).then((result) => {
         if (/memory/.test(result.store_location)) {
             chrome.storage.local.set({ password: "" });

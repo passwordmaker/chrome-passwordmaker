@@ -12,6 +12,13 @@
     "background": {
         "service_worker": "javascript/background.js"
     },
+    "commands": {
+        "_execute_action": {
+            "suggested_key": {
+                "default": "Alt+X"
+            }
+        }
+    },
     "description": "Flexible password generator using a cryptographic hash algorithm of your choice - Fully Compatible with PasswordMaker.org",
     "homepage_url": "https://github.com/passwordmaker/chrome-passwordmaker",
     "icons": {

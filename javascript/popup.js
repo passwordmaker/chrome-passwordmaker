@@ -131,7 +131,7 @@ function showButtons() {
     // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
     // Also cant run on the Chrome Web Store/Extension Gallery
     if (!(/^about|^chrome|chrome\.google\.com|^opera/i).test(Settings.currentUrl)) {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+        chrome.tabs.query({active: true, currentWindow: true}).then(tabs => {
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
                 func: showButtonsScript,
@@ -185,7 +185,7 @@ function fillFields(generatedPass) {
     // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
     // Also cant run on the Chrome Web Store/Extension Gallery
     if (!(/^about|^chrome|chrome\.google\.com|^opera/i).test(Settings.currentUrl)) {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+        chrome.tabs.query({active: true, currentWindow: true}).then(tabs => {
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
                 args : [ generatedPass ],
@@ -212,7 +212,7 @@ function copyPassword() {
 function openOptions() {
     chrome.tabs.create({
         "url": chrome.runtime.getURL("html/options.html")
-    }, () => {
+    }).then(() => {
         window.close();
     });
 }
@@ -250,7 +250,7 @@ function handleKeyPress(event) {
     }
 }
 function initPopup() {
-    chrome.storage.local.get(["password"]).then((result) => {
+    chrome.storage.local.get(["password"]).then(result => {
         if (typeof result.password === "undefined") {
             chrome.storage.local.set({
                 password: ""
@@ -313,7 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "active": true,
         "currentWindow": true,
         "windowType": "normal"
-    }, tabs => {
+    }).then(tabs => {
         Settings.currentUrl = tabs[0].url || "";
         initPopup();
     });
