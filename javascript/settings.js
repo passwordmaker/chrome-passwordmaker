@@ -109,10 +109,8 @@ Settings.saveSyncedProfiles = data => {
         if (typeof chrome.runtime.lastError === "undefined") {
             if (data.length <= threshold) {
                 output.synced_profiles = data;
-                chrome.storage.sync.set(output).then(() => {
-                    if (typeof chrome.runtime.lastError !== "undefined") {
-                        alert("Could not sync data : " + chrome.runtime.lastError);
-                    }
+                chrome.storage.sync.set(output).catch(() => {
+                    console.error("Could not sync data : " + chrome.runtime.lastError);
                 });
             } else {
                 var splitter = new RegExp("[\\s\\S]{1," + threshold + "}", "g");
@@ -125,7 +123,7 @@ Settings.saveSyncedProfiles = data => {
                 }
                 output.synced_profiles_keys = keys;
                 chrome.storage.sync.set(output).then(() => {
-                    if (oldKeys !== null) {
+                    if ((oldKeys !== null) && (oldKeys.length !== 0)) {
                         chrome.storage.sync.remove(oldKeys.split(","));
                     }
                 }).catch((error) => {
@@ -236,6 +234,7 @@ Settings.shouldAlphaSortProfiles = () => {
 
 Settings.startSyncWith = password => {
     var syncPassHash = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(password));
+    Settings.fromChromeStorageLocalToLocalStorage();
     if (Settings.syncDataAvailable) {
         var profiles = Settings.decrypt(syncPassHash, localStorage.getItem("synced_profiles"));
         if (profiles.length !== 0) {
@@ -354,7 +353,7 @@ Settings.getPasswordStrength = pw => {
 Settings.fromChromeStorageLocalToLocalStorage = () => {
     chrome.storage.local.get().then((result) => {
         Object.keys(result).forEach(function(key) {
-            localStorage[key] = result[key];
+            localStorage.setItem(key, String(result[key]));
         });
     });
 };

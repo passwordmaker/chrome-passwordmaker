@@ -2,12 +2,12 @@ function updateSyncedProfiles(data) {
     chrome.storage.local.set({"synced_profiles_keys": ""});
     if (typeof data.synced_profiles !== "undefined") {
         data.synced_profiles = "";
-    } else if (typeof data.synced_profiles !== "string") {
+    } else if (typeof data.synced_profiles_keys !== "undefined") {
         var profiles = "";
-        data.synced_profiles.forEach(function(key) {
-            profiles += data[key];
+        data.synced_profiles_keys.newValue.forEach(key => {
+            profiles += data[key].newValue;
         });
-        chrome.storage.local.set({"synced_profiles_keys": data.synced_profiles_keys.join()});
+        chrome.storage.local.set({"synced_profiles_keys": data.synced_profiles_keys.newValue.join()});
         data.synced_profiles = profiles;
     }
     chrome.storage.local.set({"synced_profiles": data.synced_profiles});
@@ -27,14 +27,12 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         return;
     }
     if (typeof changes.synced_profiles !== "undefined") {
-        var flattened = {};
-        Object.keys(changes).forEach(function(key) {
-            flattened[key] = changes[key];
-        });
-        updateSyncedProfiles(flattened);
+        updateSyncedProfiles(changes);
+    } else if (typeof changes.synced_profiles_keys !== "undefined") {
+        updateSyncedProfiles(changes);
     }
     if (typeof changes.sync_profiles_password !== "undefined") {
-        chrome.storage.local.set({"sync_profiles_password": (changes.sync_profiles_password || "")});
+        chrome.storage.local.set({"sync_profiles_password": (changes.sync_profiles_password.newValue || "")});
     }
 });
 
@@ -46,7 +44,7 @@ chrome.alarms.onAlarm.addListener(alarm => {
 
 chrome.runtime.onStartup.addListener(() => {
     chrome.storage.local.get(["store_location"]).then((result) => {
-        if (/memory/.test(result.store_location)) {
+        if ((/memory/i).test(result.store_location)) {
             chrome.storage.local.set({ password: "" });
         }
     })

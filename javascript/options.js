@@ -262,20 +262,22 @@ function setSyncPassword() {
         setTimeout(() => {
             updateSyncProfiles();
             updateProfileList();
+            Settings.saveProfiles();
         }, 200);
     } else {
-        alert("Wrong password. Please specify the password you used when initially syncing your data");
+        alert("Wrong password. Please specify the password you used when initially synced your data");
     }
 }
 
 function clearSyncData() {
-    chrome.storage.sync.clear().then(() => {
+    chrome.storage.sync.clear(() => {
         if (typeof chrome.runtime.lastError === "undefined") {
             localStorage.setItem("sync_profiles", "false");
             Settings.syncDataAvailable = false;
             localStorage.removeItem("synced_profiles");
             localStorage.removeItem("synced_profiles_keys");
             localStorage.removeItem("sync_profiles_password");
+            chrome.storage.sync.clear();
             Settings.loadLocalProfiles();
             updateSyncProfiles();
             updateProfileList();
@@ -517,7 +519,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#alphaSortProfiles").on("change", updateAlphaSortProfiles);
     $("#set_sync_password").on("click", setSyncPassword);
     $("#syncProfilesPassword").on("keydown", (event) => {
-        if (event.key === "Enter") setSyncPassword();
+        if (event.code === "Enter") setSyncPassword();
     })
     $("#clear_sync_data").on("click", clearSyncData);
     $("#resetToDefaultprofiles").on("click", removeAllProfiles);

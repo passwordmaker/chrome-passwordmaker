@@ -235,18 +235,16 @@ function showPasswordField() {
 }
 
 function handleKeyPress(event) {
-    // 13 is the key code of the enter key
-    if (event.keyCode === 13 && !(/select/i).test(event.target.tagName)) {
+    if (event.code === "Enter" && !(/select/i).test(event.target.tagName)) {
         if ((/password/i).test($("#generated").val())) {
             $("#password").focus();
         } else {
-            fillFields();
+            fillFields([$("#generated").val(), $("#username").val()]);
         }
     }
 
     // ctrl/option + c to copy the password to clipboard and close the popup
-    // 67 is the key code of the c character
-    if ((event.ctrlKey || event.metaKey) && event.keyCode === 67) {
+    if ((event.ctrlKey || event.metaKey) && event.code === "KeyC") {
         copyPassword();
     }
 }
