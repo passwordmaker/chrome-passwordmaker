@@ -1,3 +1,9 @@
+0.9.5 - 2023-11-16
+
+* Fixes issue #194
+* Fixed expire password timer
+* Changed default keyboard shortcut to Alt+X
+
 0.9.4 - 2023-11-07
 
 * Scripting can't run on the Chrome Web Store/Extension Gallery; Manifest v3 maintenance
