@@ -1,3 +1,7 @@
+0.9.6 - 2023-11-17
+
+* Update Google Web Store URL
+
 0.9.5 - 2023-11-16
 
 * Fixes issue #194
