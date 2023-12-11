@@ -1,5 +1,5 @@
 function updateSyncedProfiles(data) {
-    chrome.storage.local.set({"synced_profiles_keys": ""});
+    chrome.storage.local.remove("synced_profiles_keys");
     if (typeof data.synced_profiles !== "undefined") {
         data.synced_profiles = "";
     } else if (typeof data.synced_profiles_keys !== "undefined") {
@@ -45,7 +45,7 @@ chrome.alarms.onAlarm.addListener(alarm => {
 chrome.runtime.onStartup.addListener(() => {
     chrome.storage.local.get(["store_location"]).then((result) => {
         if ((/memory/i).test(result.store_location)) {
-            chrome.storage.local.set({ password: "" });
+            chrome.storage.local.set({ "password": "" });
         }
     })
 });

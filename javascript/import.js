@@ -211,7 +211,7 @@ function dumpedProfiles() {
     var dumpProfiles = [],
         expOpts = RdfImporter.getExportOpts();
 
-    Settings.loadLocalProfiles();
+    Settings.loadProfiles(() => { $.noop });
 
     for (var i = 0; i < Settings.profiles.length; i++) {
         var prof = Settings.profiles[i],
@@ -240,8 +240,9 @@ function dumpedProfiles() {
         }
         dumpProfiles.push(newProf);
     }
-
-    if (Settings.shouldAlphaSortProfiles()) Settings.alphaSortProfiles();
+    chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
+        if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
+    });
 
     return dumpProfiles;
 }

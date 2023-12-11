@@ -31,60 +31,66 @@ function getAutoProfileIdForUrl() {
     }
 }
 
+function passwordFieldSuccess() {
+    var profile = Settings.getProfile($("#profile").val());
+    var profileResult = profile.getPassword($("#usedtext").val(), $("#password").val(), $("#username").val());
+    $("#generated").val(profileResult);
+    setPasswordColors("#008000", "#FFFFFF");
+    $("#password, #confirmation").removeAttr("style");
+    showButtons();
+    return Settings.getPasswordStrength(profileResult).strength;
+}
+
 function updateFields() {
     var password = $("#password").val();
     var confirmation = $("#confirmation").val();
-    var usedUrl = $("#usedtext").val();
-    var userName = $("#username").val();
-    var profile = Settings.getProfile($("#profile").val());
     var passStrength = 0;
 
-    if (password.length === 0) {
-        $("#generated").val("Please Enter Password");
-        setPasswordColors("#000000", "#85FFAB");
-        hideButtons();
-    } else if (!matchesMasterHash(password)) {
-        $("#generated").val("Master Password Mismatch");
-        setPasswordColors("#FFFFFF", "#FF7272");
-        hideButtons();
-    } else if (!Settings.useVerificationCode() && !Settings.keepMasterPasswordHash() && password !== confirmation) {
-        $("#generated").val("Passwords Don't Match");
-        setPasswordColors("#FFFFFF", "#FF7272");
-        hideButtons();
-    } else {
-        var result = profile.getPassword(usedUrl, password, userName);
-        $("#generated").val(result);
-        setPasswordColors("#008000", "#FFFFFF");
-        $("#password, #confirmation").removeAttr("style");
-        passStrength = Settings.getPasswordStrength(result).strength;
-        showButtons();
-    }
+    chrome.storage.local.get(["use_verification_code", "keep_master_password_hash", "master_password_hash", "show_password_strength", "use_verification_code"]).then((result) => {
+        if (password.length === 0) {
+            $("#generated").val("Please Enter Password");
+            setPasswordColors("#000000", "#85FFAB");
+            hideButtons();
+        } else if (result["keep_master_password_hash"] && result["master_password_hash"]) {
+            var saved = JSON.parse(result["master_password_hash"]);
+            var derived = Settings.make_pbkdf2(password, saved.salt, saved.iter);
+            if (derived.hash !== saved.hash) {
+                $("#generated").val("Master Password Mismatch");
+                setPasswordColors("#FFFFFF", "#FF7272");
+                hideButtons();
+            } else {
+                passStrength = passwordFieldSuccess();
+            }
+        } else if (!result["use_verification_code"] && !result["keep_master_password_hash"] && (password !== confirmation)) {
+            $("#generated").val("Passwords Don't Match");
+            setPasswordColors("#FFFFFF", "#FF7272");
+            hideButtons();
+        } else {
+            passStrength = passwordFieldSuccess();
+        }
 
-    if (Settings.shouldShowStrength()) {
-        $("meter").val(passStrength);
-        $("#strengthValue").text(passStrength);
-    }
+        if (result["show_password_strength"]) {
+            $("meter").val(passStrength);
+            $("#strengthValue").text(passStrength);
+        }
 
-    if (Settings.useVerificationCode()) {
-        $("#verificationCode").val(getVerificationCode(password));
-    }
+        if (result["use_verification_code"]) {
+            $("#verificationCode").val(getVerificationCode(password));
+        }
 
-    Settings.setPassword(password);
+        Settings.setPassword(password);
+
+        if ((/password/i).test($("#generated").val())) {
+            $("#password").focus();
+        } else {
+            $("#password").focus().blur();
+        }
+    });
 }
 
 function delayedUpdate() {
     clearTimeout(window.delayedUpdateID);
     window.delayedUpdateID = setTimeout(updateFields, 800);
-}
-
-function matchesMasterHash(password) {
-    if (Settings.keepMasterPasswordHash()) {
-        var saved = JSON.parse(localStorage.getItem("master_password_hash"));
-        var derived = Settings.make_pbkdf2(password, saved.salt, saved.iter);
-        return derived.hash === saved.hash;
-    } else {
-        return true;
-    }
 }
 
 function updateProfileText() {
@@ -116,7 +122,7 @@ function hideButtons() {
     }
 }
 
-function showButtonsScript (){
+function showButtonsScript() {
     var fields = document.getElementsByTagName("input"), fieldCount = 0;
     for (var i = 0; i < fields.length; i++) {
         if (/password/i.test(fields[i].type + ' ' + fields[i].name)) {
@@ -130,7 +136,7 @@ function showButtons() {
     $("#copypassword").removeClass("hidden");
     // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
     // Also cant run on the Chrome Web Store/Extension Gallery
-    if (!(/^about|^chrome|(chrome|chromewebstore)\.google\.com|^opera/i).test(Settings.currentUrl)) {
+    if (!(/^about|^(chrome|chrome-extension)|(chrome|chromewebstore)\.google\.com|^opera/i).test(Settings.currentUrl)) {
         chrome.tabs.query({active: true, currentWindow: true}).then(tabs => {
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
@@ -142,7 +148,7 @@ function showButtons() {
                     }
                 }
             }).catch((err) => {
-                console.error("Show button error: " + err.message);
+                console.log("Show button error: " + err.message);
             });
         });
     }
@@ -184,7 +190,7 @@ function fillFields(generatedPass) {
     updateFields();
     // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
     // Also cant run on the Chrome Web Store/Extension Gallery
-    if (!(/^about|^chrome|(chrome|chromewebstore)\.google\.com|^opera/i).test(Settings.currentUrl)) {
+    if (!(/^about|^(chrome|chrome-extension)|(chrome|chromewebstore)\.google\.com|^opera/i).test(Settings.currentUrl)) {
         chrome.tabs.query({active: true, currentWindow: true}).then(tabs => {
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
@@ -193,7 +199,7 @@ function fillFields(generatedPass) {
             }).then(() => {
                 window.close();
             }).catch((err) => {
-                console.error("Fill field error: " + err.message);
+                console.log("Fill field error: " + err.message);
             });
         });
     }
@@ -229,9 +235,11 @@ function getVerificationCode(password) {
 function showPasswordField() {
     $("#activatePassword").hide();
     $("#generated").show();
-    if (Settings.shouldShowStrength()) {
-        $("#strength_row").show();
-    }
+    chrome.storage.local.get(["show_password_strength"]).then(result => {
+        if (result["show_password_strength"]) {
+            $("#strength_row").show();
+        }
+    });
 }
 
 function handleKeyPress(event) {
@@ -248,21 +256,27 @@ function handleKeyPress(event) {
         copyPassword();
     }
 }
+
 function initPopup() {
-    chrome.storage.local.get(["password"]).then(result => {
-        if (typeof result.password === "undefined") {
+    chrome.storage.local.get(["password", "password_key", "password_crypt", "alpha_sort_profiles"]).then(result => {
+        if (result["password"] === undefined) {
             chrome.storage.local.set({
-                password: ""
+                "password": ""
+            }).then(() => {
+                updateFields();
             });
-            updateFields();
-            initPopup();
         } else {
-            var pass = Settings.getPassword(result.password);
+            var pass = "";
+            if (result["password"]) {
+                pass = Settings.decrypt(result["password_key"], result["password"]);
+            } else if (result["password_crypt"]) {
+                pass = Settings.decrypt(result["password_key"], result["password_crypt"]);
+            }
 
             $("#password").val(pass);
             $("#confirmation").val(pass);
 
-            if (Settings.shouldAlphaSortProfiles()) Settings.alphaSortProfiles();
+            if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
             for (var i = 0; i < Settings.profiles.length; i++) {
                 $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
             }
@@ -270,56 +284,52 @@ function initPopup() {
 
             updateProfileText();
             updateFields();
-
-            if ((/password/i).test($("#generated").val())) {
-                $("#password").focus();
-            } else {
-                $("#password").focus().blur();
-            }
         }
     });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    Settings.loadProfiles();
-    Settings.fromChromeStorageLocalToLocalStorage();
-    $("#password, #confirmation").on("keyup", Settings.setPassword);
-    $("input").on("input", delayedUpdate);
-    $("#profile").on("change", onProfileChanged);
-    $("#activatePassword").on("click", showPasswordField);
-    $("#copypassword").on("click", copyPassword);
-    $("#options").on("click", openOptions);
+    Settings.loadProfiles(() => {
+        $("#password, #confirmation").on("keyup", Settings.setPassword);
+        $("input").on("input", delayedUpdate);
+        $("#profile").on("change", onProfileChanged);
+        $("#activatePassword").on("click", showPasswordField);
+        $("#copypassword").on("click", copyPassword);
+        $("#options").on("click", openOptions);
 
-    if (Settings.shouldHidePassword()) {
-        $("#generated, #strength_row").hide();
-    } else {
-        $("#activatePassword").hide();
-    }
+        chrome.storage.local.get(["show_generated_password", "keep_master_password_hash", "use_verification_code", "show_password_strength"]).then((result) => {
+            if (result["show_generated_password"] === true) {
+                $("#generated, #strength_row").hide();
+            } else {
+                $("#activatePassword").hide();
+            }
 
-    if (Settings.keepMasterPasswordHash() || Settings.useVerificationCode()) {
-        $("#confirmation_row").hide();
-    }
+            if ((result["keep_master_password_hash"] === true) || result["use_verification_code"] === true) {
+                $("#confirmation_row").hide();
+            }
 
-    if (!Settings.useVerificationCode()) {
-        $("#verification_row").hide();
-    }
+            if (!result["use_verification_code"]) {
+                $("#verification_row").hide();
+            }
 
-    if (!Settings.shouldShowStrength()) {
-        $("#strength_row").hide();
-    }
+            if (!result["show_password_strength"]) {
+                $("#strength_row").hide();
+            }
+        });
 
-    chrome.tabs.query({
-        "active": true,
-        "currentWindow": true,
-        "windowType": "normal"
-    }).then(tabs => {
-        Settings.currentUrl = tabs[0].url || "";
-        initPopup();
+        chrome.tabs.query({
+            "active": true,
+            "currentWindow": true,
+            "windowType": "normal"
+        }).then(tabs => {
+            Settings.currentUrl = tabs[0].url || "";
+            initPopup();
+        });
+
+        $("#injectpassword").on("click", function(e) {
+            fillFields([$("#generated").val(), $("#username").val()]);
+        });
+
+        $(document.body).on("keydown", handleKeyPress);
     });
-
-    $("#injectpassword").on("click", function(e) {
-        fillFields([$("#generated").val(), $("#username").val()]);
-    });
-
-    $(document.body).on("keydown", handleKeyPress);
 });
