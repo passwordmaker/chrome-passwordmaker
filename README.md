@@ -1,4 +1,4 @@
-# PasswordMaker (.org) Chrome Extension
+# PasswordMaker.org Chrome Extension
 
 This is a Chrome Extension that implements the PasswordMaker.org method for generating a unique, secure password for any site, from a single master password.
 
@@ -12,17 +12,26 @@ Later, if you switch to a different platform or lose all record of your password
 
 # Installation
 
-Install this extension from the [Chrome Web Store](https://chrome.google.com/webstore/search/PasswordMaker.org).
+Install this extension from the [Chrome Web Store](https://chromewebstore.google.com/search/PasswordMaker).
+1. [PasswordMaker Pro](https://chromewebstore.google.com/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh)
+2. [PasswordMaker (.org)](https://chromewebstore.google.com/detail/passwordmaker-org/fckpmekmkjglpmdcbfkchimdelcjiipd)
 
 # Status of this project
 
-## Update 2021-05-16 by [@GitTom](https://github.com/GitTom)
+## Update 2023-12-12 by [@heavensrevenge](https://github.com/heavensrevenge)
+
+There are two equivalent extensions on the Chrome Web Store, they are exactly the same and will be updated at the same time:
+
+1. [PasswordMaker Pro](https://chromewebstore.google.com/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh)
+2. [PasswordMaker (.org)](https://chromewebstore.google.com/detail/passwordmaker-org/fckpmekmkjglpmdcbfkchimdelcjiipd)
+
+### Update 2021-05-16 by [@GitTom](https://github.com/GitTom)
 
 I applied some minor updates and created a new Chrome Web Store listing under the name "PasswordMaker (.org)".
 
 ### Update 2014-07-13 by [@heavensrevenge](https://github.com/heavensrevenge)
 
-I have updated this extension back to the Chrome Web Store which is located at https://chrome.google.com/webstore/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh to upgrade users still on old versions.
+Became the active maintainer of the extension.
 
 ### Update 2014-07-12 by [@bitboxer](https://github.com/bitboxer)
 
