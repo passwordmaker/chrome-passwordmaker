@@ -38,14 +38,14 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 
 chrome.alarms.onAlarm.addListener(alarm => {
     if (alarm.name === "expire_password") {
-        chrome.storage.local.set({ "password": "" });
+        chrome.storage.session.set({ "password": "" });
     }
 });
 
 chrome.runtime.onStartup.addListener(() => {
     chrome.storage.local.get(["store_location"]).then((result) => {
         if ((/memory/i).test(result.store_location)) {
-            chrome.storage.local.set({ "password": "" });
+            chrome.storage.session.set({ "password": "" });
         }
     })
 });

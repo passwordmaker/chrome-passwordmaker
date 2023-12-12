@@ -83,7 +83,7 @@ Settings.alphaSortProfiles = () => {
     var profiles = Settings.profiles,
         defaultProfile = profiles.shift();
 
-    profiles.sort(function(a, b) {
+    profiles.sort((a, b) => {
         if (a.title.toUpperCase() < b.title.toUpperCase()) return -1;
         if (a.title.toUpperCase() > b.title.toUpperCase()) return 1;
         return 0;
@@ -149,11 +149,7 @@ Settings.saveProfiles = () => {
 Settings.setStoreLocation = (location) => {
     chrome.storage.local.set({ "storeLocation": location }).then(() => {
         if (location === "memory_expire") {
-            chrome.storage.local.get(["expire_password_minutes"]).then((result) => {
-                if (result["expire_password_minutes"] === undefined) {
-                    chrome.storage.local.set({ "expire_password_minutes": 5 });
-                }
-            });
+            chrome.storage.local.set({ "expire_password_minutes": 5 });
         }
         if (location !== "disk") {
             chrome.storage.local.remove("password_crypt");
@@ -179,20 +175,27 @@ Settings.createExpirePasswordAlarm = () => {
 Settings.setPassword = () => {
     chrome.storage.local.get(["storeLocation"]).then((result) => {
         if (result["storeLocation"] === "never") {
-            chrome.storage.local.set({ "password": "" });
+            chrome.storage.local.remove("password");
+            chrome.storage.session.remove("password");
         } else {
             var password = $("#password").val();
             var bits = crypto.getRandomValues(new Uint32Array(8));
             var key = sjcl.codec.base64.fromBits(bits);
             var encrypted = Settings.encrypt(key, password);
-            chrome.storage.local.set({ "password": encrypted, "password_key": String(key) });
+            switch (result["storeLocation"]) {
+                case "memory":
+                    chrome.storage.session.set({ "password": encrypted, "password_key": String(key) });
+                    break;
+                case "memory_expire":
+                    chrome.storage.session.set({ "password": encrypted, "password_key": String(key) }).then((result) => {
+                        Settings.createExpirePasswordAlarm();
+                    });
+                    break;
+                case "disk":
+                    chrome.storage.local.set({ "password": encrypted, "password_key": String(key), "password_crypt": encrypted });
+                    break;
+            }
 
-            if (result["storeLocation"] === "memory_expire") {
-                Settings.createExpirePasswordAlarm();
-            }
-            if (result["storeLocation"] === "disk") {
-                chrome.storage.local.set({ "password_crypt": encrypted });
-            }
         }
     });
 };
