@@ -1,3 +1,9 @@
+0.9.7 - 2023-12-12
+
+* Mention that there are two equivalent versions of the extension on the Chrome Web Store
+* Migrated from synchronous localStorage to asynchronous chrome.storage.(local|session) continuation of manifest v3 migration
+* Fixed session only password saving after asynchronous migration
+
 0.9.6 - 2023-11-17
 
 * Update Google Web Store URL
