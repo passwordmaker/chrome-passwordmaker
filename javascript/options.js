@@ -155,9 +155,11 @@ function copyRdfExport() {
 }
 
 function showOptions() {
-    chrome.storage.sync.getBytesInUse().then((bytes) => {
-        if (bytes > 0) {
+    chrome.storage.sync.get().then((result) => {
+        if (Object.keys(result).length > 0) {
             chrome.storage.local.set({ "syncDataAvailable": true });
+        } else {
+            chrome.storage.local.set({ "syncDataAvailable": false });
         }
     });
 
@@ -166,8 +168,9 @@ function showOptions() {
         $("#expirePasswordMinutes").val(result["expire_password_minutes"] || 5);
         updateStyle($("#password_expire_row"), "hidden", (result["storeLocation"] !== "memory_expire"));
         updateStyle($("#master_password_row"), "hidden", (result["keep_master_password_hash"] === undefined || result["keep_master_password_hash"] === false));
-        updateSyncProfiles();
         showSection("#general_settings");
+    }).finally(() => {
+        updateSyncStatus();
     });
 }
 
@@ -257,12 +260,18 @@ function updateProfileList() {
 }
 
 function syncSucccess(syncPassHash) {
-    chrome.storage.local.set({ "syncDataAvailable": true, "sync_profiles": true, "sync_profiles_password": syncPassHash }).then(() => {
+    chrome.storage.local.set({ "sync_profiles": true, "sync_profiles_password": syncPassHash }).then(() => {
         $("#syncProfilesPassword").val("");
-        updateSyncProfiles();
-        updateProfileList();
-        Settings.saveSyncedProfiles(Settings.encrypt(syncPassHash, JSON.stringify(Settings.profiles)));
-        Settings.saveProfiles();
+        
+        return updateProfileList();
+    }).then(() => {
+        //Settings.saveSyncedProfiles(Settings.encrypt(syncPassHash, JSON.stringify(Settings.profiles)));
+        //Settings.saveProfiles();
+        return Settings.saveSyncedProfiles(JSON.stringify(Settings.profiles), syncPassHash);
+    }).finally(() => {
+        setTimeout(() => {
+            updateSyncStatus();
+        }, 500);
     });
 }
 
@@ -273,16 +282,18 @@ function setSyncPassword() {
         return;
     }
 
-    chrome.storage.local.get(["syncDataAvailable", "synced_profiles", "sync_profiles_password"]).then((result) => {
+    chrome.storage.local.get(["syncDataAvailable"]).then((result) => {
         var syncPassHash = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(syncPassValue));
         if (result["syncDataAvailable"] === true) {
-            var profiles = Settings.decrypt(syncPassHash, result["synced_profiles"]);
-            if (profiles.length !== 0) {
-                Settings.loadProfilesFromString(profiles);
-                syncSucccess(syncPassHash);
-            } else {
-                alert("Wrong password. Please specify the password you used when initially synced your data");
-            }
+            chrome.storage.sync.get(["synced_profiles", "synced_profiles_keys", "sync_profiles_password"]).then((result) => {
+                //var profiles = Settings.decrypt(syncPassHash, result["synced_profiles"]);
+                if (syncPassHash === result["sync_profiles_password"]) {
+                    Settings.loadProfilesFromString(result["synced_profiles"]);
+                    syncSucccess(syncPassHash);
+                } else {
+                    alert("Wrong password. Please specify the password you used when initially synced your data");
+                }
+            });
         } else {
             syncSucccess(syncPassHash);
         }
@@ -291,30 +302,29 @@ function setSyncPassword() {
 
 function clearSyncData() {
     chrome.storage.sync.clear().then(() => {
-        if (typeof chrome.runtime.lastError === "undefined") {
-            chrome.storage.local.set({ "sync_profiles": false }).then(() => {
-                chrome.storage.local.remove(["synced_profiles", "synced_profiles_keys", "sync_profiles_password"]);
-                chrome.storage.sync.clear();
-                Settings.loadProfiles(() => {
-                    updateSyncProfiles();
-                    updateProfileList();
-                });
+        chrome.storage.local.set({ "sync_profiles": false }).then(() => {
+            return chrome.storage.local.remove(["synced_profiles", "synced_profiles_keys", "sync_profiles_password"]);
+        }).then(() => {
+            Settings.loadProfiles(() => {
+                setTimeout(() => {
+                    updateSyncStatus();
+                }, 500);
+                updateProfileList();
             });
-        } else {
-            alert("Could not delete synced data: " + chrome.runtime.lastError);
-        }
+        });
     });
 }
 
-function updateSyncProfiles() {
+function updateSyncStatus() {
     $("#sync_profiles_row, #no_sync_password, #sync_data_exists, #sync_password_set").hide();
     $("#set_sync_password, #clear_sync_data").addClass("hidden");
 
     if ($("#syncProfiles").prop("checked")) {
         chrome.storage.local.get(["syncDataAvailable", "sync_profiles_password", "synced_profiles"]).then((result) => {
-            var syncHash = result["sync_profiles_password"] || "";
-            var profiles = Settings.decrypt(syncHash, result["synced_profiles"]);
-            if (profiles.length !== 0) {
+            //var syncHash = result["sync_profiles_password"] || "";
+            //var profiles = Settings.decrypt(syncHash, result["synced_profiles"]);
+            var profiles = result["synced_profiles"];
+            if ((profiles !== undefined) && (profiles.length !== 0) && result["syncDataAvailable"]) {
                 $("#sync_password_set").show();
                 $("#clear_sync_data").removeClass("hidden");
             } else if (result["syncDataAvailable"]) {
@@ -326,9 +336,11 @@ function updateSyncProfiles() {
             }
         });
     } else {
-        chrome.storage.local.remove("sync_profiles_password");
-        Settings.loadProfiles(() => {
-            updateProfileList();
+        chrome.storage.local.set({ "sync_profiles": false }).then((result) => {
+            chrome.storage.local.remove(["synced_profiles", "sync_profiles_password"]);
+            Settings.loadProfiles(() => {
+                updateProfileList();
+            });
         });
     }
 }
@@ -543,7 +555,7 @@ document.addEventListener("DOMContentLoaded", () => {
         $("#expirePasswordMinutes").on("change", updateExpireTime);
         $("#hidePassword").on("change", updateHidePassword);
         $("#keepMasterPasswordHash").on("change", updateMasterHash);
-        $("#syncProfiles").on("change", updateSyncProfiles);
+        $("#syncProfiles").on("change", updateSyncStatus);
         $("#masterPassword").on("keyup", updateMasterHash);
         $("#useVerificationCode").on("change", updateUseVerificationCode);
         $("#showPasswordStrength").on("change", updateShowStrength);

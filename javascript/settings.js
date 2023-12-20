@@ -93,39 +93,33 @@ Settings.alphaSortProfiles = () => {
     Settings.profiles = profiles;
 };
 
-Settings.saveSyncedProfiles = (data) => {
+Settings.saveSyncedProfiles = (profileData, syncPassHash) => {
     var threshold = Math.round(chrome.storage.sync.QUOTA_BYTES_PER_ITEM * 0.95);
     var output = {};
 
     chrome.storage.sync.clear().then(() => {
-        if (typeof chrome.runtime.lastError === "undefined") {
-            if (data.length <= threshold) {
-                output["synced_profiles"] = data;
-                chrome.storage.sync.set(output).catch(() => {
-                    console.log("Could not sync data : " + chrome.runtime.lastError);
-                });
-                chrome.storage.local.set({ "synced_profiles": data });
-            } else {
-                var splitter = new RegExp("[\\s\\S]{1," + threshold + "}", "g");
-                var parts = data.match(splitter);
-                var date = Date.now();
-                var keys = [];
-                for (var i = 0; i < parts.length; ++i) {
-                    output[date + i] = parts[i];
-                    keys[i] = date + i;
-                }
-                output["synced_profiles_keys"] = keys;
-                chrome.storage.local.get(["synced_profiles_keys"]).then((result) => {
-                    chrome.storage.sync.set(output).then(() => {
-                        var oldKeys = result["synced_profiles_keys"]
-                        if ((result !== null) && (oldKeys.length !== 0)) {
-                            chrome.storage.sync.remove(oldKeys.split(","));
-                        }
-                    }).catch((error) => {
-                        console.log(error);
-                    });
-                });
-            }
+        if (profileData.length <= threshold) {
+            chrome.storage.sync.set({ "synced_profiles": profileData, "sync_profiles_password": syncPassHash }).catch(() => {
+                return console.log("Could not sync data : " + chrome.runtime.lastError);
+            }).then(() => {
+                return chrome.storage.local.set({ "synced_profiles": profileData, "sync_profiles_password": syncPassHash });
+            });
+        } else {
+            alert("Too much data to sync; will fix in a future update");
+        //    var splitter = new RegExp("[\\s\\S]{1," + threshold + "}", "g");
+        //    var parts = profileData.match(splitter);
+        //    var date = Date.now();
+        //    //var keys = [];
+        //    for (var i = 0; i < parts.length; ++i) {
+        //        output[date + i] = parts[i];
+        //        //keys[i] = date + i;
+        //    }
+        //
+        //    chrome.storage.sync.set(output).then(() => {
+        //
+        //    }).catch((error) => {
+        //        console.log(error);
+        //    });
         }
     });
 };
@@ -137,10 +131,11 @@ Settings.saveProfiles = () => {
     var stringified = JSON.stringify(Settings.profiles);
     chrome.storage.local.set({ "profiles": stringified }).then(() => {
         chrome.storage.local.get(["sync_profiles", "syncDataAvailable", "sync_profiles_password", "synced_profiles"]).then((result) => {
-            var syncHash = result["sync_profiles_password"] || "";
-            var profiles = Settings.decrypt(syncHash, result["synced_profiles"]);
-            if (result["sync_profiles"] && (!result["syncDataAvailable"] || (profiles.length !== 0))) {
-                Settings.saveSyncedProfiles(Settings.encrypt(result["sync_profiles_password"], stringified));
+            //var syncHash = result["sync_profiles_password"] || "";
+            //var profiles = Settings.decrypt(syncHash, result["synced_profiles"]);
+            if (result["sync_profiles"] && (!result["syncDataAvailable"] || (result["synced_profiles"].length !== 0))) {
+                //Settings.saveSyncedProfiles(Settings.encrypt(result["sync_profiles_password"], stringified));
+                Settings.saveSyncedProfiles(stringified, result["sync_profiles_password"]);
             }
         });
     });
