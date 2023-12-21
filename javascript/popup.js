@@ -80,10 +80,8 @@ function updateFields() {
 
         Settings.setPassword(password);
 
-        if ((/password/i).test($("#generated").val())) {
+        if ($("#password").val() === "") {
             $("#password").focus();
-        } else {
-            $("#password").focus().blur();
         }
     });
 }
