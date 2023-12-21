@@ -36,5 +36,5 @@
     },
     "permissions": ["activeTab", "scripting", "storage", "alarms"],
     "short_name": "PasswordMaker.org",
-    "version": "0.9.7"
+    "version": "0.9.8"
 }

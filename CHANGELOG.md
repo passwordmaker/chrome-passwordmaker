@@ -1,3 +1,8 @@
+0.9.8 - 2023-12-20
+
+* Fix issue #197
+* Partial fix for sync support
+
 0.9.7 - 2023-12-12
 
 * Mention that there are two equivalent versions of the extension on the Chrome Web Store
