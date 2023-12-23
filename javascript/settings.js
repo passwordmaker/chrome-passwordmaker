@@ -63,7 +63,7 @@ Settings.loadProfilesFromString = (profiles) => {
 };
 
 Settings.loadProfiles = (callback) => {
-    chrome.storage.local.get(["profiles", "sync_profiles"]).then((result) => {
+    chrome.storage.local.get(["profiles", "sync_profiles", "synced_profiles", "sync_profiles_password"]).then((result) => {
         if (result["profiles"]) {
             Settings.loadProfilesFromString(result["profiles"]);
         } else {
@@ -75,6 +75,19 @@ Settings.loadProfiles = (callback) => {
             Settings.profiles = [normal, alpha];
             Settings.saveProfiles();
         }
+
+        if (result["synced_profiles"]) {
+            chrome.storage.local.set({ "syncDataAvailable": true });
+            if (result["sync_profiles_password"]) {
+                var profiles = Settings.decrypt(result["sync_profiles_password"], result["synced_profiles"]);
+                if (profiles.length !== 0) {
+                    if (result["sync_profiles"]) {
+                        Settings.loadProfilesFromString(profiles);
+                    }
+                }
+            }
+        }
+
         callback();
     });
 }
@@ -93,33 +106,34 @@ Settings.alphaSortProfiles = () => {
     Settings.profiles = profiles;
 };
 
-Settings.saveSyncedProfiles = (profileData, syncPassHash) => {
+Settings.saveSyncedProfiles = (syncPassHash, profileData) => {
     var threshold = Math.round(chrome.storage.sync.QUOTA_BYTES_PER_ITEM * 0.95);
-    var output = {};
 
     chrome.storage.sync.clear().then(() => {
         if (profileData.length <= threshold) {
             chrome.storage.sync.set({ "synced_profiles": profileData, "sync_profiles_password": syncPassHash }).catch(() => {
-                return console.log("Could not sync data : " + chrome.runtime.lastError);
+                return console.log("Could not sync small data : " + chrome.runtime.lastError);
             }).then(() => {
                 return chrome.storage.local.set({ "synced_profiles": profileData, "sync_profiles_password": syncPassHash });
             });
         } else {
-            alert("Too much data to sync; will fix in a future update");
-        //    var splitter = new RegExp("[\\s\\S]{1," + threshold + "}", "g");
-        //    var parts = profileData.match(splitter);
-        //    var date = Date.now();
-        //    //var keys = [];
-        //    for (var i = 0; i < parts.length; ++i) {
-        //        output[date + i] = parts[i];
-        //        //keys[i] = date + i;
-        //    }
-        //
-        //    chrome.storage.sync.set(output).then(() => {
-        //
-        //    }).catch((error) => {
-        //        console.log(error);
-        //    });
+            var splitter = new RegExp("[\\s\\S]{1," + threshold + "}", "g");
+            var parts = profileData.match(splitter);
+            var date = Date.now();
+            var output = {};
+            var keys = [];
+            for (var i = 0; i < parts.length; ++i) {
+                output[date + i] = parts[i];
+                keys[i] = date + i;
+            }
+
+            output["synced_profiles_keys"] = keys;
+            chrome.storage.sync.set(output).then(() => {
+                chrome.storage.sync.set({ "sync_profiles_password": syncPassHash });
+                chrome.storage.local.set({ "synced_profiles": profileData, "sync_profiles_password": syncPassHash });
+            }).catch(() => {
+                console.log("Could not sync large data : " + chrome.extension.lastError);
+            });
         }
     });
 };
@@ -131,11 +145,10 @@ Settings.saveProfiles = () => {
     var stringified = JSON.stringify(Settings.profiles);
     chrome.storage.local.set({ "profiles": stringified }).then(() => {
         chrome.storage.local.get(["sync_profiles", "syncDataAvailable", "sync_profiles_password", "synced_profiles"]).then((result) => {
-            //var syncHash = result["sync_profiles_password"] || "";
-            //var profiles = Settings.decrypt(syncHash, result["synced_profiles"]);
-            if (result["sync_profiles"] && (!result["syncDataAvailable"] || (result["synced_profiles"].length !== 0))) {
-                //Settings.saveSyncedProfiles(Settings.encrypt(result["sync_profiles_password"], stringified));
-                Settings.saveSyncedProfiles(stringified, result["sync_profiles_password"]);
+            var syncHash = result["sync_profiles_password"] || "";
+            var profiles = Settings.decrypt(syncHash, result["synced_profiles"]);
+            if (result["sync_profiles"] && (!result["syncDataAvailable"] || (profiles.length !== 0))) {
+                Settings.saveSyncedProfiles(result["sync_profiles_password"], Settings.encrypt(result["sync_profiles_password"], stringified));
             }
         });
     });
@@ -206,16 +219,16 @@ Settings.make_pbkdf2 = (password, previousSalt, iter) => {
     };
 };
 
-Settings.encrypt = (password, data) => {
-    return sjcl.encrypt(password, data, {
+Settings.encrypt = (key, data) => {
+    return sjcl.encrypt(key, data, {
         ks: 256,
         ts: 128
     });
 };
 
-Settings.decrypt = (password, data) => {
+Settings.decrypt = (key, data) => {
     try {
-        return sjcl.decrypt(password, data);
+        return sjcl.decrypt(key, data);
     } catch (e) {
         return "";
     }
@@ -342,5 +355,24 @@ Settings.migrateFromStorage = () => {
             localStorage.removeItem("use_verification_code");
         });
     }
-    
+    if (localStorage["sync_profiles"] !== undefined) {
+        chrome.storage.local.set({ "sync_profiles": Boolean(localStorage["sync_profiles"]) }).then(() => {
+            localStorage.removeItem("sync_profiles");
+        });
+    }
+    if (localStorage["sync_profiles_password"] !== undefined) {
+        chrome.storage.local.set({ "sync_profiles_password": String(localStorage["sync_profiles_password"]) }).then(() => {
+            localStorage.removeItem("sync_profiles_password");
+        });
+    }
+    if (localStorage["synced_profiles"] !== undefined) {
+        chrome.storage.local.set({ "synced_profiles": String(localStorage["synced_profiles"]) }).then(() => {
+            localStorage.removeItem("synced_profiles");
+        });
+    }
+    if (localStorage["synced_profiles_keys"] !== undefined) {
+        chrome.storage.local.set({ "synced_profiles_keys": String(localStorage["synced_profiles_keys"]) }).then(() => {
+            localStorage.removeItem("synced_profiles_keys");
+        });
+    }
 }

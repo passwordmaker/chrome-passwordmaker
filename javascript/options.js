@@ -260,16 +260,11 @@ function updateProfileList() {
 }
 
 function syncSucccess(syncPassHash) {
-    chrome.storage.local.set({ "sync_profiles": true, "sync_profiles_password": syncPassHash }).then(() => {
-        $("#syncProfilesPassword").val("");
-        
-        return updateProfileList();
-    }).then(() => {
-        //Settings.saveSyncedProfiles(Settings.encrypt(syncPassHash, JSON.stringify(Settings.profiles)));
-        //Settings.saveProfiles();
-        return Settings.saveSyncedProfiles(JSON.stringify(Settings.profiles), syncPassHash);
-    }).finally(() => {
+    Settings.saveSyncedProfiles(syncPassHash, Settings.encrypt(syncPassHash, JSON.stringify(Settings.profiles)));
+    chrome.storage.local.set({ "sync_profiles": true, "sync_profiles_password": syncPassHash }).finally(() => {
+        updateProfileList();
         setTimeout(() => {
+            $("#syncProfilesPassword").val("");
             updateSyncStatus();
         }, 500);
     });
@@ -282,18 +277,19 @@ function setSyncPassword() {
         return;
     }
 
-    chrome.storage.local.get(["syncDataAvailable"]).then((result) => {
+    chrome.storage.local.get(["syncDataAvailable", "synced_profiles"]).then((result1) => {
         var syncPassHash = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(syncPassValue));
-        if (result["syncDataAvailable"] === true) {
-            chrome.storage.sync.get(["synced_profiles", "synced_profiles_keys", "sync_profiles_password"]).then((result) => {
-                //var profiles = Settings.decrypt(syncPassHash, result["synced_profiles"]);
-                if (syncPassHash === result["sync_profiles_password"]) {
-                    Settings.loadProfilesFromString(result["synced_profiles"]);
+        
+        if (result1["syncDataAvailable"] === true) {
+            if (result1["synced_profiles"]) {
+                var profiles = Settings.decrypt(syncPassHash, result1["synced_profiles"]);
+                if (profiles.length !== 0) {
+                    Settings.loadProfilesFromString(profiles);
                     syncSucccess(syncPassHash);
                 } else {
                     alert("Wrong password. Please specify the password you used when initially synced your data");
                 }
-            });
+            }
         } else {
             syncSucccess(syncPassHash);
         }
@@ -306,10 +302,10 @@ function clearSyncData() {
             return chrome.storage.local.remove(["synced_profiles", "synced_profiles_keys", "sync_profiles_password"]);
         }).then(() => {
             Settings.loadProfiles(() => {
+                updateProfileList();
                 setTimeout(() => {
                     updateSyncStatus();
                 }, 500);
-                updateProfileList();
             });
         });
     });
@@ -321,10 +317,9 @@ function updateSyncStatus() {
 
     if ($("#syncProfiles").prop("checked")) {
         chrome.storage.local.get(["syncDataAvailable", "sync_profiles_password", "synced_profiles"]).then((result) => {
-            //var syncHash = result["sync_profiles_password"] || "";
-            //var profiles = Settings.decrypt(syncHash, result["synced_profiles"]);
-            var profiles = result["synced_profiles"];
-            if ((profiles !== undefined) && (profiles.length !== 0) && result["syncDataAvailable"]) {
+            var syncHash = result["sync_profiles_password"] || "";
+            var profiles = Settings.decrypt(syncHash, result["synced_profiles"]);
+            if (profiles.length !== 0) {
                 $("#sync_password_set").show();
                 $("#clear_sync_data").removeClass("hidden");
             } else if (result["syncDataAvailable"]) {
@@ -337,7 +332,7 @@ function updateSyncStatus() {
         });
     } else {
         chrome.storage.local.set({ "sync_profiles": false }).then((result) => {
-            chrome.storage.local.remove(["synced_profiles", "sync_profiles_password"]);
+            chrome.storage.local.remove(["sync_profiles_password"]);
             Settings.loadProfiles(() => {
                 updateProfileList();
             });
