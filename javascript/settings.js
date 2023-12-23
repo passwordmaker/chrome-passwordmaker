@@ -237,14 +237,11 @@ Settings.decrypt = (key, data) => {
 // strength calculation based on Firefox version to return an object
 Settings.getPasswordStrength = (pw) => {
     // char frequency
-    var uniques = [];
+    var uniques = new Set();
     for (var i = 0; i < pw.length; i++) {
-        var current = pw.charCodeAt(i);
-        if (!uniques.includes(current)) {
-            uniques.push(current);
-        }
+        uniques.add(pw.charCodeAt(i));
     }
-    var r0 = (uniques.length === 1) ? 0 : (uniques.length / pw.length);
+    var r0 = (uniques.size === 1) ? 0 : (uniques.size / pw.length);
 
     // length of the password - 1pt per char over 5, up to 15 for 10 pts total
     var r1 = pw.length;
