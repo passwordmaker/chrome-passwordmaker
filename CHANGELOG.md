@@ -1,3 +1,7 @@
+0.9.9 - 2023-12-22
+
+* Sync support should be fixed
+
 0.9.8 - 2023-12-20
 
 * Fix issue #197
