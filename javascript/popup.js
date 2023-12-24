@@ -294,47 +294,54 @@ function initPopup() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    Settings.loadProfiles(() => {
-        $("#password, #confirmation").on("keyup", Settings.setPassword);
-        $("input").on("input", delayedUpdate);
-        $("#profile").on("change", onProfileChanged);
-        $("#activatePassword").on("click", showPasswordField);
-        $("#copypassword").on("click", copyPassword);
-        $("#options").on("click", openOptions);
+    chrome.storage.local.get(["storeLocation"]).then((result) => {
+        if (result["storeLocation"] === undefined) {
+            chrome.storage.local.set({ "storeLocation": "memory" });
+        }
+        Settings.migrateFromStorage();
 
-        chrome.storage.local.get(["show_generated_password", "keep_master_password_hash", "use_verification_code", "show_password_strength"]).then((result) => {
-            if (result["show_generated_password"] === true) {
-                $("#generated, #strength_row").hide();
-            } else {
-                $("#activatePassword").hide();
-            }
+        Settings.loadProfiles(() => {
+            $("#password, #confirmation").on("keyup", Settings.setPassword);
+            $("input").on("input", delayedUpdate);
+            $("#profile").on("change", onProfileChanged);
+            $("#activatePassword").on("click", showPasswordField);
+            $("#copypassword").on("click", copyPassword);
+            $("#options").on("click", openOptions);
 
-            if ((result["keep_master_password_hash"] === true) || result["use_verification_code"] === true) {
-                $("#confirmation_row").hide();
-            }
+            chrome.storage.local.get(["show_generated_password", "keep_master_password_hash", "use_verification_code", "show_password_strength"]).then((result) => {
+                if (result["show_generated_password"] === true) {
+                    $("#generated, #strength_row").hide();
+                } else {
+                    $("#activatePassword").hide();
+                }
 
-            if (!result["use_verification_code"]) {
-                $("#verification_row").hide();
-            }
+                if ((result["keep_master_password_hash"] === true) || result["use_verification_code"] === true) {
+                    $("#confirmation_row").hide();
+                }
 
-            if (!result["show_password_strength"]) {
-                $("#strength_row").hide();
-            }
+                if (!result["use_verification_code"]) {
+                    $("#verification_row").hide();
+                }
+
+                if (!result["show_password_strength"]) {
+                    $("#strength_row").hide();
+                }
+            });
+
+            chrome.tabs.query({
+                "active": true,
+                "currentWindow": true,
+                "windowType": "normal"
+            }).then((tabs) => {
+                Settings.currentUrl = tabs[0].url || "";
+                initPopup();
+            });
+
+            $("#injectpassword").on("click", () => {
+                fillFields([$("#generated").val(), $("#username").val()]);
+            });
+
+            $(document.body).on("keydown", handleKeyPress);
         });
-
-        chrome.tabs.query({
-            "active": true,
-            "currentWindow": true,
-            "windowType": "normal"
-        }).then((tabs) => {
-            Settings.currentUrl = tabs[0].url || "";
-            initPopup();
-        });
-
-        $("#injectpassword").on("click", function(e) {
-            fillFields([$("#generated").val(), $("#username").val()]);
-        });
-
-        $(document.body).on("keydown", handleKeyPress);
     });
 });

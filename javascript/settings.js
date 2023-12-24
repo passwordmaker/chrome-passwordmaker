@@ -3,13 +3,6 @@ var Settings = {
     profiles: []
 };
 
-chrome.storage.local.get(["storeLocation"]).then((result) => {
-    if (result["storeLocation"] === undefined) {
-        chrome.storage.local.set({ "storeLocation": "memory" });
-    }
-    Settings.migrateFromStorage();
-});
-
 var CHARSET_OPTIONS = [
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./",
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
@@ -62,7 +55,7 @@ Settings.loadProfilesFromString = (profiles) => {
     });
 };
 
-Settings.loadProfiles = (callback) => {
+Settings.loadProfiles = (callback = (function () { void(0) })) => {
     chrome.storage.local.get(["profiles", "sync_profiles", "synced_profiles", "sync_profiles_password"]).then((result) => {
         if (result["profiles"]) {
             Settings.loadProfilesFromString(result["profiles"]);

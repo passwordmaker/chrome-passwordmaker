@@ -211,7 +211,7 @@ function dumpedProfiles() {
     var dumpProfiles = [],
         expOpts = RdfImporter.getExportOpts();
 
-    Settings.loadProfiles(() => { $.noop });
+    Settings.loadProfiles();
 
     for (var i = 0; i < Settings.profiles.length; i++) {
         var prof = Settings.profiles[i],

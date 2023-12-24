@@ -509,58 +509,65 @@ function checkPassStrength() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    Settings.loadProfiles(() => {
-        updateProfileList();
-        setCurrentProfile(Settings.profiles[0]);
+    chrome.storage.local.get(["storeLocation"]).then((result) => {
+        if (result["storeLocation"] === undefined) {
+            chrome.storage.local.set({ "storeLocation": "memory" });
+        }
+        Settings.migrateFromStorage();
 
-        chrome.storage.local.get(["show_generated_password", "sync_profiles", "keep_master_password_hash", "use_verification_code", "show_password_strength", "alpha_sort_profiles"]).then((result) => {
-            $("#hidePassword").prop("checked", result["show_generated_password"]);
-            $("#keepMasterPasswordHash").prop("checked", result["keep_master_password_hash"]);
-            $("#useVerificationCode").prop("checked", result["use_verification_code"]);
-            $("#showPasswordStrength").prop("checked", result["show_password_strength"]);
-            $("#syncProfiles").prop("checked", result["sync_profiles"]);
-            $("#alphaSortProfiles").prop("checked", result["alpha_sort_profiles"]);
+        Settings.loadProfiles(() => {
+            updateProfileList();
+            setCurrentProfile(Settings.profiles[0]);
+
+            chrome.storage.local.get(["show_generated_password", "sync_profiles", "keep_master_password_hash", "use_verification_code", "show_password_strength", "alpha_sort_profiles"]).then((result) => {
+                $("#hidePassword").prop("checked", result["show_generated_password"]);
+                $("#keepMasterPasswordHash").prop("checked", result["keep_master_password_hash"]);
+                $("#useVerificationCode").prop("checked", result["use_verification_code"]);
+                $("#showPasswordStrength").prop("checked", result["show_password_strength"]);
+                $("#syncProfiles").prop("checked", result["sync_profiles"]);
+                $("#alphaSortProfiles").prop("checked", result["alpha_sort_profiles"]);
+            });
+
+            $("#profile_list").on("click", ".link", editProfile);
+            $("#add").on("click", addProfile);
+            $("#showImport").on("click", showImport);
+            $("#showExport").on("click", showExport);
+            $("#showSettings").on("click", showOptions);
+            $("#showInformation").on("click", showInformation);
+
+            $("#protocolCB").on("change", updateExample);
+            $("#subdomainCB").on("click", updateExample);
+            $("#domainCB").on("click", updateExample);
+            $("#pathCB").on("click", updateExample);
+            $("#whereLeetLB").on("change", updateLeet);
+            $("#charset").on("change", updateCustomCharsetField);
+            $("#passwdLength").on("blur", sanitizePasswordLength);
+
+            $("#cloneProfileButton").on("click", cloneProfile);
+            $("#checkStrength").on("change", showStrengthSection);
+            $("#remove").on("click", removeProfile);
+            $("#save").on("click", saveProfile);
+            $("#importButton").on("click", importRdf);
+            $("#fileInput").on("change", fileImport);
+            $("#copyButton").on("click", copyRdfExport);
+            $("#exportFileButton").on("click", fileExport);
+
+            $("#store_location").on("change", updateStorageLocation);
+            $("#expirePasswordMinutes").on("change", updateExpireTime);
+            $("#hidePassword").on("change", updateHidePassword);
+            $("#keepMasterPasswordHash").on("change", updateMasterHash);
+            $("#syncProfiles").on("change", updateSyncStatus);
+            $("#masterPassword").on("keyup", updateMasterHash);
+            $("#useVerificationCode").on("change", updateUseVerificationCode);
+            $("#showPasswordStrength").on("change", updateShowStrength);
+            $("#alphaSortProfiles").on("change", updateAlphaSortProfiles);
+            $("#set_sync_password").on("click", setSyncPassword);
+            $("#syncProfilesPassword").on("keydown", (event) => {
+                if (event.code === "Enter") setSyncPassword();
+            })
+            $("#clear_sync_data").on("click", clearSyncData);
+            $("#resetToDefaultprofiles").on("click", removeAllProfiles);
+            $("#searchProfiles").on("input", filterProfiles);
         });
-
-        $("#profile_list").on("click", ".link", editProfile);
-        $("#add").on("click", addProfile);
-        $("#showImport").on("click", showImport);
-        $("#showExport").on("click", showExport);
-        $("#showSettings").on("click", showOptions);
-        $("#showInformation").on("click", showInformation);
-
-        $("#protocolCB").on("change", updateExample);
-        $("#subdomainCB").on("click", updateExample);
-        $("#domainCB").on("click", updateExample);
-        $("#pathCB").on("click", updateExample);
-        $("#whereLeetLB").on("change", updateLeet);
-        $("#charset").on("change", updateCustomCharsetField);
-        $("#passwdLength").on("blur", sanitizePasswordLength);
-
-        $("#cloneProfileButton").on("click", cloneProfile);
-        $("#checkStrength").on("change", showStrengthSection);
-        $("#remove").on("click", removeProfile);
-        $("#save").on("click", saveProfile);
-        $("#importButton").on("click", importRdf);
-        $("#fileInput").on("change", fileImport);
-        $("#copyButton").on("click", copyRdfExport);
-        $("#exportFileButton").on("click", fileExport);
-
-        $("#store_location").on("change", updateStorageLocation);
-        $("#expirePasswordMinutes").on("change", updateExpireTime);
-        $("#hidePassword").on("change", updateHidePassword);
-        $("#keepMasterPasswordHash").on("change", updateMasterHash);
-        $("#syncProfiles").on("change", updateSyncStatus);
-        $("#masterPassword").on("keyup", updateMasterHash);
-        $("#useVerificationCode").on("change", updateUseVerificationCode);
-        $("#showPasswordStrength").on("change", updateShowStrength);
-        $("#alphaSortProfiles").on("change", updateAlphaSortProfiles);
-        $("#set_sync_password").on("click", setSyncPassword);
-        $("#syncProfilesPassword").on("keydown", (event) => {
-            if (event.code === "Enter") setSyncPassword();
-        })
-        $("#clear_sync_data").on("click", clearSyncData);
-        $("#resetToDefaultprofiles").on("click", removeAllProfiles);
-        $("#searchProfiles").on("input", filterProfiles);
     });
 });
