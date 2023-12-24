@@ -245,7 +245,8 @@ function cloneProfile() {
 }
 
 function editProfile(event) {
-    setCurrentProfile(Settings.getProfile(event.target.id.slice(8)));
+    var targetId = event.target.id.replace(/\D+/, "");
+    setCurrentProfile(Settings.getProfile(targetId));
 }
 
 function updateProfileList() {
@@ -331,7 +332,7 @@ function updateSyncStatus() {
             }
         });
     } else {
-        chrome.storage.local.set({ "sync_profiles": false }).then((result) => {
+        chrome.storage.local.set({ "sync_profiles": false }).then(() => {
             chrome.storage.local.remove(["sync_profiles_password"]);
             Settings.loadProfiles(() => {
                 updateProfileList();
@@ -472,7 +473,7 @@ function filterProfiles() {
 function checkPassStrength() {
     var selected = Settings.getProfile(Settings.currentProfile);
 
-    selected.siteList       = $("#siteList").val().trim().replace(/[*?$+()^\[\]\\|{},]/g, "").split(/\s+/).shift();
+    selected.siteList       = $("#siteList").val().trim().replace(/[*?$+()^[\]\\|{},]/g, "").split(/\s+/).shift();
     selected.url_protocol   = $("#protocolCB").prop("checked");
     selected.url_subdomain  = $("#subdomainCB").prop("checked");
     selected.url_domain     = $("#domainCB").prop("checked");

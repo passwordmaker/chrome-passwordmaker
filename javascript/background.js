@@ -18,27 +18,26 @@ chrome.storage.sync.get().then((data) => {
     updateSyncedProfiles(data);
 });
 
-chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (namespace !== "sync") {
-        return;
-    }
-    if (changes["synced_profiles"] && changes["synced_profiles"]["newValue"]) {
-        var flattened = {};
-        Object.keys(changes).forEach((key) => {
-            flattened[key] = changes[key]["newValue"];
-        });
+chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === "sync") {
+        if (changes["synced_profiles"] && changes["synced_profiles"]["newValue"]) {
+            var flattened = {};
+            Object.keys(changes).forEach((key) => {
+                flattened[key] = changes[key]["newValue"];
+            });
 
-        updateSyncedProfiles(flattened);
-    }
-    if (changes["synced_profiles_keys"] && changes["synced_profiles_keys"]["newValue"]) {
-        var profiles = "";
-        Object.keys(changes).forEach((key) => {
-            if (!isNaN(parseInt(key))) {
-                profiles += changes[key]["newValue"];
-            }
-        });
+            updateSyncedProfiles(flattened);
+        }
+        if (changes["synced_profiles_keys"] && changes["synced_profiles_keys"]["newValue"]) {
+            var profiles = "";
+            Object.keys(changes).forEach((key) => {
+                if (!isNaN(parseInt(key))) {
+                    profiles += changes[key]["newValue"];
+                }
+            });
 
-        updateSyncedProfiles(profiles);
+            updateSyncedProfiles(profiles);
+        }
     }
 });
 

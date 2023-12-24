@@ -12,13 +12,13 @@ function getAutoProfileIdForUrl() {
             var sites = profile.siteList.trim().split(/\s+/);
             for (var j = 0; j < sites.length; j++) {
                 var regexString = /\s/;
-                if ((/^\/.*\/$/).test(sites[j])) {
+                if ((/^\/.*\/.*$/).test(sites[j])) {
                     try {
-                        regexString = new RegExp(sites[j].replace(/^\/|\/$/g, ""));
-                    } catch (e) {}
+                        regexString = new RegExp(sites[j].replace(/^\/|\/.*$/g, ""));
+                    } catch (e) { void(0) }
                 }
                 var plain2regex = sites[j];
-                plain2regex = plain2regex.replace(/[$+()^\[\]\\|{},]/g, "");
+                plain2regex = plain2regex.replace(/[$+()^[\]\\|{},]/g, "");
                 plain2regex = plain2regex.replace(/\?/g, ".");
                 plain2regex = plain2regex.replace(/\*/g, ".*");
                 var wildcardString = new RegExp(plain2regex, "i");
@@ -261,9 +261,9 @@ function sharedInit(decryptedPass) {
         $("#confirmation").val(decryptedPass);
 
         if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
-        for (var i = 0; i < Settings.profiles.length; i++) {
-            $("#profile").append(new Option(Settings.profiles[i].title, Settings.profiles[i].id));
-        }
+        Settings.profiles.forEach((profile) => {
+            $("#profile").append(new Option(profile.title, profile.id));
+        })
         $("#profile").val(getAutoProfileIdForUrl() || Settings.profiles[0].id);
 
         updateProfileText();
