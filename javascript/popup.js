@@ -1,7 +1,7 @@
 function setPasswordColors(foreground, background) {
-    $("#generated, #password, #confirmation").css({
-        "background-color": background,
-        "color": foreground
+    document.querySelectorAll("#generated, #password, #confirmation").forEach((el) => {
+        el.style.backgroundColor = background;
+        el.style.color = foreground;
     });
 }
 
@@ -32,37 +32,37 @@ function getAutoProfileIdForUrl() {
 }
 
 function passwordFieldSuccess() {
-    var profile = Settings.getProfile($("#profile").val());
-    var profileResult = profile.getPassword($("#usedtext").val(), $("#password").val(), $("#username").val());
-    $("#generated").val(profileResult);
+    var profile = Settings.getProfile(document.getElementById("profile").value);
+    var profileResult = profile.getPassword(document.getElementById("usedtext").value, document.getElementById("password").value, document.getElementById("username").value);
+    document.getElementById("generated").value = profileResult;
     setPasswordColors("#008000", "#FFFFFF");
-    $("#password, #confirmation").removeAttr("style");
+    document.querySelectorAll("#password, #confirmation").forEach((el) => el.removeAttribute("style"));
     showButtons();
     return Settings.getPasswordStrength(profileResult).strength;
 }
 
 function updateFields() {
-    var password = $("#password").val();
-    var confirmation = $("#confirmation").val();
+    var passwordEl = document.getElementById("password");
+    var confirmationEl = document.getElementById("confirmation");
     var passStrength = 0;
 
-    chrome.storage.local.get(["keep_master_password_hash", "master_password_hash", "show_password_strength", "storeLocation", "use_verification_code"]).then((result) => {
-        if (password.length === 0) {
-            $("#generated").val("Please Enter Password");
+    chrome.storage.local.get(["master_password_hash", "show_password_strength", "storeLocation", "use_verification_code"]).then((result) => {
+        if (passwordEl.value.length === 0) {
+            document.getElementById("generated").value = "Please Enter Password";
             setPasswordColors("#000000", "#85FFAB");
             hideButtons();
-        } else if (result["keep_master_password_hash"] && result["master_password_hash"]) {
+        } else if (result["master_password_hash"]) {
             var saved = JSON.parse(result["master_password_hash"]);
-            var derived = Settings.make_pbkdf2(password, saved.salt, saved.iter);
+            var derived = Settings.make_pbkdf2(passwordEl.value, saved.salt, saved.iter);
             if (derived.hash !== saved.hash) {
-                $("#generated").val("Master Password Mismatch");
+                document.getElementById("generated").value = "Master Password Mismatch";
                 setPasswordColors("#FFFFFF", "#FF7272");
                 hideButtons();
             } else {
                 passStrength = passwordFieldSuccess();
             }
-        } else if (!result["use_verification_code"] && !result["keep_master_password_hash"] && (password !== confirmation)) {
-            $("#generated").val("Passwords Don't Match");
+        } else if (!result["use_verification_code"] && !result["master_password_hash"] && (passwordEl.value !== confirmationEl.value)) {
+            document.getElementById("generated").value = "Passwords Don't Match";
             setPasswordColors("#FFFFFF", "#FF7272");
             hideButtons();
         } else {
@@ -70,18 +70,18 @@ function updateFields() {
         }
 
         if (result["show_password_strength"]) {
-            $("meter").val(passStrength);
-            $("#strengthValue").text(passStrength);
+            document.getElementById("popupMeter").value = passStrength;
+            document.getElementById("strengthValue").textContent = passStrength;
         }
 
         if (result["use_verification_code"]) {
-            $("#verificationCode").val(getVerificationCode(password));
+            document.getElementById("verificationCode").value = getVerificationCode(passwordEl.value);
         }
 
-        Settings.setPassword(password);
+        Settings.setPassword(passwordEl.value);
 
-        if ($("#password").val() === "") {
-            $("#password").focus();
+        if (passwordEl.value === "") {
+            passwordEl.focus();
         }
     });
 }
@@ -92,17 +92,17 @@ function delayedUpdate() {
 }
 
 function updateProfileText() {
-    var profile = Settings.getProfile($("#profile").val());
+    var profile = Settings.getProfile(document.getElementById("profile").value);
     // Store either matched url or, if set, use profiles own "use text"
     if (profile.getText().length !== 0) {
-        $("#usedtext").val(profile.getText());
+        document.getElementById("usedtext").value = profile.getText();
     } else {
-        $("#usedtext").val(profile.getUrl(Settings.currentUrl));
+        document.getElementById("usedtext").value = profile.getUrl(Settings.currentUrl);
     }
     if (profile.getUsername().length !== 0) {
-        $("#username").val(profile.getUsername());
+        document.getElementById("username").value = profile.getUsername();
     } else {
-        $("#username").val("");
+        document.getElementById("username").value = "";
     }
 }
 
@@ -112,11 +112,14 @@ function onProfileChanged() {
 }
 
 function hideButtons() {
-    if (!$("#copypassword").hasClass("hidden")) {
-        $("#copypassword").addClass("hidden");
+    var copyPassEl = document.getElementById("copypassword");
+    if (!copyPassEl.classList.contains("hidden")) {
+        copyPassEl.classList.add("hidden");
+        
     }
-    if (!$("#injectpassword").hasClass("hidden")) {
-        $("#injectpassword").addClass("hidden");
+    var injectPassEl = document.getElementById("injectpassword");
+    if (!injectPassEl.classList.contains("hidden")) {
+        injectPassEl.classList.add("hidden");
     }
 }
 
@@ -131,18 +134,18 @@ function showButtonsScript() {
 }
 
 function showButtons() {
-    $("#copypassword").removeClass("hidden");
+    document.getElementById("copypassword").classList.remove("hidden");
     // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
     // Also cant run on the Chrome Web Store/Extension Gallery
-    if (!(/^about|^(chrome|chrome-extension)|(chrome|chromewebstore)\.google\.com|^opera/i).test(Settings.currentUrl)) {
+    if (!(/^about|^chrome|^edge|^opera|(chrome|chromewebstore)\.google\.com|.*extension:/i).test(Settings.currentUrl)) {
         chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
                 func: showButtonsScript,
-            }).then(fieldCounts => {
+            }).then((fieldCounts) => {
                 for (var frame = 0; frame < fieldCounts.length; frame++) {
                     if (fieldCounts[frame].result > 0) {
-                        $("#injectpassword").removeClass("hidden");
+                        document.getElementById("injectpassword").classList.remove("hidden");
                     }
                 }
             }).catch((err) => {
@@ -188,7 +191,7 @@ function fillFields(generatedPass) {
     updateFields();
     // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
     // Also cant run on the Chrome Web Store/Extension Gallery
-    if (!(/^about|^(chrome|chrome-extension)|(chrome|chromewebstore)\.google\.com|^opera/i).test(Settings.currentUrl)) {
+    if (!(/^about|^chrome|^edge|^opera|(chrome|chromewebstore)\.google\.com|.*extension:/i).test(Settings.currentUrl)) {
         chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
@@ -208,7 +211,7 @@ function copyPassword() {
     chrome.tabs.query({
         "windowType": "popup"
     }).then(() => {
-        navigator.clipboard.writeText($("#generated").val()).then(() => {
+        navigator.clipboard.writeText(document.getElementById("generated").value).then(() => {
             window.close();
         });
     });
@@ -231,21 +234,25 @@ function getVerificationCode(password) {
 }
 
 function showPasswordField() {
-    $("#activatePassword").hide();
-    $("#generated").show();
+    document.getElementById("activatePassword").style.display = "none";
+    document.getElementById("generated").style.display = "";
     chrome.storage.local.get(["show_password_strength"]).then((result) => {
         if (result["show_password_strength"]) {
-            $("#strength_row").show();
+            document.getElementById("strength_row").style.display = "";
         }
     });
 }
 
 function handleKeyPress(event) {
-    if (event.code === "Enter" && !(/select/i).test(event.target.tagName)) {
-        if ((/password/i).test($("#generated").val())) {
-            $("#password").focus();
+    var generatedElVal = document.getElementById("generated").value;
+    var usernameElVal = document.getElementById("username").value;
+    if (/Enter/.test(event.code) && !(/select/i).test(event.target.tagName)) {
+        if ((/Password/).test(generatedElVal)) {
+            if (document.getElementById("confirmation").style.display !== "none") {
+                document.getElementById("confirmation").focus();
+            }
         } else {
-            fillFields([$("#generated").val(), $("#username").val()]);
+            fillFields([generatedElVal, usernameElVal]);
         }
     }
 
@@ -257,14 +264,14 @@ function handleKeyPress(event) {
 
 function sharedInit(decryptedPass) {
     chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
-        $("#password").val(decryptedPass);
-        $("#confirmation").val(decryptedPass);
+        document.getElementById("password").value = decryptedPass;
+        document.getElementById("confirmation").value = decryptedPass;
 
         if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
         Settings.profiles.forEach((profile) => {
-            $("#profile").append(new Option(profile.title, profile.id));
-        })
-        $("#profile").val(getAutoProfileIdForUrl() || Settings.profiles[0].id);
+            document.getElementById("profile").appendChild(new Option(profile.title, profile.id));
+        });
+        document.getElementById("profile").value = (getAutoProfileIdForUrl() || Settings.profiles[0].id);
 
         updateProfileText();
         updateFields();
@@ -300,31 +307,31 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         Settings.migrateFromStorage();
 
-        Settings.loadProfiles(() => {
-            $("#password, #confirmation").on("keyup", Settings.setPassword);
-            $("input").on("input", delayedUpdate);
-            $("#profile").on("change", onProfileChanged);
-            $("#activatePassword").on("click", showPasswordField);
-            $("#copypassword").on("click", copyPassword);
-            $("#options").on("click", openOptions);
+        Settings.loadProfiles().then(() => {
+            document.querySelectorAll("#password, #confirmation").forEach((el) => el.addEventListener("keyup", Settings.setPassword));
+            document.querySelectorAll("input").forEach((el) => el.addEventListener("input", delayedUpdate));
+            document.getElementById("profile").addEventListener("change", onProfileChanged);
+            document.getElementById("activatePassword").addEventListener("click", showPasswordField);
+            document.getElementById("copypassword").addEventListener("click", copyPassword);
+            document.getElementById("options").addEventListener("click", openOptions);
 
-            chrome.storage.local.get(["show_generated_password", "keep_master_password_hash", "use_verification_code", "show_password_strength"]).then((result) => {
-                if (result["show_generated_password"] === true) {
-                    $("#generated, #strength_row").hide();
+            chrome.storage.local.get(["hide_generated_password", "master_password_hash", "use_verification_code", "show_password_strength"]).then((result) => {
+                if (result["hide_generated_password"] === true) {
+                    document.querySelectorAll("#generated, #strength_row").forEach((el) => el.style.display = "none");
                 } else {
-                    $("#activatePassword").hide();
+                    document.getElementById("activatePassword").style.display = "none";
                 }
 
-                if ((result["keep_master_password_hash"] === true) || result["use_verification_code"] === true) {
-                    $("#confirmation_row").hide();
+                if (result["master_password_hash"] || result["use_verification_code"] === true) {
+                    document.getElementById("confirmation_row").style.display = "none";
                 }
 
                 if (!result["use_verification_code"]) {
-                    $("#verification_row").hide();
+                    document.getElementById("verification_row").style.display = "none";
                 }
 
                 if (!result["show_password_strength"]) {
-                    $("#strength_row").hide();
+                    document.getElementById("strength_row").style.display = "none";
                 }
             });
 
@@ -337,11 +344,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 initPopup();
             });
 
-            $("#injectpassword").on("click", () => {
-                fillFields([$("#generated").val(), $("#username").val()]);
+            document.getElementById("injectpassword").addEventListener("click", () => {
+                fillFields([document.getElementById("generated").value, document.getElementById("username").value]);
             });
 
-            $(document.body).on("keydown", handleKeyPress);
+            document.body.addEventListener("keydown", handleKeyPress);
         });
     });
 });

@@ -78,7 +78,7 @@ var RdfImporter = {
     getImportOpts: function() {
         var rv = {};
         for (var i = 0; i < this.attrs.length; i++) {
-            rv[this.attrs[i][1].toLowerCase()] = {
+            rv[this.attrs[i][1]] = {
                 name: this.attrs[i][2],
                 convert: this.attrs[i][3]
             };
@@ -104,22 +104,22 @@ var RdfImporter = {
     }
 };
 
-RdfImporter.loadDoc = rdf => {
+RdfImporter.loadDoc = (rdf) => {
     var profiles = [],
         defaultProfile = {},
         settings = {};
 
     // check over every Description, but will ignore groups and anything without
     // settings/profile attributes
-    $(rdf).find("RDF\\:Description").each(function() {
-        var prof = {},
-            attrMap = RdfImporter.getImportOpts(),
-            attrName = "";
-        for (var i = 0; i < this.attributes.length; i++) {
+    Array.from(new DOMParser().parseFromString(rdf, "text/xml").getElementsByTagName("RDF:Description")).forEach((item) => {
+        var prof = {};
+        var attrMap = RdfImporter.getImportOpts(item);
+        var attrName = "";
+        for (var i = 0; i < item.attributes.length; i++) {
             // remove namespace
-            attrName = this.attributes[i].name.replace(/\w+:/, "");
-            var opts = attrMap[attrName],
-                val = this.attributes[i].value;
+            attrName = item.attributes[i].localName;
+            var opts = attrMap[attrName];
+            var val = item.attributes[i].value;
             if (opts) {
                 prof[opts.name] = opts.convert ? opts.convert(val) : val;
             }
@@ -130,16 +130,16 @@ RdfImporter.loadDoc = rdf => {
             patternType = [],
             patternEnabled = [],
             siteList = "";
-        for (var j = 0; j < this.attributes.length; j++) {
-            attrName = this.attributes[j].name.replace(/\w+:/, "");
+        for (var j = 0; j < item.attributes.length; j++) {
+            attrName = item.attributes[j].localName;
             var m = attrName.match(/pattern(|type|enabled)(\d+)/);
             if (m) {
                 if (m[1] === "") {
-                    patterns[m[2]] = this.attributes[j].value;
+                    patterns[m[2]] = item.attributes[j].value;
                 } else if (m[1] === "type") {
-                    patternType[m[2]] = this.attributes[j].value;
+                    patternType[m[2]] = item.attributes[j].value;
                 } else if (m[1] === "enabled") {
-                    patternEnabled[m[2]] = this.attributes[j].value;
+                    patternEnabled[m[2]] = item.attributes[j].value;
                 }
             }
         }
@@ -166,10 +166,10 @@ RdfImporter.loadDoc = rdf => {
     });
 
     // chrome export doesn't include /remotes section.
-    var fromChrome = rdf.indexOf("http://passwordmaker.mozdev.org/remotes") === -1;
+    var fromChrome = rdf.includes("http://passwordmaker.mozdev.org/remotes");
 
     // chrome -> chrome doesn't need "default" profile. would create duplicate.
-    if (!fromChrome) {
+    if (fromChrome) {
         profiles.unshift(defaultProfile);
         // FF version uses a "default" profile that has attributes we need for each
         // profile (such as url_{protocol,subdomain,domain,path})
@@ -185,7 +185,7 @@ RdfImporter.loadDoc = rdf => {
 };
 
 // returns number of profiles imported
-RdfImporter.saveProfiles = profiles => {
+RdfImporter.saveProfiles = (profiles) => {
     if (!profiles || !profiles.length) {
         return 0;
     }
@@ -209,7 +209,7 @@ RdfImporter.dumpDoc = () => {
 // get profiles as list of objects w/ FF names as keys
 function dumpedProfiles() {
     var dumpProfiles = [],
-        expOpts = RdfImporter.getExportOpts();
+        expOpts = RdfImporter.getExportOpts(this);
 
     Settings.loadProfiles();
 

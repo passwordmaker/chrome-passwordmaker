@@ -46,7 +46,7 @@
             </div>
             <div class="small_row" id="strength_row">
                 <span id="strengthValue"></span>
-                <meter min="0" max="100" low="25" high="75" optimum="80" value="0"></meter>
+                <meter id="popupMeter" min="0" max="100" low="25" high="75" optimum="80" value="0"></meter>
             </div>
             <div class="big_row" id="button_row">
                 <button class="button black hidden" id="copypassword">Copy</button>
@@ -56,7 +56,6 @@ Note: This button only fills a single field at a time.">Fill Fields</button>
                 <button class="button black" id="options">Options</button>
             </div>
         </main>
-        <script src="../javascript/libs/jquery.min.js"></script>
         <script src="../javascript/libs/sjcl.js"></script>
         <script src="../javascript/passwordmaker/hashutils.js"></script>
         <script src="../javascript/passwordmaker/md4.js"></script>

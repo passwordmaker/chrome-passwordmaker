@@ -8,7 +8,6 @@
     <script src="import.js"></script>
     <script src="chrome-storage-local-mock.js"></script>
 
-    <script src="../javascript/libs/jquery.min.js"></script>
     <script src="../javascript/passwordmaker/hashutils.js"></script>
     <script src="../javascript/passwordmaker/md4.js"></script>
     <script src="../javascript/passwordmaker/md5.js"></script>
@@ -26,12 +25,11 @@
     <div id="qunit"></div>
     <div id="qunit-fixture">
         <textarea id="rdf1">
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <RDF:RDF xmlns:NS1="http://passwordmaker.mozdev.org/rdf#"
          xmlns:NC="http://home.netscape.com/NC-rdf#"
          xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-  <RDF:Seq RDF:about="http://passwordmaker.mozdev.org/domains">
-  </RDF:Seq>
+  <RDF:Seq RDF:about="http://passwordmaker.mozdev.org/domains"></RDF:Seq>
   <RDF:Description RDF:about="rdf:#$5PGpU1"
                    NS1:name="nospecial"
                    NS1:description="no special characters"
@@ -63,8 +61,7 @@
     <RDF:li RDF:resource="http://passwordmaker.mozdev.org/defaults"/>
     <RDF:li RDF:resource="rdf:#$6PGpU1"/>
   </RDF:Seq>
-  <RDF:Seq RDF:about="http://passwordmaker.mozdev.org/remotes">
-  </RDF:Seq>
+  <RDF:Seq RDF:about="http://passwordmaker.mozdev.org/remotes"></RDF:Seq>
   <RDF:Description RDF:about="http://passwordmaker.mozdev.org/defaults"
                    NS1:name="Defaults"
                    NS1:description="Default settings for URLs not elsewhere in this list"
@@ -102,7 +99,7 @@
                    NS1:maskMasterPassword="false"
                    NS1:selectedTabIndex="0"
                    NS1:autoClearClipboard="true"
-                   NS2:masterPasswordStorage="store-in-memory" />
+                   NS1:masterPasswordStorage="store-in-memory" />
 </RDF:RDF>
         </textarea>
     </div>

@@ -40,8 +40,8 @@ Settings.loadProfilesFromString = (profiles) => {
     Settings.profiles = JSON.parse(profiles).map((item) => Object.assign(Object.create(Profile), item));
 };
 
-Settings.loadProfiles = (callback = (function () { void(0) })) => {
-    chrome.storage.local.get(["profiles", "sync_profiles", "synced_profiles", "sync_profiles_password"]).then((result) => {
+Settings.loadProfiles = () => {
+    return chrome.storage.local.get(["profiles", "sync_profiles", "synced_profiles", "sync_profiles_password"]).then((result) => {
         if (result["profiles"]) {
             Settings.loadProfilesFromString(result["profiles"]);
         } else {
@@ -65,8 +65,6 @@ Settings.loadProfiles = (callback = (function () { void(0) })) => {
                 }
             }
         }
-
-        callback();
     });
 }
 
@@ -92,7 +90,7 @@ Settings.saveSyncedProfiles = (syncPassHash, profileData) => {
             chrome.storage.sync.set({ "synced_profiles": profileData, "sync_profiles_password": syncPassHash }).catch(() => {
                 return console.log("Could not sync small data : " + chrome.runtime.lastError);
             }).then(() => {
-                return chrome.storage.local.set({ "synced_profiles": profileData, "sync_profiles_password": syncPassHash });
+                return chrome.storage.local.set({ "syncDataAvailable": true, "synced_profiles": profileData, "sync_profiles_password": syncPassHash });
             });
         } else {
             var splitter = new RegExp("[\\s\\S]{1," + threshold + "}", "g");
@@ -109,7 +107,7 @@ Settings.saveSyncedProfiles = (syncPassHash, profileData) => {
             output["synced_profiles_keys"] = keys;
             chrome.storage.sync.set(output).then(() => {
                 chrome.storage.sync.set({ "sync_profiles_password": syncPassHash });
-                chrome.storage.local.set({ "synced_profiles": profileData, "sync_profiles_password": syncPassHash });
+                chrome.storage.local.set({ "syncDataAvailable": true, "synced_profiles": profileData, "sync_profiles_password": syncPassHash });
             }).catch(() => {
                 console.log("Could not sync large data : " + chrome.extension.lastError);
             });
@@ -124,7 +122,7 @@ Settings.saveProfiles = () => {
     });
 
     var stringified = JSON.stringify(Settings.profiles);
-    chrome.storage.local.set({ "profiles": stringified }).then(() => {
+    return chrome.storage.local.set({ "profiles": stringified }).then(() => {
         chrome.storage.local.get(["sync_profiles", "syncDataAvailable", "sync_profiles_password", "synced_profiles"]).then((result) => {
             var syncHash = result["sync_profiles_password"] || "";
             var profiles = Settings.decrypt(syncHash, result["synced_profiles"]);
@@ -139,6 +137,8 @@ Settings.setStoreLocation = (location) => {
     chrome.storage.local.set({ "storeLocation": location }).then(() => {
         if (location === "memory_expire") {
             chrome.storage.local.set({ "expire_password_minutes": 5 });
+        } else {
+            chrome.storage.local.remove("expire_password_minutes");
         }
         if (location !== "disk") {
             chrome.storage.local.remove("password_crypt");
@@ -167,7 +167,7 @@ Settings.setPassword = () => {
             chrome.storage.local.remove("password");
             chrome.storage.session.remove("password");
         } else {
-            var password = $("#password").val();
+            var password = document.getElementById("password").value;
             var bits = crypto.getRandomValues(new Uint32Array(8));
             var key = sjcl.codec.base64.fromBits(bits);
             var encrypted = Settings.encrypt(key, password);
@@ -219,7 +219,7 @@ Settings.decrypt = (key, data) => {
 Settings.getPasswordStrength = (pw) => {
     // char frequency
     var uniques = new Set();
-    [...pw].forEach((char) => {
+    Array.from(pw).forEach((char) => {
         uniques.add(char.charCodeAt(0));
     });
     var r0 = (uniques.size === 1) ? 0 : (uniques.size / pw.length);
@@ -353,4 +353,12 @@ Settings.migrateFromStorage = () => {
             localStorage.removeItem("synced_profiles_keys");
         });
     }
+    chrome.storage.local.get(["show_generated_password"]).then((result) => {
+        if (result["show_generated_password"] !== undefined) {
+            if (result["show_generated_password"] === false) {
+                chrome.storage.local.set({ "hide_generated_password": true });
+            }
+            chrome.storage.local.remove(["show_generated_password"]);
+        }
+    });
 }

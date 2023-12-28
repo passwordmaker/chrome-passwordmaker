@@ -1,6 +1,6 @@
 QUnit.module("rdf import", {
     beforeEach: function() {
-        this.rdf_doc1 = RdfImporter.loadDoc($("#rdf1").val());
+        this.rdf_doc1 = RdfImporter.loadDoc(document.getElementById("rdf1").value);
     },
     afterEach: function() {
         Settings.profiles = [];
@@ -62,11 +62,11 @@ QUnit.test("load default profile", function(assert) {
     assert.equal(p.siteList, "");
 });
 
-QUnit.test("save profiles", function(assert) {
+QUnit.test("save profiles", async function(assert) {
     var profiles = this.rdf_doc1.profiles;
 
     assert.equal(profiles.length, 2);
-    Settings.loadProfiles(() => {
+    await Settings.loadProfiles().then(() => {
         assert.equal(Settings.profiles.length, 2);
         RdfImporter.saveProfiles(profiles);
         assert.equal(Settings.profiles.length, 4);
@@ -74,18 +74,18 @@ QUnit.test("save profiles", function(assert) {
 });
 
 QUnit.test("save settings", function(assert) {
-    chrome.storage.local.set({ "show_generated_password": true, "store_location": "memory" }).then(() => {
-        chrome.storage.local.get(["show_generated_password", "store_location"]).then((result) => {
-            assert.equal(result["show_generated_password"], true);
+    chrome.storage.local.set({ "hide_generated_password": true, "store_location": "memory" }).then(() => {
+        chrome.storage.local.get(["hide_generated_password", "store_location"]).then((result) => {
+            assert.equal(result["hide_generated_password"], true);
             assert.equal(result["store_location"], "memory");
         });
     });
 });
 
 QUnit.module("rdf export", {
-    beforeEach: function() {
-        Settings.loadProfiles(() => {
-            this.rdf_doc1 = RdfImporter.loadDoc($("#rdf1").val());
+    beforeEach: async function() {
+        await Settings.loadProfiles().then(() => {
+            this.rdf_doc1 = RdfImporter.loadDoc(document.getElementById("rdf1").value);
             RdfImporter.saveProfiles(this.rdf_doc1.profiles);
             this.doc2 = RdfImporter.loadDoc(RdfImporter.dumpDoc());
         });
@@ -139,8 +139,8 @@ QUnit.test("dump default profile to rdf", function(assert) {
 });
 
 QUnit.module("password generation", {
-    beforeEach: function() {
-        Settings.loadProfiles(() => {
+    beforeEach: async function() {
+        await Settings.loadProfiles().then(() => {
             this.p = Settings.profiles[0];
             this.url = "passwordmaker.org";
             this.pass = decodeURI("PasswordMaker%C2%A9%E2%82%AC%F0%A4%AD%A2"); // dont rely on unicode text editor
