@@ -218,11 +218,8 @@ function copyPassword() {
 }
 
 function openOptions() {
-    chrome.tabs.create({
-        "url": chrome.runtime.getURL("html/options.html")
-    }).then(() => {
-        window.close();
-    });
+    chrome.runtime.openOptionsPage();
+    window.close();
 }
 
 function getVerificationCode(password) {
