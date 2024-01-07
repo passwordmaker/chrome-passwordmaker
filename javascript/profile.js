@@ -20,6 +20,7 @@ var Profile = {
     selectedCharset: CHARSET_OPTIONS[0],
     passwordPrefix: "",
     passwordSuffix: "",
+    description: "",
     whereToUseL33t: "off",
     l33tLevel: 0
 };

@@ -68,6 +68,7 @@ var RdfImporter = {
         ["profile", "charset",               "selectedCharset"],
         ["profile", "prefix",                "passwordPrefix"],
         ["profile", "suffix",                "passwordSuffix"],
+        ["profile", "description",           "description"],
         ["default", "protocolCB",            "url_protocol",       strToBool],
         ["default", "subdomainCB",           "url_subdomain",      strToBool],
         ["default", "domainCB",              "url_domain",         strToBool],

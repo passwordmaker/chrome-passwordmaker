@@ -92,6 +92,12 @@ meter {
     width: 100%;
 }
 
+@supports (-moz-appearance:none) {
+    meter {
+      height: 1.3em;
+    }
+}
+
 meter::-webkit-meter-bar,
 meter::-webkit-meter-even-less-good-value,
 meter::-webkit-meter-suboptimum-value,

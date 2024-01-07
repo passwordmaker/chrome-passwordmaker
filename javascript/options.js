@@ -62,6 +62,7 @@ function setCurrentProfile(profile) {
     document.getElementById("modifier").value = profile.modifier;
     document.getElementById("passwordPrefix").value = profile.passwordPrefix;
     document.getElementById("passwordSuffix").value = profile.passwordSuffix;
+    document.getElementById("description").value = profile.description;
 
     document.getElementById("charset").replaceChildren();
     for (var i = 0; i < CHARSET_OPTIONS.length; i++) {
@@ -221,6 +222,7 @@ function saveProfile() {
     selected.modifier       = document.getElementById("modifier").value.trim();
     selected.passwordPrefix = document.getElementById("passwordPrefix").value;
     selected.passwordSuffix = document.getElementById("passwordSuffix").value;
+    selected.description    = document.getElementById("description").value;
 
     // make sure default profile siteList and strUseText stays blank/generic
     if (Settings.profiles[0].id === selected.id) {
@@ -253,7 +255,7 @@ function cloneProfile() {
 
 function editProfile(event) {
     if (event.target.classList.contains("link")) {
-        var targetId = event.target.id.replace(/\D+/, "");
+        var targetId = event.target.id.slice(-1);
         setCurrentProfile(Settings.getProfile(targetId));
     }
 }
@@ -482,8 +484,9 @@ function filterProfiles() {
 
     // Loop through all list items, and hide those which don't match the search query
     for (var i = 0; i < list.length; i++) {
-        var items = list[i].getElementsByTagName("span")[0];
-        if (items.innerHTML.toUpperCase().includes(filter)) {
+        var itemId = list[i].getElementsByTagName("span")[0].id.slice(-1);
+        var prof = Settings.getProfile(itemId);
+        if (prof.title.toUpperCase().includes(filter) || prof.strUseText.toUpperCase().includes(filter) || prof.username.toUpperCase().includes(filter) || prof.description.toUpperCase().includes(filter) || prof.siteList.toUpperCase().includes(filter)) {
             list[i].style.display = "";
         } else {
             list[i].style.display = "none";
