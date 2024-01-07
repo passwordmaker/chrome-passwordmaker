@@ -135,20 +135,27 @@ Settings.saveProfiles = () => {
 
 Settings.setStoreLocation = (location) => {
     chrome.storage.local.set({ "storeLocation": location }).then(() => {
-        if (location === "memory_expire") {
-            chrome.storage.local.set({ "expire_password_minutes": 5 });
-        } else {
-            chrome.storage.local.remove("expire_password_minutes");
-        }
-        if (location !== "disk") {
-            chrome.storage.local.remove("password_crypt");
-        }
-        if (location === "never") {
-            chrome.storage.local.remove("password_key");
+        switch (location) {
+            case "memory":
+                chrome.storage.local.remove(["expire_password_minutes", "password", "password_crypt", "password_key"]);
+                break;
+            case "memory_expire":
+                chrome.storage.local.remove(["expire_password_minutes", "password", "password_crypt", "password_key"]).then(() => {
+                    chrome.storage.local.set({ "expire_password_minutes": 5 });
+                });
+                break;
+            case "disk":
+                chrome.storage.session.remove(["password", "password_key"]).then(() => {
+                    chrome.storage.local.remove(["expire_password_minutes"]);
+                });
+                break;
+            case "never":
+                chrome.storage.session.remove(["password", "password_key"]).then(() => {
+                    chrome.storage.local.remove(["expire_password_minutes", "password", "password_crypt", "password_key"]);
+                });
+                break;
         }
     });
-
-
 };
 
 Settings.createExpirePasswordAlarm = () => {
@@ -181,7 +188,7 @@ Settings.setPassword = () => {
                     });
                     break;
                 case "disk":
-                    chrome.storage.local.set({ "password": encrypted, "password_key": String(key), "password_crypt": encrypted });
+                    chrome.storage.local.set({ "password_crypt": encrypted, "password_key": String(key) });
                     break;
             }
 

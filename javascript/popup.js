@@ -277,22 +277,21 @@ function sharedInit(decryptedPass) {
 
 function initPopup() {
     chrome.storage.local.get(["storeLocation"]).then((result) => {
-        if (result["storeLocation"] === undefined) {
-            chrome.storage.local.set({ "password": "" }).then(() => {
-                chrome.storage.session.set({ "password": "" }).then(() => {
-                    updateFields();
+        switch (result["storeLocation"]) {
+            case "memory":
+            case "memory_expire":
+                chrome.storage.session.get(["password", "password_key"]).then((result) => {
+                    sharedInit(Settings.decrypt(result["password_key"], result["password"]));
                 });
-            });
-        } else if ((result["storeLocation"] === "memory") || (result["storeLocation"] === "memory_expire")) {
-            chrome.storage.session.get(["password", "password_key"]).then((result) => {
-                sharedInit(Settings.decrypt(result["password_key"], result["password"]));
-            });
-        } else if ((result["storeLocation"] === "disk")) {
-            chrome.storage.local.get(["password_key", "password_crypt"]).then((result) => {
-                sharedInit(Settings.decrypt(result["password_key"], result["password_crypt"]));
-            });
-        }  else if ((result["storeLocation"] === "never")) {
-            sharedInit("");
+                break;
+            case "disk":
+                chrome.storage.local.get(["password_key", "password_crypt"]).then((result) => {
+                    sharedInit(Settings.decrypt(result["password_key"], result["password_crypt"]));
+                });
+                break;
+            case "never":
+                sharedInit("");
+                break;
         }
     });
 }

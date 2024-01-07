@@ -135,12 +135,16 @@ RdfImporter.loadDoc = (rdf) => {
             attrName = item.attributes[j].localName;
             var m = attrName.match(/pattern(|type|enabled)(\d+)/);
             if (m) {
-                if (m[1] === "") {
-                    patterns[m[2]] = item.attributes[j].value;
-                } else if (m[1] === "type") {
-                    patternType[m[2]] = item.attributes[j].value;
-                } else if (m[1] === "enabled") {
-                    patternEnabled[m[2]] = item.attributes[j].value;
+                switch (m[1]) {
+                    case "":
+                        patterns[m[2]] = item.attributes[j].value;
+                        break;
+                    case "type":
+                        patternType[m[2]] = item.attributes[j].value;
+                        break;
+                    case "enabled":
+                        patternEnabled[m[2]] = item.attributes[j].value;
+                        break;
                 }
             }
         }
