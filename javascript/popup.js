@@ -46,7 +46,7 @@ function updateFields() {
     var confirmationEl = document.getElementById("confirmation");
     var passStrength = 0;
 
-    chrome.storage.local.get(["master_password_hash", "show_password_strength", "storeLocation", "use_verification_code"]).then((result) => {
+    return chrome.storage.local.get(["master_password_hash", "show_password_strength", "storeLocation", "use_verification_code"]).then((result) => {
         if (passwordEl.value.length === 0) {
             document.getElementById("generated").value = "Please Enter Password";
             setPasswordColors("#000000", "#85FFAB");
@@ -136,7 +136,7 @@ function showButtonsScript() {
 function showButtons() {
     document.getElementById("copypassword").classList.remove("hidden");
     // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
-    // Also cant run on the Chrome Web Store/Extension Gallery
+    // Also cant run on the Chrome Web Store/Extension Gallery or extension options pages
     if (!(/^about|^chrome|^edge|^opera|(chrome|chromewebstore)\.google\.com|.*extension:/i).test(Settings.currentUrl)) {
         chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             chrome.scripting.executeScript({
@@ -188,38 +188,37 @@ function fillFieldsScript(args) {
 }
 
 function fillFields(generatedPass) {
-    updateFields();
-    // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
-    // Also cant run on the Chrome Web Store/Extension Gallery
-    if (!(/^about|^chrome|^edge|^opera|(chrome|chromewebstore)\.google\.com|.*extension:/i).test(Settings.currentUrl)) {
-        chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
-            chrome.scripting.executeScript({
-                target: {tabId: tabs[0].id, allFrames: true},
-                args : [ generatedPass ],
-                func: fillFieldsScript,
-            }).then(() => {
-                window.close();
-            }).catch((err) => {
-                console.log("Fill field error: " + err.message);
+    updateFields().then(() => {
+        // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
+        // Also cant run on the Chrome Web Store/Extension Gallery
+        if (!(/^about|^chrome|^edge|^opera|(chrome|chromewebstore)\.google\.com|.*extension:/i).test(Settings.currentUrl)) {
+            chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+                chrome.scripting.executeScript({
+                    target: {tabId: tabs[0].id, allFrames: true},
+                    args : [ generatedPass ],
+                    func: fillFieldsScript,
+                }).then(() => {
+                    window.close();
+                }).catch((err) => {
+                    console.log("Fill field error: " + err.message);
+                });
             });
-        });
-    }
+        }
+    });
 }
 
 function copyPassword() {
-    updateFields();
-    chrome.tabs.query({
-        "windowType": "popup"
-    }).then(() => {
-        navigator.clipboard.writeText(document.getElementById("generated").value).then(() => {
-            window.close();
+    updateFields().then(() => {
+        chrome.tabs.query({
+            "windowType": "popup"
+        }).then(() => {
+            navigator.clipboard.writeText(document.getElementById("generated").value).then(() => window.close());
         });
     });
 }
 
 function openOptions() {
-    chrome.runtime.openOptionsPage();
-    window.close();
+    chrome.runtime.openOptionsPage().then(() => window.close());
 }
 
 function getVerificationCode(password) {
@@ -270,8 +269,7 @@ function sharedInit(decryptedPass) {
         });
         document.getElementById("profile").value = (getAutoProfileIdForUrl() || Settings.profiles[0].id);
 
-        updateProfileText();
-        updateFields();
+        onProfileChanged();
     });
 }
 
@@ -301,9 +299,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (result["storeLocation"] === undefined) {
             chrome.storage.local.set({ "storeLocation": "memory" });
         }
-        Settings.migrateFromStorage();
-
-        Settings.loadProfiles().then(() => {
+        Settings.migrateFromStorage()
+        .then(() => Settings.loadProfiles())
+        .then(() => {
             document.querySelectorAll("#password, #confirmation").forEach((el) => el.addEventListener("keyup", Settings.setPassword));
             document.querySelectorAll("input").forEach((el) => el.addEventListener("input", delayedUpdate));
             document.getElementById("profile").addEventListener("change", onProfileChanged);

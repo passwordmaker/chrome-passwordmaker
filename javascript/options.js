@@ -22,9 +22,8 @@ function addProfile() {
     var p = Object.create(Profile);
     p.title = "No name";
     Settings.addProfile(p);
-    updateProfileList().then(() => {
-        setCurrentProfile(p);
-    })
+    updateProfileList()
+        .then(() => setCurrentProfile(p));
 }
 
 function removeProfile() {
@@ -36,12 +35,12 @@ function removeProfile() {
 }
 
 function removeAllProfiles() {
-    if (confirm("Really delete ALL local profile customizations and reset to the default profiles?")) {
-        chrome.storage.local.remove("profiles").then(() => {
-            Settings.loadProfiles().then(() => {
-                updateProfileList();
-            });
-        })
+    if (confirm("Really delete ALL local AND synced profile customizations and reset to the default profiles?")) {
+        chrome.storage.local.remove(["profiles", "synced_profiles"])
+            .then(() => clearSyncData())
+            .then(() => document.getElementById("syncProfiles").checked = false)
+            .then(() => Settings.loadProfiles())
+            .then(() => updateProfileList());
     }
 }
 
@@ -164,18 +163,17 @@ function showOptions() {
         }
     });
 
-    chrome.storage.local.get(["storeLocation", "expire_password_minutes", "master_password_hash"]).then((result) => {
-        document.getElementById("store_location").value = result["storeLocation"];
-        document.getElementById("expirePasswordMinutes").value = (result["expire_password_minutes"] || 5);
-        updateStyle(document.getElementById("password_expire_row"), "hidden", (result["storeLocation"] !== "memory_expire"));
-        updateStyle(document.getElementById("master_password_row"), "hidden", (result["master_password_hash"] === undefined));
-        document.getElementById("masterPassword").setAttribute("placeholder", "Encrypted In Storage");
-        showSection("general_settings");
-    }).then(() => {
-        updateSyncStatus().then(() => {
-            filterProfiles();
-        });
-    });
+    chrome.storage.local.get(["storeLocation", "expire_password_minutes", "master_password_hash"])
+        .then((result) => {
+            document.getElementById("store_location").value = result["storeLocation"];
+            document.getElementById("expirePasswordMinutes").value = (result["expire_password_minutes"] || 5);
+            updateStyle(document.getElementById("password_expire_row"), "hidden", (result["storeLocation"] !== "memory_expire"));
+            updateStyle(document.getElementById("master_password_row"), "hidden", (result["master_password_hash"] === undefined));
+            document.getElementById("masterPassword").setAttribute("placeholder", "Encrypted In Storage");
+            showSection("general_settings");
+        })
+        .then(() => updateSyncStatus())
+        .then(() => filterProfiles());
 }
 
 function showInformation() {
@@ -185,9 +183,10 @@ function showInformation() {
 function showSection(showId) {
     document.getElementById("checkStrength").checked = false;
     showStrengthSection();
-    Array.from(document.querySelectorAll("section")).concat(Array.from(document.querySelectorAll("aside"))).filter((el) => {
-        return el.id !== showId;
-    }).forEach((el) => el.style.display = "none");
+    Array.from(document.querySelectorAll("section"))
+        .concat(Array.from(document.querySelectorAll("aside")))
+        .filter((el) => el.id !== showId)
+        .forEach((el) => el.style.display = "none");
     document.getElementById(showId).style.display = "block";
 }
 
@@ -198,10 +197,9 @@ function highlightProfile() {
 
 function updateStorageLocation() {
     var storeLocation = document.getElementById("store_location").value;
-    chrome.storage.local.set({ "storeLocation": storeLocation }).then(() => {
-        Settings.setStoreLocation(storeLocation);
-        updateStyle(document.getElementById("password_expire_row"), "hidden", (storeLocation !== "memory_expire"));
-    });
+    chrome.storage.local.set({ "storeLocation": storeLocation })
+        .then(() => Settings.setStoreLocation(storeLocation))
+        .then(() => updateStyle(document.getElementById("password_expire_row"), "hidden", (storeLocation !== "memory_expire")));
 }
 
 function saveProfile() {
@@ -236,26 +234,25 @@ function saveProfile() {
         selected.selectedCharset = document.getElementById("charset").value;
     }
 
-    Settings.saveProfiles();
-    updateProfileList().then(() => {
-        setCurrentProfile(selected);
-        highlightProfile();
-        oldHashWarning(selected.hashAlgorithm);
-    });
+    Settings.saveProfiles()
+        .then(() => updateProfileList())
+        .then(() => {
+            setCurrentProfile(selected);
+            highlightProfile();
+            oldHashWarning(selected.hashAlgorithm);
+        });
 }
 
 function cloneProfile() {
     var p = Object.assign(Object.create(Profile), Settings.getProfile(Settings.currentProfile));
     p.title = p.title + " Copy";
     Settings.addProfile(p);
-    updateProfileList().then(() => {
-        setCurrentProfile(p);
-    });
+    updateProfileList().then(() => setCurrentProfile(p));
 }
 
 function editProfile(event) {
     if (event.target.classList.contains("link")) {
-        var targetId = event.target.id.slice(-1);
+        var targetId = event.target.id.replace(/^\D+/, "");
         setCurrentProfile(Settings.getProfile(targetId));
     }
 }
@@ -272,13 +269,13 @@ function updateProfileList() {
 }
 
 function syncSucccess(syncPassHash) {
-    Settings.saveSyncedProfiles(syncPassHash, Settings.encrypt(syncPassHash, JSON.stringify(Settings.profiles)));
-    chrome.storage.local.set({ "sync_profiles": true, "sync_profiles_password": syncPassHash }).then(() => {
-        updateProfileList().then(() => {
+    return Settings.saveSyncedProfiles(syncPassHash, Settings.encrypt(syncPassHash, JSON.stringify(Settings.profiles)))
+        .then(() => chrome.storage.local.set({ "sync_profiles": true, "sync_profiles_password": syncPassHash }))
+        .then(() => updateProfileList())
+        .then(() => {
             document.getElementById("syncProfilesPassword").value = "";
             updateSyncStatus();
         });
-    });
 }
 
 function setSyncPassword() {
@@ -288,7 +285,7 @@ function setSyncPassword() {
         return;
     }
 
-    chrome.storage.local.get(["syncDataAvailable", "synced_profiles"]).then((result1) => {
+    return chrome.storage.local.get(["syncDataAvailable", "synced_profiles"]).then((result1) => {
         var syncPassHash = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(syncPassValue));
         
         if (result1["syncDataAvailable"] === true) {
@@ -308,15 +305,11 @@ function setSyncPassword() {
 }
 
 function clearSyncData() {
-    chrome.storage.sync.clear().then(() => {
-        chrome.storage.local.remove(["syncDataAvailable", "sync_profiles", "synced_profiles", "synced_profiles_keys", "sync_profiles_password"]).then(() => {
-            Settings.loadProfiles().then(() => {
-                updateProfileList().then(() => {
-                    updateSyncStatus();
-                });
-            });
-        });
-    });
+    chrome.storage.sync.clear()
+        .then(() => chrome.storage.local.remove(["syncDataAvailable", "sync_profiles", "synced_profiles", "synced_profiles_keys", "sync_profiles_password"]))
+        .then(() => Settings.loadProfiles())
+        .then(() => updateProfileList())
+        .then(() => updateSyncStatus());
 }
 
 function updateSyncStatus() {
@@ -341,9 +334,7 @@ function updateSyncStatus() {
         });
     } else {
         return chrome.storage.local.remove(["sync_profiles", "sync_profiles_password"]).then(() => {
-            Settings.loadProfiles().then(() => {
-                updateProfileList();
-            });
+            return Settings.loadProfiles().then(() => updateProfileList());
         });
     }
 }
@@ -394,11 +385,9 @@ function updateAlphaSortProfiles() {
     } else {
         chrome.storage.local.remove("alpha_sort_profiles");
     }
-    Settings.loadProfiles().then(() => {
-        updateProfileList().then(() => {
-            filterProfiles();
-        });
-    });
+    Settings.loadProfiles()
+        .then(() => updateProfileList())
+        .then(() => filterProfiles());
 }
 
 function sanitizePasswordLength() {
@@ -417,7 +406,7 @@ function sanitizeExpireTime(newExpireTime) {
         newExpireTime = 720;
         field.value = "720";
     }
-    newExpireTime = parseInt(newExpireTime, 10);
+    newExpireTime = parseInt(newExpireTime);
     field.value = newExpireTime;
     return newExpireTime;
 }
@@ -484,9 +473,11 @@ function filterProfiles() {
 
     // Loop through all list items, and hide those which don't match the search query
     for (var i = 0; i < list.length; i++) {
-        var itemId = list[i].getElementsByTagName("span")[0].id.slice(-1);
+        var itemId = list[i].getElementsByTagName("span")[0].id.replace(/^\D+/, "");
         var prof = Settings.getProfile(itemId);
-        if (prof.title.toUpperCase().includes(filter) || prof.strUseText.toUpperCase().includes(filter) || prof.username.toUpperCase().includes(filter) || prof.description.toUpperCase().includes(filter) || prof.siteList.toUpperCase().includes(filter)) {
+        if (prof.title.toUpperCase().includes(filter) || prof.strUseText.toUpperCase().includes(filter) ||
+            prof.username.toUpperCase().includes(filter) || prof.description.toUpperCase().includes(filter) ||
+            prof.siteList.toUpperCase().includes(filter)) {
             list[i].style.display = "";
         } else {
             list[i].style.display = "none";
@@ -538,13 +529,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (result["storeLocation"] === undefined) {
             chrome.storage.local.set({ "storeLocation": "memory" });
         }
-        Settings.migrateFromStorage();
-
-        Settings.loadProfiles().then(() => {
-            updateProfileList().then(() => {
-                setCurrentProfile(Settings.profiles[0]);
-            });
-
+        Settings.migrateFromStorage()
+        .then(() => Settings.loadProfiles())
+        .then(() => updateProfileList())
+        .then(() => setCurrentProfile(Settings.profiles[0]))
+        .then(() => {
             chrome.storage.local.get(["hide_generated_password", "sync_profiles", "master_password_hash", "use_verification_code", "show_password_strength", "alpha_sort_profiles"]).then((result) => {
                 document.getElementById("hidePassword").checked = result["hide_generated_password"];
                 document.getElementById("keepMasterPasswordHash").checked = result["master_password_hash"];

@@ -42,18 +42,6 @@ Settings.loadProfilesFromString = (profiles) => {
 
 Settings.loadProfiles = () => {
     return chrome.storage.local.get(["profiles", "sync_profiles", "synced_profiles", "sync_profiles_password"]).then((result) => {
-        if (result["profiles"]) {
-            Settings.loadProfilesFromString(result["profiles"]);
-        } else {
-            var normal = Object.create(Profile);
-            var alpha = Object.create(Profile);
-            alpha.id = 2;
-            alpha.title = "Alphanumeric";
-            alpha.selectedCharset = CHARSET_OPTIONS[1];
-            Settings.profiles = [normal, alpha];
-            Settings.saveProfiles();
-        }
-
         if (result["synced_profiles"]) {
             chrome.storage.local.set({ "syncDataAvailable": true });
             if (result["sync_profiles_password"]) {
@@ -64,6 +52,16 @@ Settings.loadProfiles = () => {
                     }
                 }
             }
+        } else if (result["profiles"]) {
+            Settings.loadProfilesFromString(result["profiles"]);
+        } else {
+            var normal = Object.create(Profile);
+            var alpha = Object.create(Profile);
+            alpha.id = 2;
+            alpha.title = "Alphanumeric";
+            alpha.selectedCharset = CHARSET_OPTIONS[1];
+            Settings.profiles = [normal, alpha];
+            Settings.saveProfiles();
         }
     });
 }
@@ -85,13 +83,11 @@ Settings.alphaSortProfiles = () => {
 Settings.saveSyncedProfiles = (syncPassHash, profileData) => {
     var threshold = Math.round(8192 * 0.99); // 8192 is chrome.storage.sync.QUOTA_BYTES_PER_ITEM but 8146 is actual max item size
 
-    chrome.storage.sync.clear().then(() => {
+    return chrome.storage.sync.clear().then(() => {
         if (profileData.length <= threshold) {
-            chrome.storage.sync.set({ "synced_profiles": profileData, "sync_profiles_password": syncPassHash }).catch(() => {
-                return console.log("Could not sync small data : " + chrome.runtime.lastError);
-            }).then(() => {
-                return chrome.storage.local.set({ "syncDataAvailable": true, "synced_profiles": profileData, "sync_profiles_password": syncPassHash });
-            });
+            return chrome.storage.sync.set({ "synced_profiles": profileData, "sync_profiles_password": syncPassHash })
+                .then(() => chrome.storage.local.set({ "syncDataAvailable": true, "synced_profiles": profileData, "sync_profiles_password": syncPassHash }))
+                .catch(() => console.log("Could not sync small data : " + chrome.extension.lastError));
         } else {
             var splitter = new RegExp("[\\s\\S]{1," + threshold + "}", "g");
             var parts = profileData.match(splitter);
@@ -105,12 +101,10 @@ Settings.saveSyncedProfiles = (syncPassHash, profileData) => {
             });
 
             output["synced_profiles_keys"] = keys;
-            chrome.storage.sync.set(output).then(() => {
-                chrome.storage.sync.set({ "sync_profiles_password": syncPassHash });
-                chrome.storage.local.set({ "syncDataAvailable": true, "synced_profiles": profileData, "sync_profiles_password": syncPassHash });
-            }).catch(() => {
-                console.log("Could not sync large data : " + chrome.extension.lastError);
-            });
+            return chrome.storage.sync.set(output)
+                .then(() => chrome.storage.sync.set({ "sync_profiles_password": syncPassHash }))
+                .then(() => chrome.storage.local.set({ "syncDataAvailable": true, "synced_profiles": profileData, "sync_profiles_password": syncPassHash }))
+                .catch(() => console.log("Could not sync large data : " + chrome.extension.lastError));
         }
     });
 };
@@ -123,11 +117,11 @@ Settings.saveProfiles = () => {
 
     var stringified = JSON.stringify(Settings.profiles);
     return chrome.storage.local.set({ "profiles": stringified }).then(() => {
-        chrome.storage.local.get(["sync_profiles", "syncDataAvailable", "sync_profiles_password", "synced_profiles"]).then((result) => {
+        return chrome.storage.local.get(["sync_profiles", "syncDataAvailable", "sync_profiles_password", "synced_profiles"]).then((result) => {
             var syncHash = result["sync_profiles_password"] || "";
             var profiles = Settings.decrypt(syncHash, result["synced_profiles"]);
             if (result["sync_profiles"] && (!result["syncDataAvailable"] || (profiles.length !== 0))) {
-                Settings.saveSyncedProfiles(result["sync_profiles_password"], Settings.encrypt(result["sync_profiles_password"], stringified));
+                return Settings.saveSyncedProfiles(result["sync_profiles_password"], Settings.encrypt(result["sync_profiles_password"], stringified));
             }
         });
     });
@@ -140,19 +134,16 @@ Settings.setStoreLocation = (location) => {
                 chrome.storage.local.remove(["expire_password_minutes", "password", "password_crypt", "password_key"]);
                 break;
             case "memory_expire":
-                chrome.storage.local.remove(["expire_password_minutes", "password", "password_crypt", "password_key"]).then(() => {
-                    chrome.storage.local.set({ "expire_password_minutes": 5 });
-                });
+                chrome.storage.local.remove(["expire_password_minutes", "password", "password_crypt", "password_key"])
+                    .then(() => chrome.storage.local.set({ "expire_password_minutes": 5 }));
                 break;
             case "disk":
-                chrome.storage.session.remove(["password", "password_key"]).then(() => {
-                    chrome.storage.local.remove(["expire_password_minutes"]);
-                });
+                chrome.storage.session.remove(["password", "password_key"])
+                    .then(() => chrome.storage.local.remove(["expire_password_minutes"]));
                 break;
             case "never":
-                chrome.storage.session.remove(["password", "password_key"]).then(() => {
-                    chrome.storage.local.remove(["expire_password_minutes", "password", "password_crypt", "password_key"]);
-                });
+                chrome.storage.session.remove(["password", "password_key"])
+                    .then(() => chrome.storage.local.remove(["expire_password_minutes", "password", "password_crypt", "password_key"]));
                 break;
         }
     });
@@ -160,10 +151,10 @@ Settings.setStoreLocation = (location) => {
 
 Settings.createExpirePasswordAlarm = () => {
     chrome.alarms.clear("expire_password").then(() => {
-        chrome.storage.local.get(["expire_password_minutes"]).then((result) => {
-            chrome.alarms.create("expire_password", {
-                delayInMinutes: parseInt(result["expire_password_minutes"], 10)
-            });
+        return chrome.storage.local.get(["expire_password_minutes"])
+    }).then((result) => {
+        chrome.alarms.create("expire_password", {
+            delayInMinutes: parseInt(result["expire_password_minutes"])
         });
     });
 };
@@ -171,8 +162,8 @@ Settings.createExpirePasswordAlarm = () => {
 Settings.setPassword = () => {
     chrome.storage.local.get(["storeLocation"]).then((result) => {
         if (result["storeLocation"] === "never") {
-            chrome.storage.local.remove("password");
-            chrome.storage.session.remove("password");
+            chrome.storage.session.remove("password")
+                .then(() => chrome.storage.local.remove("password"));
         } else {
             var password = document.getElementById("password").value;
             var bits = crypto.getRandomValues(new Uint32Array(8));
@@ -360,7 +351,7 @@ Settings.migrateFromStorage = () => {
             localStorage.removeItem("synced_profiles_keys");
         });
     }
-    chrome.storage.local.get(["show_generated_password"]).then((result) => {
+    return chrome.storage.local.get(["show_generated_password"]).then((result) => {
         if (result["show_generated_password"] !== undefined) {
             if (result["show_generated_password"] === false) {
                 chrome.storage.local.set({ "hide_generated_password": true });

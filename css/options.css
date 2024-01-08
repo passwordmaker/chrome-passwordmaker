@@ -357,7 +357,7 @@ select.input {
 
 #resetToDefaultprofiles {
     font-weight: bold;
-    margin: 50px 0 50px 165px;
+    margin: 50px 0 50px 0px;
 }
 
 #expirePasswordMinutes {
