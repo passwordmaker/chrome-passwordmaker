@@ -1,3 +1,10 @@
+0.10.0 - 2024-01-10
+
+* Source compatible with Firefox (with manifest.json tweak), Chrome, Edge and Opera
+* Removed jQuery dependency! and updated QUnit to 2.20.0
+* Added a description/notes field that was used in the original PasswordMaker for issue #176
+* Profile search function looks at profile name, site list, use this text, username and description
+
 0.9.9 - 2023-12-22
 
 * Sync support should be fixed
