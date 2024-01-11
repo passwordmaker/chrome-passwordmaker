@@ -169,7 +169,6 @@ function showOptions() {
             document.getElementById("expirePasswordMinutes").value = (result["expire_password_minutes"] || 5);
             updateStyle(document.getElementById("password_expire_row"), "hidden", (result["storeLocation"] !== "memory_expire"));
             updateStyle(document.getElementById("master_password_row"), "hidden", (result["master_password_hash"] === undefined));
-            document.getElementById("masterPassword").setAttribute("placeholder", "Encrypted In Storage");
             showSection("general_settings");
         })
         .then(() => updateSyncStatus())
