@@ -19,7 +19,7 @@
             }
         }
     },
-    "description": "Password generator using a cryptographic hash algorithm of your choice - Fully Compatible with PasswordMaker.org",
+    "description": "Flexible password generator using a cryptographic hash algorithm of your choice - Fully Compatible with PasswordMaker.org",
     "homepage_url": "https://github.com/passwordmaker/chrome-passwordmaker",
     "icons": {
         "16": "images/passwdmaker16.png",
@@ -35,5 +35,5 @@
     },
     "permissions": ["activeTab", "scripting", "storage", "alarms"],
     "short_name": "PasswordMaker.org",
-    "version": "0.10.0"
+    "version": "0.10.1"
 }

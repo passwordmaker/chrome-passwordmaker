@@ -1,3 +1,7 @@
+0.10.1 - 2024-01-12
+
+* Sync support should be fixed v2
+
 0.10.0 - 2024-01-10
 
 * Source compatible with Firefox (with manifest.json tweak), Chrome, Edge and Opera
