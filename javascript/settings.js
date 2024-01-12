@@ -40,6 +40,16 @@ Settings.loadProfilesFromString = (profiles) => {
     Settings.profiles = JSON.parse(profiles).map((item) => Object.assign(Object.create(Profile), item));
 };
 
+Settings.createDefaultProfiles = () => {
+    var normal = Object.create(Profile);
+    var alpha = Object.create(Profile);
+    alpha.id = 2;
+    alpha.title = "Alphanumeric";
+    alpha.selectedCharset = CHARSET_OPTIONS[1];
+    Settings.profiles = [normal, alpha];
+    Settings.saveProfiles();
+}
+
 Settings.loadProfiles = () => {
     return chrome.storage.local.get(["profiles", "sync_profiles", "synced_profiles", "sync_profiles_password"]).then((result) => {
         if (result["synced_profiles"]) {
@@ -51,17 +61,15 @@ Settings.loadProfiles = () => {
                         Settings.loadProfilesFromString(profiles);
                     }
                 }
+            } else if (result["profiles"]) {
+                Settings.loadProfilesFromString(result["profiles"]);
+            } else {
+                Settings.createDefaultProfiles();
             }
         } else if (result["profiles"]) {
             Settings.loadProfilesFromString(result["profiles"]);
         } else {
-            var normal = Object.create(Profile);
-            var alpha = Object.create(Profile);
-            alpha.id = 2;
-            alpha.title = "Alphanumeric";
-            alpha.selectedCharset = CHARSET_OPTIONS[1];
-            Settings.profiles = [normal, alpha];
-            Settings.saveProfiles();
+            Settings.createDefaultProfiles();
         }
     });
 }

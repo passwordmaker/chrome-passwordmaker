@@ -31,7 +31,7 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
         if (changes["synced_profiles_keys"] && changes["synced_profiles_keys"]["newValue"]) {
             var profiles = "";
             Object.keys(changes).forEach((key) => {
-                if (!isNaN(parseInt(key))) {
+                if (!isNaN(parseInt(key)) && changes[key]["newValue"]) {
                     profiles += changes[key]["newValue"];
                 }
             });
