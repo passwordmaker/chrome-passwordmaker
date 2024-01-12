@@ -83,7 +83,7 @@ function updateFields() {
         if (passwordEl.value === "") {
             passwordEl.focus();
         }
-    });
+    }).catch((err) => console.log("Could not run updateFields: " + err));
 }
 
 function delayedUpdate() {
@@ -148,9 +148,7 @@ function showButtons() {
                         document.getElementById("injectpassword").classList.remove("hidden");
                     }
                 }
-            }).catch((err) => {
-                console.log("Show button error: " + err.message);
-            });
+            }).catch((err) => console.log("Could not run showButtons: " + err));
         });
     }
 }
@@ -197,14 +195,12 @@ function fillFields(generatedPass) {
                     target: {tabId: tabs[0].id, allFrames: true},
                     args : [ generatedPass ],
                     func: fillFieldsScript,
-                }).then(() => {
-                    window.close();
-                }).catch((err) => {
-                    console.log("Fill field error: " + err.message);
-                });
+                })
+                .then(() => window.close())
+                .catch((err) => console.log("Fill field executeScript error: " + err));
             });
         }
-    });
+    }).catch((err) => console.log("Could not run fillFields: " + err));
 }
 
 function copyPassword() {
@@ -214,7 +210,7 @@ function copyPassword() {
         }).then(() => {
             navigator.clipboard.writeText(document.getElementById("generated").value).then(() => window.close());
         });
-    });
+    }).catch((err) => console.log("Could not run copyPassword: " + err));
 }
 
 function openOptions() {
@@ -236,7 +232,7 @@ function showPasswordField() {
         if (result["show_password_strength"]) {
             document.getElementById("strength_row").style.display = "";
         }
-    });
+    }).catch((err) => console.log("Could not run showPasswordField: " + err));
 }
 
 function handleKeyPress(event) {
@@ -270,7 +266,7 @@ function sharedInit(decryptedPass) {
         document.getElementById("profile").value = (getAutoProfileIdForUrl() || Settings.profiles[0].id);
 
         onProfileChanged();
-    });
+    }).catch((err) => console.log("Could not run sharedInit: " + err));
 }
 
 function initPopup() {
@@ -291,7 +287,7 @@ function initPopup() {
                 sharedInit("");
                 break;
         }
-    });
+    }).catch((err) => console.log("Could not run initPopup: " + err));
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -344,5 +340,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
             document.body.addEventListener("keydown", handleKeyPress);
         });
-    });
+    }).catch((err) => console.log("Failure during popup page load: " + err));
 });

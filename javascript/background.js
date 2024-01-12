@@ -11,7 +11,7 @@ function updateSyncedProfiles(changes) {
         } else if (typeof changes === "string") {
             chrome.storage.local.set({ "synced_profiles": changes });
         }
-    });
+    }).catch((err) => console.log("Could not run updateSyncedProfiles: " + err));
 }
 
 chrome.storage.sync.get().then((data) => {

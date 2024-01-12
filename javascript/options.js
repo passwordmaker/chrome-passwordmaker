@@ -23,7 +23,8 @@ function addProfile() {
     p.title = "No name";
     Settings.addProfile(p);
     updateProfileList()
-        .then(() => setCurrentProfile(p));
+        .then(() => setCurrentProfile(p))
+        .catch((err) => console.log("Could not run addProfile: " + err));
 }
 
 function removeProfile() {
@@ -40,7 +41,8 @@ function removeAllProfiles() {
             .then(() => clearSyncData())
             .then(() => document.getElementById("syncProfiles").checked = false)
             .then(() => Settings.loadProfiles())
-            .then(() => updateProfileList());
+            .then(() => updateProfileList())
+            .catch((err) => console.log("Could not run removeAllProfiles: " + err));
     }
 }
 
@@ -151,9 +153,8 @@ function importRdf() {
 }
 
 function copyRdfExport() {
-    navigator.clipboard.writeText(document.getElementById("exportText").value).then(() => {
-        document.getElementById("exportText").select();
-    });
+    navigator.clipboard.writeText(document.getElementById("exportText").value)
+        .then(() => document.getElementById("exportText").select());
 }
 
 function showOptions() {
@@ -161,7 +162,7 @@ function showOptions() {
         if (Object.keys(result).length > 0) {
             chrome.storage.local.set({ "syncDataAvailable": true });
         }
-    });
+    }).catch((err) => console.log("Could not check sync data: " + err));
 
     chrome.storage.local.get(["storeLocation", "expire_password_minutes", "master_password_hash"])
         .then((result) => {
@@ -172,7 +173,8 @@ function showOptions() {
             showSection("general_settings");
         })
         .then(() => updateSyncStatus())
-        .then(() => filterProfiles());
+        .then(() => filterProfiles())
+        .catch((err) => console.log("Could not run showOptions: " + err));
 }
 
 function showInformation() {
@@ -198,7 +200,8 @@ function updateStorageLocation() {
     var storeLocation = document.getElementById("store_location").value;
     chrome.storage.local.set({ "storeLocation": storeLocation })
         .then(() => Settings.setStoreLocation(storeLocation))
-        .then(() => updateStyle(document.getElementById("password_expire_row"), "hidden", (storeLocation !== "memory_expire")));
+        .then(() => updateStyle(document.getElementById("password_expire_row"), "hidden", (storeLocation !== "memory_expire")))
+        .catch((err) => console.log("Could not run updateStorageLocation: " + err));
 }
 
 function saveProfile() {
@@ -239,7 +242,7 @@ function saveProfile() {
             setCurrentProfile(selected);
             highlightProfile();
             oldHashWarning(selected.hashAlgorithm);
-        });
+        }).catch((err) => console.log("Could not run saveProfile: " + err));
 }
 
 function cloneProfile() {
@@ -264,7 +267,7 @@ function updateProfileList() {
         for (var i = 0; i < Settings.profiles.length; i++) {
             document.getElementById("profile_list").insertAdjacentHTML("beforeend", `<li><span id="profile_${Settings.profiles[i].id}" class="link">${Settings.profiles[i].title}</span></li>`);
         }
-    });
+    }).catch((err) => console.log("Could not run updateProfileList: " + err));
 }
 
 function syncSucccess(syncPassHash) {
@@ -274,7 +277,7 @@ function syncSucccess(syncPassHash) {
         .then(() => {
             document.getElementById("syncProfilesPassword").value = "";
             updateSyncStatus();
-        });
+        }).catch((err) => console.log("Could not run syncSucccess: " + err));
 }
 
 function setSyncPassword() {
@@ -300,7 +303,7 @@ function setSyncPassword() {
         } else {
             syncSucccess(syncPassHash);
         }
-    });
+    }).catch((err) => console.log("Could not run setSyncPassword: " + err));
 }
 
 function clearSyncData() {
@@ -308,7 +311,8 @@ function clearSyncData() {
         .then(() => chrome.storage.local.remove(["syncDataAvailable", "sync_profiles", "synced_profiles", "synced_profiles_keys", "sync_profiles_password"]))
         .then(() => Settings.loadProfiles())
         .then(() => updateProfileList())
-        .then(() => updateSyncStatus());
+        .then(() => updateSyncStatus())
+        .catch((err) => console.log("Could not run clearSyncData: " + err));
 }
 
 function updateSyncStatus() {
@@ -330,11 +334,12 @@ function updateSyncStatus() {
                 document.querySelectorAll("#sync_profiles_row, #no_sync_password").forEach((el) => el.style.display = "");
                 document.getElementById("set_sync_password").classList.remove("hidden");
             }
-        });
+        }).catch((err) => console.log("Could not enable updateSyncStatus: " + err));
     } else {
-        return chrome.storage.local.remove(["sync_profiles", "sync_profiles_password"]).then(() => {
-            return Settings.loadProfiles().then(() => updateProfileList());
-        });
+        return chrome.storage.local.remove(["sync_profiles", "sync_profiles_password"])
+            .then(() => Settings.loadProfiles())
+            .then(() => updateProfileList())
+            .catch((err) => console.log("Could not disable updateSyncStatus: " + err));
     }
 }
 
@@ -386,7 +391,8 @@ function updateAlphaSortProfiles() {
     }
     Settings.loadProfiles()
         .then(() => updateProfileList())
-        .then(() => filterProfiles());
+        .then(() => filterProfiles())
+        .catch((err) => console.log("Could not run updateAlphaSortProfiles: " + err));
 }
 
 function sanitizePasswordLength() {
@@ -424,7 +430,7 @@ function updateExpireTime() {
         } else {
             chrome.alarms.clear("expire_password");
         }
-    });
+    }).catch((err) => console.log("Could not run updateExpireTime: " + err));
 }
 
 function fileImport() {
@@ -582,6 +588,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("clear_sync_data").addEventListener("click", clearSyncData);
             document.getElementById("resetToDefaultprofiles").addEventListener("click", removeAllProfiles);
             document.getElementById("searchProfiles").addEventListener("input", filterProfiles);
-        });
+        }).catch((err) => console.log("Failure during options page load: " + err));
     });
 });

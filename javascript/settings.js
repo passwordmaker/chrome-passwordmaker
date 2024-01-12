@@ -40,38 +40,28 @@ Settings.loadProfilesFromString = (profiles) => {
     Settings.profiles = JSON.parse(profiles).map((item) => Object.assign(Object.create(Profile), item));
 };
 
-Settings.createDefaultProfiles = () => {
-    var normal = Object.create(Profile);
-    var alpha = Object.create(Profile);
-    alpha.id = 2;
-    alpha.title = "Alphanumeric";
-    alpha.selectedCharset = CHARSET_OPTIONS[1];
-    Settings.profiles = [normal, alpha];
-    Settings.saveProfiles();
-}
-
 Settings.loadProfiles = () => {
     return chrome.storage.local.get(["profiles", "sync_profiles", "synced_profiles", "sync_profiles_password"]).then((result) => {
-        if (result["synced_profiles"]) {
-            chrome.storage.local.set({ "syncDataAvailable": true });
-            if (result["sync_profiles_password"]) {
-                var profiles = Settings.decrypt(result["sync_profiles_password"], result["synced_profiles"]);
-                if (profiles.length !== 0) {
-                    if (result["sync_profiles"]) {
-                        Settings.loadProfilesFromString(profiles);
-                    }
-                }
-            } else if (result["profiles"]) {
-                Settings.loadProfilesFromString(result["profiles"]);
-            } else {
-                Settings.createDefaultProfiles();
+        if (result["sync_profiles"] && result["synced_profiles"] && result["sync_profiles_password"]) {
+            if (result["synced_profiles"]) {
+                chrome.storage.local.set({ "syncDataAvailable": true });
+            }
+            var profiles = Settings.decrypt(result["sync_profiles_password"], result["synced_profiles"]);
+            if (profiles.length !== 0) {
+                Settings.loadProfilesFromString(profiles);
             }
         } else if (result["profiles"]) {
             Settings.loadProfilesFromString(result["profiles"]);
         } else {
-            Settings.createDefaultProfiles();
+            var normal = Object.create(Profile);
+            var alpha = Object.create(Profile);
+            alpha.id = 2;
+            alpha.title = "Alphanumeric";
+            alpha.selectedCharset = CHARSET_OPTIONS[1];
+            Settings.profiles = [normal, alpha];
+            Settings.saveProfiles();
         }
-    });
+    }).catch((err) => console.log("Could not run Settings.loadProfiles: " + err));
 }
 
 Settings.alphaSortProfiles = () => {
@@ -114,7 +104,7 @@ Settings.saveSyncedProfiles = (syncPassHash, profileData) => {
                 .then(() => chrome.storage.local.set({ "syncDataAvailable": true, "synced_profiles": profileData, "sync_profiles_password": syncPassHash }))
                 .catch(() => console.log("Could not sync large data : " + chrome.extension.lastError));
         }
-    });
+    }).catch((err) => console.log("Could not sync anything: " + err));
 };
 
 Settings.saveProfiles = () => {
@@ -132,7 +122,7 @@ Settings.saveProfiles = () => {
                 return Settings.saveSyncedProfiles(result["sync_profiles_password"], Settings.encrypt(result["sync_profiles_password"], stringified));
             }
         });
-    });
+    }).catch((err) => console.log("Could not run Settings.saveProfiles: " + err));
 };
 
 Settings.setStoreLocation = (location) => {
@@ -154,7 +144,7 @@ Settings.setStoreLocation = (location) => {
                     .then(() => chrome.storage.local.remove(["expire_password_minutes", "password", "password_crypt", "password_key"]));
                 break;
         }
-    });
+    }).catch((err) => console.log("Could not run Settings.setStoreLocation: " + err));
 };
 
 Settings.createExpirePasswordAlarm = () => {
@@ -164,7 +154,7 @@ Settings.createExpirePasswordAlarm = () => {
         chrome.alarms.create("expire_password", {
             delayInMinutes: parseInt(result["expire_password_minutes"])
         });
-    });
+    }).catch((err) => console.log("Could not run Settings.createExpirePasswordAlarm: " + err));
 };
 
 Settings.setPassword = () => {
@@ -192,7 +182,7 @@ Settings.setPassword = () => {
             }
 
         }
-    });
+    }).catch((err) => console.log("Could not run Settings.setPassword: " + err));
 };
 
 Settings.make_pbkdf2 = (password, previousSalt, iter) => {
