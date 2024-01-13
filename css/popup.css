@@ -1,36 +1,20 @@
-* {
-    box-sizing: border-box;
-}
-
 body {
     font-family: "DejaVu Serif", Georgia, "Droid Serif", serif;
-    font-size: 100%;
+    font-size: 1em;
     width: 18em;
 }
 
-main {
-    display: flex;
-    flex-direction: column;
-}
-
-.small_row, .big_row {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-}
-
-.small_row {
-    height: 1.5em;
-}
-
-.big_row {
-    height: 2em;
+#input_section {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-row-gap: .2em;
 }
 
 header {
-    align-items: center;
-    display: flex;
-    margin-bottom: 1.5%;
+    display: inline-grid;
+    grid-template-columns: 8% 92%;
+    margin-bottom: 2%;
+    width: 100%;
 }
 
 header > img {
@@ -39,7 +23,6 @@ header > img {
 
 header > span {
     font-weight: bold;
-    margin-left: 1.5%;
 }
 
 label {
@@ -51,50 +34,62 @@ label {
 input {
     border: .1em solid #000;
     border-radius: 0;
+    float: right;
     font-size: 82%;
     height: 1.5em;
     padding: 0 0 0 .8%;
-    width: 54%;
+    width: 11.6em;
 }
 
 select {
     background-color: #fff;
     border: .1em solid #000;
-    border-radius: 0;
+    float: right;
     font-size: 82%;
     height: 1.5em;
-    width: 54%;
+    width: 11.9em;
 }
 
 .hidden {
     visibility: hidden;
 }
 
+#generated_section {
+    display: inline-grid;
+    width: 100%;
+}
+
 #generated {
     font-family: "DejaVu Sans Mono", Menlo, "Lucida Console", monospace;
     font-size: 110%;
     font-weight: bold;
-    height: 100%;
-    letter-spacing: .05em;
+    letter-spacing: .1em;
     text-align: center;
-    width: 100%;
+    width: 98%;
 }
 
 #activatePassword {
-    height: 100%;
     width: 100%;
 }
 
-meter {
-    border: .1em solid #000;
-    height: 2.5em;
-    margin-top: .2em;
+#strength_row {
+    align-items: center;
+    display: inline-flex;
+    height: 2em;
+    justify-content: center;
     width: 100%;
 }
 
-@supports (-moz-appearance:none) {
-    meter {
-      height: 1.3em;
+#popupMeter {
+    height: 2.6em;
+    width: 100%;
+}
+
+@supports (-moz-appearance: none) {
+    /* Firefox specific CSS; border-radius must come after */
+    #popupMeter {
+        height: 1.2em;
+        border-radius: 1em;
     }
 }
 
@@ -102,27 +97,26 @@ meter::-webkit-meter-bar,
 meter::-webkit-meter-even-less-good-value,
 meter::-webkit-meter-suboptimum-value,
 meter::-webkit-meter-optimum-value {
-    transition: width 0.1s ease-out;
+    transition: all .1s ease-out;
 }
 
 #strengthValue {
-    cursor: default;
     font-family: "DejaVu Sans Mono", "Andale Mono", Consolas, Monaco, monospace;
     font-weight: bold;
-    margin: 1.4% 0 0 44%;
     position: absolute;
-    z-index: 1
+    z-index: 1;
 }
 
 #button_row {
-    margin-top: 1.5%;
-    white-space: nowrap;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: .4em;
+    margin-top: .3em;
+    width: 100%;
 }
 
 #copypassword, #injectpassword, #options {
-    font-size: 90%;
-    height: 90%;
-    width: 32%;
+    font-size: 95%;
 }
 
 *:not(input) {
