@@ -290,9 +290,16 @@ function updateProfileList() {
     return chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
         if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
 
-        document.getElementById("profile_list").replaceChildren();
+        var profileList = document.getElementById("profile_list");
+        profileList.replaceChildren(); //Empty profile list
         for (var i = 0; i < Settings.profiles.length; i++) {
-            document.getElementById("profile_list").insertAdjacentHTML("beforeend", `<li><span id="profile_${Settings.profiles[i].id}" class="link">${Settings.profiles[i].title}</span></li>`);
+            var listItem = document.createElement("li");
+            var spanItem = document.createElement("span");
+            spanItem.setAttribute("class", "link");
+            spanItem.setAttribute("id", "profile_" + Settings.profiles[i].id);
+            spanItem.appendChild(document.createTextNode(Settings.profiles[i].title));
+            listItem.appendChild(spanItem);
+            profileList.appendChild(listItem);
         }
     }).catch((err) => console.log("Could not run updateProfileList: " + err));
 }

@@ -85,7 +85,7 @@ Settings.saveSyncedProfiles = (syncPassHash, profileData) => {
         if (profileData.length <= threshold) {
             return chrome.storage.sync.set({ "synced_profiles": profileData, "sync_profiles_password": syncPassHash })
                 .then(() => chrome.storage.local.set({ "syncDataAvailable": true, "synced_profiles": profileData, "sync_profiles_password": syncPassHash }))
-                .catch(() => console.log("Could not sync small data : " + chrome.extension.lastError));
+                .catch((err) => console.log("Could not sync small data : " + err));
         } else {
             var splitter = new RegExp("[\\s\\S]{1," + threshold + "}", "g");
             var parts = profileData.match(splitter);
@@ -102,7 +102,7 @@ Settings.saveSyncedProfiles = (syncPassHash, profileData) => {
             return chrome.storage.sync.set(output)
                 .then(() => chrome.storage.sync.set({ "sync_profiles_password": syncPassHash }))
                 .then(() => chrome.storage.local.set({ "syncDataAvailable": true, "synced_profiles": profileData, "sync_profiles_password": syncPassHash }))
-                .catch(() => console.log("Could not sync large data : " + chrome.extension.lastError));
+                .catch((err) => console.log("Could not sync large data : " + err));
         }
     }).catch((err) => console.log("Could not sync anything: " + err));
 };

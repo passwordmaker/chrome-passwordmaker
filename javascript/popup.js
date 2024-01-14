@@ -259,10 +259,11 @@ function sharedInit(decryptedPass) {
         document.getElementById("confirmation").value = decryptedPass;
 
         if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
+        var profileList = document.getElementById("profile");
         Settings.profiles.forEach((profile) => {
-            document.getElementById("profile").appendChild(new Option(profile.title, profile.id));
+            profileList.appendChild(new Option(profile.title, profile.id));
         });
-        document.getElementById("profile").value = (getAutoProfileIdForUrl() || Settings.profiles[0].id);
+        profileList.value = (getAutoProfileIdForUrl() || Settings.profiles[0].id);
 
         onProfileChanged();
     }).catch((err) => console.log("Could not run sharedInit: " + err));
