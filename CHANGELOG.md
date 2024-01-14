@@ -1,3 +1,9 @@
+1.0.0 - 2024-01-14
+
+* We deserve version 1.0.0
+* Added ability to reorder profiles
+* Added ability to set zoom level of popup
+
 0.10.1 - 2024-01-12
 
 * Sync support should be fixed v2
