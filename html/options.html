@@ -212,13 +212,7 @@
             <section id="import_settings">
                 <h2>Import Profiles</h2>
                 <div class="row">
-                    <div class="section_info">Paste export into the box below then click "Import".</div>
-                    <div class="section_info">
-                        From Firefox PasswordMaker go to
-                        <a class="link" target="_blank" href="https://www.passwordmaker.org/Firefox/Mozilla/SeaMonkey/Flock/Netscape/Advanced">Advanced Options</a>
-                        &rarr; File &rarr; Export Settings &rarr; RDF.<br>
-                        Open the .rdf file in a plain text editor (e.g. notepad) then select all, copy and paste into the box below.
-                    </div>
+                    <div class="section_info">Either choose an RDF file to import or paste export text into the box below then click "Import"</div>
                     <input class="input" id="fileInput" type="file">
                     <textarea class="input" id="importText"></textarea>
                 </div>
@@ -232,13 +226,7 @@
             <section id="export_settings">
                 <h2>Export Profiles</h2>
                 <div class="row">
-                    <div class="section_info">Copy and paste the text below into "Import Profiles" section of Chrome PasswordMaker.org.</div>
-                    <div class="section_info">
-                        For Firefox PasswordMaker, save the text below into a plain text document (e.g. open notepad, paste, save as "profiles.rdf") then go to
-                        <a class="link" target="_blank" href="https://www.passwordmaker.org/Firefox/Mozilla/SeaMonkey/Flock/Netscape/Advanced">Advanced Options</a>
-                        &rarr; File &rarr; Import Settings.
-                        <b>Back up any existing settings first by going to Firefox PasswordMaker &rarr; File &rarr; Export Setting &rarr; RDF.</b>
-                    </div>
+                    <div class="section_info">Either choose an RDF file to save or copy the text below into "Import Profiles"</div>
                     <textarea class="input" id="exportText"></textarea>
                 </div>
                 <div id="export_buttons">
@@ -317,7 +305,7 @@
                         password and click "Set password". The profile settings will be encrypted and stored on
                         Google's servers.<br><br>
                         A key, derived from your password will be stored locally.<br><br>
-                        Note that syncing profile settings requires that you log in to Chrome and enable extension syncing.
+                        Note that syncing profile settings requires that you log in to the browser and enable extension syncing.
                     </div>
                     <div class="info_text" id="sync_data_exists">
                         You have previously synced profile data which isn't being synchronized.
@@ -349,13 +337,12 @@
                 <h2>Information</h2>
                 <div class="row">
                     <div class="subrow">
-                        <div class="section_info">Keyboard navigation</div>
                         <div class="info_text">
                             You can use the shortcut <b>Alt+X</b> or you can canfigue a custom shortcut if you navigate
                             to "Manage Extensions" -> "Keyboard Shortcuts" to open the PasswordMaker popup, no matter where
                             you are on a website.<br><br>
                             When you are done typing your master password in the <i>Password</i> textfield of the
-                            PassworkMaker Pro popup, you can push <b>Enter</b> to fill the open website'spassword field
+                            PassworkMaker popup, you can push <b>Enter</b> to fill the open website'spassword field
                             with the generated password, using the settings that were preselected in the
                             PasswordMaker popup.  Alternatively, you can copy the generated password
                             to the clipboard by pressing <b>Ctrl+C</b>.<br><br>
@@ -373,7 +360,7 @@
             </section>
         </main>
         <footer>
-            <a target="_blank" href="https://github.com/passwordmaker/chrome-passwordmaker">PasswordMaker Chrome Extension</a>
+            <a target="_blank" href="https://github.com/passwordmaker/chrome-passwordmaker">PasswordMaker Extension</a>
             is based on <a target="_blank" href="https://www.passwordmaker.org/">passwordmaker.org</a>
         </footer>
         <script src="../javascript/libs/sjcl.js"></script>

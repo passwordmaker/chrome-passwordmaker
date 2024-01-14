@@ -512,15 +512,11 @@ function fileExport() {
 function showStrengthSection() {
     if (document.getElementById("checkStrength").checked) {
         document.getElementById("strength_section").style.display = "inline-block";
-        document.querySelectorAll(".testInput").forEach((el) => {
-            ["change", "keyup"].forEach((event) => el.addEventListener(event, checkPassStrength));
-        });
+        document.querySelectorAll(".testInput").forEach((el) => el.addEventListener("input", checkPassStrength));
         checkPassStrength();
     } else {
         document.getElementById("strength_section").style.display = "none";
-        document.querySelectorAll(".testInput").forEach((el) => {
-            ["change", "keyup"].forEach((event) => el.removeEventListener(event, checkPassStrength));
-        });
+        document.querySelectorAll(".testInput").forEach((el) => el.removeEventListener("input", checkPassStrength));
         document.querySelectorAll(".strengthInput").forEach((el) => el.value = "");
     }
 }
@@ -609,9 +605,9 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("showInformation").addEventListener("click", showInformation);
 
             document.getElementById("protocolCB").addEventListener("change", updateExample);
-            document.getElementById("subdomainCB").addEventListener("click", updateExample);
-            document.getElementById("domainCB").addEventListener("click", updateExample);
-            document.getElementById("pathCB").addEventListener("click", updateExample);
+            document.getElementById("subdomainCB").addEventListener("change", updateExample);
+            document.getElementById("domainCB").addEventListener("change", updateExample);
+            document.getElementById("pathCB").addEventListener("change", updateExample);
             document.getElementById("whereLeetLB").addEventListener("change", updateLeet);
             document.getElementById("charset").addEventListener("change", updateCustomCharsetField);
             document.getElementById("passwdLength").addEventListener("change", sanitizePasswordLength);
@@ -633,12 +629,12 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("hidePassword").addEventListener("change", updateHidePassword);
             document.getElementById("keepMasterPasswordHash").addEventListener("change", updateMasterHash);
             document.getElementById("syncProfiles").addEventListener("change", updateSyncStatus);
-            document.getElementById("masterPassword").addEventListener("keyup", updateMasterHash);
+            document.getElementById("masterPassword").addEventListener("input", updateMasterHash);
             document.getElementById("useVerificationCode").addEventListener("change", updateUseVerificationCode);
             document.getElementById("showPasswordStrength").addEventListener("change", updateShowStrength);
             document.getElementById("alphaSortProfiles").addEventListener("change", updateAlphaSortProfiles);
             document.getElementById("set_sync_password").addEventListener("click", setSyncPassword);
-            document.getElementById("syncProfilesPassword").addEventListener("keydown", (event) => {
+            document.getElementById("syncProfilesPassword").addEventListener("input", (event) => {
                 if (event.code === "Enter") setSyncPassword();
             })
             document.getElementById("clear_sync_data").addEventListener("click", clearSyncData);

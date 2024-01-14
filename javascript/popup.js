@@ -32,6 +32,7 @@ function getAutoProfileIdForUrl() {
 }
 
 function passwordFieldSuccess() {
+    Settings.setPassword(document.getElementById("password").value);
     var profile = Settings.getProfile(document.getElementById("profile").value);
     var profileResult = profile.getPassword(document.getElementById("usedtext").value, document.getElementById("password").value, document.getElementById("username").value);
     document.getElementById("generated").value = profileResult;
@@ -77,8 +78,6 @@ function updateFields() {
         if (result["use_verification_code"]) {
             document.getElementById("verificationCode").value = getVerificationCode(passwordEl.value);
         }
-
-        Settings.setPassword(passwordEl.value);
 
         if (passwordEl.value === "") {
             passwordEl.focus();
@@ -168,7 +167,7 @@ function fillFieldsScript(args) {
         var isVisible = isRendered(fields[i]) && (parseFloat(elStyle.width) > 0) && (parseFloat(elStyle.height) > 0);
         var isPasswordField = (/password/i).test(fields[i].type + ' ' + fields[i].name);
         var isUsernameField = (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name) && (/^(?!display)/i).test(fields[i].name);
-        var changeEvent = new Event("change"); // MVC friendly way to force a view-model update
+        var changeEvent = new Event("input", {bubbles: true}); // MVC friendly way to force a view-model update
         if (isVisible && !passFilled && fields[i].value.length === 0 && isPasswordField) {
             fields[i].value = args[0];
             passFilled = true;
@@ -301,7 +300,6 @@ document.addEventListener("DOMContentLoaded", () => {
         Settings.migrateFromStorage()
         .then(() => Settings.loadProfiles())
         .then(() => {
-            document.querySelectorAll("#password, #confirmation").forEach((el) => el.addEventListener("keyup", Settings.setPassword));
             document.querySelectorAll("input").forEach((el) => el.addEventListener("input", delayedUpdate));
             document.getElementById("profile").addEventListener("change", onProfileChanged);
             document.getElementById("activatePassword").addEventListener("click", showPasswordField);
