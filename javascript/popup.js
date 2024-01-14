@@ -274,14 +274,12 @@ function initPopup() {
         switch (result["storeLocation"]) {
             case "memory":
             case "memory_expire":
-                chrome.storage.session.get(["password", "password_key"]).then((result) => {
-                    sharedInit(Settings.decrypt(result["password_key"], result["password"]));
-                });
+                chrome.storage.session.get(["password", "password_key"])
+                    .then((result) => sharedInit(Settings.decrypt(result["password_key"], result["password"])));
                 break;
             case "disk":
-                chrome.storage.local.get(["password_key", "password_crypt"]).then((result) => {
-                    sharedInit(Settings.decrypt(result["password_key"], result["password_crypt"]));
-                });
+                chrome.storage.local.get(["password_key", "password_crypt"])
+                    .then((result) => sharedInit(Settings.decrypt(result["password_key"], result["password_crypt"])));
                 break;
             case "never":
                 sharedInit("");
@@ -291,9 +289,14 @@ function initPopup() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    chrome.storage.local.get(["storeLocation"]).then((result) => {
+    chrome.storage.local.get(["storeLocation", "zoomLevel"]).then((result) => {
         if (result["storeLocation"] === undefined) {
             chrome.storage.local.set({ "storeLocation": "memory" });
+        }
+        if (result["zoomLevel"]) {
+            document.body.style.fontSize = (result["zoomLevel"].toString() + "%");
+        } else {
+            document.body.style.fontSize = "100%"
         }
         Settings.migrateFromStorage()
         .then(() => Settings.loadProfiles())

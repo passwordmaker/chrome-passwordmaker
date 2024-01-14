@@ -166,10 +166,11 @@ function showOptions() {
         }
     }).catch((err) => console.log("Could not check sync data: " + err));
 
-    chrome.storage.local.get(["storeLocation", "expire_password_minutes", "master_password_hash"])
+    chrome.storage.local.get(["storeLocation", "expire_password_minutes", "master_password_hash", "zoomLevel"])
         .then((result) => {
             document.getElementById("store_location").value = result["storeLocation"];
             document.getElementById("expirePasswordMinutes").value = (result["expire_password_minutes"] || 5);
+            document.getElementById("zoomLevel").value = (result["zoomLevel"] || 100);
             updateStyle(document.getElementById("password_expire_row"), "hidden", (result["storeLocation"] !== "memory_expire"));
             updateStyle(document.getElementById("master_password_row"), "hidden", (result["master_password_hash"] === undefined));
             showSection("general_settings");
@@ -459,6 +460,32 @@ function updateExpireTime() {
     }).catch((err) => console.log("Could not run updateExpireTime: " + err));
 }
 
+function sanitizeZoomLevel(newZoomLevel) {
+    var field = document.getElementById("zoomLevel");
+    if (newZoomLevel < 100) {
+        newZoomLevel = 100;
+        field.value = "100";
+    }
+    if (newZoomLevel > 210) {
+        newZoomLevel = 210;
+        field.value = "210";
+    }
+    newZoomLevel = parseInt(newZoomLevel);
+    field.value = newZoomLevel;
+    return newZoomLevel;
+}
+
+function updateZoomLevel() {
+    chrome.storage.local.get(["zoomLevel"]).then((result) => {
+        var oldZoomLevel = result["zoomLevel"] || 100;
+        var newZoomLevel = document.getElementById("zoomLevel").value;
+        newZoomLevel = sanitizeZoomLevel(newZoomLevel);
+        if (oldZoomLevel !== newZoomLevel) {
+            chrome.storage.local.set({ "zoomLevel": newZoomLevel });
+        }
+    }).catch((err) => console.log("Could not run updateZoomLevel: " + err));
+}
+
 function fileImport() {
     var file = document.getElementById("fileInput").files[0];
     if ((/rdf|xml/i).test(file.type)) {
@@ -587,7 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("pathCB").addEventListener("click", updateExample);
             document.getElementById("whereLeetLB").addEventListener("change", updateLeet);
             document.getElementById("charset").addEventListener("change", updateCustomCharsetField);
-            document.getElementById("passwdLength").addEventListener("blur", sanitizePasswordLength);
+            document.getElementById("passwdLength").addEventListener("change", sanitizePasswordLength);
 
             document.getElementById("cloneProfileButton").addEventListener("click", cloneProfile);
             document.getElementById("moveUpButton").addEventListener("click", moveProfileUp);
@@ -600,6 +627,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("copyButton").addEventListener("click", copyRdfExport);
             document.getElementById("exportFileButton").addEventListener("click", fileExport);
 
+            document.getElementById("zoomLevel").addEventListener("change", updateZoomLevel);
             document.getElementById("store_location").addEventListener("change", updateStorageLocation);
             document.getElementById("expirePasswordMinutes").addEventListener("change", updateExpireTime);
             document.getElementById("hidePassword").addEventListener("change", updateHidePassword);

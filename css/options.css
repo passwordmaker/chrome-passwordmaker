@@ -361,5 +361,14 @@ select.input {
 }
 
 #expirePasswordMinutes {
-    width: 6em;
+    width: 5em;
+}
+
+#zoomLevel {
+    margin-left: 14em;
+    width: 5em;
+}
+
+#zoom_level_row {
+    margin-left: 10.4em;
 }
