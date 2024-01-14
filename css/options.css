@@ -208,7 +208,7 @@ meter {
     width: 310px;
 }
 
-#profile_buttons, #sync_buttons {
+#profile_buttons, #reorder_buttons, #sync_buttons {
     margin: 20px 0 0 165px;
     width: 300px;
 }
@@ -320,7 +320,7 @@ textarea {
     font-weight: bold;
 }
 
-#clear_sync_data, #export_buttons, #importButton, #remove {
+#clear_sync_data, #export_buttons, #importButton, #moveDownButton, #remove {
     float: right;
 }
 

@@ -83,11 +83,13 @@ function setCurrentProfile(profile) {
     updateLeet();
     highlightProfile();
     // Keeps profile #1 around so it can only be re-named
-    if (Settings.profiles[0].id === profile.id) {
-        document.getElementById("remove").style.display = "none";
-    } else {
-        document.getElementById("remove").style.display = "";
-    }
+    chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
+        if ((Settings.profiles[0].id === profile.id) || result["alpha_sort_profiles"]) {
+            document.querySelectorAll("#moveUpButton, #moveDownButton, #remove").forEach((el) => el.style.display = "none");
+        } else {
+            document.querySelectorAll("#moveUpButton, #moveDownButton, #remove").forEach((el) => el.style.display = "");
+        }
+    });
 
     showSection("profile_settings");
     oldHashWarning(profile.hashAlgorithm);
@@ -250,6 +252,30 @@ function cloneProfile() {
     p.title = p.title + " Copy";
     Settings.addProfile(p);
     updateProfileList().then(() => setCurrentProfile(p));
+}
+
+function moveProfileUp() {
+    var pIndex = Settings.getProfile(Settings.currentProfile).id - 1;
+    if (pIndex > 1) {
+        var p = Settings.profiles.splice(pIndex, 1);
+        Settings.profiles.splice(pIndex - 1, 0, p[0]);
+        p[0].id--;
+        Settings.saveProfiles()
+            .then(() => updateProfileList())
+            .then(() => setCurrentProfile(p[0]));
+    }
+}
+
+function moveProfileDown() {
+    var pIndex = Settings.getProfile(Settings.currentProfile).id - 1;
+    if (pIndex < Settings.profiles.length - 1) {
+        var p = Settings.profiles.splice(pIndex, 1);
+        Settings.profiles.splice(pIndex + 1, 0, p[0]);
+        p[0].id++;
+        Settings.saveProfiles()
+            .then(() => updateProfileList())
+            .then(() => setCurrentProfile(p[0]));
+    }
 }
 
 function editProfile(event) {
@@ -564,6 +590,8 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("passwdLength").addEventListener("blur", sanitizePasswordLength);
 
             document.getElementById("cloneProfileButton").addEventListener("click", cloneProfile);
+            document.getElementById("moveUpButton").addEventListener("click", moveProfileUp);
+            document.getElementById("moveDownButton").addEventListener("click", moveProfileDown);        
             document.getElementById("checkStrength").addEventListener("change", showStrengthSection);
             document.getElementById("remove").addEventListener("click", removeProfile);
             document.getElementById("save").addEventListener("click", saveProfile);
