@@ -16,7 +16,7 @@ function updateSyncedProfiles(changes) {
 
 chrome.storage.sync.get().then((data) => {
     updateSyncedProfiles(data);
-});
+}).catch((err) => console.log("Could not get sync data: " + err));
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === "sync") {

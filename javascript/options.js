@@ -321,12 +321,12 @@ function setSyncPassword() {
         return;
     }
 
-    return chrome.storage.local.get(["syncDataAvailable", "synced_profiles"]).then((result1) => {
+    return chrome.storage.local.get(["syncDataAvailable", "synced_profiles"]).then((result) => {
         var syncPassHash = sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(syncPassValue));
         
-        if (result1["syncDataAvailable"] === true) {
-            if (result1["synced_profiles"]) {
-                var profiles = Settings.decrypt(syncPassHash, result1["synced_profiles"]);
+        if (result["syncDataAvailable"] === true) {
+            if (result["synced_profiles"]) {
+                var profiles = Settings.decrypt(syncPassHash, result["synced_profiles"]);
                 if (profiles.length !== 0) {
                     Settings.loadProfilesFromString(profiles);
                     syncSucccess(syncPassHash);
