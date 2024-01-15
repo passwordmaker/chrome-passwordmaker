@@ -235,9 +235,9 @@ function dumpedProfiles() {
             var pats = prof.siteList.trim().split(/\s+/);
             for (var k = 0; k < pats.length; k++) {
                 var pat = pats[k],
-                    ptype = (pat[0] === "/" && pat[pat.length - 1] === "/") ? "regex" : "wildcard";
+                    ptype = (pat.startsWith("/") && pat.endsWith("/")) ? "regex" : "wildcard";
 
-                newProf["pattern" + k] = (ptype === "regex") ? pat.substring(1, pat.length - 1) : pat;
+                newProf["pattern" + k] = (ptype === "regex") ? pat.slice(1, -1) : pat;
                 newProf["patternenabled" + k] = "true";
                 newProf["patterndesc" + k] = "";
                 newProf["patterntype" + k] = ptype;

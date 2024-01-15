@@ -6,29 +6,32 @@ function setPasswordColors(foreground, background) {
 }
 
 function getAutoProfileIdForUrl() {
+    var match = 0,
+        found = false;
     for (var i = 0; i < Settings.profiles.length; i++) {
+        if (found) break;
         var profile = Settings.profiles[i];
-        if (profile.siteList.trim().length !== 0) {
+        if (profile.siteList.trim().length > 0) {
             var sites = profile.siteList.trim().split(/\s+/);
             for (var j = 0; j < sites.length; j++) {
-                var regexString = /\s/;
-                if ((/^\/.*\/.*$/).test(sites[j])) {
-                    try {
-                        regexString = new RegExp(sites[j].replace(/^\/|\/.*$/g, ""));
-                    } catch (e) { void(0) }
+                var pat = sites[j],
+                    regex = /\s/;
+                if (pat.startsWith("/") && pat.endsWith("/")) {
+                    regex = new RegExp(pat.slice(1, -1), "i");
+                } else {
+                    var plain2regex = pat.replace(/[$+()^[\]\\|{},]/g, "").replace(/\./g, "\\.").replace(/\?/g, ".").replace(/\*/g, ".*");
+                    regex = new RegExp(plain2regex, "i");
                 }
-                var plain2regex = sites[j];
-                plain2regex = plain2regex.replace(/[$+()^[\]\\|{},]/g, "");
-                plain2regex = plain2regex.replace(/\?/g, ".");
-                plain2regex = plain2regex.replace(/\*/g, ".*");
-                var wildcardString = new RegExp(plain2regex, "i");
 
-                if (regexString.test(Settings.currentUrl) || wildcardString.test(Settings.currentUrl)) {
-                    return profile.id;
+                if (regex.test(Settings.currentUrl)) {
+                    match = profile.id;
+                    found = true;
+                    break;
                 }
             }
         }
     }
+    return match;
 }
 
 function passwordFieldSuccess() {
