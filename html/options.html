@@ -334,27 +334,47 @@
             </section>
 
             <section id="general_information">
-                <h2>Information</h2>
+                
                 <div class="row">
-                    <div class="subrow">
-                        <div class="info_text">
-                            You can use the shortcut <b>Alt+X</b> or you can canfigue a custom shortcut if you navigate
-                            to "Manage Extensions" -> "Keyboard Shortcuts" to open the PasswordMaker popup, no matter where
-                            you are on a website.<br><br>
-                            When you are done typing your master password in the <i>Password</i> textfield of the
-                            PassworkMaker popup, you can push <b>Enter</b> to fill the open website'spassword field
-                            with the generated password, using the settings that were preselected in the
-                            PasswordMaker popup.  Alternatively, you can copy the generated password
-                            to the clipboard by pressing <b>Ctrl+C</b>.<br><br>
-                            If you do not have the <b>Keep Master Password Hash</b> setting enabled, pushing <b>Enter</b> or
-                            <b>Tab</b> in the <i>Password</i> textfield will bring you to the <i>Confirmation</i> textfield. Here you can
-                            then push <b>Enter</b>, after you are done typing your master password again, to fill the open
-                            website's password field, using the settings that were preselected in the password popup.<br><br>
-                            If you want to alter any of the PasswordMaker popup's settings, just push <b>Tab</b> to
-                            get to the respective next setting. Push <b>Shift+Tab</b> to get to the previous setting
-                            respectively. When you are in the <i>Generated Password</i> field, again you can push <b>Enter</b>
-                            to fill the open website's password field.
-                        </div>
+                    <h3>General Information:</h3>
+                    <div class="info_text">
+                        <ul>
+                            <li>You can use the shortcut <b>Alt+X</b> or you can canfigue a custom shortcut if you navigate
+                                to "Manage Extensions" -> "Keyboard Shortcuts" to open the PasswordMaker popup, no matter where
+                                you are on a website.</li>
+                            <li>You can copy the successfully generated password to the clipboard by pressing <b>Ctrl+C</b>.</li>
+                            <li>If you want to alter any of the PasswordMaker input fields, just push <b>Tab</b> to
+                                get to the next input field, or push <b>Shift+Tab</b> to get to the previous input field.
+                                When you are done typing your master password in the extension popup, upon successful password
+                                generation you can push <b>Enter</b> to fill the open websites username/account (if configured)
+                                and password field using the settings that were selected in the popup.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <h3>Sync Information:</h3>
+                    <div class="info_text">
+                        "Sync support" has been around since 2012 origionally via 
+                        <a href="https://github.com/passwordmaker/chrome-passwordmaker/commit/6af8f194122f37dd6bd2e558db2e5c54418589a5">6af8f19</a>, and
+                        has been around a long time.  We use the Stanford JavaScript Crypto Library (sjcl.js) since we have existed far longer
+                        than the new browser Web Crypto API.
+                        <h4>How does sync work you ask? (For the curious or paranoid)</h4>
+                        <ul>
+                            <li>You set sync your password, the password you chose is PBKDF2 iterated 10,000 times by default.</li>
+                            <li>Only your profile data gets encrypted with the PBKDF2'd sync password you set.</li>
+                            <li>Encryption uses AES-CCM mode (counter with cipher block chaining message authentication code) with your
+                                256-bit PBKDF2'd password as the key using a browser generated random Initialization Vector each time.</li>
+                            <li>Your profile templates are then synced to your chosen browser vendors servers, encrypted, but available on any
+                                extension instance you log into both the browser and the extension where you use the same sync password.</li>
+                            <li>Profile customization data is the only data which gets synced, your master password is <b>NEVER</b>
+                                synced, it stays 100% local.</li>
+                            <li>Profile settings are synced immediately after you save a change to your configured profiles only if you
+                                have sync fully enabled.</li>
+                        </ul>
+                        Bottom line, <b>only</b> your profile templates are synced, after being encrypted by the extension locally, your master
+                        password is <b>never</b> synced and <b>never</b> leaves your local machine, your sync password can be different than your
+                        master password.  In addition, if you store your master password "On Disk" it's also encrypted, your master password is
+                        <b>never</b> stored in plain text either locally or in sync data.
                     </div>
                 </div>
             </section>
