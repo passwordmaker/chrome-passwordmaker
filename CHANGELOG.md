@@ -1,3 +1,8 @@
+1.0.1 - 2024-01-16
+
+* Fixed and optimized regex profile matching
+* Added section for sync information
+
 1.0.0 - 2024-01-14
 
 * We deserve version 1.0.0
