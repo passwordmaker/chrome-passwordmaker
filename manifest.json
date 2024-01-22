@@ -34,6 +34,5 @@
         "open_in_tab": true
     },
     "permissions": ["activeTab", "scripting", "storage", "alarms"],
-    "short_name": "PasswordMaker.org",
     "version": "1.0.1"
 }
