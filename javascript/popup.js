@@ -128,7 +128,7 @@ function hideButtons() {
 function showButtonsScript() {
     var fields = document.getElementsByTagName("input"), fieldCount = 0;
     for (var i = 0; i < fields.length; i++) {
-        if (/password/i.test(fields[i].type + ' ' + fields[i].name)) {
+        if ((/acct|mail|name|password|user|usr|ssn/i).test(fields[i].type + " " + fields[i].name)) {
             fieldCount += 1;
         }
     }
@@ -137,8 +137,8 @@ function showButtonsScript() {
 
 function showButtons() {
     document.getElementById("copypassword").classList.remove("hidden");
-    // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
-    // Also cant run on the Chrome Web Store/Extension Gallery or extension options pages
+    // Don't run executeScript() on built-in chrome://, opera:// or about:// or extension options pages
+    // Also can't run on the Chrome Web Store/Extension Gallery
     if (!(/^about|^chrome|^edge|^opera|(chrome|chromewebstore)\.google\.com|.*extension:/i).test(Settings.currentUrl)) {
         chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             chrome.scripting.executeScript({
@@ -168,8 +168,8 @@ function fillFieldsScript(args) {
     for (var i = 0; i < fields.length; i++) {
         var elStyle = getComputedStyle(fields[i]);
         var isVisible = isRendered(fields[i]) && (parseFloat(elStyle.width) > 0) && (parseFloat(elStyle.height) > 0);
-        var isPasswordField = (/password/i).test(fields[i].type + ' ' + fields[i].name);
-        var isUsernameField = (/id|un|name|user|usr|log|email|mail|acct|ssn/i).test(fields[i].name) && (/^(?!display)/i).test(fields[i].name);
+        var isPasswordField = (/password/i).test(fields[i].type + " " + fields[i].name);
+        var isUsernameField = (/acct|mail|name|user|usr|ssn/i).test(fields[i].type + " " + fields[i].name);
         var changeEvent = new Event("input", {bubbles: true}); // MVC friendly way to force a view-model update
         if (isVisible && !passFilled && fields[i].value.length === 0 && isPasswordField) {
             fields[i].value = args[0];
@@ -189,8 +189,8 @@ function fillFieldsScript(args) {
 
 function fillFields(generatedPass) {
     updateFields().then(() => {
-        // Don't run executeScript() on built-in chrome://, opera:// or about:// browser pages since it isn't allowed anyway
-        // Also cant run on the Chrome Web Store/Extension Gallery
+        // Don't run executeScript() on built-in chrome://, opera:// or about:// or extension options pages
+        // Also can't run on the Chrome Web Store/Extension Gallery
         if (!(/^about|^chrome|^edge|^opera|(chrome|chromewebstore)\.google\.com|.*extension:/i).test(Settings.currentUrl)) {
             chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
                 chrome.scripting.executeScript({
