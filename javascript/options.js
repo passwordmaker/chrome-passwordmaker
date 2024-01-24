@@ -67,9 +67,9 @@ function setCurrentProfile(profile) {
 
     document.getElementById("charset").replaceChildren();
     for (var i = 0; i < CHARSET_OPTIONS.length; i++) {
-        document.getElementById("charset").appendChild(new Option(CHARSET_OPTIONS[i]));
+        document.getElementById("charset").append(new Option(CHARSET_OPTIONS[i]));
     }
-    document.getElementById("charset").appendChild(new Option("Custom charset"));
+    document.getElementById("charset").append(new Option("Custom charset"));
 
     if (CHARSET_OPTIONS.includes(profile.selectedCharset)) {
         document.getElementById("charset").value = profile.selectedCharset;
@@ -295,11 +295,11 @@ function updateProfileList() {
         for (var i = 0; i < Settings.profiles.length; i++) {
             var listItem = document.createElement("li");
             var spanItem = document.createElement("span");
-            spanItem.setAttribute("class", "link");
-            spanItem.setAttribute("id", "profile_" + Settings.profiles[i].id);
-            spanItem.appendChild(document.createTextNode(Settings.profiles[i].title));
-            listItem.appendChild(spanItem);
-            profileList.appendChild(listItem);
+            spanItem.className = "link";
+            spanItem.id = "profile_" + Settings.profiles[i].id;
+            spanItem.textContent = Settings.profiles[i].title;
+            listItem.append(spanItem);
+            profileList.append(listItem);
         }
     }).catch((err) => console.log("Could not run updateProfileList: " + err));
 }

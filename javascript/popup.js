@@ -264,7 +264,7 @@ function sharedInit(decryptedPass) {
         if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
         var profileList = document.getElementById("profile");
         Settings.profiles.forEach((profile) => {
-            profileList.appendChild(new Option(profile.title, profile.id));
+            profileList.append(new Option(profile.title, profile.id));
         });
         profileList.value = (getAutoProfileIdForUrl() || Settings.profiles[0].id);
 
