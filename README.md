@@ -1,10 +1,16 @@
-# PasswordMaker.org Chrome Extension
+# PasswordMaker.org Browser Extension
 
-This is a Chrome Extension that implements the PasswordMaker.org method for generating a unique, secure password for any site, from a single master password.
+This is a browser extension that works for Chrome, Firefox, and other Chromium based browsers which is a flexible password generation tool that creates unique, secure passwords that are very easy for you to generate but no one else.
+Your passwords are never stored anywhere, anytime, so there's no database to be hacked, lost, or stolen; unlike the many popular password managers available.
 
-This technique has been widely used since 2003, though it has been eclipsed by generators that create a random password for each site.  The problem with that method is that every generated password must be stored - with the PasswordMaker.org technique you just memorize or record the master password (this master password can not be determined from the generated passwords).
+To use, click the golden ring and provide PasswordMaker with at least two pieces of information: 
+1) A "master password" -- that one, single password you like
+2) The URL of the website requiring a password
+3) Customize per website password generation settings (optional)
 
-Later, if you switch to a different platform or lose all record of your passwords, you can still easily unlock all your passwords, for all your sites (and on any platform since this same technique is implemented on other platforms) as long as you can remember your master password.
+PasswordMaker will then generate a unique password using a one-way hash algorithm of your choosing to generate a unique password for every website which is both extremely configurable and user friendly.
+
+This technique has been widely used since 2003 and is 100% compatible with the other versions of PasswordMaker for other devices and computers which you can find at [passwordmaker.org](https://www.passwordmaker.org/) for more information.  So, if you switch to a different platform, you can still easily generate all your passwords, for all your sites as long as you can remember your master password and password profile setting for the site.
 
 ### For more, see the [passwordmaker.org](https://www.passwordmaker.org/) site.
 
