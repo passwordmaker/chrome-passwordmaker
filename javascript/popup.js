@@ -161,7 +161,7 @@ function hideButtons() {
 function showButtonsScript() {
     var fields = document.getElementsByTagName("input"), fieldCount = 0;
     for (var i = 0; i < fields.length; i++) {
-        if ((/acct|mail|name|password|user|usr|ssn/i).test(fields[i].type + " " + fields[i].name)) {
+        if ((/mail|pass/i).test(fields[i].type)) {
             fieldCount += 1;
         }
     }
@@ -202,7 +202,7 @@ function fillFieldsScript(args) {
         var elStyle = getComputedStyle(fields[i]);
         var isVisible = isRendered(fields[i]) && (parseFloat(elStyle.width) > 0) && (parseFloat(elStyle.height) > 0);
         var isPasswordField = (/password/i).test(fields[i].type + " " + fields[i].name);
-        var isUsernameField = (/acct|mail|name|user|usr|ssn/i).test(fields[i].type + " " + fields[i].name);
+        var isUsernameField = (/acc|mail|user|usr/i).test(fields[i].type + " " + fields[i].name);
         var changeEvent = new Event("input", {bubbles: true}); // MVC friendly way to force a view-model update
         if (isVisible && !passFilled && fields[i].value.length === 0 && isPasswordField) {
             fields[i].value = args[0];
