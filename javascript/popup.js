@@ -34,10 +34,35 @@ function getAutoProfileIdForUrl() {
     return match;
 }
 
+function setPassword() {
+    chrome.storage.local.get(["storeLocation"]).then((result) => {
+        if (result["storeLocation"] === "never") {
+            chrome.storage.session.remove("password")
+                .then(() => chrome.storage.local.remove("password"));
+        } else {
+            var bits = crypto.getRandomValues(new Uint32Array(8));
+            var key = sjcl.codec.base64.fromBits(bits);
+            var encrypted = Settings.encrypt(key, document.getElementById("password").value);
+            switch (result["storeLocation"]) {
+                case "memory":
+                    chrome.storage.session.set({ "password": encrypted, "password_key": key });
+                    break;
+                case "memory_expire":
+                    chrome.storage.session.set({ "password": encrypted, "password_key": key })
+                        .then(() => Settings.createExpirePasswordAlarm());
+                    break;
+                case "disk":
+                    chrome.storage.local.set({ "password_crypt": encrypted, "password_key": key });
+                    break;
+            }
+        }
+    }).catch((err) => console.trace("Could not run Settings.setPassword: " + err));
+};
+
 function passwordFieldSuccess() {
-    Settings.setPassword(document.getElementById("password").value);
+    setPassword();
     var profile = Settings.getProfile(document.getElementById("profile").value);
-    var profileResult = profile.getPassword(document.getElementById("usedtext").value, document.getElementById("password").value, document.getElementById("username").value);
+    var profileResult = profile.genPassword(document.getElementById("usedtext").value, document.getElementById("password").value, document.getElementById("username").value);
     document.getElementById("generated").value = profileResult;
     setPasswordColors("#008000", "#FFFFFF");
     document.querySelectorAll("#password, #confirmation").forEach((el) => el.removeAttribute("style"));
@@ -224,7 +249,7 @@ function getVerificationCode(password) {
     p.hashAlgorithm = "sha256";
     p.passwordLength = 3;
     p.selectedCharset = CHARSET_OPTIONS[4];
-    return p.getPassword("", password, "");
+    return p.genPassword("", password, "");
 }
 
 function showPasswordField() {

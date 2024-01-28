@@ -156,34 +156,6 @@ Settings.createExpirePasswordAlarm = () => {
     }).catch((err) => console.trace("Could not run Settings.createExpirePasswordAlarm: " + err));
 };
 
-Settings.setPassword = () => {
-    chrome.storage.local.get(["storeLocation"]).then((result) => {
-        if (result["storeLocation"] === "never") {
-            chrome.storage.session.remove("password")
-                .then(() => chrome.storage.local.remove("password"));
-        } else {
-            var password = document.getElementById("password").value;
-            var bits = crypto.getRandomValues(new Uint32Array(8));
-            var key = sjcl.codec.base64.fromBits(bits);
-            var encrypted = Settings.encrypt(key, password);
-            switch (result["storeLocation"]) {
-                case "memory":
-                    chrome.storage.session.set({ "password": encrypted, "password_key": String(key) });
-                    break;
-                case "memory_expire":
-                    chrome.storage.session.set({ "password": encrypted, "password_key": String(key) }).then(() => {
-                        Settings.createExpirePasswordAlarm();
-                    });
-                    break;
-                case "disk":
-                    chrome.storage.local.set({ "password_crypt": encrypted, "password_key": String(key) });
-                    break;
-            }
-
-        }
-    }).catch((err) => console.log("Could not run Settings.setPassword: " + err));
-};
-
 Settings.make_pbkdf2 = (password, previousSalt, iter) => {
     var usedSalt = previousSalt || sjcl.codec.base64.fromBits(crypto.getRandomValues(new Uint32Array(8)));
     var iterations = iter || 10000;
