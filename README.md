@@ -11,10 +11,16 @@ Later, if you switch to a different platform or lose all record of your password
 **_PLEASE Export your profile data_** it is advisable to always keep a back-up of your current profile data.
 
 # Installation
-
-Install this extension from the [Chrome Web Store](https://chromewebstore.google.com/search/PasswordMaker).
+### Chrome:
+From the Chrome Web Store:
 1. [PasswordMaker Pro](https://chromewebstore.google.com/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh)
 2. [PasswordMaker (.org)](https://chromewebstore.google.com/detail/passwordmaker-org/fckpmekmkjglpmdcbfkchimdelcjiipd)
+
+### Firefox:
+From Mozilla AMO: https://addons.mozilla.org/en-US/firefox/addon/firefox-passwordmaker-pro/
+
+### Opera:
+From Opera Addons: https://addons.opera.com/en/extensions/details/passwordmaker-pro/
 
 # Status of this project
 
