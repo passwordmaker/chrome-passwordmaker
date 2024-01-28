@@ -61,7 +61,7 @@ Settings.loadProfiles = () => {
             Settings.profiles = [normal, alpha];
             Settings.saveProfiles();
         }
-    }).catch((err) => console.log("Could not run Settings.loadProfiles: " + err));
+    }).catch((err) => console.trace("Could not run Settings.loadProfiles: " + err));
 }
 
 Settings.alphaSortProfiles = () => {
@@ -85,7 +85,7 @@ Settings.saveSyncedProfiles = (syncPassHash, profileData) => {
         if (profileData.length <= threshold) {
             return chrome.storage.sync.set({ "synced_profiles": profileData })
                 .then(() => chrome.storage.local.set({ "syncDataAvailable": true, "synced_profiles": profileData, "sync_profiles_password": syncPassHash }))
-                .catch((err) => console.log("Could not sync small data : " + err));
+                .catch((err) => console.trace("Could not sync small data : " + err));
         } else {
             var splitter = new RegExp("[\\s\\S]{1," + threshold + "}", "g");
             var parts = profileData.match(splitter);
@@ -101,9 +101,9 @@ Settings.saveSyncedProfiles = (syncPassHash, profileData) => {
             output["synced_profiles_keys"] = keys;
             return chrome.storage.sync.set(output)
                 .then(() => chrome.storage.local.set({ "syncDataAvailable": true, "synced_profiles": profileData, "sync_profiles_password": syncPassHash }))
-                .catch((err) => console.log("Could not sync large data : " + err));
+                .catch((err) => console.trace("Could not sync large data : " + err));
         }
-    }).catch((err) => console.log("Could not sync anything: " + err));
+    }).catch((err) => console.trace("Could not sync anything: " + err));
 };
 
 Settings.saveProfiles = () => {
@@ -121,7 +121,7 @@ Settings.saveProfiles = () => {
                 return Settings.saveSyncedProfiles(result["sync_profiles_password"], Settings.encrypt(result["sync_profiles_password"], stringified));
             }
         });
-    }).catch((err) => console.log("Could not run Settings.saveProfiles: " + err));
+    }).catch((err) => console.trace("Could not run Settings.saveProfiles: " + err));
 };
 
 Settings.setStoreLocation = (location) => {
@@ -143,7 +143,7 @@ Settings.setStoreLocation = (location) => {
                     .then(() => chrome.storage.local.remove(["expire_password_minutes", "password", "password_crypt", "password_key"]));
                 break;
         }
-    }).catch((err) => console.log("Could not run Settings.setStoreLocation: " + err));
+    }).catch((err) => console.trace("Could not run Settings.setStoreLocation: " + err));
 };
 
 Settings.createExpirePasswordAlarm = () => {
@@ -153,7 +153,7 @@ Settings.createExpirePasswordAlarm = () => {
         chrome.alarms.create("expire_password", {
             delayInMinutes: parseInt(result["expire_password_minutes"])
         });
-    }).catch((err) => console.log("Could not run Settings.createExpirePasswordAlarm: " + err));
+    }).catch((err) => console.trace("Could not run Settings.createExpirePasswordAlarm: " + err));
 };
 
 Settings.setPassword = () => {
