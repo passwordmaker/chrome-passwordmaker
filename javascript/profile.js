@@ -25,7 +25,7 @@ var Profile = {
     l33tLevel: 0
 };
 
-Profile.getPassword = function(url, masterkey, userName) {
+Profile.genPassword = function(url, masterkey, userName) {
     if (this.selectedCharset.length < 2) {
         return "Not enough chars!";
     }

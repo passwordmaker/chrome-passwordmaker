@@ -576,7 +576,7 @@ function checkPassStrength() {
         document.getElementById("testText").value = selected.getUrl(selected.siteList);
     }
 
-    document.getElementById("genPass").value = selected.getPassword(document.getElementById("testText").value, document.getElementById("testPass").value, selected.username);
+    document.getElementById("genPass").value = selected.genPassword(document.getElementById("testText").value, document.getElementById("testPass").value, selected.username);
     var values = Settings.getPasswordStrength(document.getElementById("genPass").value);
     document.querySelectorAll("#genStrength, #optionsMeter").forEach((el) => el.value = values.strength);
     document.getElementById("hasUpper").checked = values.hasUpper;
