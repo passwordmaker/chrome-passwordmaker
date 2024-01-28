@@ -1,3 +1,11 @@
+function qs$(sel) {
+    return document.querySelector(sel);
+}
+
+function qsa$(sel) {
+    return document.querySelectorAll(sel);
+}
+
 function updateStyle(element, selected, isSelected) {
     if (isSelected) {
         element.classList.add(selected);
@@ -7,15 +15,15 @@ function updateStyle(element, selected, isSelected) {
 }
 
 function updateExample() {
-    updateStyle(document.getElementById("exprotocol"), "selected", document.getElementById("protocolCB").checked);
-    updateStyle(document.getElementById("exsubdomain"), "selected", document.getElementById("subdomainCB").checked);
-    updateStyle(document.getElementById("exdomain"), "selected", document.getElementById("domainCB").checked);
-    updateStyle(document.getElementById("expath"), "selected", document.getElementById("pathCB").checked);
+    updateStyle(qs$("#exprotocol"), "selected", qs$("#protocolCB").checked);
+    updateStyle(qs$("#exsubdomain"), "selected", qs$("#subdomainCB").checked);
+    updateStyle(qs$("#exdomain"), "selected", qs$("#domainCB").checked);
+    updateStyle(qs$("#expath"), "selected", qs$("#pathCB").checked);
 }
 
 function updateLeet() {
-    document.getElementById("leetLevelLB").disabled = (document.getElementById("whereLeetLB").value === "off");
-    updateStyle(document.getElementById("leetLevelLabel"), "disabled", document.getElementById("whereLeetLB").value === "off");
+    qs$("#leetLevelLB").disabled = (qs$("#whereLeetLB").value === "off");
+    updateStyle(qs$("#leetLevelLabel"), "disabled", qs$("#whereLeetLB").value === "off");
 }
 
 function addProfile() {
@@ -39,7 +47,7 @@ function removeAllProfiles() {
     if (confirm("Really delete ALL local AND synced profile customizations and reset to the default profiles?")) {
         chrome.storage.local.remove(["profiles", "synced_profiles"])
             .then(() => clearSyncData())
-            .then(() => document.getElementById("syncProfiles").checked = false)
+            .then(() => qs$("#syncProfiles").checked = false)
             .then(() => Settings.loadProfiles())
             .then(() => updateProfileList())
             .catch((err) => console.trace("Could not run removeAllProfiles: " + err));
@@ -48,34 +56,34 @@ function removeAllProfiles() {
 
 function setCurrentProfile(profile) {
     Settings.currentProfile = profile.id;
-    document.getElementById("profileNameTB").value = profile.title;
-    document.getElementById("siteList").value = (profile.siteList).replace(/\s/g, "\n");
-    document.getElementById("protocolCB").checked = profile.url_protocol;
-    document.getElementById("subdomainCB").checked = profile.url_subdomain;
-    document.getElementById("domainCB").checked = profile.url_domain;
-    document.getElementById("pathCB").checked = profile.url_path;
-    document.getElementById("inputUseThisText").value = profile.strUseText;
-    document.getElementById("whereLeetLB").value = profile.whereToUseL33t;
-    document.getElementById("leetLevelLB").value = profile.l33tLevel;
-    document.getElementById("hashAlgorithmLB").value = profile.hashAlgorithm;
-    document.getElementById("passwdLength").value = profile.passwordLength;
-    document.getElementById("usernameTB").value = profile.username;
-    document.getElementById("modifier").value = profile.modifier;
-    document.getElementById("passwordPrefix").value = profile.passwordPrefix;
-    document.getElementById("passwordSuffix").value = profile.passwordSuffix;
-    document.getElementById("description").value = profile.description;
+    qs$("#profileNameTB").value = profile.title;
+    qs$("#siteList").value = (profile.siteList).replace(/\s/g, "\n");
+    qs$("#protocolCB").checked = profile.url_protocol;
+    qs$("#subdomainCB").checked = profile.url_subdomain;
+    qs$("#domainCB").checked = profile.url_domain;
+    qs$("#pathCB").checked = profile.url_path;
+    qs$("#inputUseThisText").value = profile.strUseText;
+    qs$("#whereLeetLB").value = profile.whereToUseL33t;
+    qs$("#leetLevelLB").value = profile.l33tLevel;
+    qs$("#hashAlgorithmLB").value = profile.hashAlgorithm;
+    qs$("#passwdLength").value = profile.passwordLength;
+    qs$("#usernameTB").value = profile.username;
+    qs$("#modifier").value = profile.modifier;
+    qs$("#passwordPrefix").value = profile.passwordPrefix;
+    qs$("#passwordSuffix").value = profile.passwordSuffix;
+    qs$("#description").value = profile.description;
 
-    document.getElementById("charset").replaceChildren();
+    qs$("#charset").replaceChildren();
     for (var i = 0; i < CHARSET_OPTIONS.length; i++) {
-        document.getElementById("charset").append(new Option(CHARSET_OPTIONS[i]));
+        qs$("#charset").append(new Option(CHARSET_OPTIONS[i]));
     }
-    document.getElementById("charset").append(new Option("Custom charset"));
+    qs$("#charset").append(new Option("Custom charset"));
 
     if (CHARSET_OPTIONS.includes(profile.selectedCharset)) {
-        document.getElementById("charset").value = profile.selectedCharset;
+        qs$("#charset").value = profile.selectedCharset;
     } else {
-        document.getElementById("charset").value = "Custom charset";
-        document.getElementById("customCharset").value = profile.selectedCharset;
+        qs$("#charset").value = "Custom charset";
+        qs$("#customCharset").value = profile.selectedCharset;
     }
 
     updateCustomCharsetField();
@@ -85,22 +93,22 @@ function setCurrentProfile(profile) {
     // Keeps profile #1 around so it can only be re-named
     chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
         if ((Settings.profiles[0].id === profile.id) || result["alpha_sort_profiles"]) {
-            document.querySelectorAll("#moveUpButton, #moveDownButton, #remove").forEach((el) => el.style.display = "none");
+            qsa$("#moveUpButton, #moveDownButton, #remove").forEach((el) => el.style.display = "none");
         } else {
-            document.querySelectorAll("#moveUpButton, #moveDownButton, #remove").forEach((el) => el.style.display = "");
+            qsa$("#moveUpButton, #moveDownButton, #remove").forEach((el) => el.style.display = "");
         }
     });
 
-    showSection("profile_settings");
+    showSection("#profile_settings");
     oldHashWarning(profile.hashAlgorithm);
 }
 
 function updateCustomCharsetField() {
-    if (document.getElementById("charset").value === "Custom charset") {
-        document.getElementById("customCharset").value = Settings.getProfile(Settings.currentProfile).selectedCharset;
-        document.getElementById("customCharset").style.display = "";
+    if (qs$("#charset").value === "Custom charset") {
+        qs$("#customCharset").value = Settings.getProfile(Settings.currentProfile).selectedCharset;
+        qs$("#customCharset").style.display = "";
     } else {
-        document.getElementById("customCharset").style.display = "none";
+        qs$("#customCharset").style.display = "none";
     }
 }
 
@@ -124,16 +132,16 @@ function oldHashWarning(hash) {
 }
 
 function showImport() {
-    showSection("import_settings");
+    showSection("#import_settings");
 }
 
 function showExport() {
-    showSection("export_settings");
-    document.getElementById("exportText").value = RdfImporter.dumpDoc();
+    showSection("#export_settings");
+    qs$("#exportText").value = RdfImporter.dumpDoc();
 }
 
 function importRdf() {
-    var txt = document.getElementById("importText").value;
+    var txt = qs$("#importText").value;
 
     if (txt.trim().length === 0) {
         alert("Import text is empty");
@@ -142,7 +150,7 @@ function importRdf() {
 
     var rdfDoc = RdfImporter.loadDoc(txt);
     // Check that profiles have been parsed and are available before wiping current data
-    if (rdfDoc.profiles.length > 0 && document.getElementById("importOverwrite").checked) {
+    if (rdfDoc.profiles.length > 0 && qs$("#importOverwrite").checked) {
         Settings.profiles = [];
     }
 
@@ -155,8 +163,8 @@ function importRdf() {
 }
 
 function copyRdfExport() {
-    navigator.clipboard.writeText(document.getElementById("exportText").value)
-        .then(() => document.getElementById("exportText").select());
+    navigator.clipboard.writeText(qs$("#exportText").value)
+        .then(() => qs$("#exportText").select());
 }
 
 function showOptions() {
@@ -168,12 +176,12 @@ function showOptions() {
 
     chrome.storage.local.get(["storeLocation", "expire_password_minutes", "master_password_hash", "zoomLevel"])
         .then((result) => {
-            document.getElementById("store_location").value = result["storeLocation"];
-            document.getElementById("expirePasswordMinutes").value = (result["expire_password_minutes"] || 5);
-            document.getElementById("zoomLevel").value = (result["zoomLevel"] || 100);
-            updateStyle(document.getElementById("password_expire_row"), "hidden", (result["storeLocation"] !== "memory_expire"));
-            updateStyle(document.getElementById("master_password_row"), "hidden", (result["master_password_hash"] === undefined));
-            showSection("general_settings");
+            qs$("#store_location").value = result["storeLocation"];
+            qs$("#expirePasswordMinutes").value = (result["expire_password_minutes"] || 5);
+            qs$("#zoomLevel").value = (result["zoomLevel"] || 100);
+            updateStyle(qs$("#password_expire_row"), "hidden", (result["storeLocation"] !== "memory_expire"));
+            updateStyle(qs$("#master_password_row"), "hidden", (result["master_password_hash"] === undefined));
+            showSection("#general_settings");
         })
         .then(() => updateSyncStatus())
         .then(() => filterProfiles())
@@ -181,51 +189,51 @@ function showOptions() {
 }
 
 function showInformation() {
-    showSection("general_information");
+    showSection("#general_information");
 }
 
 function showSection(showId) {
-    document.getElementById("checkStrength").checked = false;
+    qs$("#checkStrength").checked = false;
     showStrengthSection();
-    Array.from(document.querySelectorAll("section"))
-        .concat(Array.from(document.querySelectorAll("aside")))
+    Array.from(qsa$("section"))
+        .concat(Array.from(qsa$("aside")))
         .filter((el) => el.id !== showId)
         .forEach((el) => el.style.display = "none");
-    document.getElementById(showId).style.display = "block";
+    qs$(showId).style.display = "block";
 }
 
 function highlightProfile() {
-    document.querySelectorAll(".highlight").forEach((el) => el.classList.remove("highlight"));
-    document.getElementById("profile_" + Settings.currentProfile).classList.add("highlight");
+    qsa$(".highlight").forEach((el) => el.classList.remove("highlight"));
+    qs$("#profile_" + Settings.currentProfile).classList.add("highlight");
 }
 
 function updateStorageLocation() {
-    var storeLocation = document.getElementById("store_location").value;
+    var storeLocation = qs$("#store_location").value;
     chrome.storage.local.set({ "storeLocation": storeLocation })
         .then(() => Settings.setStoreLocation(storeLocation))
-        .then(() => updateStyle(document.getElementById("password_expire_row"), "hidden", (storeLocation !== "memory_expire")))
+        .then(() => updateStyle(qs$("#password_expire_row"), "hidden", (storeLocation !== "memory_expire")))
         .catch((err) => console.trace("Could not run updateStorageLocation: " + err));
 }
 
 function saveProfile() {
     var selected = Settings.getProfile(Settings.currentProfile);
 
-    selected.title          = document.getElementById("profileNameTB").value.trim();
-    selected.siteList       = document.getElementById("siteList").value.trim().split(/\s+/).join(" ");
-    selected.url_protocol   = document.getElementById("protocolCB").checked;
-    selected.url_subdomain  = document.getElementById("subdomainCB").checked;
-    selected.url_domain     = document.getElementById("domainCB").checked;
-    selected.url_path       = document.getElementById("pathCB").checked;
-    selected.strUseText     = document.getElementById("inputUseThisText").value.trim();
-    selected.whereToUseL33t = document.getElementById("whereLeetLB").value;
-    selected.l33tLevel      = document.getElementById("leetLevelLB").value;
-    selected.hashAlgorithm  = document.getElementById("hashAlgorithmLB").value;
-    selected.passwordLength = document.getElementById("passwdLength").value;
-    selected.username       = document.getElementById("usernameTB").value.trim();
-    selected.modifier       = document.getElementById("modifier").value.trim();
-    selected.passwordPrefix = document.getElementById("passwordPrefix").value;
-    selected.passwordSuffix = document.getElementById("passwordSuffix").value;
-    selected.description    = document.getElementById("description").value;
+    selected.title          = qs$("#profileNameTB").value.trim();
+    selected.siteList       = qs$("#siteList").value.trim().split(/\s+/).join(" ");
+    selected.url_protocol   = qs$("#protocolCB").checked;
+    selected.url_subdomain  = qs$("#subdomainCB").checked;
+    selected.url_domain     = qs$("#domainCB").checked;
+    selected.url_path       = qs$("#pathCB").checked;
+    selected.strUseText     = qs$("#inputUseThisText").value.trim();
+    selected.whereToUseL33t = qs$("#whereLeetLB").value;
+    selected.l33tLevel      = qs$("#leetLevelLB").value;
+    selected.hashAlgorithm  = qs$("#hashAlgorithmLB").value;
+    selected.passwordLength = qs$("#passwdLength").value;
+    selected.username       = qs$("#usernameTB").value.trim();
+    selected.modifier       = qs$("#modifier").value.trim();
+    selected.passwordPrefix = qs$("#passwordPrefix").value;
+    selected.passwordSuffix = qs$("#passwordSuffix").value;
+    selected.description    = qs$("#description").value;
 
     // make sure default profile siteList and strUseText stays blank/generic
     if (Settings.profiles[0].id === selected.id) {
@@ -233,10 +241,10 @@ function saveProfile() {
         selected.strUseText = "";
     }
 
-    if (document.getElementById("charset").value === "Custom charset") {
-        selected.selectedCharset = document.getElementById("customCharset").value;
+    if (qs$("#charset").value === "Custom charset") {
+        selected.selectedCharset = qs$("#customCharset").value;
     } else {
-        selected.selectedCharset = document.getElementById("charset").value;
+        selected.selectedCharset = qs$("#charset").value;
     }
 
     Settings.saveProfiles()
@@ -290,7 +298,7 @@ function updateProfileList() {
     return chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
         if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
 
-        var profileList = document.getElementById("profile_list");
+        var profileList = qs$("#profile_list");
         profileList.replaceChildren(); //Empty profile list
         for (var i = 0; i < Settings.profiles.length; i++) {
             var listItem = document.createElement("li");
@@ -309,13 +317,13 @@ function syncSucccess(syncPassHash) {
         .then(() => chrome.storage.local.set({ "sync_profiles": true, "sync_profiles_password": syncPassHash }))
         .then(() => updateProfileList())
         .then(() => {
-            document.getElementById("syncProfilesPassword").value = "";
+            qs$("#syncProfilesPassword").value = "";
             updateSyncStatus();
         }).catch((err) => console.trace("Could not run syncSucccess: " + err));
 }
 
 function setSyncPassword() {
-    var syncPassValue = document.getElementById("syncProfilesPassword").value.trim();
+    var syncPassValue = qs$("#syncProfilesPassword").value.trim();
     if (syncPassValue.length === 0) {
         alert("Please enter a password to enable sync");
         return;
@@ -350,23 +358,22 @@ function clearSyncData() {
 }
 
 function updateSyncStatus() {
-    document.querySelectorAll("#sync_profiles_row, #no_sync_password, #sync_data_exists, #sync_password_set").forEach((el) => el.style.display = "none");
-    document.getElementById("set_sync_password").classList.add("hidden");
-    document.getElementById("clear_sync_data").classList.add("hidden");
+    qsa$("#sync_profiles_row, #no_sync_password, #sync_data_exists, #sync_password_set").forEach((el) => el.style.display = "none");
+    qsa$("#set_sync_password, #clear_sync_data").forEach((el) => el.classList.add("hidden"));
 
-    if (document.getElementById("syncProfiles").checked) {
+    if (qs$("#syncProfiles").checked) {
         return chrome.storage.local.get(["syncDataAvailable", "sync_profiles_password", "synced_profiles"]).then((result) => {
             var syncHash = result["sync_profiles_password"] || "";
             var profiles = Settings.decrypt(syncHash, result["synced_profiles"]);
             if (profiles.length !== 0) {
-                document.getElementById("sync_password_set").style.display = "";
-                document.getElementById("clear_sync_data").classList.remove("hidden");
+                qs$("#sync_password_set").style.display = "";
+                qs$("#clear_sync_data").classList.remove("hidden");
             } else if (result["syncDataAvailable"]) {
-                document.querySelectorAll("#sync_profiles_row, #sync_data_exists").forEach((el) => el.style.display = "");
-                document.querySelectorAll("#set_sync_password, #clear_sync_data").forEach((el) => el.classList.remove("hidden"));
+                qsa$("#sync_profiles_row, #sync_data_exists").forEach((el) => el.style.display = "");
+                qsa$("#set_sync_password, #clear_sync_data").forEach((el) => el.classList.remove("hidden"));
             } else {
-                document.querySelectorAll("#sync_profiles_row, #no_sync_password").forEach((el) => el.style.display = "");
-                document.getElementById("set_sync_password").classList.remove("hidden");
+                qsa$("#sync_profiles_row, #no_sync_password").forEach((el) => el.style.display = "");
+                qs$("#set_sync_password").classList.remove("hidden");
             }
         }).catch((err) => console.trace("Could not enable updateSyncStatus: " + err));
     } else {
@@ -378,23 +385,23 @@ function updateSyncStatus() {
 }
 
 function updateMasterHash() {
-    if (document.getElementById("keepMasterPasswordHash").checked) {
-        document.getElementById("master_password_row").classList.remove("hidden");
-        var master_pass = document.getElementById("masterPassword").value;
+    if (qs$("#keepMasterPasswordHash").checked) {
+        qs$("#master_password_row").classList.remove("hidden");
+        var master_pass = qs$("#masterPassword").value;
         if (master_pass.length > 0) {
             chrome.storage.local.set({ "master_password_hash": JSON.stringify(Settings.make_pbkdf2(master_pass)) });
         } else {
             chrome.storage.local.remove("master_password_hash");
         }
     } else {
-        document.getElementById("master_password_row").classList.add("hidden");
-        document.getElementById("masterPassword").value = "";
+        qs$("#master_password_row").classList.add("hidden");
+        qs$("#masterPassword").value = "";
         chrome.storage.local.remove("master_password_hash");
     }
 }
 
 function updateHidePassword() {
-    if (document.getElementById("hidePassword").checked) {
+    if (qs$("#hidePassword").checked) {
         chrome.storage.local.set({ "hide_generated_password": true });
     } else {
         chrome.storage.local.remove("hide_generated_password");
@@ -402,7 +409,7 @@ function updateHidePassword() {
 }
 
 function updateUseVerificationCode() {
-    if (document.getElementById("useVerificationCode").checked) {
+    if (qs$("#useVerificationCode").checked) {
         chrome.storage.local.set({ "use_verification_code": true });
     } else {
         chrome.storage.local.remove("use_verification_code");
@@ -410,7 +417,7 @@ function updateUseVerificationCode() {
 }
 
 function updateShowStrength() {
-    if (document.getElementById("showPasswordStrength").checked) {
+    if (qs$("#showPasswordStrength").checked) {
         chrome.storage.local.set({ "show_password_strength": true });
     } else {
         chrome.storage.local.remove("show_password_strength");
@@ -418,7 +425,7 @@ function updateShowStrength() {
 }
 
 function updateAlphaSortProfiles() {
-    if (document.getElementById("alphaSortProfiles").checked) {
+    if (qs$("#alphaSortProfiles").checked) {
         chrome.storage.local.set({ "alpha_sort_profiles": true });
     } else {
         chrome.storage.local.remove("alpha_sort_profiles");
@@ -430,13 +437,13 @@ function updateAlphaSortProfiles() {
 }
 
 function sanitizePasswordLength() {
-    var field = document.getElementById("passwdLength");
+    var field = qs$("#passwdLength");
     if (field.value < 4) field.value = "4";
     if (field.value > 512) field.value = "512";
 }
 
 function sanitizeExpireTime(newExpireTime) {
-    var field = document.getElementById("expirePasswordMinutes");
+    var field = qs$("#expirePasswordMinutes");
     if (newExpireTime < 1) {
         newExpireTime = 1;
         field.value = "1";
@@ -453,7 +460,7 @@ function sanitizeExpireTime(newExpireTime) {
 function updateExpireTime() {
     chrome.storage.local.get(["expire_password_minutes", "storeLocation"]).then((result) => {
         var oldExpireTime = result["expire_password_minutes"] || 5;
-        var newExpireTime = document.getElementById("expirePasswordMinutes").value;
+        var newExpireTime = qs$("#expirePasswordMinutes").value;
         if (result["storeLocation"] === "memory_expire") {
             newExpireTime = sanitizeExpireTime(newExpireTime);
             if (newExpireTime !== oldExpireTime) {
@@ -468,7 +475,7 @@ function updateExpireTime() {
 }
 
 function sanitizeZoomLevel(newZoomLevel) {
-    var field = document.getElementById("zoomLevel");
+    var field = qs$("#zoomLevel");
     if (newZoomLevel < 100) {
         newZoomLevel = 100;
         field.value = "100";
@@ -485,7 +492,7 @@ function sanitizeZoomLevel(newZoomLevel) {
 function updateZoomLevel() {
     chrome.storage.local.get(["zoomLevel"]).then((result) => {
         var oldZoomLevel = result["zoomLevel"] || 100;
-        var newZoomLevel = document.getElementById("zoomLevel").value;
+        var newZoomLevel = qs$("#zoomLevel").value;
         newZoomLevel = sanitizeZoomLevel(newZoomLevel);
         if (oldZoomLevel !== newZoomLevel) {
             chrome.storage.local.set({ "zoomLevel": newZoomLevel });
@@ -494,20 +501,20 @@ function updateZoomLevel() {
 }
 
 function fileImport() {
-    var file = document.getElementById("fileInput").files[0];
+    var file = qs$("#fileInput").files[0];
     if ((/rdf|xml/i).test(file.type)) {
         var reader = new FileReader();
         reader.onload = () => {
-            document.getElementById("importText").value = reader.result;
+            qs$("#importText").value = reader.result;
         };
         reader.readAsText(file);
     } else {
-        document.getElementById("importText").value = "Please select an RDF or XML file containing PasswordMaker profile data.";
+        qs$("#importText").value = "Please select an RDF or XML file containing PasswordMaker profile data.";
     }
 }
 
 function fileExport() {
-    var textFileAsBlob = new Blob([document.getElementById("exportText").value], {
+    var textFileAsBlob = new Blob([qs$("#exportText").value], {
         type: "application/rdf+xml"
     });
     var downloadLink = document.createElement("a");
@@ -517,20 +524,20 @@ function fileExport() {
 }
 
 function showStrengthSection() {
-    if (document.getElementById("checkStrength").checked) {
-        document.getElementById("strength_section").style.display = "inline-block";
-        document.querySelectorAll(".testInput").forEach((el) => el.addEventListener("input", checkPassStrength));
+    if (qs$("#checkStrength").checked) {
+        qs$("#strength_section").style.display = "inline-block";
+        qsa$(".testInput").forEach((el) => el.addEventListener("input", checkPassStrength));
         checkPassStrength();
     } else {
-        document.getElementById("strength_section").style.display = "none";
-        document.querySelectorAll(".testInput").forEach((el) => el.removeEventListener("input", checkPassStrength));
-        document.querySelectorAll(".strengthInput").forEach((el) => el.value = "");
+        qs$("#strength_section").style.display = "none";
+        qsa$(".testInput").forEach((el) => el.removeEventListener("input", checkPassStrength));
+        qsa$(".strengthInput").forEach((el) => el.value = "");
     }
 }
 
 function filterProfiles() {
-    var filter = document.getElementById("searchProfiles").value.toUpperCase();
-    var list = document.getElementById("profile_list").getElementsByTagName("li");
+    var filter = qs$("#searchProfiles").value.toUpperCase();
+    var list = qs$("#profile_list").getElementsByTagName("li");
 
     // Loop through all list items, and hide those which don't match the search query
     for (var i = 0; i < list.length; i++) {
@@ -549,40 +556,40 @@ function filterProfiles() {
 function checkPassStrength() {
     var selected = Settings.getProfile(Settings.currentProfile);
 
-    selected.siteList       = document.getElementById("siteList").value.trim().replace(/[*?$+()^[\]\\|{},]/g, "").split(/\s+/).shift();
-    selected.url_protocol   = document.getElementById("protocolCB").checked;
-    selected.url_subdomain  = document.getElementById("subdomainCB").checked;
-    selected.url_domain     = document.getElementById("domainCB").checked;
-    selected.url_path       = document.getElementById("pathCB").checked;
-    selected.strUseText     = document.getElementById("inputUseThisText").value.trim();
-    selected.whereToUseL33t = document.getElementById("whereLeetLB").value;
-    selected.l33tLevel      = document.getElementById("leetLevelLB").value;
-    selected.hashAlgorithm  = document.getElementById("hashAlgorithmLB").value;
-    selected.passwordLength = document.getElementById("passwdLength").value;
-    selected.username       = document.getElementById("usernameTB").value.trim();
-    selected.modifier       = document.getElementById("modifier").value.trim();
-    selected.passwordPrefix = document.getElementById("passwordPrefix").value;
-    selected.passwordSuffix = document.getElementById("passwordSuffix").value;
+    selected.siteList       = qs$("#siteList").value.trim().replace(/[*?$+()^[\]\\|{},]/g, "").split(/\s+/).shift();
+    selected.url_protocol   = qs$("#protocolCB").checked;
+    selected.url_subdomain  = qs$("#subdomainCB").checked;
+    selected.url_domain     = qs$("#domainCB").checked;
+    selected.url_path       = qs$("#pathCB").checked;
+    selected.strUseText     = qs$("#inputUseThisText").value.trim();
+    selected.whereToUseL33t = qs$("#whereLeetLB").value;
+    selected.l33tLevel      = qs$("#leetLevelLB").value;
+    selected.hashAlgorithm  = qs$("#hashAlgorithmLB").value;
+    selected.passwordLength = qs$("#passwdLength").value;
+    selected.username       = qs$("#usernameTB").value.trim();
+    selected.modifier       = qs$("#modifier").value.trim();
+    selected.passwordPrefix = qs$("#passwordPrefix").value;
+    selected.passwordSuffix = qs$("#passwordSuffix").value;
 
-    if (document.getElementById("charset").value === "Custom charset") {
-        selected.selectedCharset = document.getElementById("customCharset").value;
+    if (qs$("#charset").value === "Custom charset") {
+        selected.selectedCharset = qs$("#customCharset").value;
     } else {
-        selected.selectedCharset = document.getElementById("charset").value;
+        selected.selectedCharset = qs$("#charset").value;
     }
 
     if (selected.getText().length !== 0) {
-        document.getElementById("testText").value = selected.getText();
+        qs$("#testText").value = selected.getText();
     } else {
-        document.getElementById("testText").value = selected.getUrl(selected.siteList);
+        qs$("#testText").value = selected.getUrl(selected.siteList);
     }
 
-    document.getElementById("genPass").value = selected.genPassword(document.getElementById("testText").value, document.getElementById("testPass").value, selected.username);
-    var values = Settings.getPasswordStrength(document.getElementById("genPass").value);
-    document.querySelectorAll("#genStrength, #optionsMeter").forEach((el) => el.value = values.strength);
-    document.getElementById("hasUpper").checked = values.hasUpper;
-    document.getElementById("hasLower").checked = values.hasLower;
-    document.getElementById("hasDigit").checked = values.hasDigit;
-    document.getElementById("hasSymbol").checked = values.hasSymbol;
+    qs$("#genPass").value = selected.genPassword(qs$("#testText").value, qs$("#testPass").value, selected.username);
+    var values = Settings.getPasswordStrength(qs$("#genPass").value);
+    qsa$("#genStrength, #optionsMeter").forEach((el) => el.value = values.strength);
+    qs$("#hasUpper").checked = values.hasUpper;
+    qs$("#hasLower").checked = values.hasLower;
+    qs$("#hasDigit").checked = values.hasDigit;
+    qs$("#hasSymbol").checked = values.hasSymbol;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -596,57 +603,57 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(() => setCurrentProfile(Settings.profiles[0])).catch((err) => console.trace("Failure during setCurrentProfile: " + err))
         .then(() => {
             chrome.storage.local.get(["hide_generated_password", "sync_profiles", "master_password_hash", "use_verification_code", "show_password_strength", "alpha_sort_profiles"]).then((result) => {
-                document.getElementById("hidePassword").checked = result["hide_generated_password"];
-                document.getElementById("keepMasterPasswordHash").checked = result["master_password_hash"];
-                document.getElementById("useVerificationCode").checked = result["use_verification_code"];
-                document.getElementById("showPasswordStrength").checked = result["show_password_strength"];
-                document.getElementById("syncProfiles").checked = result["sync_profiles"];
-                document.getElementById("alphaSortProfiles").checked = result["alpha_sort_profiles"];
+                qs$("#hidePassword").checked = result["hide_generated_password"];
+                qs$("#keepMasterPasswordHash").checked = result["master_password_hash"];
+                qs$("#useVerificationCode").checked = result["use_verification_code"];
+                qs$("#showPasswordStrength").checked = result["show_password_strength"];
+                qs$("#syncProfiles").checked = result["sync_profiles"];
+                qs$("#alphaSortProfiles").checked = result["alpha_sort_profiles"];
             });
 
-            document.getElementById("profile_list").addEventListener("click", (event) => editProfile(event));
-            document.getElementById("add").addEventListener("click", addProfile);
-            document.getElementById("showImport").addEventListener("click", showImport);
-            document.getElementById("showExport").addEventListener("click", showExport);
-            document.getElementById("showSettings").addEventListener("click", showOptions);
-            document.getElementById("showInformation").addEventListener("click", showInformation);
+            qs$("#profile_list").addEventListener("click", (event) => editProfile(event));
+            qs$("#add").addEventListener("click", addProfile);
+            qs$("#showImport").addEventListener("click", showImport);
+            qs$("#showExport").addEventListener("click", showExport);
+            qs$("#showSettings").addEventListener("click", showOptions);
+            qs$("#showInformation").addEventListener("click", showInformation);
 
-            document.getElementById("protocolCB").addEventListener("change", updateExample);
-            document.getElementById("subdomainCB").addEventListener("change", updateExample);
-            document.getElementById("domainCB").addEventListener("change", updateExample);
-            document.getElementById("pathCB").addEventListener("change", updateExample);
-            document.getElementById("whereLeetLB").addEventListener("change", updateLeet);
-            document.getElementById("charset").addEventListener("change", updateCustomCharsetField);
-            document.getElementById("passwdLength").addEventListener("change", sanitizePasswordLength);
+            qs$("#protocolCB").addEventListener("change", updateExample);
+            qs$("#subdomainCB").addEventListener("change", updateExample);
+            qs$("#domainCB").addEventListener("change", updateExample);
+            qs$("#pathCB").addEventListener("change", updateExample);
+            qs$("#whereLeetLB").addEventListener("change", updateLeet);
+            qs$("#charset").addEventListener("change", updateCustomCharsetField);
+            qs$("#passwdLength").addEventListener("change", sanitizePasswordLength);
 
-            document.getElementById("cloneProfileButton").addEventListener("click", cloneProfile);
-            document.getElementById("moveUpButton").addEventListener("click", moveProfileUp);
-            document.getElementById("moveDownButton").addEventListener("click", moveProfileDown);        
-            document.getElementById("checkStrength").addEventListener("change", showStrengthSection);
-            document.getElementById("remove").addEventListener("click", removeProfile);
-            document.getElementById("save").addEventListener("click", saveProfile);
-            document.getElementById("importButton").addEventListener("click", importRdf);
-            document.getElementById("fileInput").addEventListener("change", fileImport);
-            document.getElementById("copyButton").addEventListener("click", copyRdfExport);
-            document.getElementById("exportFileButton").addEventListener("click", fileExport);
+            qs$("#cloneProfileButton").addEventListener("click", cloneProfile);
+            qs$("#moveUpButton").addEventListener("click", moveProfileUp);
+            qs$("#moveDownButton").addEventListener("click", moveProfileDown);        
+            qs$("#checkStrength").addEventListener("change", showStrengthSection);
+            qs$("#remove").addEventListener("click", removeProfile);
+            qs$("#save").addEventListener("click", saveProfile);
+            qs$("#importButton").addEventListener("click", importRdf);
+            qs$("#fileInput").addEventListener("change", fileImport);
+            qs$("#copyButton").addEventListener("click", copyRdfExport);
+            qs$("#exportFileButton").addEventListener("click", fileExport);
 
-            document.getElementById("zoomLevel").addEventListener("change", updateZoomLevel);
-            document.getElementById("store_location").addEventListener("change", updateStorageLocation);
-            document.getElementById("expirePasswordMinutes").addEventListener("change", updateExpireTime);
-            document.getElementById("hidePassword").addEventListener("change", updateHidePassword);
-            document.getElementById("keepMasterPasswordHash").addEventListener("change", updateMasterHash);
-            document.getElementById("syncProfiles").addEventListener("change", updateSyncStatus);
-            document.getElementById("masterPassword").addEventListener("input", updateMasterHash);
-            document.getElementById("useVerificationCode").addEventListener("change", updateUseVerificationCode);
-            document.getElementById("showPasswordStrength").addEventListener("change", updateShowStrength);
-            document.getElementById("alphaSortProfiles").addEventListener("change", updateAlphaSortProfiles);
-            document.getElementById("set_sync_password").addEventListener("click", setSyncPassword);
-            document.getElementById("syncProfilesPassword").addEventListener("input", (event) => {
+            qs$("#zoomLevel").addEventListener("change", updateZoomLevel);
+            qs$("#store_location").addEventListener("change", updateStorageLocation);
+            qs$("#expirePasswordMinutes").addEventListener("change", updateExpireTime);
+            qs$("#hidePassword").addEventListener("change", updateHidePassword);
+            qs$("#keepMasterPasswordHash").addEventListener("change", updateMasterHash);
+            qs$("#syncProfiles").addEventListener("change", updateSyncStatus);
+            qs$("#masterPassword").addEventListener("input", updateMasterHash);
+            qs$("#useVerificationCode").addEventListener("change", updateUseVerificationCode);
+            qs$("#showPasswordStrength").addEventListener("change", updateShowStrength);
+            qs$("#alphaSortProfiles").addEventListener("change", updateAlphaSortProfiles);
+            qs$("#set_sync_password").addEventListener("click", setSyncPassword);
+            qs$("#syncProfilesPassword").addEventListener("input", (event) => {
                 if (event.code === "Enter") setSyncPassword();
             })
-            document.getElementById("clear_sync_data").addEventListener("click", clearSyncData);
-            document.getElementById("resetToDefaultprofiles").addEventListener("click", removeAllProfiles);
-            document.getElementById("searchProfiles").addEventListener("input", filterProfiles);
+            qs$("#clear_sync_data").addEventListener("click", clearSyncData);
+            qs$("#resetToDefaultprofiles").addEventListener("click", removeAllProfiles);
+            qs$("#searchProfiles").addEventListener("input", filterProfiles);
         }).catch((err) => console.trace("Failure during options page load: " + err));
     });
 });

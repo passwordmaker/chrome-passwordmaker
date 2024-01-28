@@ -1,5 +1,13 @@
+function qs$(sel) {
+    return document.querySelector(sel);
+}
+
+function qsa$(sel) {
+    return document.querySelectorAll(sel);
+}
+
 function setPasswordColors(foreground, background) {
-    document.querySelectorAll("#generated, #password, #confirmation").forEach((el) => {
+    qsa$("#generated, #password, #confirmation").forEach((el) => {
         el.style.backgroundColor = background;
         el.style.color = foreground;
     });
@@ -42,7 +50,7 @@ function setPassword() {
         } else {
             var bits = crypto.getRandomValues(new Uint32Array(8));
             var key = sjcl.codec.base64.fromBits(bits);
-            var encrypted = Settings.encrypt(key, document.getElementById("password").value);
+            var encrypted = Settings.encrypt(key, qs$("#password").value);
             switch (result["storeLocation"]) {
                 case "memory":
                     chrome.storage.session.set({ "password": encrypted, "password_key": key });
@@ -61,37 +69,37 @@ function setPassword() {
 
 function passwordFieldSuccess() {
     setPassword();
-    var profile = Settings.getProfile(document.getElementById("profile").value);
-    var profileResult = profile.genPassword(document.getElementById("usedtext").value, document.getElementById("password").value, document.getElementById("username").value);
-    document.getElementById("generated").value = profileResult;
+    var profile = Settings.getProfile(qs$("#profile").value);
+    var profileResult = profile.genPassword(qs$("#usedtext").value, qs$("#password").value, qs$("#username").value);
+    qs$("#generated").value = profileResult;
     setPasswordColors("#008000", "#FFFFFF");
-    document.querySelectorAll("#password, #confirmation").forEach((el) => el.removeAttribute("style"));
+    qsa$("#password, #confirmation").forEach((el) => el.removeAttribute("style"));
     showButtons();
     return Settings.getPasswordStrength(profileResult).strength;
 }
 
 function updateFields() {
-    var passwordEl = document.getElementById("password");
-    var confirmationEl = document.getElementById("confirmation");
+    var passwordEl = qs$("#password");
+    var confirmationEl = qs$("#confirmation");
     var passStrength = 0;
 
     return chrome.storage.local.get(["master_password_hash", "show_password_strength", "storeLocation", "use_verification_code"]).then((result) => {
         if (passwordEl.value.length === 0) {
-            document.getElementById("generated").value = "Please Enter Password";
+            qs$("#generated").value = "Please Enter Password";
             setPasswordColors("#000000", "#85FFAB");
             hideButtons();
         } else if (result["master_password_hash"]) {
             var saved = JSON.parse(result["master_password_hash"]);
             var derived = Settings.make_pbkdf2(passwordEl.value, saved.salt, saved.iter);
             if (derived.hash !== saved.hash) {
-                document.getElementById("generated").value = "Master Password Mismatch";
+                qs$("#generated").value = "Master Password Mismatch";
                 setPasswordColors("#FFFFFF", "#FF7272");
                 hideButtons();
             } else {
                 passStrength = passwordFieldSuccess();
             }
         } else if (!result["use_verification_code"] && !result["master_password_hash"] && (passwordEl.value !== confirmationEl.value)) {
-            document.getElementById("generated").value = "Passwords Don't Match";
+            qs$("#generated").value = "Passwords Don't Match";
             setPasswordColors("#FFFFFF", "#FF7272");
             hideButtons();
         } else {
@@ -99,12 +107,12 @@ function updateFields() {
         }
 
         if (result["show_password_strength"]) {
-            document.getElementById("popupMeter").value = passStrength;
-            document.getElementById("strengthValue").textContent = passStrength;
+            qs$("#popupMeter").value = passStrength;
+            qs$("#strengthValue").textContent = passStrength;
         }
 
         if (result["use_verification_code"]) {
-            document.getElementById("verificationCode").value = getVerificationCode(passwordEl.value);
+            qs$("#verificationCode").value = getVerificationCode(passwordEl.value);
         }
 
         if (passwordEl.value === "") {
@@ -119,17 +127,17 @@ function delayedUpdate() {
 }
 
 function updateProfileText() {
-    var profile = Settings.getProfile(document.getElementById("profile").value);
+    var profile = Settings.getProfile(qs$("#profile").value);
     // Store either matched url or, if set, use profiles own "use text"
     if (profile.getText().length !== 0) {
-        document.getElementById("usedtext").value = profile.getText();
+        qs$("#usedtext").value = profile.getText();
     } else {
-        document.getElementById("usedtext").value = profile.getUrl(Settings.currentUrl);
+        qs$("#usedtext").value = profile.getUrl(Settings.currentUrl);
     }
     if (profile.getUsername().length !== 0) {
-        document.getElementById("username").value = profile.getUsername();
+        qs$("#username").value = profile.getUsername();
     } else {
-        document.getElementById("username").value = "";
+        qs$("#username").value = "";
     }
 }
 
@@ -139,12 +147,12 @@ function onProfileChanged() {
 }
 
 function hideButtons() {
-    var copyPassEl = document.getElementById("copypassword");
+    var copyPassEl = qs$("#copypassword");
     if (!copyPassEl.classList.contains("hidden")) {
         copyPassEl.classList.add("hidden");
         
     }
-    var injectPassEl = document.getElementById("injectpassword");
+    var injectPassEl = qs$("#injectpassword");
     if (!injectPassEl.classList.contains("hidden")) {
         injectPassEl.classList.add("hidden");
     }
@@ -161,7 +169,7 @@ function showButtonsScript() {
 }
 
 function showButtons() {
-    document.getElementById("copypassword").classList.remove("hidden");
+    qs$("#copypassword").classList.remove("hidden");
     // Don't run executeScript() on built-in chrome://, opera:// or about:// or extension options pages
     // Also can't run on the Chrome Web Store/Extension Gallery
     if (!(/^about|^chrome|^edge|^opera|(chrome|chromewebstore)\.google\.com|.*extension:/i).test(Settings.currentUrl)) {
@@ -172,7 +180,7 @@ function showButtons() {
             }).then((fieldCounts) => {
                 for (var frame = 0; frame < fieldCounts.length; frame++) {
                     if (fieldCounts[frame].result > 0) {
-                        document.getElementById("injectpassword").classList.remove("hidden");
+                        qs$("#injectpassword").classList.remove("hidden");
                     }
                 }
             }).catch((err) => console.trace("Could not run showButtons: " + err));
@@ -235,7 +243,7 @@ function copyPassword() {
         chrome.tabs.query({
             "windowType": "popup"
         }).then(() => {
-            navigator.clipboard.writeText(document.getElementById("generated").value).then(() => window.close());
+            navigator.clipboard.writeText(qs$("#generated").value).then(() => window.close());
         });
     }).catch((err) => console.trace("Could not run copyPassword: " + err));
 }
@@ -253,22 +261,22 @@ function getVerificationCode(password) {
 }
 
 function showPasswordField() {
-    document.getElementById("activatePassword").style.display = "none";
-    document.getElementById("generated").style.display = "";
+    qs$("#activatePassword").style.display = "none";
+    qs$("#generated").style.display = "";
     chrome.storage.local.get(["show_password_strength"]).then((result) => {
         if (result["show_password_strength"]) {
-            document.getElementById("strength_row").style.display = "";
+            qs$("#strength_row").style.display = "";
         }
     }).catch((err) => console.trace("Could not run showPasswordField: " + err));
 }
 
 function handleKeyPress(event) {
-    var generatedElVal = document.getElementById("generated").value;
-    var usernameElVal = document.getElementById("username").value;
+    var generatedElVal = qs$("#generated").value;
+    var usernameElVal = qs$("#username").value;
     if (/Enter/.test(event.code) && !(/select/i).test(event.target.tagName)) {
         if ((/Password/).test(generatedElVal)) {
-            if (document.getElementById("confirmation").style.display !== "none") {
-                document.getElementById("confirmation").focus();
+            if (qs$("#confirmation").style.display !== "none") {
+                qs$("#confirmation").focus();
             }
         } else {
             fillFields([generatedElVal, usernameElVal]);
@@ -283,11 +291,11 @@ function handleKeyPress(event) {
 
 function sharedInit(decryptedPass) {
     chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
-        document.getElementById("password").value = decryptedPass;
-        document.getElementById("confirmation").value = decryptedPass;
+        qs$("#password").value = decryptedPass;
+        qs$("#confirmation").value = decryptedPass;
 
         if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
-        var profileList = document.getElementById("profile");
+        var profileList = qs$("#profile");
         Settings.profiles.forEach((profile) => {
             profileList.append(new Option(profile.title, profile.id));
         });
@@ -329,29 +337,29 @@ document.addEventListener("DOMContentLoaded", () => {
         Settings.migrateFromStorage()
         .then(() => Settings.loadProfiles()).catch((err) => console.trace("Failure during popup Settings.loadProfiles: " + err))
         .then(() => {
-            document.querySelectorAll("input").forEach((el) => el.addEventListener("input", delayedUpdate));
-            document.getElementById("profile").addEventListener("change", onProfileChanged);
-            document.getElementById("activatePassword").addEventListener("click", showPasswordField);
-            document.getElementById("copypassword").addEventListener("click", copyPassword);
-            document.getElementById("options").addEventListener("click", openOptions);
+            qsa$("input").forEach((el) => el.addEventListener("input", delayedUpdate));
+            qs$("#profile").addEventListener("change", onProfileChanged);
+            qs$("#activatePassword").addEventListener("click", showPasswordField);
+            qs$("#copypassword").addEventListener("click", copyPassword);
+            qs$("#options").addEventListener("click", openOptions);
 
             chrome.storage.local.get(["hide_generated_password", "master_password_hash", "use_verification_code", "show_password_strength"]).then((result) => {
                 if (result["hide_generated_password"] === true) {
-                    document.querySelectorAll("#generated, #strength_row").forEach((el) => el.style.display = "none");
+                    qsa$("#generated, #strength_row").forEach((el) => el.style.display = "none");
                 } else {
-                    document.getElementById("activatePassword").style.display = "none";
+                    qs$("#activatePassword").style.display = "none";
                 }
 
                 if (result["master_password_hash"] || result["use_verification_code"] === true) {
-                    document.getElementById("confirmation_row").style.display = "none";
+                    qs$("#confirmation_row").style.display = "none";
                 }
 
                 if (!result["use_verification_code"]) {
-                    document.getElementById("verification_row").style.display = "none";
+                    qs$("#verification_row").style.display = "none";
                 }
 
                 if (!result["show_password_strength"]) {
-                    document.getElementById("strength_row").style.display = "none";
+                    qs$("#strength_row").style.display = "none";
                 }
             });
 
@@ -364,8 +372,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 initPopup();
             });
 
-            document.getElementById("injectpassword").addEventListener("click", () => {
-                fillFields([document.getElementById("generated").value, document.getElementById("username").value]);
+            qs$("#injectpassword").addEventListener("click", () => {
+                fillFields([qs$("#generated").value, qs$("#username").value]);
             });
 
             document.body.addEventListener("keydown", handleKeyPress);
