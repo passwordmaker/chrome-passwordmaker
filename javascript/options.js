@@ -32,7 +32,7 @@ function addProfile() {
     Settings.addProfile(p);
     updateProfileList()
         .then(() => setCurrentProfile(p))
-        .catch((err) => console.trace("Could not run addProfile: " + err));
+        .catch((err) => console.trace(`Could not run addProfile: ${err}`));
 }
 
 function removeProfile() {
@@ -50,7 +50,7 @@ function removeAllProfiles() {
             .then(() => qs$("#syncProfiles").checked = false)
             .then(() => Settings.loadProfiles())
             .then(() => updateProfileList())
-            .catch((err) => console.trace("Could not run removeAllProfiles: " + err));
+            .catch((err) => console.trace(`Could not run removeAllProfiles: ${err}`));
     }
 }
 
@@ -121,10 +121,9 @@ function oldHashWarning(hash) {
     };
     if (bugged[hash]) {
         if (confirm("Are you sure you want to continue using a legacy algorithm which is incorrectly implemented?")) {
-            alert("Please change to using a correct & secure algorithm!\n\nThe old/bugged/legacy algorithms " +
-                "are harmful to your online security and should be avoided at ALL costs.\n\n" +
-                "Please change your passwords on the sites which you are using this algorithm if you are able to " +
-                "as soon as possible.\n\nThank you\n");
+            alert(`Please change to using a correct & secure algorithm!
+The old/bugged/legacy algorithms are harmful to your online security and should be avoided at ALL costs.
+Please change your passwords on the sites which you are using this algorithm if you are able to as soon as possible!`);
         } else {
             alert("Please select one of the correct and secure hash algorithms below :)");
         }
@@ -172,7 +171,7 @@ function showOptions() {
         if (Object.keys(result).length > 0) {
             chrome.storage.local.set({ "syncDataAvailable": true });
         }
-    }).catch((err) => console.trace("Could not check sync data: " + err));
+    }).catch((err) => console.trace(`Could not check sync data: ${err}`));
 
     chrome.storage.local.get(["storeLocation", "expire_password_minutes", "master_password_hash", "zoomLevel"])
         .then((result) => {
@@ -185,7 +184,7 @@ function showOptions() {
         })
         .then(() => updateSyncStatus())
         .then(() => filterProfiles())
-        .catch((err) => console.log("Could not run showOptions: " + err));
+        .catch((err) => console.log(`Could not run showOptions: ${err}`));
 }
 
 function showInformation() {
@@ -212,7 +211,7 @@ function updateStorageLocation() {
     chrome.storage.local.set({ "storeLocation": storeLocation })
         .then(() => Settings.setStoreLocation(storeLocation))
         .then(() => updateStyle(qs$("#password_expire_row"), "hidden", (storeLocation !== "memory_expire")))
-        .catch((err) => console.trace("Could not run updateStorageLocation: " + err));
+        .catch((err) => console.trace(`Could not run updateStorageLocation: ${err}`));
 }
 
 function saveProfile() {
@@ -253,7 +252,7 @@ function saveProfile() {
             setCurrentProfile(selected);
             highlightProfile();
             oldHashWarning(selected.hashAlgorithm);
-        }).catch((err) => console.trace("Could not run saveProfile: " + err));
+        }).catch((err) => console.trace(`Could not run saveProfile: ${err}`));
 }
 
 function cloneProfile() {
@@ -309,7 +308,7 @@ function updateProfileList() {
             listItem.append(spanItem);
             profileList.append(listItem);
         }
-    }).catch((err) => console.trace("Could not run updateProfileList: " + err));
+    }).catch((err) => console.trace(`Could not run updateProfileList: ${err}`));
 }
 
 function syncSucccess(syncPassHash) {
@@ -319,7 +318,7 @@ function syncSucccess(syncPassHash) {
         .then(() => {
             qs$("#syncProfilesPassword").value = "";
             updateSyncStatus();
-        }).catch((err) => console.trace("Could not run syncSucccess: " + err));
+        }).catch((err) => console.trace(`Could not run syncSucccess: ${err}`));
 }
 
 function setSyncPassword() {
@@ -339,13 +338,13 @@ function setSyncPassword() {
                     Settings.loadProfilesFromString(profiles);
                     syncSucccess(syncPassHash);
                 } else {
-                    alert("Wrong password. Please specify the password you used when initially synced your data");
+                    alert("Wrong password! Please specify the password you used when initially synced your data.");
                 }
             }
         } else {
             syncSucccess(syncPassHash);
         }
-    }).catch((err) => console.trace("Could not run setSyncPassword: " + err));
+    }).catch((err) => console.trace(`Could not run setSyncPassword: ${err}`));
 }
 
 function clearSyncData() {
@@ -354,7 +353,7 @@ function clearSyncData() {
         .then(() => Settings.loadProfiles())
         .then(() => updateProfileList())
         .then(() => updateSyncStatus())
-        .catch((err) => console.trace("Could not run clearSyncData: " + err));
+        .catch((err) => console.trace(`Could not run clearSyncData: ${err}`));
 }
 
 function updateSyncStatus() {
@@ -375,12 +374,12 @@ function updateSyncStatus() {
                 qsa$("#sync_profiles_row, #no_sync_password").forEach((el) => el.style.display = "");
                 qs$("#set_sync_password").classList.remove("hidden");
             }
-        }).catch((err) => console.trace("Could not enable updateSyncStatus: " + err));
+        }).catch((err) => console.trace(`Could not enable updateSyncStatus: ${err}`));
     } else {
         return chrome.storage.local.remove(["sync_profiles", "sync_profiles_password"])
             .then(() => Settings.loadProfiles())
             .then(() => updateProfileList())
-            .catch((err) => console.trace("Could not disable updateSyncStatus: " + err));
+            .catch((err) => console.trace(`Could not disable updateSyncStatus: ${err}`));
     }
 }
 
@@ -433,7 +432,7 @@ function updateAlphaSortProfiles() {
     Settings.loadProfiles()
         .then(() => updateProfileList())
         .then(() => filterProfiles())
-        .catch((err) => console.trace("Could not run updateAlphaSortProfiles: " + err));
+        .catch((err) => console.trace(`Could not run updateAlphaSortProfiles: ${err}`));
 }
 
 function sanitizePasswordLength() {
@@ -471,7 +470,7 @@ function updateExpireTime() {
         } else {
             chrome.alarms.clear("expire_password");
         }
-    }).catch((err) => console.trace("Could not run updateExpireTime: " + err));
+    }).catch((err) => console.trace(`Could not run updateExpireTime: ${err}`));
 }
 
 function sanitizeZoomLevel(newZoomLevel) {
@@ -497,7 +496,7 @@ function updateZoomLevel() {
         if (oldZoomLevel !== newZoomLevel) {
             chrome.storage.local.set({ "zoomLevel": newZoomLevel });
         }
-    }).catch((err) => console.trace("Could not run updateZoomLevel: " + err));
+    }).catch((err) => console.trace(`Could not run updateZoomLevel: ${err}`));
 }
 
 function fileImport() {
@@ -598,9 +597,9 @@ document.addEventListener("DOMContentLoaded", () => {
             chrome.storage.local.set({ "storeLocation": "memory" });
         }
         Settings.migrateFromStorage()
-        .then(() => Settings.loadProfiles()).catch((err) => console.trace("Failure during options Settings.loadProfiles: " + err))
-        .then(() => updateProfileList()).catch((err) => console.trace("Failure during updateProfileList: " + err))
-        .then(() => setCurrentProfile(Settings.profiles[0])).catch((err) => console.trace("Failure during setCurrentProfile: " + err))
+        .then(() => Settings.loadProfiles()).catch((err) => console.trace(`Failure during options Settings.loadProfiles: ${err}`))
+        .then(() => updateProfileList()).catch((err) => console.trace(`Failure during updateProfileList: ${err}`))
+        .then(() => setCurrentProfile(Settings.profiles[0])).catch((err) => console.trace(`Failure during options setCurrentProfile: ${err}`))
         .then(() => {
             chrome.storage.local.get(["hide_generated_password", "sync_profiles", "master_password_hash", "use_verification_code", "show_password_strength", "alpha_sort_profiles"]).then((result) => {
                 qs$("#hidePassword").checked = result["hide_generated_password"];
@@ -654,6 +653,6 @@ document.addEventListener("DOMContentLoaded", () => {
             qs$("#clear_sync_data").addEventListener("click", clearSyncData);
             qs$("#resetToDefaultprofiles").addEventListener("click", removeAllProfiles);
             qs$("#searchProfiles").addEventListener("input", filterProfiles);
-        }).catch((err) => console.trace("Failure during options page load: " + err));
+        }).catch((err) => console.trace(`Failure during options page load: ${err}`));
     });
 });

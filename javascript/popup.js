@@ -64,7 +64,7 @@ function setPassword() {
                     break;
             }
         }
-    }).catch((err) => console.trace("Could not run Settings.setPassword: " + err));
+    }).catch((err) => console.trace(`Could not run Settings.setPassword: ${err}`));
 };
 
 function passwordFieldSuccess() {
@@ -118,7 +118,7 @@ function updateFields() {
         if (passwordEl.value === "") {
             passwordEl.focus();
         }
-    }).catch((err) => console.trace("Could not run updateFields: " + err));
+    }).catch((err) => console.trace(`Could not run updateFields: ${err}`));
 }
 
 function delayedUpdate() {
@@ -161,7 +161,7 @@ function hideButtons() {
 function showButtonsScript() {
     var fields = document.getElementsByTagName("input"), fieldCount = 0;
     for (var i = 0; i < fields.length; i++) {
-        if ((/mail|pass/i).test(fields[i].type)) {
+        if ((/email|password/i).test(`${fields[i].type} ${fields[i].name} ${fields[i].autocomplete}`)) {
             fieldCount += 1;
         }
     }
@@ -183,7 +183,7 @@ function showButtons() {
                         qs$("#injectpassword").classList.remove("hidden");
                     }
                 }
-            }).catch((err) => console.trace("Could not run showButtons: " + err));
+            }).catch((err) => console.trace(`Could not run showButtons: ${err}`));
         });
     }
 }
@@ -201,8 +201,8 @@ function fillFieldsScript(args) {
     for (var i = 0; i < fields.length; i++) {
         var elStyle = getComputedStyle(fields[i]);
         var isVisible = isRendered(fields[i]) && (parseFloat(elStyle.width) > 0) && (parseFloat(elStyle.height) > 0);
-        var isPasswordField = (/password/i).test(fields[i].type + " " + fields[i].name);
-        var isUsernameField = (/acc|mail|user|usr/i).test(fields[i].type + " " + fields[i].name);
+        var isPasswordField = (/password/i).test(`${fields[i].type} ${fields[i].name} ${fields[i].autocomplete}`);
+        var isUsernameField = (/acc|email|user|usr/i).test(`${fields[i].type} ${fields[i].name} ${fields[i].autocomplete}`);
         var changeEvent = new Event("input", {bubbles: true}); // MVC friendly way to force a view-model update
         if (isVisible && !passFilled && fields[i].value.length === 0 && isPasswordField) {
             fields[i].value = args[0];
@@ -232,10 +232,10 @@ function fillFields(generatedPass) {
                     func: fillFieldsScript,
                 })
                 .then(() => window.close())
-                .catch((err) => console.trace("Fill field executeScript error: " + err));
+                .catch((err) => console.trace(`Fill field executeScript error: ${err}`));
             });
         }
-    }).catch((err) => console.trace("Could not run fillFields: " + err));
+    }).catch((err) => console.trace(`Could not run fillFields: ${err}`));
 }
 
 function copyPassword() {
@@ -245,7 +245,7 @@ function copyPassword() {
         }).then(() => {
             navigator.clipboard.writeText(qs$("#generated").value).then(() => window.close());
         });
-    }).catch((err) => console.trace("Could not run copyPassword: " + err));
+    }).catch((err) => console.trace(`Could not run copyPassword: ${err}`));
 }
 
 function openOptions() {
@@ -267,7 +267,7 @@ function showPasswordField() {
         if (result["show_password_strength"]) {
             qs$("#strength_row").style.display = "";
         }
-    }).catch((err) => console.trace("Could not run showPasswordField: " + err));
+    }).catch((err) => console.trace(`Could not run showPasswordField: ${err}`));
 }
 
 function handleKeyPress(event) {
@@ -302,7 +302,7 @@ function sharedInit(decryptedPass) {
         profileList.value = (getAutoProfileIdForUrl() || Settings.profiles[0].id);
 
         onProfileChanged();
-    }).catch((err) => console.trace("Could not run sharedInit: " + err));
+    }).catch((err) => console.trace(`Could not run sharedInit: ${err}`));
 }
 
 function initPopup() {
@@ -321,7 +321,7 @@ function initPopup() {
                 sharedInit("");
                 break;
         }
-    }).catch((err) => console.trace("Could not run initPopup: " + err));
+    }).catch((err) => console.trace(`Could not run initPopup: ${err}`));
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -335,7 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.style.fontSize = "100%"
         }
         Settings.migrateFromStorage()
-        .then(() => Settings.loadProfiles()).catch((err) => console.trace("Failure during popup Settings.loadProfiles: " + err))
+        .then(() => Settings.loadProfiles()).catch((err) => console.trace(`Failure during popup Settings.loadProfiles: ${err}`))
         .then(() => {
             qsa$("input").forEach((el) => el.addEventListener("input", delayedUpdate));
             qs$("#profile").addEventListener("change", onProfileChanged);
@@ -378,5 +378,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
             document.body.addEventListener("keydown", handleKeyPress);
         });
-    }).catch((err) => console.trace("Failure during popup page load: " + err));
+    }).catch((err) => console.trace(`Failure during popup page load: ${err}`));
 });

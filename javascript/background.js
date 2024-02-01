@@ -11,12 +11,12 @@ function updateSyncedProfiles(changes) {
         } else if (typeof changes === "string") {
             chrome.storage.local.set({ "synced_profiles": changes });
         }
-    }).catch((err) => console.trace("Could not run updateSyncedProfiles: " + err));
+    }).catch((err) => console.trace(`Could not run updateSyncedProfiles: ${err}`));
 }
 
 chrome.storage.sync.get().then((data) => {
     updateSyncedProfiles(data);
-}).catch((err) => console.trace("Could not get sync data: " + err));
+}).catch((err) => console.trace(`Could not get sync data: ${err}`));
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === "sync") {
