@@ -159,14 +159,15 @@ function hideButtons() {
 }
 
 function showButtonsScript() {
-    return Array.from(document.getElementsByTagName("input")).some((field) => (/email|password/i).test(`${field.type} ${field.name} ${field.autocomplete}`));
+    var reg = /acc|email|id|^log|^pass|user|usr|ssn/i;
+    return Array.from(document.getElementsByTagName("input")).some((field) => reg.test(field.type) || reg.test(field.name) || reg.test(field.autocomplete));
 }
 
 function showButtons() {
     qs$("#copypassword").classList.remove("hidden");
     // Don't run executeScript() on built-in chrome://, opera:// or about:// or extension options pages
     // Also can't run on the Chrome Web Store/Extension Gallery
-    if (!(/^about|^chrome|^edge|^opera|(chrome|chromewebstore)\.google\.com|.*extension:/i).test(Settings.currentUrl)) {
+    if (!(/^about:|^chrome:|^edge:|^opera:|^https:\/\/(chromewebstore|addons)|.*extension:/i).test(Settings.currentUrl)) {
         chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
@@ -181,7 +182,13 @@ function showButtons() {
 }
 
 function fillFieldsScript(args) {
-    var nameFilled = false, passFilled = false;
+    var nameFilled = false,
+        passFilled = false;
+    var passReg = /^pass/i,
+        usrReg = /acc|email|id|^log|user|usr|ssn/i;
+    var inputEvent = new Event("input", {bubbles: true}),
+        changeEvent = new Event("change", {bubbles: true}),
+        keyupEvent = new Event("keyup", {bubbles: true});
     function isRendered(domObj) {
         var cs = document.defaultView.getComputedStyle(domObj);
         if ((domObj.nodeType !== 1) || (domObj == document.body)) return true;
@@ -191,20 +198,17 @@ function fillFieldsScript(args) {
     Array.from(document.getElementsByTagName("input")).forEach((field) => {
         var elStyle = getComputedStyle(field);
         var isVisible = isRendered(field) && (parseFloat(elStyle.width) > 0) && (parseFloat(elStyle.height) > 0);
-        var isPasswordField = (/password/i).test(`${field.type} ${field.name} ${field.autocomplete}`);
-        var isUsernameField = (/acc|email|user|usr/i).test(`${field.type} ${field.name} ${field.autocomplete}`);
+        var isPasswordField = passReg.test(field.type) || passReg.test(field.name) || passReg.test(field.autocomplete);
+        var isUsernameField = usrReg.test(field.type) || usrReg.test(field.name) || usrReg.test(field.autocomplete);
         if (isVisible && !nameFilled && field.value.length === 0 && isUsernameField) {
             field.value = args[0];
             nameFilled = true;
-            field.dispatchEvent(new Event("input", {bubbles: true}));
-            field.dispatchEvent(new Event("change", {bubbles: true}));
-            
+            field.dispatchEvent(inputEvent); field.dispatchEvent(changeEvent); field.dispatchEvent(keyupEvent);
         }
         if (isVisible && !passFilled && field.value.length === 0 && isPasswordField) {
             field.value = args[1];
             passFilled = true;
-            field.dispatchEvent(new Event("input", {bubbles: true}));
-            field.dispatchEvent(new Event("change", {bubbles: true}));
+            field.dispatchEvent(inputEvent); field.dispatchEvent(changeEvent); field.dispatchEvent(keyupEvent);
         }
     });
 }
@@ -213,7 +217,7 @@ function fillFields(generatedArr) {
     updateFields().then(() => {
         // Don't run executeScript() on built-in chrome://, opera:// or about:// or extension options pages
         // Also can't run on the Chrome Web Store/Extension Gallery
-        if (!(/^about|^chrome|^edge|^opera|(chrome|chromewebstore)\.google\.com|.*extension:/i).test(Settings.currentUrl)) {
+        if (!(/^about:|^chrome:|^edge:|^opera:|^https:\/\/(chromewebstore|addons)|.*extension:/i).test(Settings.currentUrl)) {
             chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
                 chrome.scripting.executeScript({
                     target: {tabId: tabs[0].id, allFrames: true},
