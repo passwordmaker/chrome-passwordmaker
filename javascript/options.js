@@ -74,9 +74,9 @@ function setCurrentProfile(profile) {
     qs$("#description").value = profile.description;
 
     qs$("#charset").replaceChildren();
-    for (var i = 0; i < CHARSET_OPTIONS.length; i++) {
-        qs$("#charset").append(new Option(CHARSET_OPTIONS[i]));
-    }
+    CHARSET_OPTIONS.forEach((charset) => {
+        qs$("#charset").append(new Option(charset));
+    });
     qs$("#charset").append(new Option("Custom charset"));
 
     if (CHARSET_OPTIONS.includes(profile.selectedCharset)) {
@@ -299,7 +299,7 @@ function updateProfileList() {
 
         var profileList = qs$("#profile_list");
         profileList.replaceChildren(); //Empty profile list
-        for (var i = 0; i < Settings.profiles.length; i++) {
+        Settings.profiles.forEach((_prof, i) => {
             var listItem = document.createElement("li");
             var spanItem = document.createElement("span");
             spanItem.className = "link";
@@ -307,7 +307,7 @@ function updateProfileList() {
             spanItem.textContent = Settings.profiles[i].title;
             listItem.append(spanItem);
             profileList.append(listItem);
-        }
+        });
     }).catch((err) => console.trace(`Could not run updateProfileList: ${err}`));
 }
 
@@ -536,20 +536,20 @@ function showStrengthSection() {
 
 function filterProfiles() {
     var filter = qs$("#searchProfiles").value.toUpperCase();
-    var list = qs$("#profile_list").getElementsByTagName("li");
+    var list = qsa$("#profile_list li");
 
     // Loop through all list items, and hide those which don't match the search query
-    for (var i = 0; i < list.length; i++) {
-        var itemId = list[i].getElementsByTagName("span")[0].id.replace(/^\D+/, "");
+    Array.from(list).forEach((item) => {
+        var itemId = item.firstChild.id.replace(/^\D+/, "");
         var prof = Settings.getProfile(itemId);
         if (prof.title.toUpperCase().includes(filter) || prof.strUseText.toUpperCase().includes(filter) ||
             prof.username.toUpperCase().includes(filter) || prof.description.toUpperCase().includes(filter) ||
             prof.siteList.toUpperCase().includes(filter)) {
-            list[i].style.display = "";
+            item.style.display = "";
         } else {
-            list[i].style.display = "none";
+            item.style.display = "none";
         }
-    }
+    });
 }
 
 function checkPassStrength() {

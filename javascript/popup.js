@@ -159,13 +159,7 @@ function hideButtons() {
 }
 
 function showButtonsScript() {
-    var fields = document.getElementsByTagName("input"), fieldCount = 0;
-    for (var i = 0; i < fields.length; i++) {
-        if ((/email|password/i).test(`${fields[i].type} ${fields[i].name} ${fields[i].autocomplete}`)) {
-            fieldCount += 1;
-        }
-    }
-    return fieldCount;
+    return Array.from(document.getElementsByTagName("input")).some((field) => (/email|password/i).test(`${field.type} ${field.name} ${field.autocomplete}`));
 }
 
 function showButtons() {
@@ -177,20 +171,16 @@ function showButtons() {
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
                 func: showButtonsScript,
-            }).then((fieldCounts) => {
-                for (var frame = 0; frame < fieldCounts.length; frame++) {
-                    if (fieldCounts[frame].result > 0) {
-                        qs$("#injectpassword").classList.remove("hidden");
-                    }
-                }
+            }).then((results) => {
+                results.forEach((frame) => {
+                    if (frame.result) qs$("#injectpassword").classList.remove("hidden");
+                });
             }).catch((err) => console.trace(`Could not run showButtons: ${err}`));
         });
     }
 }
 
 function fillFieldsScript(args) {
-    // base-64 encode & decode password, string concatenation of a pasword that includes quotes here won't work
-    var fields = document.getElementsByTagName("input");
     var nameFilled = false, passFilled = false;
     function isRendered(domObj) {
         var cs = document.defaultView.getComputedStyle(domObj);
@@ -198,29 +188,28 @@ function fillFieldsScript(args) {
         if (cs.display !== "none" && cs.visibility !== "hidden") return isRendered(domObj.parentNode);
         return false;
     }
-    for (var i = 0; i < fields.length; i++) {
-        var elStyle = getComputedStyle(fields[i]);
-        var isVisible = isRendered(fields[i]) && (parseFloat(elStyle.width) > 0) && (parseFloat(elStyle.height) > 0);
-        var isPasswordField = (/password/i).test(`${fields[i].type} ${fields[i].name} ${fields[i].autocomplete}`);
-        var isUsernameField = (/acc|email|user|usr/i).test(`${fields[i].type} ${fields[i].name} ${fields[i].autocomplete}`);
-        var changeEvent = new Event("input", {bubbles: true}); // MVC friendly way to force a view-model update
-        if (isVisible && !passFilled && fields[i].value.length === 0 && isPasswordField) {
-            fields[i].value = args[0];
-            passFilled = true;
-            fields[i].dispatchEvent(changeEvent);
-        }
-        if (isVisible && !nameFilled && fields[i].value.length === 0 && isUsernameField) {
-            fields[i].value = args[1];
-            if (fields[i].value.length === 0) {
-                fields[i].focus();
-            }
+    Array.from(document.getElementsByTagName("input")).forEach((field) => {
+        var elStyle = getComputedStyle(field);
+        var isVisible = isRendered(field) && (parseFloat(elStyle.width) > 0) && (parseFloat(elStyle.height) > 0);
+        var isPasswordField = (/password/i).test(`${field.type} ${field.name} ${field.autocomplete}`);
+        var isUsernameField = (/acc|email|user|usr/i).test(`${field.type} ${field.name} ${field.autocomplete}`);
+        if (isVisible && !nameFilled && field.value.length === 0 && isUsernameField) {
+            field.value = args[0];
             nameFilled = true;
-            fields[i].dispatchEvent(changeEvent);
+            field.dispatchEvent(new Event("input", {bubbles: true}));
+            field.dispatchEvent(new Event("change", {bubbles: true}));
+            
         }
-    }
+        if (isVisible && !passFilled && field.value.length === 0 && isPasswordField) {
+            field.value = args[1];
+            passFilled = true;
+            field.dispatchEvent(new Event("input", {bubbles: true}));
+            field.dispatchEvent(new Event("change", {bubbles: true}));
+        }
+    });
 }
 
-function fillFields(generatedPass) {
+function fillFields(generatedArr) {
     updateFields().then(() => {
         // Don't run executeScript() on built-in chrome://, opera:// or about:// or extension options pages
         // Also can't run on the Chrome Web Store/Extension Gallery
@@ -228,7 +217,7 @@ function fillFields(generatedPass) {
             chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
                 chrome.scripting.executeScript({
                     target: {tabId: tabs[0].id, allFrames: true},
-                    args : [ generatedPass ],
+                    args : [ generatedArr ],
                     func: fillFieldsScript,
                 })
                 .then(() => window.close())
@@ -279,7 +268,7 @@ function handleKeyPress(event) {
                 qs$("#confirmation").focus();
             }
         } else {
-            fillFields([generatedElVal, usernameElVal]);
+            fillFields([usernameElVal, generatedElVal]);
         }
     }
 
@@ -373,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             qs$("#injectpassword").addEventListener("click", () => {
-                fillFields([qs$("#generated").value, qs$("#username").value]);
+                fillFields([qs$("#username").value, qs$("#generated").value]);
             });
 
             document.body.addEventListener("keydown", handleKeyPress);

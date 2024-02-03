@@ -15,19 +15,8 @@ Settings.getProfile = (id) => {
     return Settings.profiles.filter((profile) => profile.id === parseInt(id, 10))[0];
 };
 
-Settings.getMaxId = () => {
-    var maxId = Settings.profiles.reduce((prev, curr) => {
-        if (curr.id > (prev.id || 0)) {
-            return curr;
-        } else {
-            return prev;
-        }
-    }, 0);
-    return maxId.id;
-};
-
 Settings.addProfile = (inputProfile) => {
-    inputProfile.id = Settings.getMaxId() + 1;
+    inputProfile.id = Settings.profiles.reduce((prev, curr) => Math.max((prev.id || 0), curr.id), 0) + 1;
     Settings.profiles.push(inputProfile);
 };
 
