@@ -1,3 +1,10 @@
+1.0.2 - 2024-02-04
+
+* Improve username and password filling
+* Detect username field when sites separate username page and password page
+* Add SHA-512 integrity check for sjcl.js so users know it's unmodified
+* Browser agnostic now instead of Chrome specific
+
 1.0.1 - 2024-01-16
 
 * Fixed and optimized regex profile matching

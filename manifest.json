@@ -1,5 +1,5 @@
 {
-    "author": "GitTom",
+    "author": "Heavensrevenge",
     "action": {
         "default_icon": {
             "16": "images/passwdmaker16.png",
@@ -28,11 +28,11 @@
         "128": "images/passwdmaker128.png"
     },
     "manifest_version": 3,
-    "name": "PasswordMaker (.org)",
+    "name": "PasswordMaker Pro",
     "options_ui": {
         "page": "html/options.html",
         "open_in_tab": true
     },
     "permissions": ["activeTab", "scripting", "storage", "alarms"],
-    "version": "1.0.1"
+    "version": "1.0.2"
 }
