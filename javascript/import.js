@@ -30,12 +30,12 @@ function renameHashAlgorithm(key) {
 }
 
 function renameImportMap(key, list) {
-    var map = {};
-    for (var i = 0; i < list.length; i++) {
-        map[list[i][0]] = list[i][1];
-        map[list[i][1]] = list[i][0];
-    }
-    return map[key] || key;
+    var map = new Map();
+    list.forEach((item) => {
+        map.set(item[0], item[1]);
+        map.set(item[1], item[0]);
+    });
+    return map.get(key) || key;
 }
 
 var RdfImporter = {
@@ -77,30 +77,30 @@ var RdfImporter = {
 
     // use FF as key for lookup
     getImportOpts: function() {
-        var rv = {};
-        for (var i = 0; i < this.attrs.length; i++) {
-            rv[this.attrs[i][1]] = {
-                name: this.attrs[i][2],
-                convert: this.attrs[i][3]
-            };
-        }
+        var rv = new Map();
+        this.attrs.forEach((attr) => {
+            rv.set(attr[1], {
+                name: attr[2],
+                convert: attr[3]
+            });
+        });
         return rv;
     },
 
     // use option group as key for separate lists
     getExportOpts: function() {
         var rv = {};
-        for (var i = 0; i < this.attrs.length; i++) {
-            var k = this.attrs[i][0];
+        this.attrs.forEach((attr) => {
+            var k = attr[0];
             if (!rv[k]) {
                 rv[k] = [];
             }
             rv[k].push({
-                to: this.attrs[i][1],
-                from: this.attrs[i][2],
-                convert: this.attrs[i][4]
+                to: attr[1],
+                from: attr[2],
+                convert: attr[4]
             });
-        }
+        });
         return rv;
     }
 };
@@ -112,51 +112,53 @@ RdfImporter.loadDoc = (rdf) => {
 
     // check over every Description, but will ignore groups and anything without
     // settings/profile attributes
-    Array.from(new DOMParser().parseFromString(rdf, "text/xml").getElementsByTagName("RDF:Description")).forEach((item) => {
+    Array.from(new DOMParser().parseFromString(rdf, "text/xml").getElementsByTagName("RDF:Description")).forEach(item => {
         var prof = {};
         var attrMap = RdfImporter.getImportOpts(item);
         var attrName = "";
-        for (var i = 0; i < item.attributes.length; i++) {
+        Array.from(item.attributes).forEach((attr) => {
             // remove namespace
-            attrName = item.attributes[i].localName;
-            var opts = attrMap[attrName];
-            var val = item.attributes[i].value;
+            attrName = attr.localName;
+            var opts = attrMap.get(attrName);
+            var val = attr.value;
             if (opts) {
                 prof[opts.name] = opts.convert ? opts.convert(val) : val;
             }
-        }
+        });
 
         // store site patterns
         var patterns = [],
             patternType = [],
             patternEnabled = [],
             siteList = "";
-        for (var j = 0; j < item.attributes.length; j++) {
-            attrName = item.attributes[j].localName;
+        Array.from(item.attributes).forEach((attr) => {
+            attrName = attr.localName;
             var m = attrName.match(/pattern(|type|enabled)(\d+)/);
             if (m) {
                 switch (m[1]) {
                     case "":
-                        patterns[m[2]] = item.attributes[j].value;
+                        patterns[m[2]] = attr.value;
                         break;
                     case "type":
-                        patternType[m[2]] = item.attributes[j].value;
+                        patternType[m[2]] = attr.value;
                         break;
                     case "enabled":
-                        patternEnabled[m[2]] = item.attributes[j].value;
+                        patternEnabled[m[2]] = attr.value;
                         break;
                 }
             }
-        }
-        for (var k = 0; k < patterns.length; k++) {
+        });
+
+        patterns.forEach((pat, k) => {
             if (patternEnabled[k] === "true") {
                 if (patternType[k] === "regex") {
-                    siteList += "/" + patterns[k] + "/ ";
+                    siteList += "/" + pat + "/ ";
                 } else {
-                    siteList += patterns[k] + " ";
+                    siteList += pat + " ";
                 }
             }
-        }
+        });
+
         prof.siteList = siteList.trim();
 
         if (prof.rdf_about === "http://passwordmaker.mozdev.org/globalSettings") {
@@ -178,9 +180,9 @@ RdfImporter.loadDoc = (rdf) => {
         profiles.unshift(defaultProfile);
         // FF version uses a "default" profile that has attributes we need for each
         // profile (such as url_{protocol,subdomain,domain,path})
-        for (var i = 0; i < profiles.length; i++) {
-            profiles[i] = Object.assign(new Profile(), defaultProfile, profiles[i]);
-        }
+        profiles.forEach((profile, i) => {
+            profiles[i] = Object.assign(new Profile(), defaultProfile, profile);
+        });
     }
 
     return {
@@ -194,9 +196,9 @@ RdfImporter.saveProfiles = (profiles) => {
     if (!profiles || !profiles.length) {
         return 0;
     }
-    for (var i = 0; i < profiles.length; i++) {
-        Settings.addProfile(Object.assign(new Profile(), profiles[i]));
-    }
+    profiles.forEach((profile) => {
+        Settings.addProfile(Object.assign(new Profile(), profile));
+    });
     Settings.saveProfiles();
     return profiles.length;
 };
@@ -218,33 +220,29 @@ function dumpedProfiles() {
 
     Settings.loadProfiles();
 
-    for (var i = 0; i < Settings.profiles.length; i++) {
-        var prof = Settings.profiles[i],
-            newProf = {},
+    Settings.profiles.forEach((prof) => {
+        var newProf = {},
             attrMap = expOpts.profile.concat(expOpts["default"]);
 
         // regular attributes
-        for (var j = 0; j < attrMap.length; j++) {
-            var opts = attrMap[j],
-                val = prof[opts.from];
+        attrMap.forEach((opts) => {
+            var val = prof[opts.from];
             newProf[opts.to] = opts.convert ? opts.convert(val) : val;
-        }
+        });
 
         // patterns
         if (prof.siteList) {
             var pats = prof.siteList.trim().split(/\s+/);
-            for (var k = 0; k < pats.length; k++) {
-                var pat = pats[k],
-                    ptype = (pat.startsWith("/") && pat.endsWith("/")) ? "regex" : "wildcard";
-
+            pats.forEach((pat, k) => {
+                var ptype = (pat.startsWith("/") && pat.endsWith("/")) ? "regex" : "wildcard";
                 newProf["pattern" + k] = (ptype === "regex") ? pat.slice(1, -1) : pat;
                 newProf["patternenabled" + k] = "true";
                 newProf["patterndesc" + k] = "";
                 newProf["patterntype" + k] = ptype;
-            }
+            });
         }
         dumpProfiles.push(newProf);
-    }
+    });
     chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
         if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
     });
@@ -259,20 +257,19 @@ function dumpedProfilesToRdf(profiles) {
     profiles.unshift(Object.assign({}, profiles[0], {
         name: "Defaults"
     }));
-    for (var i = 0; i < profiles.length; i++) {
+    profiles.forEach((prof, i) => {
         var about = (i === 0) ? "http://passwordmaker.mozdev.org/defaults" : "rdf:#$CHROME" + i;
         abouts.push(about);
         rv += `<RDF:Description RDF:about="${attrEscape(about)}"\n`;
-        var keys = Object.keys(profiles[i]);
-        for (var j = 0; j < keys.length; j++) {
-            rv += ` NS1:${keys[j]}="${attrEscape(profiles[i][keys[j]])}"\n`;
+        for (let [key, value] of Object.entries(prof)) {
+            rv += ` NS1:${key}="${attrEscape(value)}"\n`;
         }
         rv += ` />\n`;
-    }
+    });
     rv += `<RDF:Seq RDF:about="http://passwordmaker.mozdev.org/accounts">\n`;
-    for (var k = 0; k < abouts.length; k++) {
-        rv += `<RDF:li RDF:resource="${attrEscape(abouts[k])}"/>\n`;
-    }
+    abouts.forEach((item) => {
+        rv += `<RDF:li RDF:resource="${attrEscape(item)}"/>\n`;
+    });
     rv += "</RDF:Seq>";
 
     return rv;

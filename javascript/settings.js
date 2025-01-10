@@ -186,12 +186,13 @@ Settings.getPasswordStrength = (pw) => {
 
     // length of the password - 1pt per char over 5, up to 15 for 10 pts total
     var r1 = pw.length;
-    if (r1 >= 15) {
-        r1 = 10;
-    } else if (r1 < 5) {
-        r1 = -5;
-    } else {
-        r1 -= 5;
+    switch (true) {
+        case (r1 >= 15):
+            r1 = 10; break;
+        case (r1 < 5):
+            r1 = -5; break;
+        default:
+            r1 -= 5;
     }
 
     var quarterLen = Math.round(pw.length / 4);
