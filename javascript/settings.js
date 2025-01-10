@@ -26,7 +26,7 @@ Settings.deleteProfile = (id) => {
 };
 
 Settings.loadProfilesFromString = (profiles) => {
-    Settings.profiles = JSON.parse(profiles).map((item) => Object.assign(Object.create(Profile), item));
+    Settings.profiles = JSON.parse(profiles).map((item) => Object.assign(new Profile(), item));
 };
 
 Settings.loadProfiles = () => {
@@ -42,8 +42,8 @@ Settings.loadProfiles = () => {
         } else if (result["profiles"]) {
             Settings.loadProfilesFromString(result["profiles"]);
         } else {
-            var normal = Object.create(Profile);
-            var alpha = Object.create(Profile);
+            var normal = new Profile();
+            var alpha = new Profile();
             alpha.id = 2;
             alpha.title = "Alphanumeric";
             alpha.selectedCharset = Settings.CHARSET_OPTIONS[1];

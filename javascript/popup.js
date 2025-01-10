@@ -122,20 +122,20 @@ function updateFields() {
 }
 
 function delayedUpdate() {
-    clearTimeout(window.delayedUpdateID);
-    window.delayedUpdateID = setTimeout(updateFields, 800);
+    clearTimeout(window.myTimeoutID);
+    window.myTimeoutID = setTimeout(updateFields, 800);
 }
 
 function updateProfileText() {
     var profile = Settings.getProfile(qs$("#profile").value);
     // Store either matched url or, if set, use profiles own "use text"
-    if (profile.getText().length !== 0) {
-        qs$("#usedtext").value = profile.getText();
+    if (profile.strUseText.length !== 0) {
+        qs$("#usedtext").value = profile.strUseText;
     } else {
         qs$("#usedtext").value = profile.getUrl(Settings.currentUrl);
     }
-    if (profile.getUsername().length !== 0) {
-        qs$("#username").value = profile.getUsername();
+    if (profile.username.length !== 0) {
+        qs$("#username").value = profile.username;
     } else {
         qs$("#username").value = "";
     }
@@ -160,6 +160,7 @@ function hideButtons() {
 
 function showButtonsScript() {
     var reg = /acc|email|id|^log|^pass|user|usr|ssn/i;
+    console.log(Array.from(document.getElementsByTagName("input")).length)
     return Array.from(document.getElementsByTagName("input")).some((field) => reg.test(field.type) || reg.test(field.name) || reg.test(field.autocomplete));
 }
 
@@ -175,6 +176,7 @@ function showButtons() {
                 target: {tabId: tabs[0].id, allFrames: true},
                 func: showButtonsScript,
             }).then((results) => {
+                console.log("results: "+JSON.stringify(results))
                 results.forEach((frame) => {
                     if (frame.result) qs$("#injectpassword").classList.remove("hidden");
                 });
@@ -223,8 +225,9 @@ function fillFields(generatedArr) {
             chrome.tabs.query({
                 active: true
             }).then((tabs) => {
+                console.log(tabs)
                 chrome.scripting.executeScript({
-                    target: {tabId: tabs[0].id, allFrames: true},
+                    target: {tabId: tabs[0].id, "allFrames": true},
                     args : [ generatedArr ],
                     func: fillFieldsScript,
                 })
@@ -250,7 +253,7 @@ function openOptions() {
 }
 
 function getVerificationCode(password) {
-    var p = Object.create(Profile);
+    var p = new Profile();
     p.hashAlgorithm = "sha256";
     p.passwordLength = 3;
     p.selectedCharset = Settings.CHARSET_OPTIONS[4];

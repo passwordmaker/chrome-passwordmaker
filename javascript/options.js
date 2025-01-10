@@ -27,7 +27,7 @@ function updateLeet() {
 }
 
 function addProfile() {
-    var p = Object.create(Profile);
+    var p = new Profile();
     p.title = "No name";
     Settings.addProfile(p);
     updateProfileList()
@@ -252,14 +252,14 @@ function saveProfile() {
 }
 
 function cloneProfile() {
-    var p = Object.assign(Object.create(Profile), Settings.getProfile(Settings.currentProfile));
+    var p = Object.assign(new Profile(), Settings.getProfile(Settings.currentProfile));
     p.title = p.title + " Copy";
     Settings.addProfile(p);
     updateProfileList().then(() => setCurrentProfile(p));
 }
 
 function moveProfileUp(event) {
-    var pIndex = parseInt(event.target.parentElement.firstChild.id.replace(/^\D+/, "")) - 1;
+    var pIndex = parseInt(event.target.parentElement.lastChild.id.replace(/\D+/, "")) - 1;
     if (pIndex > 1) {
         var p = Settings.profiles.splice(pIndex, 1);
         Settings.profiles.splice(pIndex - 1, 0, p[0]);
@@ -270,7 +270,7 @@ function moveProfileUp(event) {
 }
 
 function moveProfileDown(event) {
-    var pIndex = parseInt(event.target.parentElement.firstChild.id.replace(/^\D+/, "")) - 1;
+    var pIndex = parseInt(event.target.parentElement.lastChild.id.replace(/\D+/, "")) - 1;
     if (pIndex < Settings.profiles.length - 1) {
         var p = Settings.profiles.splice(pIndex, 1);
         Settings.profiles.splice(pIndex + 1, 0, p[0]);
@@ -282,7 +282,7 @@ function moveProfileDown(event) {
 
 function editProfile(event) {
     if (event.target.classList.contains("link")) {
-        var targetId = event.target.id.replace(/^\D+/, "");
+        var targetId = event.target.id.replace(/\D+/, "");
         setCurrentProfile(Settings.getProfile(targetId));
     }
 }
@@ -299,7 +299,7 @@ function updateProfileList() {
             spanItem.className = "link";
             spanItem.id = "profile_" + profile.id;
             spanItem.textContent = profile.title;
-            listItem.append(spanItem)
+            
             if (i !== 0 && i !== Settings.profiles.length - 1) {
                 var downArrow = document.createElement("span");
                 downArrow.className = "downArrow";
@@ -314,6 +314,7 @@ function updateProfileList() {
                 upArrow.title = "Move Profile Up";
                 listItem.append(upArrow);
             }
+            listItem.append(spanItem)
             profileList.append(listItem);
         });
         //Need to re-attach event listeners upon profile list regeneration
@@ -551,7 +552,7 @@ function filterProfiles() {
 
     // Loop through all list items, and hide those which don't match the search query
     Array.from(list).forEach((item) => {
-        var itemId = item.firstChild.id.replace(/^\D+/, "");
+        var itemId = item.lastChild.id.replace(/\D+/, "");
         var prof = Settings.getProfile(itemId);
         if (prof.title.toUpperCase().includes(filter) || prof.strUseText.toUpperCase().includes(filter) ||
             prof.username.toUpperCase().includes(filter) || prof.description.toUpperCase().includes(filter) ||
@@ -587,8 +588,8 @@ function checkPassStrength() {
         selected.selectedCharset = qs$("#charset").value;
     }
 
-    if (selected.getText().length !== 0) {
-        qs$("#testText").value = selected.getText();
+    if (selected.strUseText.length !== 0) {
+        qs$("#testText").value = selected.strUseText;
     } else {
         qs$("#testText").value = selected.getUrl(selected.siteList);
     }

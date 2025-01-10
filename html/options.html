@@ -46,7 +46,8 @@
                     </div>
                     <div class="subrow extra_info">
                         <span>
-                            Separate by spaces, e.g. "example.com apple.com google.com" to specify that this profile is automatically selected for those URL's.
+                            Separate by spaces or new lines to specify that this profile is automatically selected for these URL's.<br>
+                            Can use wildcards or regular expression matching
                         </span>
                     </div>
                 </div>
@@ -158,8 +159,8 @@
                     <span class="row link" id="cloneProfileButton">Clone this profile</span>
                 </div>
                 <div id="profile_buttons">
-                    <button class="button green" id="save">Save</button>
-                    <button class="button red" id="remove">Remove</button>
+                    <button class="button green" id="save" title="Saves this profile's settings">Save</button>
+                    <button class="button red" id="remove" title="Deletes the currently selected profile">Remove</button>
                 </div>
             </section>
             <aside id="strength_section">
@@ -330,7 +331,6 @@
             </section>
 
             <section id="general_information">
-                
                 <div class="row">
                     <h3>General Information:</h3>
                     <div class="info_text">
