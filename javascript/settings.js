@@ -11,8 +11,12 @@ var Settings = {
     ]
 };
 
-Settings.getProfile = (id) => {
+Settings.getProfileById = (id) => {
     return Settings.profiles.filter((profile) => profile.id === parseInt(id, 10))[0];
+};
+
+Settings.getProfileByTitle = (str) => {
+    return Settings.profiles.filter((profile) => profile.title === str)[0];
 };
 
 Settings.addProfile = (inputProfile) => {
@@ -137,7 +141,7 @@ Settings.setStoreLocation = (location) => {
 
 Settings.createExpirePasswordAlarm = () => {
     chrome.alarms.clear("expire_password").then(() => {
-        return chrome.storage.local.get(["expire_password_minutes"])
+        return chrome.storage.local.get(["expire_password_minutes"]);
     }).then((result) => {
         chrome.alarms.create("expire_password", {
             delayInMinutes: parseInt(result["expire_password_minutes"])
@@ -219,8 +223,7 @@ Settings.getPasswordStrength = (pw) => {
     var pwStrength = (((r0 + r2 + r3 + r4 + r5) / 5) * 100) + r1;
 
     // make sure strength is a valid value between 0 and 100
-    if (isNaN(pwStrength)) pwStrength = 0;
-    if (pwStrength < 0) pwStrength = 0;
+    if (pwStrength < 0 || isNaN(pwStrength)) pwStrength = 0;
     if (pwStrength > 100) pwStrength = 100;
 
     // return strength as an integer + boolean usage of character type

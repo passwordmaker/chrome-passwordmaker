@@ -17,16 +17,13 @@ This technique has been widely used since 2003 and is 100% compatible with the o
 **_PLEASE Export your profile data_** it is advisable to always keep a back-up of your current profile data.
 
 # Installation
-### Chrome:
+### Chrome and other Chromium based browsers:
 From the Chrome Web Store:
 1. [PasswordMaker Pro](https://chromewebstore.google.com/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh)
 2. [PasswordMaker (.org)](https://chromewebstore.google.com/detail/passwordmaker-org/fckpmekmkjglpmdcbfkchimdelcjiipd)
 
 ### Firefox:
 From Mozilla AMO: https://addons.mozilla.org/en-US/firefox/addon/firefox-passwordmaker-pro/
-
-### Opera:
-From Opera Addons: https://addons.opera.com/en/extensions/details/passwordmaker-pro/
 
 # Status of this project
 

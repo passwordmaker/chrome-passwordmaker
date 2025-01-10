@@ -105,7 +105,7 @@ function setCurrentProfile(profile) {
 
 function updateCustomCharsetField() {
     if (qs$("#charset").value === "Custom charset") {
-        qs$("#customCharset").value = Settings.getProfile(Settings.currentProfile).selectedCharset;
+        qs$("#customCharset").value = Settings.getProfileById(Settings.currentProfile).selectedCharset;
         qs$("#customCharset").style.display = "";
     } else {
         qs$("#customCharset").style.display = "none";
@@ -180,7 +180,7 @@ function showOptions() {
         })
         .then(() => updateSyncStatus())
         .then(() => filterProfiles())
-        .catch((err) => console.log(`Could not run showOptions: ${err}`));
+        .catch((err) => console.trace(`Could not run showOptions: ${err}`));
 }
 
 function showInformation() {
@@ -195,6 +195,7 @@ function showSection(showId) {
         .filter((el) => el.id !== showId)
         .forEach((el) => el.style.display = "none");
     qs$(showId).style.display = "block";
+    shouldDragSort();
 }
 
 function highlightProfile() {
@@ -211,7 +212,7 @@ function updateStorageLocation() {
 }
 
 function saveProfile() {
-    var selected = Settings.getProfile(Settings.currentProfile);
+    var selected = Settings.getProfileById(Settings.currentProfile);
 
     selected.title          = qs$("#profileNameTB").value.trim();
     selected.siteList       = qs$("#siteList").value.trim().split(/\s+/).join(" ");
@@ -252,38 +253,80 @@ function saveProfile() {
 }
 
 function cloneProfile() {
-    var p = Object.assign(new Profile(), Settings.getProfile(Settings.currentProfile));
+    var p = Object.assign(new Profile(), Settings.getProfileById(Settings.currentProfile));
     p.title = p.title + " Copy";
     Settings.addProfile(p);
     updateProfileList().then(() => setCurrentProfile(p));
 }
 
-function moveProfileUp(event) {
-    var pIndex = parseInt(event.target.parentElement.lastChild.id.replace(/\D+/, "")) - 1;
-    if (pIndex > 1) {
-        var p = Settings.profiles.splice(pIndex, 1);
-        Settings.profiles.splice(pIndex - 1, 0, p[0]);
-        Settings.saveProfiles()
-            .then(() => updateProfileList())
-            .then(() => setCurrentProfile(p[0]));
-    }
+function handleDragStart(e) {
+    e.target.classList.add("dragging");
 }
 
-function moveProfileDown(event) {
-    var pIndex = parseInt(event.target.parentElement.lastChild.id.replace(/\D+/, "")) - 1;
-    if (pIndex < Settings.profiles.length - 1) {
-        var p = Settings.profiles.splice(pIndex, 1);
-        Settings.profiles.splice(pIndex + 1, 0, p[0]);
-        Settings.saveProfiles()
+function handleDragEnd() {
+    let selectedTitle = Settings.getProfileById(Settings.currentProfile).title;
+    let sortableList = qs$("#profile_list");
+    let newList = [];
+    sortableList.childNodes.forEach((el) => {
+        newList.push(Settings.getProfileById(parseInt(el.lastChild.id.replace(/^\D+/, ""))))
+    });
+    Settings.profiles = newList;
+    Settings.saveProfiles()
             .then(() => updateProfileList())
-            .then(() => setCurrentProfile(p[0]));
-    }
+            .then(() => setCurrentProfile(Settings.getProfileByTitle(selectedTitle)));
+}
+
+function handleDragOver(e) {
+    let sortableList = qs$("#profile_list");
+    e.preventDefault();
+    let draggedItem = qs$(".dragging");
+    let siblings = Array.from(sortableList.querySelectorAll("li:not(:first-child):not(.dragging)"));
+    let nextSibling = siblings.find((sibling) => {
+        return e.pageY <= sibling.offsetTop + parseInt(sibling.offsetHeight / 2);
+    });
+    sortableList.insertBefore(draggedItem, nextSibling);
+}
+
+function handleDragEnter(e) {
+    e.preventDefault();
+}
+
+function shouldDragSort() {
+    return chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
+        if (result["alpha_sort_profiles"] || qs$("#searchProfiles").value.length !== 0) {
+            disableDragSorting();
+        } else {
+            enableDragSorting();
+        }
+    });
+}
+
+function enableDragSorting() {
+    let sortableList = qs$("#profile_list");
+    sortableList.querySelectorAll("li:not(:first-child)").forEach((item) => {
+        item.addEventListener("dragstart", handleDragStart);
+        item.addEventListener("dragend", handleDragEnd);
+    });
+    sortableList.addEventListener("dragover", handleDragOver);
+    sortableList.addEventListener("dragenter", handleDragEnter);
+    qsa$(".grab").forEach((el) => el.style.display = "");
+}
+
+function disableDragSorting() {
+    let sortableList = qs$("#profile_list");
+    sortableList.querySelectorAll("li:not(:first-child)").forEach((item) => {
+        item.removeEventListener("dragstart", handleDragStart);
+        item.removeEventListener("dragend", handleDragEnd);
+    });
+    sortableList.removeEventListener("dragover", handleDragOver);
+    sortableList.removeEventListener("dragenter", handleDragEnter);
+    qsa$(".grab").forEach((el) => el.style.display = "none");
 }
 
 function editProfile(event) {
     if (event.target.classList.contains("link")) {
-        var targetId = event.target.id.replace(/\D+/, "");
-        setCurrentProfile(Settings.getProfile(targetId));
+        var targetId = event.target.id.replace(/^\D+/, "");
+        setCurrentProfile(Settings.getProfileById(targetId));
     }
 }
 
@@ -299,27 +342,17 @@ function updateProfileList() {
             spanItem.className = "link";
             spanItem.id = "profile_" + profile.id;
             spanItem.textContent = profile.title;
-            
-            if (i !== 0 && i !== Settings.profiles.length - 1) {
-                var downArrow = document.createElement("span");
-                downArrow.className = "downArrow";
-                downArrow.innerHTML = "&#x1F80B;";
-                downArrow.title = "Move Profile Down";
-                listItem.append(downArrow);
-            }
-            if (i !== 0 && i !== 1) {
-                var upArrow = document.createElement("span");
-                upArrow.className = "upArrow";
-                upArrow.innerHTML = "&#x1F809;";
-                upArrow.title = "Move Profile Up";
-                listItem.append(upArrow);
+            if (i > 0) {
+                var dragHandle = document.createElement("span");
+                dragHandle.className = "grab";
+                dragHandle.innerHTML = "&#x21F5;";
+                dragHandle.title = "Click and Drag Profile";
+                listItem.draggable = "true";
+                listItem.append(dragHandle);
             }
             listItem.append(spanItem)
             profileList.append(listItem);
         });
-        //Need to re-attach event listeners upon profile list regeneration
-        qsa$(".upArrow").forEach((el) => el.addEventListener("click", moveProfileUp));
-        qsa$(".downArrow").forEach((el) => el.addEventListener("click", moveProfileDown));
     }).catch((err) => console.trace(`Could not run updateProfileList: ${err}`));
 }
 
@@ -548,12 +581,10 @@ function showStrengthSection() {
 
 function filterProfiles() {
     var filter = qs$("#searchProfiles").value.toUpperCase();
-    var list = qsa$("#profile_list li");
-
     // Loop through all list items, and hide those which don't match the search query
-    Array.from(list).forEach((item) => {
-        var itemId = item.lastChild.id.replace(/\D+/, "");
-        var prof = Settings.getProfile(itemId);
+    Array.from(qsa$("#profile_list li")).forEach((item) => {
+        var itemId = item.lastChild.id.replace(/^\D+/, "");
+        var prof = Settings.getProfileById(itemId);
         if (prof.title.toUpperCase().includes(filter) || prof.strUseText.toUpperCase().includes(filter) ||
             prof.username.toUpperCase().includes(filter) || prof.description.toUpperCase().includes(filter) ||
             prof.siteList.toUpperCase().includes(filter)) {
@@ -562,10 +593,15 @@ function filterProfiles() {
             item.style.display = "none";
         }
     });
+    if (filter.length === 0) {
+        shouldDragSort();
+    } else {
+        disableDragSorting();
+    }
 }
 
 function checkPassStrength() {
-    var selected = Settings.getProfile(Settings.currentProfile);
+    var selected = Settings.getProfileById(Settings.currentProfile);
 
     selected.siteList       = qs$("#siteList").value.trim().replace(/[*?$+()^[\]\\|{},]/g, "").split(/\s+/).shift();
     selected.url_protocol   = qs$("#protocolCB").checked;

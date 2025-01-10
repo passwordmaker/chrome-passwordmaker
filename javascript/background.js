@@ -41,7 +41,7 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
     }
 });
 
-chrome.alarms.onAlarm.addListener(alarm => {
+chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === "expire_password") {
         chrome.storage.session.set({ "password": "" });
     }

@@ -78,11 +78,9 @@ class Profile {
         var md5v6 = /md5_v6/i;
         var notAscii = /[^\x00-\x7F]/;
         if (notAscii.test(key) && !md5v6.test(hashAlgorithm)) {
-            //key = encodeURI(key).replace(/%[\da-f]{2}/gi, (char) => String.fromCodePoint(parseInt(char.replace(/%/, ""), 16)));
             key = new TextEncoder().encode(key).reduce((keyStr, char) => keyStr += String.fromCodePoint(char), "");
         }
         if (notAscii.test(data) && !md5v6.test(hashAlgorithm)) {
-            //data = encodeURI(data).replace(/%[\da-f]{2}/gi, (char) => String.fromCodePoint(parseInt(char.replace(/%/, ""), 16)));
             data = new TextEncoder().encode(data).reduce((dataStr, char) => dataStr += String.fromCodePoint(char), "");
         }
 

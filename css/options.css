@@ -88,11 +88,11 @@ nav {
     text-decoration: underline;
 }
 
-.upArrow, .downArrow {
-    cursor: pointer;
+.grab {
+    cursor: grab;
     float: right;
     position: relative;
-    left: -186px;
+    left: -190px;
     user-select: none;
 }
 

@@ -17,10 +17,11 @@ function getAutoProfileIdForUrl() {
     var match = 0,
         found = false;
     for (let profile of Settings.profiles) {
-        if (!found) {
+        if (found) {
+            break;
+        } else {
             if (profile.siteList.trim().length > 0) {
-                var sites = profile.siteList.trim().split(/\s+/);
-                for (let pattern of sites) {
+                for (let pattern of profile.siteList.trim().split(/\s+/)) {
                     var regex = /\s/;
                     if (pattern.startsWith("/") && pattern.endsWith("/")) {
                         regex = new RegExp(pattern.slice(1, -1), "i");
@@ -35,8 +36,6 @@ function getAutoProfileIdForUrl() {
                     }
                 }
             }
-        } else {
-            break;
         }
     }
     return match;
@@ -69,7 +68,7 @@ function setPassword() {
 
 function passwordFieldSuccess() {
     setPassword();
-    var profile = Settings.getProfile(qs$("#profile").value);
+    var profile = Settings.getProfileById(qs$("#profile").value);
     var profileResult = profile.genPassword(qs$("#usedtext").value, qs$("#password").value, qs$("#username").value);
     qs$("#generated").value = profileResult;
     setPasswordColors("#008000", "#FFFFFF");
@@ -122,12 +121,12 @@ function updateFields() {
 }
 
 function delayedUpdate() {
-    clearTimeout(window.myTimeoutID);
-    window.myTimeoutID = setTimeout(updateFields, 800);
+    clearTimeout(window.delayedUpdateID);
+    window.delayedUpdateID = setTimeout(updateFields, 800);
 }
 
 function updateProfileText() {
-    var profile = Settings.getProfile(qs$("#profile").value);
+    var profile = Settings.getProfileById(qs$("#profile").value);
     // Store either matched url or, if set, use profiles own "use text"
     if (profile.strUseText.length !== 0) {
         qs$("#usedtext").value = profile.strUseText;
@@ -160,7 +159,6 @@ function hideButtons() {
 
 function showButtonsScript() {
     var reg = /acc|email|id|^log|^pass|user|usr|ssn/i;
-    console.log(Array.from(document.getElementsByTagName("input")).length)
     return Array.from(document.getElementsByTagName("input")).some((field) => reg.test(field.type) || reg.test(field.name) || reg.test(field.autocomplete));
 }
 
@@ -170,13 +168,13 @@ function showButtons() {
     // Also can't run on the Chrome Web Store/Extension Gallery
     if (!(Settings.executeScriptRegex).test(Settings.currentUrl)) {
         chrome.tabs.query({
-            active: true
+            active: true,
+            currentWindow: true
         }).then((tabs) => {
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
                 func: showButtonsScript,
             }).then((results) => {
-                console.log("results: "+JSON.stringify(results))
                 results.forEach((frame) => {
                     if (frame.result) qs$("#injectpassword").classList.remove("hidden");
                 });
@@ -223,11 +221,11 @@ function fillFields(generatedArr) {
         // Also can't run on the Chrome Web Store/Extension Gallery
         if (!(Settings.executeScriptRegex).test(Settings.currentUrl)) {
             chrome.tabs.query({
-                active: true
+                active: true,
+                currentWindow: true
             }).then((tabs) => {
-                console.log(tabs)
                 chrome.scripting.executeScript({
-                    target: {tabId: tabs[0].id, "allFrames": true},
+                    target: {tabId: tabs[0].id, allFrames: true},
                     args : [ generatedArr ],
                     func: fillFieldsScript,
                 })
@@ -241,7 +239,8 @@ function fillFields(generatedArr) {
 function copyPassword() {
     updateFields().then(() => {
         chrome.tabs.query({
-            windowType: "popup"
+            windowType: "popup",
+            currentWindow: true
         }).then(() => {
             navigator.clipboard.writeText(qs$("#generated").value).then(() => window.close());
         }).catch((err) => console.trace(`Could not run chrome.tabs.query in copyPassword: ${err}`));
@@ -364,7 +363,8 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             chrome.tabs.query({
-                active: true
+                active: true,
+                currentWindow: true
             }).then((tabs) => {
                 Settings.currentUrl = tabs[0].url || "";
                 initPopup();
