@@ -17,7 +17,7 @@ var Profile = {
     username: "",
     modifier: "",
     passwordLength: 8,
-    selectedCharset: CHARSET_OPTIONS[0],
+    selectedCharset: Settings.CHARSET_OPTIONS[0],
     passwordPrefix: "",
     passwordSuffix: "",
     description: "",

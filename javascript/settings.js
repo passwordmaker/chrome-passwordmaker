@@ -1,15 +1,15 @@
 var Settings = {
-    currentUrl: ""
+    currentUrl: "",
+    executeScriptRegex: /^about:|^brave:|^chrome:|^edge:|^opera:|^vivaldi:|^https:\/\/(chromewebstore|addons)|.*extension:/i,
+    CHARSET_OPTIONS: [
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./",
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+        "0123456789abcdef",
+        "0123456789",
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+        "`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./"
+    ]
 };
-
-var CHARSET_OPTIONS = [
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./",
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-    "0123456789abcdef",
-    "0123456789",
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-    "`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./"
-];
 
 Settings.getProfile = (id) => {
     return Settings.profiles.filter((profile) => profile.id === parseInt(id, 10))[0];
@@ -46,7 +46,7 @@ Settings.loadProfiles = () => {
             var alpha = Object.create(Profile);
             alpha.id = 2;
             alpha.title = "Alphanumeric";
-            alpha.selectedCharset = CHARSET_OPTIONS[1];
+            alpha.selectedCharset = Settings.CHARSET_OPTIONS[1];
             Settings.profiles = [normal, alpha];
             Settings.saveProfiles();
         }

@@ -10,7 +10,7 @@
     font: inherit;
     outline: none;
     padding-bottom: .4em;
-    padding-top: .2em;
+    padding-top: .4em;
     user-select: none;
 }
 
@@ -45,4 +45,19 @@
 
 .red:active {
     background: linear-gradient(#aa1317, #ed1c24);
+}
+
+.green {
+	color: #fff;
+	border: solid .1em #538312;
+	background: linear-gradient(#7db72f,  #4e7d0e);
+}
+
+.green:hover {
+	background: linear-gradient(#6b9d28,  #436b0c);
+}
+
+.green:active {
+	color: #a9c08c;
+	background: linear-gradient(#4e7d0e,  #7db72f);
 }

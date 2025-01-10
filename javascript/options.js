@@ -74,12 +74,12 @@ function setCurrentProfile(profile) {
     qs$("#description").value = profile.description;
 
     qs$("#charset").replaceChildren();
-    CHARSET_OPTIONS.forEach((charset) => {
+    (Settings.CHARSET_OPTIONS).forEach((charset) => {
         qs$("#charset").append(new Option(charset));
     });
     qs$("#charset").append(new Option("Custom charset"));
 
-    if (CHARSET_OPTIONS.includes(profile.selectedCharset)) {
+    if ((Settings.CHARSET_OPTIONS).includes(profile.selectedCharset)) {
         qs$("#charset").value = profile.selectedCharset;
     } else {
         qs$("#charset").value = "Custom charset";
@@ -93,9 +93,9 @@ function setCurrentProfile(profile) {
     // Keeps profile #1 around so it can only be re-named
     chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
         if ((Settings.profiles[0].id === profile.id) || result["alpha_sort_profiles"]) {
-            qsa$("#moveUpButton, #moveDownButton, #remove").forEach((el) => el.style.display = "none");
+            qs$("#remove").style.display = "none";
         } else {
-            qsa$("#moveUpButton, #moveDownButton, #remove").forEach((el) => el.style.display = "");
+            qs$("#remove").style.display = "";
         }
     });
 
@@ -114,12 +114,8 @@ function updateCustomCharsetField() {
 
 function oldHashWarning(hash) {
     // Be as annoying as possible to try and stop people from using the bugged algorithms
-    var bugged = {
-        "md5_v6": 1,
-        "hmac-md5_v6": 1,
-        "hmac-sha256": 1
-    };
-    if (bugged[hash]) {
+    var bugged = new Set(["md5_v6", "hmac-md5_v6", "hmac-sha256"]);
+    if (bugged.has(hash)) {
         if (confirm("Are you sure you want to continue using a legacy algorithm which is incorrectly implemented?")) {
             alert(`Please change to using a correct & secure algorithm!
 The old/bugged/legacy algorithms are harmful to your online security and should be avoided at ALL costs.
@@ -262,24 +258,22 @@ function cloneProfile() {
     updateProfileList().then(() => setCurrentProfile(p));
 }
 
-function moveProfileUp() {
-    var pIndex = Settings.getProfile(Settings.currentProfile).id - 1;
+function moveProfileUp(event) {
+    var pIndex = parseInt(event.target.parentElement.firstChild.id.replace(/^\D+/, "")) - 1;
     if (pIndex > 1) {
         var p = Settings.profiles.splice(pIndex, 1);
         Settings.profiles.splice(pIndex - 1, 0, p[0]);
-        p[0].id--;
         Settings.saveProfiles()
             .then(() => updateProfileList())
             .then(() => setCurrentProfile(p[0]));
     }
 }
 
-function moveProfileDown() {
-    var pIndex = Settings.getProfile(Settings.currentProfile).id - 1;
+function moveProfileDown(event) {
+    var pIndex = parseInt(event.target.parentElement.firstChild.id.replace(/^\D+/, "")) - 1;
     if (pIndex < Settings.profiles.length - 1) {
         var p = Settings.profiles.splice(pIndex, 1);
         Settings.profiles.splice(pIndex + 1, 0, p[0]);
-        p[0].id++;
         Settings.saveProfiles()
             .then(() => updateProfileList())
             .then(() => setCurrentProfile(p[0]));
@@ -299,15 +293,32 @@ function updateProfileList() {
 
         var profileList = qs$("#profile_list");
         profileList.replaceChildren(); //Empty profile list
-        Settings.profiles.forEach((_prof, i) => {
+        Settings.profiles.forEach((profile, i) => {
             var listItem = document.createElement("li");
             var spanItem = document.createElement("span");
             spanItem.className = "link";
-            spanItem.id = "profile_" + Settings.profiles[i].id;
-            spanItem.textContent = Settings.profiles[i].title;
-            listItem.append(spanItem);
+            spanItem.id = "profile_" + profile.id;
+            spanItem.textContent = profile.title;
+            listItem.append(spanItem)
+            if (i !== 0 && i !== Settings.profiles.length - 1) {
+                var downArrow = document.createElement("span");
+                downArrow.className = "downArrow";
+                downArrow.innerHTML = "&#x1F80B;";
+                downArrow.title = "Move Profile Down";
+                listItem.append(downArrow);
+            }
+            if (i !== 0 && i !== 1) {
+                var upArrow = document.createElement("span");
+                upArrow.className = "upArrow";
+                upArrow.innerHTML = "&#x1F809;";
+                upArrow.title = "Move Profile Up";
+                listItem.append(upArrow);
+            }
             profileList.append(listItem);
         });
+        //Need to re-attach event listeners upon profile list regeneration
+        qsa$(".upArrow").forEach((el) => el.addEventListener("click", moveProfileUp));
+        qsa$(".downArrow").forEach((el) => el.addEventListener("click", moveProfileDown));
     }).catch((err) => console.trace(`Could not run updateProfileList: ${err}`));
 }
 
@@ -610,7 +621,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 qs$("#alphaSortProfiles").checked = result["alpha_sort_profiles"];
             });
 
-            qs$("#profile_list").addEventListener("click", (event) => editProfile(event));
+            qs$("#profile_list").addEventListener("click", editProfile);
             qs$("#add").addEventListener("click", addProfile);
             qs$("#showImport").addEventListener("click", showImport);
             qs$("#showExport").addEventListener("click", showExport);
@@ -626,8 +637,6 @@ document.addEventListener("DOMContentLoaded", () => {
             qs$("#passwdLength").addEventListener("change", sanitizePasswordLength);
 
             qs$("#cloneProfileButton").addEventListener("click", cloneProfile);
-            qs$("#moveUpButton").addEventListener("click", moveProfileUp);
-            qs$("#moveDownButton").addEventListener("click", moveProfileDown);        
             qs$("#checkStrength").addEventListener("change", showStrengthSection);
             qs$("#remove").addEventListener("click", removeProfile);
             qs$("#save").addEventListener("click", saveProfile);

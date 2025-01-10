@@ -16,27 +16,27 @@ function setPasswordColors(foreground, background) {
 function getAutoProfileIdForUrl() {
     var match = 0,
         found = false;
-    for (var i = 0; i < Settings.profiles.length; i++) {
-        if (found) break;
-        var profile = Settings.profiles[i];
-        if (profile.siteList.trim().length > 0) {
-            var sites = profile.siteList.trim().split(/\s+/);
-            for (var j = 0; j < sites.length; j++) {
-                var pat = sites[j],
-                    regex = /\s/;
-                if (pat.startsWith("/") && pat.endsWith("/")) {
-                    regex = new RegExp(pat.slice(1, -1), "i");
-                } else {
-                    var plain2regex = pat.replace(/[$+()^[\]\\|{},]/g, "").replace(/\./g, "\\.").replace(/\?/g, ".").replace(/\*/g, ".*");
-                    regex = new RegExp(plain2regex, "i");
-                }
-
-                if (regex.test(Settings.currentUrl)) {
-                    match = profile.id;
-                    found = true;
-                    break;
+    for (let profile of Settings.profiles) {
+        if (!found) {
+            if (profile.siteList.trim().length > 0) {
+                var sites = profile.siteList.trim().split(/\s+/);
+                for (let pattern of sites) {
+                    var regex = /\s/;
+                    if (pattern.startsWith("/") && pattern.endsWith("/")) {
+                        regex = new RegExp(pattern.slice(1, -1), "i");
+                    } else {
+                        var plain2regex = pattern.replace(/[$+()^[\]\\|{},]/g, "").replace(/\./g, "\\.").replace(/\?/g, ".").replace(/\*/g, ".*");
+                        regex = new RegExp(plain2regex, "i");
+                    }
+                    if (regex.test(Settings.currentUrl)) {
+                        match = profile.id;
+                        found = true;
+                        break;
+                    }
                 }
             }
+        } else {
+            break;
         }
     }
     return match;
@@ -167,8 +167,10 @@ function showButtons() {
     qs$("#copypassword").classList.remove("hidden");
     // Don't run executeScript() on built-in chrome://, opera:// or about:// or extension options pages
     // Also can't run on the Chrome Web Store/Extension Gallery
-    if (!(/^about:|^chrome:|^edge:|^opera:|^https:\/\/(chromewebstore|addons)|.*extension:/i).test(Settings.currentUrl)) {
-        chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+    if (!(Settings.executeScriptRegex).test(Settings.currentUrl)) {
+        chrome.tabs.query({
+            active: true
+        }).then((tabs) => {
             chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id, allFrames: true},
                 func: showButtonsScript,
@@ -177,7 +179,7 @@ function showButtons() {
                     if (frame.result) qs$("#injectpassword").classList.remove("hidden");
                 });
             }).catch((err) => console.trace(`Could not run showButtons: ${err}`));
-        });
+        }).catch((err) => console.trace(`Could not run chrome.tabs.query in showButtons: ${err}`));
     }
 }
 
@@ -217,8 +219,10 @@ function fillFields(generatedArr) {
     updateFields().then(() => {
         // Don't run executeScript() on built-in chrome://, opera:// or about:// or extension options pages
         // Also can't run on the Chrome Web Store/Extension Gallery
-        if (!(/^about:|^chrome:|^edge:|^opera:|^https:\/\/(chromewebstore|addons)|.*extension:/i).test(Settings.currentUrl)) {
-            chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+        if (!(Settings.executeScriptRegex).test(Settings.currentUrl)) {
+            chrome.tabs.query({
+                active: true
+            }).then((tabs) => {
                 chrome.scripting.executeScript({
                     target: {tabId: tabs[0].id, allFrames: true},
                     args : [ generatedArr ],
@@ -226,7 +230,7 @@ function fillFields(generatedArr) {
                 })
                 .then(() => window.close())
                 .catch((err) => console.trace(`Fill field executeScript error: ${err}`));
-            });
+            }).catch((err) => console.trace(`Could not run chrome.tabs.query in fillFields: ${err}`));
         }
     }).catch((err) => console.trace(`Could not run fillFields: ${err}`));
 }
@@ -234,10 +238,10 @@ function fillFields(generatedArr) {
 function copyPassword() {
     updateFields().then(() => {
         chrome.tabs.query({
-            "windowType": "popup"
+            windowType: "popup"
         }).then(() => {
             navigator.clipboard.writeText(qs$("#generated").value).then(() => window.close());
-        });
+        }).catch((err) => console.trace(`Could not run chrome.tabs.query in copyPassword: ${err}`));
     }).catch((err) => console.trace(`Could not run copyPassword: ${err}`));
 }
 
@@ -249,7 +253,7 @@ function getVerificationCode(password) {
     var p = Object.create(Profile);
     p.hashAlgorithm = "sha256";
     p.passwordLength = 3;
-    p.selectedCharset = CHARSET_OPTIONS[4];
+    p.selectedCharset = Settings.CHARSET_OPTIONS[4];
     return p.genPassword("", password, "");
 }
 
@@ -357,13 +361,11 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             chrome.tabs.query({
-                "active": true,
-                "currentWindow": true,
-                "windowType": "normal"
+                active: true
             }).then((tabs) => {
                 Settings.currentUrl = tabs[0].url || "";
                 initPopup();
-            });
+            }).catch((err) => console.trace(`Failure during chrome.tabs.query in popup page: ${err}`));
 
             qs$("#injectpassword").addEventListener("click", () => {
                 fillFields([qs$("#username").value, qs$("#generated").value]);
