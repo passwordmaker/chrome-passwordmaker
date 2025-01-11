@@ -333,8 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             document.body.style.fontSize = "100%"
         }
-        Settings.migrateFromStorage()
-        .then(() => Settings.loadProfiles()).catch((err) => console.trace(`Failure during popup Settings.loadProfiles: ${err}`))
+        Settings.loadProfiles().catch((err) => console.trace(`Failure during popup Settings.loadProfiles: ${err}`))
         .then(() => {
             qsa$("input").forEach((el) => el.addEventListener("input", delayedUpdate));
             qs$("#profile").addEventListener("change", onProfileChanged);

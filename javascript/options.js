@@ -644,8 +644,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (result["storeLocation"] === undefined) {
             chrome.storage.local.set({ "storeLocation": "memory" });
         }
-        Settings.migrateFromStorage()
-        .then(() => Settings.loadProfiles()).catch((err) => console.trace(`Failure during options Settings.loadProfiles: ${err}`))
+        Settings.loadProfiles().catch((err) => console.trace(`Failure during options Settings.loadProfiles: ${err}`))
         .then(() => updateProfileList()).catch((err) => console.trace(`Failure during updateProfileList: ${err}`))
         .then(() => setCurrentProfile(Settings.profiles[0])).catch((err) => console.trace(`Failure during options setCurrentProfile: ${err}`))
         .then(() => {
