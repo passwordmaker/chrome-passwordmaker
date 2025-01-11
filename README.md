@@ -17,26 +17,17 @@ This technique has been widely used since 2003 and is 100% compatible with the o
 **_PLEASE Export your profile data_** it is advisable to always keep a back-up of your current profile data.
 
 # Installation
-### Chrome and other Chromium based browsers:
-From the Chrome Web Store:
-1. [PasswordMaker Pro](https://chromewebstore.google.com/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh)
-2. [PasswordMaker (.org)](https://chromewebstore.google.com/detail/passwordmaker-org/fckpmekmkjglpmdcbfkchimdelcjiipd)
+### Chrome, Brave, Edge, Opera, Vivaldi and other Chromium based browsers:
+https://chromewebstore.google.com/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh
 
 ### Firefox:
-From Mozilla AMO: https://addons.mozilla.org/en-US/firefox/addon/firefox-passwordmaker-pro/
+https://addons.mozilla.org/en-US/firefox/addon/firefox-passwordmaker-pro/
 
 # Status of this project
 
-## Update 2023-12-12 by [@heavensrevenge](https://github.com/heavensrevenge)
+## Update 2025-01-10 by [@heavensrevenge](https://github.com/heavensrevenge)
 
-There are two equivalent extensions on the Chrome Web Store, they are exactly the same and will be updated at the same time:
-
-1. [PasswordMaker Pro](https://chromewebstore.google.com/detail/passwordmaker-pro/lnhofcfhehhcbccpmdmdpjncdoihmkkh)
-2. [PasswordMaker (.org)](https://chromewebstore.google.com/detail/passwordmaker-org/fckpmekmkjglpmdcbfkchimdelcjiipd)
-
-### Update 2021-05-16 by [@GitTom](https://github.com/GitTom)
-
-I applied some minor updates and created a new Chrome Web Store listing under the name "PasswordMaker (.org)".
+Still improving and maintaining the codebase for Chrome, Brave, Edge, Opera, Vivaldi and Firefox.
 
 ### Update 2014-07-13 by [@heavensrevenge](https://github.com/heavensrevenge)
 
