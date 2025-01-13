@@ -1,3 +1,10 @@
+1.0.3 - 2025-01-12
+
+* Add drag and drop of profiles to options page for issue #157 (drag & drop is disabled if alphanumeric sort is enabled)
+* profile.js is now a class
+* Misc code modernizations and maintenance
+* Updated QUnit to 2.23.0
+
 1.0.2 - 2024-02-04
 
 * Improve username and password filling
