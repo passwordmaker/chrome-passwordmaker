@@ -58,6 +58,7 @@ var RdfImporter = {
         ["setting", "maskMasterPassword",    "hideMasterPassword", strToBool],
         ["setting", "masterPasswordStorage", "storeLocation",      renameStoreLocation, renameStoreLocation],
         ["profile", "name",                  "title"],
+        ["profile", "timestamp",             "timestamp",          parseInt],
         ["profile", "urlToUse",              "strUseText"],
         ["profile", "whereLeetLB",           "whereToUseL33t"],
         ["profile", "leetLevelLB",           "l33tLevel",          parseInt],
@@ -244,7 +245,7 @@ function dumpedProfiles() {
         dumpProfiles.push(newProf);
     });
     chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
-        if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
+        Settings.alphaSortProfiles(result["alpha_sort_profiles"]);
     });
 
     return dumpProfiles;

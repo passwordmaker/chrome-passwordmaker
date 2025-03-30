@@ -57,18 +57,33 @@ Settings.loadProfiles = () => {
     }).catch((err) => console.trace(`Could not run Settings.loadProfiles: ${err}`));
 }
 
-Settings.alphaSortProfiles = () => {
-    var profiles = Settings.profiles,
-        defaultProfile = profiles.shift();
+Settings.alphaSortProfiles = (nopt) => {
+    if (nopt == 0) {
+        return;
+    } else { 
 
-    profiles.sort((a, b) => {
-        if (a.title.toUpperCase() < b.title.toUpperCase()) return -1;
-        if (a.title.toUpperCase() > b.title.toUpperCase()) return 1;
-        return 0;
-    });
+        var profiles = Settings.profiles,
+            defaultProfile = profiles.shift();
 
-    profiles.unshift(defaultProfile);
-    Settings.profiles = profiles;
+        if (nopt == 1) {
+            profiles.sort((a, b) => {
+                if (a.title.toUpperCase() < b.title.toUpperCase()) return -1;
+                if (a.title.toUpperCase() > b.title.toUpperCase()) return 1;
+                return 0;
+            });
+        } else if (nopt == 2) {
+            profiles.sort((a, b) => {
+                return b.timestamp - a.timestamp;
+            });
+        } else if (nopt == 3) {
+            profiles.sort((a, b) => {
+                return a.timestamp - b.timestamp;
+            });
+        }
+
+        profiles.unshift(defaultProfile);
+        Settings.profiles = profiles;
+    }
 };
 
 Settings.saveSyncedProfiles = (syncPassHash, profileData) => {
