@@ -293,7 +293,7 @@ function sharedInit(decryptedPass) {
         qs$("#password").value = decryptedPass;
         qs$("#confirmation").value = decryptedPass;
 
-        if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
+        Settings.alphaSortProfiles(result["alpha_sort_profiles"]);
         var profileList = qs$("#profile");
         Settings.profiles.forEach((profile) => {
             profileList.append(new Option(profile.title, profile.id));

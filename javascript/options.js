@@ -102,14 +102,12 @@ function setCurrentProfile(profile) {
     updateExample();
     updateLeet();
     highlightProfile();
-    // Keeps profile #1 around so it can only be re-named
-    chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
-        if ((Settings.profiles[0].id === profile.id) || result["alpha_sort_profiles"]) {
-            qs$("#remove").style.display = "none";
-        } else {
-            qs$("#remove").style.display = "";
-        }
-    });
+    // Keeps profile #1 around so it can only be re-named, always the default profile in all sorting orders
+    if (Settings.profiles[0].id === profile.id) {
+        qs$("#remove").style.display = "none";
+    } else {
+        qs$("#remove").style.display = "";
+    }
 
     showSection("#profile_settings");
     oldHashWarning(profile.hashAlgorithm);
