@@ -115,7 +115,7 @@ nav {
     position: static;
 }
 
-h2 {
+h2, h3, h4 {
     display: inline-block;
     margin: 0 0 20px 20px;
 }
@@ -273,9 +273,9 @@ label {
     font-size: .8em;
     font-style: italic;
     margin: 0 0 10px 165px;
-    padding: 10px 0 10px 0;
-    text-align: center;
-    width: 310px;
+    padding: 10px 10px 10px 10px;
+    text-align: left;
+    width: 290px;
 }
 
 footer {
@@ -353,11 +353,11 @@ textarea {
     margin-left: 165px;
 }
 
-#cloneProfileButton, select, input {
+#cloneProfileButton, #timestamp, select, input {
     margin-left: 165px;
 }
 
-#store_location_row {
+#store_location_row, #sort_order_row {
     margin-left: 7.5em;
 }
 
@@ -365,7 +365,7 @@ select.input {
     width: 304px;
 }
 
-#store_location {
+#store_location, #alphaSortProfiles {
     width: 150px;
 }
 

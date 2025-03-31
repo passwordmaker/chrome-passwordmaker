@@ -1,3 +1,13 @@
+function formatLastModTime(lastmod0) {
+    var lastmod = parseInt(lastmod0,10);
+    if (lastmod > 0) {
+        var t = new Date(lastmod);
+        return t.toLocaleString();
+    } else {
+        return "unknown";
+    }
+}
+
 function qs$(sel) {
     return document.querySelector(sel);
 }
@@ -29,6 +39,7 @@ function updateLeet() {
 function addProfile() {
     var p = new Profile();
     p.title = "No name";
+    p.timestamp = Date.now();
     Settings.addProfile(p);
     updateProfileList()
         .then(() => setCurrentProfile(p))
@@ -57,6 +68,7 @@ function removeAllProfiles() {
 function setCurrentProfile(profile) {
     Settings.currentProfile = profile.id;
     qs$("#profileNameTB").value = profile.title;
+    qs$("#timestamp").textContent = formatLastModTime(profile.timestamp);
     qs$("#siteList").value = (profile.siteList).replace(/\s/g, "\n");
     qs$("#protocolCB").checked = profile.url_protocol;
     qs$("#subdomainCB").checked = profile.url_subdomain;
@@ -90,14 +102,12 @@ function setCurrentProfile(profile) {
     updateExample();
     updateLeet();
     highlightProfile();
-    // Keeps profile #1 around so it can only be re-named
-    chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
-        if ((Settings.profiles[0].id === profile.id) || result["alpha_sort_profiles"]) {
-            qs$("#remove").style.display = "none";
-        } else {
-            qs$("#remove").style.display = "";
-        }
-    });
+    // Keeps profile #1 around so it can only be re-named, always the default profile in all sorting orders
+    if (Settings.profiles[0].id === profile.id) {
+        qs$("#remove").style.display = "none";
+    } else {
+        qs$("#remove").style.display = "";
+    }
 
     showSection("#profile_settings");
     oldHashWarning(profile.hashAlgorithm);
@@ -215,6 +225,7 @@ function saveProfile() {
     var selected = Settings.getProfileById(Settings.currentProfile);
 
     selected.title          = qs$("#profileNameTB").value.trim();
+    selected.timestamp      = Date.now();
     selected.siteList       = qs$("#siteList").value.trim().split(/\s+/).join(" ");
     selected.url_protocol   = qs$("#protocolCB").checked;
     selected.url_subdomain  = qs$("#subdomainCB").checked;
@@ -255,6 +266,7 @@ function saveProfile() {
 function cloneProfile() {
     var p = Object.assign(new Profile(), Settings.getProfileById(Settings.currentProfile));
     p.title = p.title + " Copy";
+    p.timestamp = Date.now();
     Settings.addProfile(p);
     updateProfileList().then(() => setCurrentProfile(p));
 }
@@ -332,10 +344,12 @@ function editProfile(event) {
 
 function updateProfileList() {
     return chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
-        if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
+        Settings.alphaSortProfiles(result["alpha_sort_profiles"]);
+        qs$("#profile_num").textContent = Settings.profiles.length.toString();
 
         var profileList = qs$("#profile_list");
         profileList.replaceChildren(); //Empty profile list
+        var lastmod = 0;
         Settings.profiles.forEach((profile, i) => {
             var listItem = document.createElement("li");
             var spanItem = document.createElement("span");
@@ -352,7 +366,9 @@ function updateProfileList() {
             }
             listItem.append(spanItem)
             profileList.append(listItem);
+            if (profile.timestamp > lastmod) lastmod = profile.timestamp;
         });
+        qs$("#profilelist_lastmod").textContent = formatLastModTime(lastmod);
     }).catch((err) => console.trace(`Could not run updateProfileList: ${err}`));
 }
 
@@ -469,9 +485,8 @@ function updateShowStrength() {
 }
 
 function updateAlphaSortProfiles() {
-    if (qs$("#alphaSortProfiles").checked) {
-        chrome.storage.local.set({ "alpha_sort_profiles": true });
-    } else {
+    chrome.storage.local.set({ "alpha_sort_profiles": qs$("#alphaSortProfiles").value });
+    if (qs$("#alphaSortProfiles").value == 0) {
         chrome.storage.local.remove("alpha_sort_profiles");
     }
     Settings.loadProfiles()
@@ -654,7 +669,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 qs$("#useVerificationCode").checked = result["use_verification_code"];
                 qs$("#showPasswordStrength").checked = result["show_password_strength"];
                 qs$("#syncProfiles").checked = result["sync_profiles"];
-                qs$("#alphaSortProfiles").checked = result["alpha_sort_profiles"];
+                qs$("#alphaSortProfiles").value = result["alpha_sort_profiles"];
             });
 
             qs$("#profile_list").addEventListener("click", editProfile);

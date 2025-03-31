@@ -58,6 +58,7 @@ var RdfImporter = {
         ["setting", "maskMasterPassword",    "hideMasterPassword", strToBool],
         ["setting", "masterPasswordStorage", "storeLocation",      renameStoreLocation, renameStoreLocation],
         ["profile", "name",                  "title"],
+        ["profile", "timestamp",             "timestamp",          parseInt],
         ["profile", "urlToUse",              "strUseText"],
         ["profile", "whereLeetLB",           "whereToUseL33t"],
         ["profile", "leetLevelLB",           "l33tLevel",          parseInt],
@@ -125,6 +126,12 @@ RdfImporter.loadDoc = (rdf) => {
                 prof[opts.name] = opts.convert ? opts.convert(val) : val;
             }
         });
+
+        // deal with the cases that there are multiple lines in the description
+        var descr = item.getElementsByTagName("NS1:description")[0];
+        if (descr) {
+            prof.description = descr.textContent;
+        }
 
         // store site patterns
         var patterns = [],
@@ -244,7 +251,7 @@ function dumpedProfiles() {
         dumpProfiles.push(newProf);
     });
     chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
-        if (result["alpha_sort_profiles"]) Settings.alphaSortProfiles();
+        Settings.alphaSortProfiles(result["alpha_sort_profiles"]);
     });
 
     return dumpProfiles;
@@ -257,14 +264,30 @@ function dumpedProfilesToRdf(profiles) {
     profiles.unshift(Object.assign({}, profiles[0], {
         name: "Defaults"
     }));
+    var rvbool = false; // true if multiple-line description exists
     profiles.forEach((prof, i) => {
         var about = (i === 0) ? "http://passwordmaker.mozdev.org/defaults" : "rdf:#$CHROME" + i;
         abouts.push(about);
         rv += `<RDF:Description RDF:about="${attrEscape(about)}"\n`;
         for (let [key, value] of Object.entries(prof)) {
-            rv += ` NS1:${key}="${attrEscape(value)}"\n`;
+            if ( /\n/.exec(value) ) {
+                rvbool = true;
+            } else {
+                rv += ` NS1:${key}="${attrEscape(value)}"\n`;
+            }
         }
-        rv += ` />\n`;
+        // import multiple-line description if it exists
+        if (rvbool) {
+            rv += ` >\n`;
+            for (let [key, value] of Object.entries(prof)) {
+                if ( /\n/.exec(value) ) {
+                    rv += ` <NS1:${key}>${attrEscape(value)}</NS1:${key}>\n`;
+                }
+            }
+            rv += ` </RDF:Description>\n`;
+        } else {
+            rv += ` />\n`;
+        }
     });
     rv += `<RDF:Seq RDF:about="http://passwordmaker.mozdev.org/accounts">\n`;
     abouts.forEach((item) => {

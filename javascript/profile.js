@@ -1,6 +1,7 @@
 class Profile {
     id = 1;
     title = "Default";
+    timestamp = 0;
     siteList = "";
 
     // Settings for the URL generation
