@@ -250,8 +250,8 @@ function dumpedProfiles() {
         }
         dumpProfiles.push(newProf);
     });
-    chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
-        Settings.alphaSortProfiles(result["alpha_sort_profiles"]);
+    chrome.storage.local.get(["sort_profiles"]).then((result) => {
+        Settings.sortProfiles(result["sort_profiles"]);
     });
 
     return dumpProfiles;

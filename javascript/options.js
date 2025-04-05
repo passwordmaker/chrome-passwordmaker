@@ -68,7 +68,7 @@ function removeAllProfiles() {
 function setCurrentProfile(profile) {
     Settings.currentProfile = profile.id;
     qs$("#profileNameTB").value = profile.title;
-    qs$("#timestamp").textContent = formatLastModTime(profile.timestamp);
+    qs$("#profileTimeStamp").value = formatLastModTime(profile.timestamp);
     qs$("#siteList").value = (profile.siteList).replace(/\s/g, "\n");
     qs$("#protocolCB").checked = profile.url_protocol;
     qs$("#subdomainCB").checked = profile.url_subdomain;
@@ -260,6 +260,7 @@ function saveProfile() {
             setCurrentProfile(selected);
             highlightProfile();
             oldHashWarning(selected.hashAlgorithm);
+            updateShowRecentModTime();
         }).catch((err) => console.trace(`Could not run saveProfile: ${err}`));
 }
 
@@ -304,8 +305,8 @@ function handleDragEnter(e) {
 }
 
 function shouldDragSort() {
-    return chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
-        if (result["alpha_sort_profiles"] || qs$("#searchProfiles").value.length !== 0) {
+    return chrome.storage.local.get(["sort_profiles"]).then((result) => {
+        if (result["sort_profiles"] !== "user_defined" || qs$("#searchProfiles").value.length !== 0) {
             disableDragSorting();
         } else {
             enableDragSorting();
@@ -343,13 +344,12 @@ function editProfile(event) {
 }
 
 function updateProfileList() {
-    return chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
-        Settings.alphaSortProfiles(result["alpha_sort_profiles"]);
+    return chrome.storage.local.get(["sort_profiles"]).then((result) => {
+        Settings.sortProfiles(result["sort_profiles"]);
         qs$("#profile_num").textContent = Settings.profiles.length.toString();
 
         var profileList = qs$("#profile_list");
         profileList.replaceChildren(); //Empty profile list
-        var lastmod = 0;
         Settings.profiles.forEach((profile, i) => {
             var listItem = document.createElement("li");
             var spanItem = document.createElement("span");
@@ -366,9 +366,8 @@ function updateProfileList() {
             }
             listItem.append(spanItem)
             profileList.append(listItem);
-            if (profile.timestamp > lastmod) lastmod = profile.timestamp;
+            if (profile.timestamp > Settings.lastmod) Settings.lastmod = profile.timestamp;
         });
-        qs$("#profilelist_lastmod").textContent = formatLastModTime(lastmod);
     }).catch((err) => console.trace(`Could not run updateProfileList: ${err}`));
 }
 
@@ -484,15 +483,24 @@ function updateShowStrength() {
     }
 }
 
-function updateAlphaSortProfiles() {
-    chrome.storage.local.set({ "alpha_sort_profiles": qs$("#alphaSortProfiles").value });
-    if (qs$("#alphaSortProfiles").value == 0) {
-        chrome.storage.local.remove("alpha_sort_profiles");
+function updateShowRecentModTime() {
+    if (qs$("#showRecentModTime").checked) {
+        chrome.storage.local.set({ "show_recent_mod_time": true }).then(() => {
+            qs$("#profile_list_last_mod").innerHTML = `<h4>Last Modified On ${formatLastModTime(Settings.lastmod)}</h4>`;
+        });
+    } else {
+        chrome.storage.local.remove("show_recent_mod_time").then(() => {
+            qs$("#profile_list_last_mod").innerHTML = "";
+        });
     }
-    Settings.loadProfiles()
+}
+
+function updateSortProfiles() {
+    chrome.storage.local.set({ "sort_profiles": qs$("#sort_profiles").value })
+        .then(() => Settings.loadProfiles())
         .then(() => updateProfileList())
         .then(() => filterProfiles())
-        .catch((err) => console.trace(`Could not run updateAlphaSortProfiles: ${err}`));
+        .catch((err) => console.trace(`Could not run updateSortProfiles: ${err}`));
 }
 
 function sanitizePasswordLength() {
@@ -659,17 +667,22 @@ document.addEventListener("DOMContentLoaded", () => {
         if (result["storeLocation"] === undefined) {
             chrome.storage.local.set({ "storeLocation": "memory" });
         }
-        Settings.loadProfiles().catch((err) => console.trace(`Failure during options Settings.loadProfiles: ${err}`))
+        Settings.migrateStorage()
+        .then(() => Settings.loadProfiles()).catch((err) => console.trace(`Failure during options Settings.loadProfiles: ${err}`))
         .then(() => updateProfileList()).catch((err) => console.trace(`Failure during updateProfileList: ${err}`))
         .then(() => setCurrentProfile(Settings.profiles[0])).catch((err) => console.trace(`Failure during options setCurrentProfile: ${err}`))
         .then(() => {
-            chrome.storage.local.get(["hide_generated_password", "sync_profiles", "master_password_hash", "use_verification_code", "show_password_strength", "alpha_sort_profiles"]).then((result) => {
+            chrome.storage.local.get(["hide_generated_password", "sync_profiles", "master_password_hash", "use_verification_code", "show_password_strength", "show_recent_mod_time", "sort_profiles"]).then((result) => {
                 qs$("#hidePassword").checked = result["hide_generated_password"];
                 qs$("#keepMasterPasswordHash").checked = result["master_password_hash"];
                 qs$("#useVerificationCode").checked = result["use_verification_code"];
                 qs$("#showPasswordStrength").checked = result["show_password_strength"];
                 qs$("#syncProfiles").checked = result["sync_profiles"];
-                qs$("#alphaSortProfiles").value = result["alpha_sort_profiles"];
+                qs$("#sort_profiles").value = result["sort_profiles"];
+                if (result["show_recent_mod_time"]) {
+                    qs$("#showRecentModTime").checked = result["show_recent_mod_time"];
+                    qs$("#profile_list_last_mod").innerHTML = `<h4>Last Modified On ${formatLastModTime(Settings.lastmod)}</h4>`;
+                }
             });
 
             qs$("#profile_list").addEventListener("click", editProfile);
@@ -705,7 +718,8 @@ document.addEventListener("DOMContentLoaded", () => {
             qs$("#masterPassword").addEventListener("input", updateMasterHash);
             qs$("#useVerificationCode").addEventListener("change", updateUseVerificationCode);
             qs$("#showPasswordStrength").addEventListener("change", updateShowStrength);
-            qs$("#alphaSortProfiles").addEventListener("change", updateAlphaSortProfiles);
+            qs$("#showRecentModTime").addEventListener("change", updateShowRecentModTime);
+            qs$("#sort_profiles").addEventListener("change", updateSortProfiles);
             qs$("#set_sync_password").addEventListener("click", setSyncPassword);
             qs$("#syncProfilesPassword").addEventListener("input", (event) => {
                 if (event.code === "Enter") setSyncPassword();

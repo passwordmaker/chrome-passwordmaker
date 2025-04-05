@@ -289,11 +289,11 @@ function handleKeyPress(event) {
 }
 
 function sharedInit(decryptedPass) {
-    chrome.storage.local.get(["alpha_sort_profiles"]).then((result) => {
+    chrome.storage.local.get(["sort_profiles"]).then((result) => {
         qs$("#password").value = decryptedPass;
         qs$("#confirmation").value = decryptedPass;
 
-        Settings.alphaSortProfiles(result["alpha_sort_profiles"]);
+        Settings.sortProfiles(result["sort_profiles"]);
         var profileList = qs$("#profile");
         Settings.profiles.forEach((profile) => {
             profileList.append(new Option(profile.title, profile.id));
@@ -333,7 +333,8 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             document.body.style.fontSize = "100%"
         }
-        Settings.loadProfiles().catch((err) => console.trace(`Failure during popup Settings.loadProfiles: ${err}`))
+        Settings.migrateStorage()
+        .then(() => Settings.loadProfiles()).catch((err) => console.trace(`Failure during popup Settings.loadProfiles: ${err}`))
         .then(() => {
             qsa$("input").forEach((el) => el.addEventListener("input", delayedUpdate));
             qs$("#profile").addEventListener("change", onProfileChanged);

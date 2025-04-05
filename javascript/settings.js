@@ -8,7 +8,8 @@ var Settings = {
         "0123456789",
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
         "`~!@#$%^&*()_-+={}|[]\\:\";'<>?,./"
-    ]
+    ],
+    lastmod: 0
 };
 
 Settings.getProfileById = (id) => {
@@ -57,33 +58,35 @@ Settings.loadProfiles = () => {
     }).catch((err) => console.trace(`Could not run Settings.loadProfiles: ${err}`));
 }
 
-Settings.alphaSortProfiles = (nopt) => {
-    if (nopt == 0) {
-        return;
-    } else { 
-
-        var profiles = Settings.profiles,
-            defaultProfile = profiles.shift();
-
-        if (nopt == 1) {
+Settings.sortProfiles = (sortOrder) => {
+    var profiles = Settings.profiles,
+        defaultProfile = profiles.shift();
+    switch (sortOrder) {
+        case "user_defined":
+            break;
+        case "alphabetical":
             profiles.sort((a, b) => {
                 if (a.title.toUpperCase() < b.title.toUpperCase()) return -1;
                 if (a.title.toUpperCase() > b.title.toUpperCase()) return 1;
                 return 0;
             });
-        } else if (nopt == 2) {
+            break;
+        case "newest_first":
             profiles.sort((a, b) => {
                 return b.timestamp - a.timestamp;
             });
-        } else if (nopt == 3) {
+            break;
+        case "oldest_first":
             profiles.sort((a, b) => {
                 return a.timestamp - b.timestamp;
             });
-        }
-
-        profiles.unshift(defaultProfile);
-        Settings.profiles = profiles;
+            break;
+        default:
+            console.trace(`Incorrect Settings.sortProfiles option: ${sortOrder}`);
+            break;
     }
+    profiles.unshift(defaultProfile);
+    Settings.profiles = profiles;
 };
 
 Settings.saveSyncedProfiles = (syncPassHash, profileData) => {
@@ -251,3 +254,14 @@ Settings.getPasswordStrength = (pw) => {
         hasSymbol: Boolean(syms)
     };
 };
+
+Settings.migrateStorage = () => {
+    return chrome.storage.local.get(["alpha_sort_profiles", "sort_profiles"]).then((result) => {
+        if (result["alpha_sort_profiles"] === true) {
+            chrome.storage.local.set({ "sort_profiles": "alphabetical" })
+                .then(() => chrome.storage.local.remove(["alpha_sort_profiles"]));
+        } else if (result["sort_profiles"] === undefined) {
+            chrome.storage.local.set({ "sort_profiles": "user_defined" });
+        }
+    });
+}

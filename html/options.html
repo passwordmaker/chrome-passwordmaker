@@ -23,8 +23,8 @@
         <main>
             <div id="list">
                 <h3>Profile List (<span id="profile_num"></span>)</h3>
-                <h4> Last modified on <span id="profilelist_lastmod"></span> </h4>
-                <input id="searchProfiles" placeholder="Search for Profile" title="Filtering disables ability to change profile order" type="text">
+                <span id="profile_list_last_mod"></span>
+                <input id="searchProfiles" placeholder="Search for Profile" title="Filtering disables ability to change profile order" type="text"/>
                 <ol id="profile_list"></ol>
             </div>
 
@@ -41,8 +41,8 @@
                     <input class="input" id="profileNameTB">
                 </div>
                 <div class="row">
-                    <label for="timestamp">Last Modified:</label>
-                    <span id="timestamp"></span>
+                    <label for="profileTimeStamp">Profile Modified On:</label>
+                    <input class="input" id="profileTimeStamp">
                 </div>
                 <div class="row">
                     <div class="subrow">
@@ -266,12 +266,12 @@
                 </div>
                 <div class="row" id="sort_order_row">
                     <div class="subrow">
-                        <label for="alphaSortProfiles">Sort Profiles By:</label>
-                        <select class="input" id="alphaSortProfiles">
-                            <option value="0">User-defined Order</option>
-                            <option value="1">Alphabetical Order</option>
-                            <option value="2">Newest First</option>
-                            <option value="3">Oldest First</option>
+                        <label for="sort_profiles">Sort Profiles By:</label>
+                        <select id="sort_profiles" title="Only User-Defined order allows custom drag & drop sorting">
+                            <option value="user_defined">User-Defined Order</option>
+                            <option value="alphabetical">Alphabetical Order</option>
+                            <option value="newest_first">Newest First</option>
+                            <option value="oldest_first">Oldest First</option>
                         </select>
                     </div>
                 </div>                
@@ -291,6 +291,12 @@
                     <div class="subrow">
                         <input id="showPasswordStrength" type="checkbox">
                         <label class="checkbox" for="showPasswordStrength">Show Password Strength Meter in Popup</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="subrow">
+                        <input id="showRecentModTime" type="checkbox">
+                        <label class="checkbox" for="showRecentModTime">Show the Most Recent Profile Modification Time</label>
                     </div>
                 </div>
                 <div class="row">
