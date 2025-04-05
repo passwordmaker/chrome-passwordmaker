@@ -1,13 +1,3 @@
-function formatLastModTime(lastmod0) {
-    var lastmod = parseInt(lastmod0,10);
-    if (lastmod > 0) {
-        var t = new Date(lastmod);
-        return t.toLocaleString();
-    } else {
-        return "unknown";
-    }
-}
-
 function qs$(sel) {
     return document.querySelector(sel);
 }
@@ -62,6 +52,15 @@ function removeAllProfiles() {
             .then(() => Settings.loadProfiles())
             .then(() => updateProfileList())
             .catch((err) => console.trace(`Could not run removeAllProfiles: ${err}`));
+    }
+}
+
+function formatLastModTime(timeStamp) {
+    var lastMod = parseInt(timeStamp, 10);
+    if (lastMod > 0) {
+        return new Date(lastMod).toLocaleString();
+    } else {
+        return "Unknown";
     }
 }
 

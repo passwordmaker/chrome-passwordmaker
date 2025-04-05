@@ -238,12 +238,15 @@ meter {
     margin-bottom: 6px;
 }
 
+.row textarea {
+    width: 303px;
+}
+
 #general_settings .subrow {
     white-space: nowrap;
 }
 
 label {
-    margin-top: 3px;
     position: absolute;
     text-align: right;
     width: 155px;
@@ -273,7 +276,7 @@ label {
     font-size: .8em;
     font-style: italic;
     margin: 0 0 10px 165px;
-    padding: 10px 10px 10px 10px;
+    padding: 10px;
     text-align: left;
     width: 290px;
 }
@@ -362,7 +365,7 @@ textarea {
 }
 
 select.input {
-    width: 304px;
+    width: 308px;
 }
 
 #store_location, #alphaSortProfiles {

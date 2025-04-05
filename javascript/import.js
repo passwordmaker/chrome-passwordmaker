@@ -113,7 +113,7 @@ RdfImporter.loadDoc = (rdf) => {
 
     // check over every Description, but will ignore groups and anything without
     // settings/profile attributes
-    Array.from(new DOMParser().parseFromString(rdf, "text/xml").getElementsByTagName("RDF:Description")).forEach(item => {
+    Array.from(new DOMParser().parseFromString(rdf, "text/xml").getElementsByTagName("RDF:Description")).forEach((item) => {
         var prof = {};
         var attrMap = RdfImporter.getImportOpts(item);
         var attrName = "";
