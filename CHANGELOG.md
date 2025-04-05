@@ -1,3 +1,12 @@
+1.0.4 - 2025-04-05
+
+* Added timestamp to profiles by @spartanroc
+* Added ability to sort profiles by modification time by @spartanroc
+* Allow descriptions to be more than one line by @spartanroc
+* Added option to show last profile modification on options page
+* Some code maintenance
+* Updated QUnit to 2.24.1
+
 1.0.3 - 2025-01-12
 
 * Add drag and drop of profiles to options page for issue #157 (drag & drop is disabled if alphanumeric sort is enabled)
