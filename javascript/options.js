@@ -485,11 +485,13 @@ function updateShowStrength() {
 function updateShowRecentModTime() {
     if (qs$("#showRecentModTime").checked) {
         chrome.storage.local.set({ "show_recent_mod_time": true }).then(() => {
-            qs$("#profile_list_last_mod").innerHTML = `<h4>Last Modified On ${formatLastModTime(Settings.lastmod)}</h4>`;
+            var h4Ele = document.createElement("h4");
+            h4Ele.append(`Last Modified On: ${formatLastModTime(Settings.lastmod)}`);
+            qs$("#profile_list_last_mod").append(h4Ele);
         });
     } else {
         chrome.storage.local.remove("show_recent_mod_time").then(() => {
-            qs$("#profile_list_last_mod").innerHTML = "";
+            qs$("#profile_list_last_mod").replaceChildren(); //Empties the node
         });
     }
 }
@@ -680,7 +682,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 qs$("#sort_profiles").value = result["sort_profiles"];
                 if (result["show_recent_mod_time"]) {
                     qs$("#showRecentModTime").checked = result["show_recent_mod_time"];
-                    qs$("#profile_list_last_mod").innerHTML = `<h4>Last Modified On ${formatLastModTime(Settings.lastmod)}</h4>`;
+                    var h4Ele = document.createElement("h4");
+                    h4Ele.append(`Last Modified On: ${formatLastModTime(Settings.lastmod)}`);
+                    qs$("#profile_list_last_mod").append(h4Ele);
                 }
             });
 
